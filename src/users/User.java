@@ -13,4 +13,9 @@ package users;
  */
 public abstract class User {
 
+  @SuppressWarnings("unused")
+  private String name;
+  public void setName(String newName) {
+    name = newName;
+  }
 }
