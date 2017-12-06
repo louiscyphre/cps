@@ -1,6 +1,8 @@
 package cps.core;
 
-public abstract class CustomerAction {
+import java.io.Serializable;
+
+public abstract class CustomerAction implements Serializable {
 
 	private int id;
 	private int customerID;

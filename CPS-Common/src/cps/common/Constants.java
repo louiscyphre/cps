@@ -6,4 +6,5 @@ public interface Constants {
 	public final String DB_URL = "localhost";
 	public final String DB_USERNAME = "user1";
 	public final String DB_PASSWORD = "changeme";
+	public final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 }

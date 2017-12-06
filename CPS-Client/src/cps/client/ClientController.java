@@ -34,7 +34,7 @@ public class ClientController extends AbstractClient {
 	 * @param message
 	 *          The message from the UI.
 	 */
-	public void handleMessageFromClientUI(String message) {
+	public void handleMessageFromClientUI(Object message) {
 		try {
 			sendToServer(message);
 		} catch (IOException e) {

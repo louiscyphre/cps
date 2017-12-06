@@ -26,8 +26,10 @@ public class ServerApplication extends AbstractServer {
 	@Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		if (msg != null) {
-			System.out.println("Message received: " + msg + " from " + client);
+			System.out.println("Message received: " + msg + ", from: " + client + ", type: " + msg.getClass().toString());
 			this.sendToAllClients(msg);
+		} else {
+			System.out.println("Message received: " + msg + ", from: " + client);
 		}
 	}
 
@@ -49,14 +51,11 @@ public class ServerApplication extends AbstractServer {
 
 	@Override
 	protected void clientConnected(ConnectionToClient client) {
-		super.clientConnected(client);
 		System.out.println("Client connected: " + client);
 	}
 
 	@Override
 	protected synchronized void clientDisconnected(ConnectionToClient client) {
-		// TODO Auto-generated method stub
-		super.clientDisconnected(client);
 		System.out.println("Client disconnected: " + client);
 	}
 

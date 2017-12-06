@@ -2,8 +2,12 @@ package cps.client;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.sql.Date;
+import java.time.Instant;
+
 import cps.common.Constants;
 import cps.common.Utilities;
+import cps.core.IncidentalParking;
 
 public class ConsoleClient implements ClientUI {
 	ClientController client;
@@ -58,7 +62,9 @@ public class ConsoleClient implements ClientUI {
 				
 				switch (choice) {
 				case 1:
-					client.handleMessageFromClientUI("ParkingRequest");
+					Date date = new Date(Instant.now().toEpochMilli());
+					IncidentalParking request = new IncidentalParking(1, 1, 1, date, "user@email");
+					client.handleMessageFromClientUI(request);
 					break;
 				case 2:
 					client.closeConnection();
@@ -69,6 +75,7 @@ public class ConsoleClient implements ClientUI {
 			}
 		} catch (Exception ex) {
 			System.out.println("Unexpected error while reading from console!");
+			ex.printStackTrace();
 		}
 	}
 
