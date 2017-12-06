@@ -1,4 +1,6 @@
 package cps.core;
 
-public abstract class ServiceAction {
+import java.io.Serializable;
+
+public abstract class ServiceAction implements Serializable {
 }

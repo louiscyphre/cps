@@ -1,6 +1,8 @@
 package cps.core;
 
-public abstract class Person {
+import java.io.Serializable;
+
+public abstract class Person implements Serializable {
 
 	private final int id;
 	private String email;
