@@ -4,23 +4,12 @@ import java.time.LocalDateTime;
 
 public class ReservedParking extends ParkingRequest {
 	private static final long serialVersionUID = 1L;
-
-	private int lotID;
 	private LocalDateTime startTime;
 
-	public ReservedParking(int id, int customerID, int carID, LocalDateTime plannedEndTime, String email, int lotID,
+	public ReservedParking(int id, int customerID, String email, int carID, int lotID, LocalDateTime plannedEndTime,
 			LocalDateTime startTime) {
-		super(id, customerID, carID, plannedEndTime, email);
-		this.lotID = lotID;
+		super(id, customerID, email, carID, lotID, plannedEndTime);
 		this.startTime = startTime;
-	}
-
-	public int getLotID() {
-		return lotID;
-	}
-
-	public void setLotID(int lotID) {
-		this.lotID = lotID;
 	}
 
 	public LocalDateTime getStartTime() {

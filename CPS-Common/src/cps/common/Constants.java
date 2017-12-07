@@ -8,4 +8,5 @@ public interface Constants {
 	public final String DB_USERNAME = "cps";
 	public final String DB_PASSWORD = "project";
 	public final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+	public final String SQL_CREATE_ONETIME_PARKING = "INSERT INTO OnetimeParking values(default, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 }

@@ -62,7 +62,7 @@ public class ConsoleClient implements ClientUI {
 				switch (choice) {
 				case 1:
 					LocalDateTime date = LocalDateTime.now().plusHours(3);
-					IncidentalParking request = new IncidentalParking(1, 1, 1, date, "user@email");
+					IncidentalParking request = new IncidentalParking(1, 1, "user@email", 1, 1, date);
 					System.out.println(request);
 					client.handleMessageFromClientUI(request);
 					break;
