@@ -1,25 +1,26 @@
 package cps.core;
 
-import java.sql.Date;
+import java.time.LocalDateTime ;
 
 public class ParkingExit extends CustomerAction {
+	private static final long serialVersionUID = 1L;
 
-	private Date exitTime;
+	private LocalDateTime  exitTime;
 	private int lotID;
 	private int carID;
 
-	public ParkingExit(int id, int customerID, Date exitTime, int lotID, int carID) {
+	public ParkingExit(int id, int customerID, LocalDateTime  exitTime, int lotID, int carID) {
 		super(id, customerID);
 		this.exitTime = exitTime;
 		this.lotID = lotID;
 		this.carID = carID;
 	}
 
-	public Date getExitTime() {
+	public LocalDateTime  getExitTime() {
 		return exitTime;
 	}
 
-	public void setExitTime(Date exitTime) {
+	public void setExitTime(LocalDateTime  exitTime) {
 		this.exitTime = exitTime;
 	}
 

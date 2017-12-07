@@ -1,9 +1,7 @@
 package cps.common;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public abstract class Utilities {
 	public static int stringToInteger(String s, int defaultValue) {
@@ -14,7 +12,7 @@ public abstract class Utilities {
 		}
 	}
 	
-	public static String dateToString(Date date) {
-		return new SimpleDateFormat(Constants.DATETIME_FORMAT).format(date);
+	public static String dateToString(LocalDateTime localDateTime) {
+		return new SimpleDateFormat(Constants.DATETIME_FORMAT).format(localDateTime);
 	}
 }

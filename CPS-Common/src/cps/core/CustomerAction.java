@@ -3,6 +3,7 @@ package cps.core;
 import java.io.Serializable;
 
 public abstract class CustomerAction implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private int id;
 	private int customerID;

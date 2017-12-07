@@ -3,7 +3,7 @@ package cps.core;
 import java.io.Serializable;
 
 public abstract class Person implements Serializable {
-
+	private static final long serialVersionUID = 1L;
 	private final int id;
 	private String email;
 	

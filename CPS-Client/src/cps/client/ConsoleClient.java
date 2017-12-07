@@ -2,8 +2,7 @@ package cps.client;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.sql.Date;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 import cps.common.Constants;
 import cps.common.Utilities;
@@ -62,7 +61,7 @@ public class ConsoleClient implements ClientUI {
 				
 				switch (choice) {
 				case 1:
-					Date date = new Date(Instant.now().toEpochMilli());
+					LocalDateTime date = LocalDateTime.now().plusHours(3);
 					IncidentalParking request = new IncidentalParking(1, 1, 1, date, "user@email");
 					client.handleMessageFromClientUI(request);
 					break;

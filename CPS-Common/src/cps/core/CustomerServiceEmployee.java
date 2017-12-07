@@ -1,6 +1,7 @@
 package cps.core;
 
 public abstract class CustomerServiceEmployee extends Employee {
+	private static final long serialVersionUID = 1L;
 
 	public CustomerServiceEmployee(int id, String email, String username, String password, String firstName,
 			String lastName, String jobTitle, int managerID, int departmentID) {

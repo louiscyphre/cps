@@ -1,6 +1,7 @@
 package cps.core;
 
 public abstract class Employee extends CompanyPerson {
+	private static final long serialVersionUID = 1L;
 
 	private int managerID;
 	private int departmentID;

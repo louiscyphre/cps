@@ -1,17 +1,18 @@
 package cps.core;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public abstract class ParkingRequest extends CustomerAction {
+	private static final long serialVersionUID = 1L;
 
 	private int carID;
-	private Date estimatedExitTime;
+	private LocalDateTime plannedEndTime;
 	private String email;
 
-	public ParkingRequest(int id, int customerID, int carID, Date estimatedExitTime, String email) {
+	public ParkingRequest(int id, int customerID, int carID, LocalDateTime plannedEndTime, String email) {
 		super(id, customerID);
 		this.carID = carID;
-		this.estimatedExitTime = estimatedExitTime;
+		this.plannedEndTime = plannedEndTime;
 		this.email = email;
 	}
 
@@ -23,12 +24,12 @@ public abstract class ParkingRequest extends CustomerAction {
 		this.carID = carID;
 	}
 
-	public Date getEstimatedExitTime() {
-		return estimatedExitTime;
+	public LocalDateTime getPlannedEndTime() {
+		return plannedEndTime;
 	}
 
-	public void setEstimatedExitTime(Date estimatedExitTime) {
-		this.estimatedExitTime = estimatedExitTime;
+	public void setPlannedEndTime(LocalDateTime plannedEndTime) {
+		this.plannedEndTime = plannedEndTime;
 	}
 
 	public String getEmail() {

@@ -1,15 +1,15 @@
 package cps.core;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class RegularSubscription extends SubscriptionRequest {
-
+	private static final long serialVersionUID = 1L;
 	private int lotID;
-	private Date endTime;
+	private LocalDateTime endTime;
 
-	public RegularSubscription(int id, int customerID, int customerID2, int carID, Date startDate, int lotID,
-			Date endTime) {
-		super(id, customerID, customerID2, carID, startDate);
+	public RegularSubscription(int id, int customerID, int carID, LocalDateTime startDate, int lotID,
+			LocalDateTime endTime) {
+		super(id, customerID, carID, startDate);
 		this.lotID = lotID;
 		this.endTime = endTime;
 	}
@@ -22,11 +22,11 @@ public class RegularSubscription extends SubscriptionRequest {
 		this.lotID = lotID;
 	}
 
-	public Date getEndTime() {
+	public LocalDateTime getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Date endTime) {
+	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
 	}
 }

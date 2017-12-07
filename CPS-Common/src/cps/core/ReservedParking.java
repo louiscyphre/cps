@@ -1,15 +1,16 @@
 package cps.core;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class ReservedParking extends ParkingRequest {
+	private static final long serialVersionUID = 1L;
 
 	private int lotID;
-	private Date startTime;
+	private LocalDateTime startTime;
 
-	public ReservedParking(int id, int customerID, int carID, Date estimatedExitTime, String email, int lotID,
-			Date startTime) {
-		super(id, customerID, carID, estimatedExitTime, email);
+	public ReservedParking(int id, int customerID, int carID, LocalDateTime plannedEndTime, String email, int lotID,
+			LocalDateTime startTime) {
+		super(id, customerID, carID, plannedEndTime, email);
 		this.lotID = lotID;
 		this.startTime = startTime;
 	}
@@ -22,11 +23,11 @@ public class ReservedParking extends ParkingRequest {
 		this.lotID = lotID;
 	}
 
-	public Date getStartTime() {
+	public LocalDateTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 

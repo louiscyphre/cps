@@ -1,11 +1,11 @@
 package cps.core;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class FullSubscription extends SubscriptionRequest {
+	private static final long serialVersionUID = 1L;
 
-	public FullSubscription(int id, int customerID, int customerID2, int carID, Date startDate) {
-		super(id, customerID, customerID2, carID, startDate);
-		// TODO Auto-generated constructor stub
+	public FullSubscription(int id, int customerID, int carID, LocalDateTime startDate) {
+		super(id, customerID, carID, startDate);
 	}
 }

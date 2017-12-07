@@ -1,6 +1,7 @@
 package cps.core;
 
 public class Complaint extends CustomerAction {
+	private static final long serialVersionUID = 1L;
 
 	private String content;
 

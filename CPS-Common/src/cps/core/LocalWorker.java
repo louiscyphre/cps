@@ -1,6 +1,7 @@
 package cps.core;
 
 public class LocalWorker extends LocalEmployee {
+	private static final long serialVersionUID = 1L;
 
 	public LocalWorker(int id, String email, String username, String password, String firstName, String lastName,
 			String jobTitle, int managerID, int departmentID) {

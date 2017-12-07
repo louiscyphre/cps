@@ -1,24 +1,25 @@
 package cps.core;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public abstract class SubscriptionRequest extends CustomerAction {
-
+	private static final long serialVersionUID = 1L;
 	private int customerID;
 	private int carID;
-	private Date startDate;
+	private LocalDateTime startDate;
 
-	public SubscriptionRequest(int id, int customerID, int customerID2, int carID, Date startDate) {
+	public SubscriptionRequest(int id, int customerID, int carID, LocalDateTime startDate) {
 		super(id, customerID);
-		customerID = customerID2;
 		this.carID = carID;
 		this.startDate = startDate;
 	}
 
+	@Override
 	public int getCustomerID() {
 		return customerID;
 	}
 
+	@Override
 	public void setCustomerID(int customerID) {
 		this.customerID = customerID;
 	}
@@ -31,11 +32,11 @@ public abstract class SubscriptionRequest extends CustomerAction {
 		this.carID = carID;
 	}
 
-	public Date getStartDate() {
+	public LocalDateTime getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(LocalDateTime startDate) {
 		this.startDate = startDate;
 	}
 
