@@ -1,9 +1,11 @@
 package cps.common;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public abstract class Utilities {
+	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT);
+	
 	public static int stringToInteger(String s, int defaultValue) {
 		try {
 			return Integer.parseInt(s);
@@ -13,6 +15,6 @@ public abstract class Utilities {
 	}
 	
 	public static String dateToString(LocalDateTime localDateTime) {
-		return new SimpleDateFormat(Constants.DATETIME_FORMAT).format(localDateTime);
+		return localDateTime.format(dateTimeFormatter);
 	}
 }
