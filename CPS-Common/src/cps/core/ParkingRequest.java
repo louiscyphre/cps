@@ -6,24 +6,24 @@ public abstract class ParkingRequest extends CustomerAction {
 	private static final long serialVersionUID = 1L;
 	public final static int TYPE = 2;
 
-	private int carID;
+	private String carID;
 	private int lotID;
 	private LocalDateTime plannedEndTime;
 	private String email;
 
-	public ParkingRequest(int id, int customerID, String email, int carID, int lotID, LocalDateTime plannedEndTime) {
-		super(id, customerID);
+	public ParkingRequest(int customerID, String email, String carID, int lotID, LocalDateTime plannedEndTime) {
+		super(customerID);
 		this.carID = carID;
 		this.lotID = lotID;
 		this.plannedEndTime = plannedEndTime;
 		this.email = email;
 	}
 
-	public int getCarID() {
+	public String getCarID() {
 		return carID;
 	}
 
-	public void setCarID(int carID) {
+	public void setCarID(String carID) {
 		this.carID = carID;
 	}
 

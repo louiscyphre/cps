@@ -13,10 +13,6 @@ public class ClientController extends AbstractClient {
 		openConnection();
 	}
 
-	public void display(String message) {
-		System.out.println("> " + message);
-	}
-
 	/**
 	 * This method handles all data that comes in from the server.
 	 *
@@ -25,7 +21,7 @@ public class ClientController extends AbstractClient {
 	 */
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		clientUI.display(msg.toString());
+		clientUI.display(msg);
 	}
 
 	/**

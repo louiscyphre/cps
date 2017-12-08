@@ -1,19 +1,19 @@
 package cps.core;
 
-import java.time.LocalDateTime ;
+import java.time.LocalDateTime;
 
 public class ParkingEntry extends CustomerAction {
 	private static final long serialVersionUID = 1L;
 
-	private LocalDateTime  entryTime;
+	private LocalDateTime entryTime;
 	private int entryLicenseID;
 	private int entryLicenseType;
 	private int lotID;
 	private int carID;
 
-	public ParkingEntry(int id, int customerID, LocalDateTime  entryTime, int entryLicenseID, int entryLicenseType, int lotID,
+	public ParkingEntry(int customerID, LocalDateTime entryTime, int entryLicenseID, int entryLicenseType, int lotID,
 			int carID) {
-		super(id, customerID);
+		super(customerID);
 		this.entryTime = entryTime;
 		this.entryLicenseID = entryLicenseID;
 		this.entryLicenseType = entryLicenseType;
@@ -21,11 +21,11 @@ public class ParkingEntry extends CustomerAction {
 		this.carID = carID;
 	}
 
-	public LocalDateTime  getEntryTime() {
+	public LocalDateTime getEntryTime() {
 		return entryTime;
 	}
 
-	public void setEntryTime(LocalDateTime  entryTime) {
+	public void setEntryTime(LocalDateTime entryTime) {
 		this.entryTime = entryTime;
 	}
 
