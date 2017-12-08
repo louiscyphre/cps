@@ -9,8 +9,8 @@ public class ParkingExit extends CustomerAction {
 	private int lotID;
 	private int carID;
 
-	public ParkingExit(int id, int customerID, LocalDateTime  exitTime, int lotID, int carID) {
-		super(id, customerID);
+	public ParkingExit(int customerID, LocalDateTime  exitTime, int lotID, int carID) {
+		super(customerID);
 		this.exitTime = exitTime;
 		this.lotID = lotID;
 		this.carID = carID;

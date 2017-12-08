@@ -8,8 +8,8 @@ public abstract class SubscriptionRequest extends CustomerAction {
 	private int carID;
 	private LocalDateTime startDate;
 
-	public SubscriptionRequest(int id, int customerID, int carID, LocalDateTime startDate) {
-		super(id, customerID);
+	public SubscriptionRequest(int customerID, int carID, LocalDateTime startDate) {
+		super(customerID);
 		this.carID = carID;
 		this.startDate = startDate;
 	}

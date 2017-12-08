@@ -5,8 +5,8 @@ public class Complaint extends CustomerAction {
 
 	private String content;
 
-	public Complaint(int id, int customerID, String content) {
-		super(id, customerID);
+	public Complaint(int customerID, String content) {
+		super(customerID);
 		this.content = content;
 	}
 

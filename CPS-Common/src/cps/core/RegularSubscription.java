@@ -7,9 +7,9 @@ public class RegularSubscription extends SubscriptionRequest {
 	private int lotID;
 	private LocalDateTime endTime;
 
-	public RegularSubscription(int id, int customerID, int carID, LocalDateTime startDate, int lotID,
+	public RegularSubscription(int customerID, int carID, LocalDateTime startDate, int lotID,
 			LocalDateTime endTime) {
-		super(id, customerID, carID, startDate);
+		super(customerID, carID, startDate);
 		this.lotID = lotID;
 		this.endTime = endTime;
 	}

@@ -3,10 +3,12 @@ package cps.client;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Scanner;
 
-import cps.common.Constants;
-import cps.common.Utilities;
-import cps.core.IncidentalParking;
+import cps.common.*;
+import cps.core.*;
+import cps.model.*;
 
 public class ConsoleClient implements ClientUI {
 	ClientController client;
@@ -35,48 +37,136 @@ public class ConsoleClient implements ClientUI {
 	 * @param message
 	 *          The string to be displayed.
 	 */
-	public void display(String message) {
-		System.out.println("> " + message);
+	@SuppressWarnings("unchecked")
+	public void display(Object message) {
+		System.out.println("Message received from server: " + message);
+		
+		if (message instanceof ServerResponse) {
+			ServerResponse response = (ServerResponse) message;
+			if (response.description.equals("Status query successful")) { // TODO: find a more elegant way to check this
+				Collection<Object> results = (Collection<Object>) response.data; 
+				for (Object entry : results) {
+					System.out.println(entry);
+				}
+			}
+		}
 	}
 
 	@Override
-	public void displayError(String message) {
-		System.out.println("> " + message);		
+	public void displayError(Object message) {
+		System.out.println("Error: " + message);		
+	}
+	
+	private LocalDateTime readTime(Scanner scanner) {
+		String timeStr = scanner.nextLine().trim();
+		return LocalDateTime.parse(timeStr);
+	}
+	
+	private IncidentalParking readParkingRequest() {
+		Scanner scanner = new Scanner(System.in);
+		boolean done = false;
+		
+		while (!done) {
+			try {
+				System.out.print("User ID> ");
+				int userID = Integer.parseInt(scanner.nextLine().trim());
+				
+				System.out.print("Email> ");
+				String email = scanner.nextLine().trim();
+				
+				System.out.print("Car ID> ");
+				String carID = scanner.nextLine().trim();
+				
+				System.out.print("Lot ID> ");
+				int lotID = Integer.parseInt(scanner.nextLine().trim());
+				
+				System.out.print("Planned end time> ");		
+				LocalDateTime date = readTime(scanner);
+				
+				IncidentalParking request = new IncidentalParking(userID, email, carID, lotID, date);
+				return request;
+			} catch (Exception ex) {
+				System.out.println(ex);
+				System.out.println("Invalid data format. Try again? [y/n] ");
+				if (scanner.nextLine().trim().equals("n")) {
+					done = true;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private void menuChoiceSendRequest() {
+		IncidentalParking request = readParkingRequest();
+		if (request != null) {
+			System.out.println("Sending parking request: " + request);
+			client.handleMessageFromClientUI(request);
+		}		
+	}
+	
+	@SuppressWarnings("resource")
+	private void menuChoiceViewRequests() {
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("User ID> ");
+		int userID = 0;
+		
+		try {
+			userID = Integer.parseInt(scanner.nextLine().trim());
+		} catch (Exception ex) {
+			System.out.println(ex);
+			System.out.println("Invalid data format.");
+			return;
+		}
+		
+		StatusQueryRequest request = new StatusQueryRequest(userID);
+		System.out.println("Sending status query: " + request);
+		client.handleMessageFromClientUI(request);		
 	}
 
 	/**
 	 * This method waits for input from the console. Once it is received, it sends
 	 * it to the client's message handler.
 	 */
-	public void interactWithUser() {
+	public void interactWithUser() {		
 		try {
 			BufferedReader fromConsole = new BufferedReader(new InputStreamReader(System.in));
-			String message;
+			String input;
 
-			while (true) {				
-				System.out.println("[1] Send Parking Request");
-				System.out.println("[2] Quit");				
-				message = fromConsole.readLine();
-				int choice = Utilities.stringToInteger(message, -1);
+			while (true) {
+				System.out.println("Main menu:");
+				System.out.println("[1] Request Incidental Parking");
+				System.out.println("[2] View my Parking Requests");
+				System.out.println("[3] Quit");				
+				input = fromConsole.readLine();
+				int choice = Utilities.stringToInteger(input, -1);
 				
 				switch (choice) {
 				case 1:
-					LocalDateTime date = LocalDateTime.now().plusHours(3);
-					IncidentalParking request = new IncidentalParking(1, 1, "user@email", 1, 1, date);
-					System.out.println(request);
-					client.handleMessageFromClientUI(request);
+					menuChoiceSendRequest();
 					break;
 				case 2:
+					menuChoiceViewRequests();
+					break;
+				case 3:
 					client.closeConnection();
 					return;
 				default:
-					System.out.println("Invalid choice. Please choose 1 or 2.");
+					System.out.println("Invalid choice. Please choose a number from 1 to 3.");
 				}
 			}
 		} catch (Exception ex) {
 			System.out.println("Unexpected error while reading from console!");
 			ex.printStackTrace();
 		}
+	}
+	
+	@SuppressWarnings("unused")
+	private void testTime() {
+		Scanner scanner = new Scanner(System.in);
+		LocalDateTime date = readTime(scanner);
+		System.out.println(date);
+		scanner.close();
 	}
 
 	public static void main(String[] args) {
@@ -97,5 +187,6 @@ public class ConsoleClient implements ClientUI {
 		
 		ConsoleClient app = new ConsoleClient(host, port);
 		app.interactWithUser();
+//		app.testTime();
 	}
 }

@@ -4,6 +4,8 @@ import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
 
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -36,21 +38,41 @@ public class ServerApplication extends AbstractServer {
 		}
 	}
 
-	private void insertIncidentalParking(IncidentalParking incidentalParking) {
+	private OnetimeParking insertIncidentalParking(IncidentalParking incidentalParking) {
 		Connection conn = null;
+		OnetimeParking onetimeParking = null;
+
 		try {
 			conn = databaseController.getConnection();
 			Timestamp startTime = new Timestamp(System.currentTimeMillis());
 			Timestamp plannedEndTime = Timestamp.valueOf(incidentalParking.getPlannedEndTime());
-			OnetimeParking onetimeParking = OnetimeParking.create(conn, IncidentalParking.TYPE,
-				incidentalParking.getCustomerID(), incidentalParking.getEmail(), incidentalParking.getCarID(),
-				incidentalParking.getLotID(), startTime, plannedEndTime, startTime, null);
-			System.out.println(onetimeParking);
+			onetimeParking = OnetimeParking.create(conn, IncidentalParking.TYPE, incidentalParking.getCustomerID(),
+					incidentalParking.getEmail(), incidentalParking.getCarID(), incidentalParking.getLotID(), startTime,
+					plannedEndTime, startTime, null);
+			// System.out.println(onetimeParking);
 		} catch (SQLException ex) {
 			databaseController.handleSQLException(ex);
 		} finally {
 			databaseController.closeConnection(conn);
 		}
+
+		return onetimeParking;
+	}
+	
+	private Collection<OnetimeParking> getOnetimeParkingEntriesForCustomer(int customerID) {
+		Connection conn = null;
+		Collection<OnetimeParking> results = null;
+		
+		try {
+			conn = databaseController.getConnection();
+			results = OnetimeParking.findByCustomerID(conn, customerID);
+		} catch (SQLException ex) {
+			databaseController.handleSQLException(ex);
+		} finally {
+			databaseController.closeConnection(conn);
+		}
+		
+		return results != null ? results : new LinkedList<OnetimeParking>();
 	}
 
 	/**
@@ -64,11 +86,15 @@ public class ServerApplication extends AbstractServer {
 	@Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		if (msg != null) {
-			System.out
-					.println("Message received: " + msg + ", from: " + client + ", type: " + msg.getClass().toString());
-			sendToClient(client, msg);
+			System.out.println("Message received: " + msg + ", from: " + client + ", type: " + msg.getClass().toString());
+			
 			if (msg instanceof IncidentalParking) {
-				insertIncidentalParking((IncidentalParking) msg);
+				OnetimeParking result = insertIncidentalParking((IncidentalParking) msg);
+				sendToClient(client, ServerResponse.decide("Entry creation", result));
+			} else if (msg instanceof StatusQueryRequest) {
+				StatusQueryRequest request = (StatusQueryRequest) msg;
+				Collection<OnetimeParking> result = getOnetimeParkingEntriesForCustomer(request.getCustomerID());
+				sendToClient(client, ServerResponse.decide("Status query", result));
 			}
 		} else {
 			System.out.println("Message received: " + msg + ", from: " + client);
