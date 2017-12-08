@@ -27,6 +27,7 @@ bin/
 tmp/
 *.tmp
 *.bak
+*.bak_*
 *.swp
 *~.nib
 local.properties
