@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 import cps.common.*;
 import cps.core.*;
-import cps.model.*;
 
 public class ConsoleClient implements ClientUI {
 	ClientController client;
