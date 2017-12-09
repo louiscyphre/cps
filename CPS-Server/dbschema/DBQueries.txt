@@ -1,0 +1,4 @@
+SELECT *
+FROM  Subscriptions S, CarsInSubscription CS
+JOIN on S.id=CS.subsID
+WHERE S.customerID=<custID> AND CS.carNo=<carNo> AND S.id=<subsID>
