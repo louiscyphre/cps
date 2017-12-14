@@ -16,13 +16,80 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `OnetimeParking`
+-- Table structure for table `car_transportation`
 --
 
-DROP TABLE IF EXISTS `OnetimeParking`;
+DROP TABLE IF EXISTS `car_transportation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `OnetimeParking` (
+CREATE TABLE `car_transportation` (
+  `customer_id` int(11) DEFAULT NULL,
+  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `auth_type` int(11) DEFAULT NULL,
+  `auth_id` int(11) DEFAULT NULL,
+  `lot_id` int(11) DEFAULT NULL,
+  `inserted_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `removed_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `complaint`
+--
+
+DROP TABLE IF EXISTS `complaint`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `complaint` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) DEFAULT NULL,
+  `description` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `employee_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `customer`
+--
+
+DROP TABLE IF EXISTS `customer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customer` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `balance` float DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `daily_statistics`
+--
+
+DROP TABLE IF EXISTS `daily_statistics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `daily_statistics` (
+  `day` date NOT NULL,
+  `realized_orders` int(11) DEFAULT NULL,
+  `canceled_orders` int(11) DEFAULT NULL,
+  `late_arrivals` int(11) DEFAULT NULL,
+  `complaints` int(11) DEFAULT NULL,
+  PRIMARY KEY (`day`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `onetime_service`
+--
+
+DROP TABLE IF EXISTS `onetime_service`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `onetime_service` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parking_type` int(11) DEFAULT NULL,
   `customer_id` int(11) DEFAULT NULL,
@@ -31,20 +98,49 @@ CREATE TABLE `OnetimeParking` (
   `lot_id` int(11) DEFAULT NULL,
   `planned_start_time` datetime DEFAULT NULL,
   `planned_end_time` datetime DEFAULT NULL,
-  `actual_start_time` datetime DEFAULT NULL,
-  `actual_end_time` datetime DEFAULT NULL,
+  `canceled` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `OnetimeParking`
+-- Table structure for table `parking_lot`
 --
 
-LOCK TABLES `OnetimeParking` WRITE;
-/*!40000 ALTER TABLE `OnetimeParking` DISABLE KEYS */;
-/*!40000 ALTER TABLE `OnetimeParking` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `parking_lot`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `parking_lot` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `street_address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `size` int(11) DEFAULT NULL,
+  `content` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `price1` float DEFAULT NULL,
+  `price2` float DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `subscription_service`
+--
+
+DROP TABLE IF EXISTS `subscription_service`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subscription_service` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `subs_type` int(11) DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lot_id` int(11) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `planned_exit_time` time DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -55,4 +151,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-08 21:16:00
+-- Dump completed on 2017-12-14 20:37:05

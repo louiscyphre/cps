@@ -6,8 +6,11 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Scanner;
 
+import cps.api.request.IncidentalParkingRequest;
+import cps.api.request.StatusQueryRequest;
+import cps.api.response.ServerResponse;
 import cps.common.*;
-import cps.core.*;
+import cps.api.*;
 
 public class ConsoleClient implements ClientUI {
 	ClientController client;
@@ -61,7 +64,7 @@ public class ConsoleClient implements ClientUI {
 		return LocalDateTime.parse(timeStr);
 	}
 	
-	private IncidentalParking readParkingRequest() {
+	private IncidentalParkingRequest readParkingRequest() {
 		Scanner scanner = new Scanner(System.in);
 		boolean done = false;
 		
@@ -82,7 +85,7 @@ public class ConsoleClient implements ClientUI {
 				System.out.print("Planned end time> ");		
 				LocalDateTime date = readTime(scanner);
 				
-				IncidentalParking request = new IncidentalParking(userID, email, carID, lotID, date);
+				IncidentalParkingRequest request = new IncidentalParkingRequest(userID, email, carID, lotID, date);
 				return request;
 			} catch (Exception ex) {
 				System.out.println(ex);
@@ -97,7 +100,7 @@ public class ConsoleClient implements ClientUI {
 	}
 	
 	private void menuChoiceSendRequest() {
-		IncidentalParking request = readParkingRequest();
+		IncidentalParkingRequest request = readParkingRequest();
 		if (request != null) {
 			System.out.println("Sending parking request: " + request);
 			client.handleMessageFromClientUI(request);
