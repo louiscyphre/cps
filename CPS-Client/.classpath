@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OCSF"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CPS-Server"/>
+	<classpathentry kind="lib" path="/CPS-Server/lib/gson-2.6.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

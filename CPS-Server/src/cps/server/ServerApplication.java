@@ -6,6 +6,9 @@ import ocsf.server.ConnectionToClient;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.LinkedList;
+
+import com.google.gson.Gson;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -15,28 +18,18 @@ import cps.api.request.*;
 import cps.api.response.*;
 
 public class ServerApplication extends AbstractServer {
+	DatabaseController databaseController;
+	
 	/**
 	 * Constructs an instance of the server application.
 	 *
 	 * @param port
 	 *            The port number to connect on.
 	 */
-
-	DatabaseController databaseController;
-
 	public ServerApplication(int port) throws Exception {
 		super(port);
 		databaseController = new DatabaseController(Constants.DB_HOST, Constants.DB_NAME, Constants.DB_USERNAME,
 				Constants.DB_PASSWORD);
-	}
-
-	private void sendToClient(ConnectionToClient client, Object msg) {
-		try {
-			client.sendToClient(msg);
-		} catch (Exception ex) {
-			System.out.println("ERROR - Could not send to client!");
-			ex.printStackTrace();
-		}
 	}
 
 	private OnetimeService insertIncidentalParking(IncidentalParkingRequest incidentalParking) {
@@ -73,7 +66,18 @@ public class ServerApplication extends AbstractServer {
 			databaseController.closeConnection(conn);
 		}
 		
-		return results != null ? results : new LinkedList<OnetimeService>();
+		return results;
+	}
+
+	private void sendToClient(ConnectionToClient client, Object msg) {
+		try {
+			Gson gson = new Gson();
+			System.out.print("Sending to client: " + gson.toJson(msg));
+			client.sendToClient(msg);
+		} catch (Exception ex) {
+			System.out.println("ERROR - Could not send to client!");
+			ex.printStackTrace();
+		}
 	}
 
 	/**
@@ -86,19 +90,26 @@ public class ServerApplication extends AbstractServer {
 	 */
 	@Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
-		if (msg != null) {
-			System.out.println("Message received: " + msg + ", from: " + client + ", type: " + msg.getClass().toString());
-			
-			if (msg instanceof IncidentalParkingRequest) {
-				OnetimeService result = insertIncidentalParking((IncidentalParkingRequest) msg);
-				sendToClient(client, ServerResponse.decide("Entry creation", result));
-			} else if (msg instanceof StatusQueryRequest) {
-				StatusQueryRequest request = (StatusQueryRequest) msg;
-				Collection<OnetimeService> result = getOnetimeParkingEntriesForCustomer(request.getCustomerID());
-				sendToClient(client, ServerResponse.decide("Status query", result));
+		if (msg == null) return;
+		
+		Gson gson = new Gson();
+		
+		System.out.println("Message from: " + client + ", type: " + msg.getClass().getSimpleName() + ", content: " + gson.toJson(msg));
+		
+		if (msg instanceof IncidentalParkingRequest) {
+			OnetimeService result = insertIncidentalParking((IncidentalParkingRequest) msg);
+			sendToClient(client, ServerResponse.decide("Entry creation", result != null));
+		}
+		
+		else if (msg instanceof ListOnetimeEntriesRequest) {
+			ListOnetimeEntriesRequest request = (ListOnetimeEntriesRequest) msg;
+			Collection<OnetimeService> result = getOnetimeParkingEntriesForCustomer(request.getCustomerID());
+			System.out.println(result);
+			if (result == null) {
+				sendToClient(client, ServerResponse.error("Entry retrieval failed"));
+			} else {
+				sendToClient(client, new ListOnetimeEntriesResponse("Entry retrieval successful", result));
 			}
-		} else {
-			System.out.println("Message received: " + msg + ", from: " + client);
 		}
 	}
 

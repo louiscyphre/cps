@@ -1,15 +1,20 @@
 package cps.client;
 
 import java.io.BufferedReader;
+
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
+
 import cps.api.request.IncidentalParkingRequest;
-import cps.api.request.StatusQueryRequest;
+import cps.api.request.ListOnetimeEntriesRequest;
+import cps.api.response.ListOnetimeEntriesResponse;
 import cps.api.response.ServerResponse;
 import cps.common.*;
+import cps.entities.models.OnetimeService;
 import cps.api.*;
 
 public class ConsoleClient implements ClientUI {
@@ -41,16 +46,20 @@ public class ConsoleClient implements ClientUI {
 	 */
 	@SuppressWarnings("unchecked")
 	public void display(Object message) {
-		System.out.println("Message received from server: " + message);
-		
-		if (message instanceof ServerResponse) {
-			ServerResponse response = (ServerResponse) message;
-			if (response.description.equals("Status query successful")) { // TODO: find a more elegant way to check this
-				Collection<Object> results = (Collection<Object>) response.data; 
-				for (Object entry : results) {
-					System.out.println(entry);
-				}
+		if (message instanceof ListOnetimeEntriesResponse) { // TODO: find a more elegant way to check this
+			ListOnetimeEntriesResponse response = (ListOnetimeEntriesResponse) message;
+			for (OnetimeService entry : response.getData()) {
+				System.out.println(entry);
 			}
+		}
+		
+		else if (message instanceof ServerResponse) {
+			ServerResponse response = (ServerResponse) message;
+			System.out.println("Response from server: " + response);
+		}
+		
+		else {
+			System.out.println("Unrecognized server response type: " + message.getClass());
 		}
 	}
 
@@ -121,8 +130,8 @@ public class ConsoleClient implements ClientUI {
 			return;
 		}
 		
-		StatusQueryRequest request = new StatusQueryRequest(userID);
-		System.out.println("Sending status query: " + request);
+		ListOnetimeEntriesRequest request = new ListOnetimeEntriesRequest(userID);
+//		System.out.println("Sending status query: " + request);
 		client.handleMessageFromClientUI(request);		
 	}
 

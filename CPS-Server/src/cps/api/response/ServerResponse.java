@@ -8,31 +8,51 @@ public class ServerResponse implements Serializable {
 	public static final int STATUS_OK = 1;
 	public static final int STATUS_ERROR = -1;
 	
-	public int status;
-	public String description;
-	public Object data;
+	private int status;
+	private String description;
 	
-	public ServerResponse(int status, String description, Object data) {
+	public ServerResponse() {
+		this.status = STATUS_OK;
+		this.description = "";
+	}
+	
+	public ServerResponse(int status, String description) {
 		this.status = status;
 		this.description = description;
-		this.data = data;
 	}
 	
-	public static ServerResponse ok(String description, Object data) {
-		return new ServerResponse(STATUS_OK, description, data);
+	public static ServerResponse ok(String description) {
+		return new ServerResponse(STATUS_OK, description);
 	}
 	
-	public static ServerResponse error(String description, Object data) {
-		return new ServerResponse(STATUS_ERROR, description, data);
+	public static ServerResponse error(String description) {
+		return new ServerResponse(STATUS_ERROR, description);
 	}
 	
-	public static ServerResponse decide(String description, Object data) {
-		if (data == null) {
-			return ServerResponse.error(description + " failed", data);
+	public static ServerResponse decide(String description, boolean condition) {
+		if (condition) {
+			return ServerResponse.ok(description + " successful");
 		} else {
-			return ServerResponse.ok(description + " successful", data);
+			return ServerResponse.error(description + " failed");
 		}		
 	}
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	
 	@Override
 	public String toString() {
@@ -46,6 +66,6 @@ public class ServerResponse implements Serializable {
 			statusRepr = Integer.toString(status);
 		}
 		
-		return "ServerResponse({status: " + statusRepr + ", description: " + description + "})"; 
+		return "{status: " + statusRepr + ", description: " + description + "})";
 	}
 }

@@ -13,8 +13,14 @@ public class IncidentalParkingRequest extends OnetimeParkingRequest {
 	}
 
 	@Override
-	public String toString() {;		
-		return "IncidentalParking(" + getCustomerID() + ", " + getCarID() + ", "
-			+ Utilities.dateToString(getPlannedEndTime()) + ", " + getEmail() + ")";
+	public String toString() {
+		StringBuilder buffer = new StringBuilder();
+		buffer.append("{");
+		buffer.append("customerID: " + getCustomerID() + ", ");
+		buffer.append("email: " + getEmail() + ", ");
+		buffer.append("carID: " + getCarID() + ", ");
+		buffer.append("lotID: " + getLotID() + ", ");
+		buffer.append("plannedEndTime: " + getPlannedEndTime() + "}");
+		return buffer.toString();
 	}
 }
