@@ -21,6 +21,7 @@ tmp/
 *.bak
 *.bak_*
 *.vpp~*
+*.vpp.lck
 *.swp
 *~.nib
 local.properties
