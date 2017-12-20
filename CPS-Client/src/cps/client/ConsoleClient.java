@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
@@ -17,6 +16,7 @@ import cps.common.*;
 import cps.entities.models.OnetimeService;
 import cps.api.*;
 
+@SuppressWarnings("unused")
 public class ConsoleClient implements ClientUI {
 	ClientController client;
 
@@ -44,10 +44,10 @@ public class ConsoleClient implements ClientUI {
 	 * @param message
 	 *          The string to be displayed.
 	 */
-	@SuppressWarnings("unchecked")
 	public void display(Object message) {
 		if (message instanceof ListOnetimeEntriesResponse) { // TODO: find a more elegant way to check this
 			ListOnetimeEntriesResponse response = (ListOnetimeEntriesResponse) message;
+			System.out.println("Parking requests for customer id: " + response.getCustomerID() + ", count: " + response.getData().size());
 			for (OnetimeService entry : response.getData()) {
 				System.out.println(entry);
 			}
@@ -172,7 +172,6 @@ public class ConsoleClient implements ClientUI {
 		}
 	}
 	
-	@SuppressWarnings("unused")
 	private void testTime() {
 		Scanner scanner = new Scanner(System.in);
 		LocalDateTime date = readTime(scanner);
