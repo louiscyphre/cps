@@ -5,7 +5,6 @@ import ocsf.server.ConnectionToClient;
 
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.LinkedList;
 
 import com.google.gson.Gson;
 
@@ -19,6 +18,7 @@ import cps.api.response.*;
 
 public class ServerApplication extends AbstractServer {
 	DatabaseController databaseController;
+	Config config;
 	
 	/**
 	 * Constructs an instance of the server application.
@@ -26,10 +26,11 @@ public class ServerApplication extends AbstractServer {
 	 * @param port
 	 *            The port number to connect on.
 	 */
-	public ServerApplication(int port) throws Exception {
+	public ServerApplication(int port, boolean remote) throws Exception {
 		super(port);
-		databaseController = new DatabaseController(Constants.DB_HOST, Constants.DB_NAME, Constants.DB_USERNAME,
-				Constants.DB_PASSWORD);
+		config = remote ? Config.getRemote() : Config.getLocal();
+		databaseController = new DatabaseController(config.get("db.host"), config.get("db.name"), config.get("db.username"),
+				config.get("db.password"));
 	}
 
 	private OnetimeService insertIncidentalParking(IncidentalParkingRequest incidentalParking) {
@@ -108,7 +109,7 @@ public class ServerApplication extends AbstractServer {
 			if (result == null) {
 				sendToClient(client, ServerResponse.error("Entry retrieval failed"));
 			} else {
-				sendToClient(client, new ListOnetimeEntriesResponse("Entry retrieval successful", result));
+				sendToClient(client, new ListOnetimeEntriesResponse("Entry retrieval successful", result, request.getCustomerID()));
 			}
 		}
 	}
@@ -149,9 +150,17 @@ public class ServerApplication extends AbstractServer {
 		} catch (Throwable t) {
 			port = Constants.DEFAULT_PORT;
 		}
+		
+		boolean remote = true;
+		
+		for (String elem : args) {
+			if (elem.equals("--local")) {
+				remote = false;
+			}
+		}
 
 		try {
-			ServerApplication server = new ServerApplication(port);
+			ServerApplication server = new ServerApplication(port, remote);
 			server.listen(); // Start listening for connections
 		} catch (Exception ex) {
 			System.out.println("ERROR - Could not listen for clients!");

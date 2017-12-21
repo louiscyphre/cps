@@ -6,10 +6,12 @@ import cps.entities.models.OnetimeService;
 public class ListOnetimeEntriesResponse extends ServerResponse {
 	private static final long serialVersionUID = 1L;
 	private Collection<OnetimeService> data;
+	private int customerID;
 
-	public ListOnetimeEntriesResponse(String description, Collection<OnetimeService> data) {
+	public ListOnetimeEntriesResponse(String description, Collection<OnetimeService> data, int customerID) {
 		super(STATUS_OK, description);
 		this.data = data;
+		this.customerID = customerID;
 	}
 
 	public Collection<OnetimeService> getData() {
@@ -18,5 +20,13 @@ public class ListOnetimeEntriesResponse extends ServerResponse {
 
 	public void setData(Collection<OnetimeService> data) {
 		this.data = data;
+	}
+
+	public int getCustomerID() {
+		return customerID;
+	}
+
+	public void setCustomerID(int customerID) {
+		this.customerID = customerID;
 	}
 }
