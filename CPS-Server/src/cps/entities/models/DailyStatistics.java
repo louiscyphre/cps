@@ -14,6 +14,12 @@ public class DailyStatistics extends Entity {
 
   private static final long serialVersionUID = 1L;
 
+  private LocalDate day;
+  private int realizedOrders;
+  private int canceledOrders;
+  private int lateArrivals;
+  private int complaints;
+
   public DailyStatistics(LocalDate day, int realizedOrders, int canceledOrders, int lateArrivals, int complaints) {
     super();
     this.day = day;
@@ -22,12 +28,6 @@ public class DailyStatistics extends Entity {
     this.lateArrivals = lateArrivals;
     this.complaints = complaints;
   }
-
-  private LocalDate day;
-  private int realizedOrders;
-  private int canceledOrders;
-  private int lateArrivals;
-  private int complaints;
 
   public LocalDate getDay() {
     return day;
