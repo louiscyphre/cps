@@ -1,26 +1,27 @@
 package cps.entities.models;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Complaint extends Entity {
+public class Complaint implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private int customerId;
+	private int customerID;
 	private String description;
 	private String status;
-	private int employeeId;
+	private int employeeID;
 
-	public Complaint(int id, int customerId, String description, String status, int employeeId) {
+	public Complaint(int id, int customerID, String description, String status, int employeeID) {
 		this.id = id;
-		this.customerId = customerId;
+		this.customerID = customerID;
 		this.description = description;
 		this.status = status;
-		this.employeeId = employeeId;
+		this.employeeID = employeeID;
 	}
 
-	public static Complaint buildFromQueryResult(ResultSet rs) throws SQLException {
-		return new Complaint(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getInt(5));
+	public Complaint (ResultSet rs) throws SQLException {
+		this(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getInt(5));
 	}
 
 	public int getId() {
@@ -31,12 +32,20 @@ public class Complaint extends Entity {
 		this.id = id;
 	}
 
-	public int getCustomerId() {
-		return customerId;
+	public int getCustomerID() {
+		return customerID;
 	}
 
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
+	public void setCustomerID(int customerID) {
+		this.customerID = customerID;
+	}
+
+	public int getEmployeeID() {
+		return employeeID;
+	}
+
+	public void setEmployeeID(int employeeID) {
+		this.employeeID = employeeID;
 	}
 
 	public String getDescription() {
@@ -53,14 +62,6 @@ public class Complaint extends Entity {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public int getEmployee_id() {
-		return employeeId;
-	}
-
-	public void setEmployee_id(int employee_id) {
-		this.employeeId = employee_id;
 	}
 
 }

@@ -1,9 +1,10 @@
 package cps.entities.models;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ParkingLot extends Entity {
+public class ParkingLot implements Serializable {
   private static final long serialVersionUID = 1L;
   // `id` int(11) NOT NULL AUTO_INCREMENT,
   // `street_address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -36,6 +37,11 @@ public class ParkingLot extends Entity {
     this.price1 = price1;
     this.price2 = price2;
   }
+
+  public ParkingLot(ResultSet rs) throws SQLException {
+    this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getFloat(5), rs.getFloat(6));
+  }
+  
 
   public int getId() {
     return id;
@@ -84,9 +90,4 @@ public class ParkingLot extends Entity {
   public void setPrice2(float price2) {
     this.price2 = price2;
   }
-
-  public static ParkingLot buildFromQueryResult(ResultSet rs) throws SQLException {
-    return new ParkingLot(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getFloat(5), rs.getFloat(6));
-  }
-  
 }

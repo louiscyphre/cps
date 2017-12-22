@@ -1,11 +1,12 @@
 package cps.entities.models;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 // Database entity for monthly parking subscriptions - regular or full both stored in the same table .
 
-public class SubscriptionService extends Entity {
+public class SubscriptionService implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	int id;
@@ -31,8 +32,10 @@ public class SubscriptionService extends Entity {
 		this.email = email;
 	}
 
-	public static SubscriptionService buildFromQueryResult(ResultSet rs) throws SQLException {
-		return new SubscriptionService(rs.getInt(1),rs.getInt(2),rs.getInt(3),rs.getInt(4),rs.getInt(5),rs.getTimestamp(6),rs.getTimestamp(7),rs.getTimestamp(8),rs.getString(9));}
+	public SubscriptionService(ResultSet rs) throws SQLException {
+		this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getTimestamp(6),
+				rs.getTimestamp(7), rs.getTimestamp(8), rs.getString(9));
+	}
 
 	public int getId() {
 		return id;
@@ -105,5 +108,5 @@ public class SubscriptionService extends Entity {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 }
