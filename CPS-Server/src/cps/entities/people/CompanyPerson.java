@@ -1,17 +1,22 @@
 package cps.entities.people;
 
-public abstract class CompanyPerson extends Person {
+import java.io.Serializable;
+
+public abstract class CompanyPerson implements User, Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
+	private int id;
+	private String email;
 	private String username;
 	private String password;
 	private String firstName;
 	private String lastName;
 	private String jobTitle;
-	
+
 	public CompanyPerson(int id, String email, String username, String password, String firstName, String lastName,
 			String jobTitle) {
-		super(id, email);
+		this.id = id;
+		this.email = email;
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
@@ -58,6 +63,21 @@ public abstract class CompanyPerson extends Person {
 	public void setJobTitle(String jobTitle) {
 		this.jobTitle = jobTitle;
 	}
-	
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 }
