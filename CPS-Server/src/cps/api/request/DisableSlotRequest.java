@@ -7,10 +7,10 @@ public class DisableSlotRequest extends ClientRequest {
 	private int j;
 	private int k;
 
-	public DisableSlotRequest(int userId, int lotId, int i, int j, int k) {
+	/*public DisableSlotRequest(int userId, int lotId, int i, int j, int k) {
 		super(userId);
 		// TODO Auto-generated constructor stub
-	}
+	}*/
 
 	public int getLotID() {
 		return lotID;

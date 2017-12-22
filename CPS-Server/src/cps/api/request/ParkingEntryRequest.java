@@ -11,7 +11,7 @@ public class ParkingEntryRequest extends ClientRequest {
 	private int lotID;
 	private int carID;
 
-	public ParkingEntryRequest(int customerID, LocalDateTime entryTime, int entryLicenseID, int entryLicenseType, int lotID,
+	/*public ParkingEntryRequest(int customerID, LocalDateTime entryTime, int entryLicenseID, int entryLicenseType, int lotID,
 			int carID) {
 		super(customerID);
 		this.entryTime = entryTime;
@@ -19,7 +19,7 @@ public class ParkingEntryRequest extends ClientRequest {
 		this.entryLicenseType = entryLicenseType;
 		this.lotID = lotID;
 		this.carID = carID;
-	}
+	}*/
 
 	public LocalDateTime getEntryTime() {
 		return entryTime;

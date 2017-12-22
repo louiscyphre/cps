@@ -8,11 +8,11 @@ public abstract class SubscriptionRequest extends ClientRequest {
 	private int carID;
 	private LocalDateTime startDate;
 
-	public SubscriptionRequest(int customerID, int carID, LocalDateTime startDate) {
+	/*public SubscriptionRequest(int customerID, int carID, LocalDateTime startDate) {
 		super(customerID);
 		this.carID = carID;
 		this.startDate = startDate;
-	}
+	}*/
 
 	@Override
 	public int getCustomerID() {

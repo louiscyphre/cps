@@ -13,7 +13,7 @@ public class Customer implements Serializable, User {
 	public String email;
 	public float balance;
 
-	public Customer(int id, String email, float balance) {
+	/*public Customer(int id, String email, float balance) {
 		this.id = id;
 		this.email = email;
 		this.balance = balance;
@@ -21,7 +21,7 @@ public class Customer implements Serializable, User {
 
 	public Customer(ResultSet rs) throws SQLException {
 		this(rs.getInt(1), rs.getString(2), rs.getFloat(3));
-	}
+	}*/
 
 	public int getId() {
 		return id;

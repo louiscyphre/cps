@@ -12,7 +12,7 @@ public class Complaint implements Serializable {
 	private String status;
 	private int employeeID;
 
-	public Complaint(int id, int customerID, String description, String status, int employeeID) {
+	/*public Complaint(int id, int customerID, String description, String status, int employeeID) {
 		this.id = id;
 		this.customerID = customerID;
 		this.description = description;
@@ -22,7 +22,7 @@ public class Complaint implements Serializable {
 
 	public Complaint (ResultSet rs) throws SQLException {
 		this(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getInt(5));
-	}
+	}*/
 
 	public int getId() {
 		return id;

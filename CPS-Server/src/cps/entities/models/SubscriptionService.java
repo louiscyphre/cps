@@ -19,7 +19,7 @@ public class SubscriptionService implements Serializable {
 	Timestamp endTime; // null for full subscription
 	String email;
 
-	public SubscriptionService(int id, int type, int customerID, int carID, int lotID, Timestamp startDate,
+	/*public SubscriptionService(int id, int type, int customerID, int carID, int lotID, Timestamp startDate,
 			Timestamp endDate, Timestamp endTime, String email) {
 		this.id = id;
 		this.type = type;
@@ -35,7 +35,7 @@ public class SubscriptionService implements Serializable {
 	public SubscriptionService(ResultSet rs) throws SQLException {
 		this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getTimestamp(6),
 				rs.getTimestamp(7), rs.getTimestamp(8), rs.getString(9));
-	}
+	}*/
 
 	public int getId() {
 		return id;

@@ -28,7 +28,7 @@ public class ParkingLot implements Serializable {
   // `price1` float DEFAULT NULL,
   // `price2` float DEFAULT NULL,
   
-  public ParkingLot(int id, String streetAddress, int size, String content, float price1, float price2) {
+  /*public ParkingLot(int id, String streetAddress, int size, String content, float price1, float price2) {
     super();
     this.id = id;
     this.streetAddress = streetAddress;
@@ -40,7 +40,7 @@ public class ParkingLot implements Serializable {
 
   public ParkingLot(ResultSet rs) throws SQLException {
     this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getFloat(5), rs.getFloat(6));
-  }
+  }*/
   
 
   public int getId() {

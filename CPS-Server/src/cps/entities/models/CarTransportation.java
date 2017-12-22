@@ -13,6 +13,22 @@ public class CarTransportation implements Serializable {
 	private String carID;
 	private int authType;
 	private int lotID;
+	private Timestamp insertedAt;
+	private Timestamp removedAt;
+
+	/*public CarTransportation(int customerID, String carID, int authType, int lotID, Timestamp insertedAt,
+			Timestamp removedAt) {
+		this.customerID = customerID;
+		this.carID = carID;
+		this.authType = authType;
+		this.lotID = lotID;
+		this.insertedAt = insertedAt;
+		this.removedAt = removedAt;
+	}*/
+
+	/*public CarTransportation(ResultSet rs) throws SQLException {
+		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getTimestamp(5), rs.getTimestamp(6));
+	}*/
 	
 	public int getCustomerID() {
 		return customerID;
@@ -60,23 +76,6 @@ public class CarTransportation implements Serializable {
 
 	public void setRemovedAt(Timestamp removedAt) {
 		this.removedAt = removedAt;
-	}
-
-	public CarTransportation(int customerID, String carID, int authType, int lotID, Timestamp insertedAt,
-			Timestamp removedAt) {
-		this.customerID = customerID;
-		this.carID = carID;
-		this.authType = authType;
-		this.lotID = lotID;
-		this.insertedAt = insertedAt;
-		this.removedAt = removedAt;
-	}
-
-	private Timestamp insertedAt;
-	private Timestamp removedAt;
-
-	public CarTransportation(ResultSet rs) throws SQLException {
-		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getTimestamp(5), rs.getTimestamp(6));
 	}
 
 }

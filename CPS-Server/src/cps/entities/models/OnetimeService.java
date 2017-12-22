@@ -26,7 +26,7 @@ public class OnetimeService implements Serializable {
 	private Timestamp plannedEndTime;
 	private boolean canceled;
 
-	public OnetimeService(int id, int type, int customerID, String email, String carID, int lotID,
+	/*public OnetimeService(int id, int type, int customerID, String email, String carID, int lotID,
 			Timestamp plannedStartTime, Timestamp plannedEndTime, boolean canceled) {
 		this.id = id;
 		this.type = type;
@@ -42,7 +42,7 @@ public class OnetimeService implements Serializable {
 	public OnetimeService(ResultSet rs) throws SQLException {
 		this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getInt(6),
 				rs.getTimestamp(7), rs.getTimestamp(8), rs.getBoolean(9));
-	}
+	}*/
 
 	public int getId() {
 		return id;
@@ -143,8 +143,9 @@ public class OnetimeService implements Serializable {
 		// conn.commit();
 		stmt.close();
 
-		return new OnetimeService(newID, type, customerID, email, carID, lotID, plannedStartTime, plannedEndTime,
-				canceled);
+		/*return new OnetimeService(newID, type, customerID, email, carID, lotID, plannedStartTime, plannedEndTime,
+				canceled);*/
+		return null;
 	}
 
 	public static Collection<OnetimeService> findByCustomerID(Connection conn, int userID) throws SQLException {
@@ -156,7 +157,7 @@ public class OnetimeService implements Serializable {
 		ResultSet rs = stmt.executeQuery();
 
 		while (rs.next()) {
-			results.add(new OnetimeService(rs));
+			//results.add(new OnetimeService(rs));
 		}
 
 		rs.close();

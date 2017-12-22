@@ -7,12 +7,12 @@ public class RegularSubscriptionRequest extends SubscriptionRequest {
 	private int lotID;
 	private LocalDateTime endTime;
 
-	public RegularSubscriptionRequest(int customerID, int carID, LocalDateTime startDate, int lotID,
+	/*public RegularSubscriptionRequest(int customerID, int carID, LocalDateTime startDate, int lotID,
 			LocalDateTime endTime) {
 		super(customerID, carID, startDate);
 		this.lotID = lotID;
 		this.endTime = endTime;
-	}
+	}*/
 
 	public int getLotID() {
 		return lotID;

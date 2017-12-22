@@ -21,7 +21,7 @@ public class DailyStatistics implements Serializable {
   private int lateArrivals;
   private int complaints;
 
-  public DailyStatistics(LocalDate day, int realizedOrders, int canceledOrders, int lateArrivals, int complaints) {
+  /*public DailyStatistics(LocalDate day, int realizedOrders, int canceledOrders, int lateArrivals, int complaints) {
     super();
     this.day = day;
     this.realizedOrders = realizedOrders;
@@ -32,7 +32,7 @@ public class DailyStatistics implements Serializable {
 
   public DailyStatistics(ResultSet rs) throws SQLException {
     this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
-  }
+  }*/
 
   public LocalDate getDay() {
     return day;

@@ -7,9 +7,9 @@ public abstract class ClientRequest implements Serializable {
 	
 	private int customerID;
 
-	public ClientRequest(int customerID) {
+	/*public ClientRequest(int customerID) {
 		this.customerID = customerID;
-	}
+	}*/
 
 	public int getCustomerID() {
 		return customerID;

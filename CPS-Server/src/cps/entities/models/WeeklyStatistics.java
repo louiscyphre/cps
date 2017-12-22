@@ -28,7 +28,7 @@ public class WeeklyStatistics implements Serializable {
 	private String canceledOrdersDist;
 	private String lateArrivalsDist;
 
-	public WeeklyStatistics(LocalDate start, float realizedOrdersMean, float canceledOrdersMean, float lateArrivalsMean,
+	/*public WeeklyStatistics(LocalDate start, float realizedOrdersMean, float canceledOrdersMean, float lateArrivalsMean,
 			float realizedOrdersMedian, float canceledOrdersMedian, float lateArrivalsMedian, String realizedOrdersDist,
 			String canceledOrdersDist, String lateArrivalsDist) {
 		super();
@@ -47,7 +47,7 @@ public class WeeklyStatistics implements Serializable {
 	public WeeklyStatistics(ResultSet rs) throws SQLException {
 		this(rs.getDate(1).toLocalDate(), rs.getFloat(2), rs.getFloat(3), rs.getFloat(4), rs.getFloat(5),
 				rs.getFloat(6), rs.getFloat(7), rs.getString(8), rs.getString(9), rs.getString(10));
-	}
+	}*/
 
 	public LocalDate getStart() {
 		return start;

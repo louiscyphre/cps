@@ -11,13 +11,13 @@ public abstract class OnetimeParkingRequest extends ClientRequest {
 	private LocalDateTime plannedEndTime;
 	private String email;
 
-	public OnetimeParkingRequest(int customerID, String email, String carID, int lotID, LocalDateTime plannedEndTime) {
+	/*public OnetimeParkingRequest(int customerID, String email, String carID, int lotID, LocalDateTime plannedEndTime) {
 		super(customerID);
 		this.carID = carID;
 		this.lotID = lotID;
 		this.plannedEndTime = plannedEndTime;
 		this.email = email;
-	}
+	}*/
 
 	public String getCarID() {
 		return carID;

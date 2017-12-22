@@ -9,12 +9,12 @@ public class ParkingExitRequest extends ClientRequest {
 	private int lotID;
 	private int carID;
 
-	public ParkingExitRequest(int customerID, LocalDateTime  exitTime, int lotID, int carID) {
+	/*public ParkingExitRequest(int customerID, LocalDateTime  exitTime, int lotID, int carID) {
 		super(customerID);
 		this.exitTime = exitTime;
 		this.lotID = lotID;
 		this.carID = carID;
-	}
+	}*/
 
 	public LocalDateTime  getExitTime() {
 		return exitTime;

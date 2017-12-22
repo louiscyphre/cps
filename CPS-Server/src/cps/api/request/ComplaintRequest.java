@@ -5,10 +5,10 @@ public class ComplaintRequest extends ClientRequest {
 
 	private String content;
 
-	public ComplaintRequest(int customerID, String content) {
+	/*public ComplaintRequest(int customerID, String content) {
 		super(customerID);
 		this.content = content;
-	}
+	}*/
 
 	public String getContent() {
 		return content;
