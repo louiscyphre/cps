@@ -63,7 +63,7 @@ public class OnetimeService extends Entity implements Serializable {
 
 		ResultSet keys = stmt.getGeneratedKeys();
 		int newID = 0;
-
+		
 		if (keys != null && keys.next()) {
 			newID = keys.getInt(1);
 			keys.close();
