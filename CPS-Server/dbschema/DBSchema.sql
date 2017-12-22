@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.1.29-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: cps
 -- ------------------------------------------------------
--- Server version	10.1.29-MariaDB
+-- Server version	5.7.20-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -74,11 +74,12 @@ DROP TABLE IF EXISTS `daily_statistics`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `daily_statistics` (
   `day` date NOT NULL,
+  `lot_id` int(11) NOT NULL,
   `realized_orders` int(11) DEFAULT NULL,
   `canceled_orders` int(11) DEFAULT NULL,
   `late_arrivals` int(11) DEFAULT NULL,
-  `complaints` int(11) DEFAULT NULL,
-  PRIMARY KEY (`day`)
+  `inactive_slots` int(11) DEFAULT NULL,
+  PRIMARY KEY (`day`,`lot_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -100,7 +101,7 @@ CREATE TABLE `onetime_service` (
   `planned_end_time` datetime DEFAULT NULL,
   `canceled` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -141,6 +142,28 @@ CREATE TABLE `subscription_service` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `weekly_statistics`
+--
+
+DROP TABLE IF EXISTS `weekly_statistics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `weekly_statistics` (
+  `start` date NOT NULL,
+  `realized_orders_mean` int(11) NOT NULL DEFAULT '0',
+  `realized_orders_median` int(11) NOT NULL DEFAULT '0',
+  `canceled_orders_mean` int(11) NOT NULL DEFAULT '0',
+  `canceled_orders_median` int(11) NOT NULL DEFAULT '0',
+  `late_arrivals_mean` int(11) NOT NULL DEFAULT '0',
+  `late_arrivals_median` int(11) NOT NULL DEFAULT '0',
+  `realized_orders_dist` varchar(300) NOT NULL,
+  `canceled_orders_dist` varchar(300) NOT NULL,
+  `late_arrivals_dist` varchar(300) NOT NULL,
+  PRIMARY KEY (`start`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -151,4 +174,4 @@ CREATE TABLE `subscription_service` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-14 20:37:05
+-- Dump completed on 2017-12-22 17:11:36
