@@ -5,7 +5,9 @@ import java.time.LocalTime;
 
 // Database entity for monthly parking subscriptions - regular or full both stored in the same table .
 
-public class SubscriptionService {
+public class SubscriptionService extends Entity {
+	private static final long serialVersionUID = 1L;
+
 	int id;
 	int type; // 1 = regular, 2 = full
 	int customerID;

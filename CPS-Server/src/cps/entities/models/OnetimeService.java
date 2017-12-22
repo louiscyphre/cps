@@ -14,7 +14,7 @@ import cps.common.Constants;
 
 // Database entity for one-time parking services - incidental parking or reserved parking both stored in the same table.
 
-public class OnetimeService implements Serializable {
+public class OnetimeService extends Entity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public int id;
 	public int type; // 1 = incidental, 2 = reserved
