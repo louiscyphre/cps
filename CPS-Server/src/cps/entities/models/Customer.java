@@ -1,5 +1,8 @@
 package cps.entities.models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import cps.entities.people.User;
 
 public class Customer extends Entity implements User {
@@ -13,6 +16,10 @@ public class Customer extends Entity implements User {
 		this.id = id;
 		this.email = email;
 		this.balance = balance;
+	}
+
+	public static Customer buildFromQueryResult(ResultSet rs) throws SQLException {
+		return new Customer(rs.getInt(1), rs.getString(2), rs.getFloat(3));
 	}
 
 	public int getId() {
