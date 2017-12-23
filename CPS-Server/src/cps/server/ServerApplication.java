@@ -3,13 +3,9 @@ package cps.server;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
 
-import java.sql.Timestamp;
 import java.util.Collection;
 
 import com.google.gson.Gson;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import cps.common.*;
 import cps.entities.models.*;
@@ -31,43 +27,6 @@ public class ServerApplication extends AbstractServer {
 		config = remote ? Config.getRemote() : Config.getLocal();
 		databaseController = new DatabaseController(config.get("db.host"), config.get("db.name"), config.get("db.username"),
 				config.get("db.password"));
-	}
-
-	private OnetimeService insertIncidentalParking(IncidentalParkingRequest incidentalParking) {
-		Connection conn = null;
-		OnetimeService onetimeParking = null;
-
-		try {
-			conn = databaseController.getConnection();
-			Timestamp startTime = new Timestamp(System.currentTimeMillis());
-			Timestamp plannedEndTime = Timestamp.valueOf(incidentalParking.getPlannedEndTime());
-			onetimeParking = OnetimeService.create(conn, IncidentalParkingRequest.TYPE, incidentalParking.getCustomerID(),
-					incidentalParking.getEmail(), incidentalParking.getCarID(), incidentalParking.getLotID(), startTime,
-					plannedEndTime, false);
-			// System.out.println(onetimeParking);
-		} catch (SQLException ex) {
-			databaseController.handleSQLException(ex);
-		} finally {
-			databaseController.closeConnection(conn);
-		}
-
-		return onetimeParking;
-	}
-	
-	private Collection<OnetimeService> getOnetimeParkingEntriesForCustomer(int customerID) {
-		Connection conn = null;
-		Collection<OnetimeService> results = null;
-		
-		try {
-			conn = databaseController.getConnection();
-			results = OnetimeService.findByCustomerID(conn, customerID);
-		} catch (SQLException ex) {
-			databaseController.handleSQLException(ex);
-		} finally {
-			databaseController.closeConnection(conn);
-		}
-		
-		return results;
 	}
 
 	private void sendToClient(ConnectionToClient client, Object msg) {
@@ -98,13 +57,13 @@ public class ServerApplication extends AbstractServer {
 		System.out.println("Message from: " + client + ", type: " + msg.getClass().getSimpleName() + ", content: " + gson.toJson(msg));
 		
 		if (msg instanceof IncidentalParkingRequest) {
-			OnetimeService result = insertIncidentalParking((IncidentalParkingRequest) msg);
+			OnetimeService result = databaseController.insertIncidentalParking((IncidentalParkingRequest) msg);
 			sendToClient(client, ServerResponse.decide("Entry creation", result != null));
 		}
 		
 		else if (msg instanceof ListOnetimeEntriesRequest) {
 			ListOnetimeEntriesRequest request = (ListOnetimeEntriesRequest) msg;
-			Collection<OnetimeService> result = getOnetimeParkingEntriesForCustomer(request.getCustomerID());
+			Collection<OnetimeService> result = databaseController.getOnetimeParkingEntriesForCustomer(request.getCustomerID());
 			System.out.println(result);
 			if (result == null) {
 				sendToClient(client, ServerResponse.error("Entry retrieval failed"));

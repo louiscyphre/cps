@@ -1,8 +1,6 @@
 package cps.entities.models;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class DailyStatistics implements Serializable {

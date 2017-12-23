@@ -1,8 +1,6 @@
 package cps.entities.models;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 // Database entity for monthly parking subscriptions - regular or full both stored in the same table .
 

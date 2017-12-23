@@ -44,11 +44,11 @@ public class OnetimeService implements Serializable {
 				rs.getTimestamp(7), rs.getTimestamp(8), rs.getBoolean(9));
 	}*/
 
-	public int getId() {
+	public int getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setID(int id) {
 		this.id = id;
 	}
 
@@ -143,9 +143,9 @@ public class OnetimeService implements Serializable {
 		// conn.commit();
 		stmt.close();
 
-		/*return new OnetimeService(newID, type, customerID, email, carID, lotID, plannedStartTime, plannedEndTime,
-				canceled);*/
-		return null;
+		OnetimeService result = new OnetimeService();
+		result.setID(newID);
+		return result;
 	}
 
 	public static Collection<OnetimeService> findByCustomerID(Connection conn, int userID) throws SQLException {

@@ -94,7 +94,7 @@ public class ConsoleClient implements ClientUI {
 				System.out.print("Planned end time> ");		
 				LocalDateTime date = readTime(scanner);
 				
-				IncidentalParkingRequest request = new IncidentalParkingRequest(userID, email, carID, lotID, date);
+				IncidentalParkingRequest request = new IncidentalParkingRequest();
 				return request;
 			} catch (Exception ex) {
 				System.out.println(ex);
@@ -130,7 +130,7 @@ public class ConsoleClient implements ClientUI {
 			return;
 		}
 		
-		ListOnetimeEntriesRequest request = new ListOnetimeEntriesRequest(userID);
+		ListOnetimeEntriesRequest request = new ListOnetimeEntriesRequest();
 //		System.out.println("Sending status query: " + request);
 		client.handleMessageFromClientUI(request);		
 	}

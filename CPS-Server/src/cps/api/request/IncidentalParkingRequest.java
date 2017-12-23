@@ -1,7 +1,5 @@
 package cps.api.request;
 
-import java.time.LocalDateTime;
-
 public class IncidentalParkingRequest extends OnetimeParkingRequest {
 	private static final long serialVersionUID = 1L;
 	public static final int TYPE = 1;
