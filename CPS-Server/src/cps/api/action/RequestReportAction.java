@@ -1,10 +1,10 @@
 package cps.api.action;
 
-public class StatisticalReportAction extends ServiceAction {
+public class RequestReportAction extends ServiceAction {
 	private static final long serialVersionUID = 1L;
 	private String reportType; 
 
-	public StatisticalReportAction(int userID, String reportType) {
+	public RequestReportAction(int userID, String reportType) {
 		super(userID);
 		this.reportType = reportType;
 	}

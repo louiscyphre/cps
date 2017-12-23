@@ -1,26 +1,16 @@
 package cps.api.action;
 
-public class DisableParkingSlotsAction extends ServiceAction {
+public class DisableParkingSlotsAction extends LotAction {
 	private static final long serialVersionUID = 1L;
-	private int lotID;
 	private int locationI;
 	private int locationJ;
 	private int locationK;
 
 	public DisableParkingSlotsAction(int userID, int lotID, int locationI, int locationJ, int locationK) {
-		super(userID);
-		this.lotID = lotID;
+		super(userID, lotID);
 		this.locationI = locationI;
 		this.locationJ = locationJ;
 		this.locationK = locationK;
-	}
-
-	public int getLotID() {
-		return lotID;
-	}
-
-	public void setLotID(int lotID) {
-		this.lotID = lotID;
 	}
 
 	public int getLocationI() {
