@@ -3,13 +3,9 @@ package cps.server;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
 
-import java.sql.Timestamp;
 import java.util.Collection;
 
 import com.google.gson.Gson;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import cps.common.*;
 import cps.entities.models.*;
