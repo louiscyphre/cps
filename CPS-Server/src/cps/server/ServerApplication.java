@@ -14,6 +14,7 @@ import cps.api.response.*;
 
 public class ServerApplication extends AbstractServer {
 	DatabaseController databaseController;
+	RobotController robotController = null;
 	Config config;
 	
 	/**
