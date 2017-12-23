@@ -1,6 +1,6 @@
 package cps.api.action;
 
-public class SetLotRedirectAction extends LotAction {
+public class SetFullLotAction extends LotAction {
 	private static final long serialVersionUID = 1L;
 	int alternativeLotID;
 
