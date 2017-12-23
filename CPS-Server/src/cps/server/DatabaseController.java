@@ -3,6 +3,11 @@ package cps.server;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Collection;
+
+import cps.api.request.IncidentalParkingRequest;
+import cps.entities.models.OnetimeService;
 
 public class DatabaseController {
 	String host;
@@ -36,5 +41,42 @@ public class DatabaseController {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public OnetimeService insertIncidentalParking(IncidentalParkingRequest incidentalParking) {
+		Connection conn = null;
+		OnetimeService onetimeParking = null;
+
+		try {
+			conn = getConnection();
+			Timestamp startTime = new Timestamp(System.currentTimeMillis());
+			Timestamp plannedEndTime = Timestamp.valueOf(incidentalParking.getPlannedEndTime());
+			onetimeParking = OnetimeService.create(conn, IncidentalParkingRequest.TYPE, incidentalParking.getCustomerID(),
+					incidentalParking.getEmail(), incidentalParking.getCarID(), incidentalParking.getLotID(), startTime,
+					plannedEndTime, false);
+			// System.out.println(onetimeParking);
+		} catch (SQLException ex) {
+			handleSQLException(ex);
+		} finally {
+			closeConnection(conn);
+		}
+
+		return onetimeParking;
+	}
+
+	public Collection<OnetimeService> getOnetimeParkingEntriesForCustomer(int customerID) {
+		Connection conn = null;
+		Collection<OnetimeService> results = null;
+		
+		try {
+			conn = getConnection();
+			results = OnetimeService.findByCustomerID(conn, customerID);
+		} catch (SQLException ex) {
+			handleSQLException(ex);
+		} finally {
+			closeConnection(conn);
+		}
+		
+		return results;
 	}
 }

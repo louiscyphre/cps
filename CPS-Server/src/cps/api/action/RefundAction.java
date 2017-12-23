@@ -5,8 +5,8 @@ public class RefundAction extends ServiceAction {
 	private double amount;
 	private int complaintID;
 
-	public RefundAction(double amount, int complaintID) {
-		super();
+	public RefundAction(int userID, double amount, int complaintID) {
+		super(userID);
 		this.amount = amount;
 		this.complaintID = complaintID;
 	}
