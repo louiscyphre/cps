@@ -20,6 +20,7 @@ public class ParkingLot implements Serializable {
 	private float price1;
 	private float price2;
 	private String alternativeLots;
+	private String robotIP;
 
 	/*
 	 * public ParkingLot(int id, String streetAddress, int size, String content,
