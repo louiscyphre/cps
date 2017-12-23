@@ -1,6 +1,6 @@
 package cps.api.action;
 
-public class InitParkingLot extends LotAction {
+public class InitLotAction extends LotAction {
 	private static final long serialVersionUID = 1L;
 	private int size;
 
