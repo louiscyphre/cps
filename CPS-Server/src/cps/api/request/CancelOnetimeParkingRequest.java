@@ -1,6 +1,6 @@
 package cps.api.request;
 
-public class CancelOnetimeParkingRequest extends ClientRequest {
+public class CancelOnetimeParkingRequest extends CustomerRequest {
 	public CancelOnetimeParkingRequest(int customerID, int onetimeServiceID) {
 		super(customerID);
 		this.onetimeServiceID = onetimeServiceID;

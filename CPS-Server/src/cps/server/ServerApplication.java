@@ -3,19 +3,21 @@ package cps.server;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
 
-import java.util.Collection;
-
 import com.google.gson.Gson;
 
 import cps.common.*;
-import cps.entities.models.*;
+import cps.server.controllers.DatabaseController;
+import cps.server.controllers.OnetimeParkingController;
+import cps.server.controllers.RobotController;
 import cps.api.request.*;
 import cps.api.response.*;
 
 public class ServerApplication extends AbstractServer {
-	DatabaseController databaseController;
-	RobotController robotController = null;
-	Config config;
+	private ServerConfig config;
+	private DatabaseController databaseController;
+	private RobotController robotController;
+	private OnetimeParkingController onetimeParkingController;
+	Gson gson = new Gson();
 	
 	/**
 	 * Constructs an instance of the server application.
@@ -23,16 +25,49 @@ public class ServerApplication extends AbstractServer {
 	 * @param port
 	 *            The port number to connect on.
 	 */
-	public ServerApplication(int port, boolean remote) throws Exception {
+	public ServerApplication(int port, ServerConfig config) throws Exception {
 		super(port);
-		config = remote ? Config.getRemote() : Config.getLocal();
+		this.config = config;		
 		databaseController = new DatabaseController(config.get("db.host"), config.get("db.name"), config.get("db.username"),
 				config.get("db.password"));
+		robotController = new RobotController();
+		onetimeParkingController = new OnetimeParkingController(this);
+	}
+
+	public ServerConfig getConfig() {
+		return config;
+	}
+
+	public void setConfig(ServerConfig config) {
+		this.config = config;
+	}
+
+	public DatabaseController getDatabaseController() {
+		return databaseController;
+	}
+
+	public void setDatabaseController(DatabaseController databaseController) {
+		this.databaseController = databaseController;
+	}
+
+	public RobotController getRobotController() {
+		return robotController;
+	}
+
+	public void setRobotController(RobotController robotController) {
+		this.robotController = robotController;
+	}
+
+	public OnetimeParkingController getOnetimeParkingController() {
+		return onetimeParkingController;
+	}
+
+	public void setOnetimeParkingController(OnetimeParkingController onetimeParkingController) {
+		this.onetimeParkingController = onetimeParkingController;
 	}
 
 	private void sendToClient(ConnectionToClient client, Object msg) {
 		try {
-			Gson gson = new Gson();
 			System.out.print("Sending to client: " + gson.toJson(msg));
 			client.sendToClient(msg);
 		} catch (Exception ex) {
@@ -44,33 +79,29 @@ public class ServerApplication extends AbstractServer {
 	/**
 	 * This method handles any messages received from the client.
 	 *
-	 * @param msg
+	 * @param message
 	 *            The message received from the client.
 	 * @param client
 	 *            The connection from which the message originated.
 	 */
 	@Override
-	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
-		if (msg == null) return;
+	protected void handleMessageFromClient(Object message, ConnectionToClient client) {
+		if (message == null) return;
 		
-		Gson gson = new Gson();
+		System.out.println("Message from: " + client + ", type: " + message.getClass().getSimpleName() + ", content: " + gson.toJson(message));
+		ServerResponse response = null;
 		
-		System.out.println("Message from: " + client + ", type: " + msg.getClass().getSimpleName() + ", content: " + gson.toJson(msg));
-		
-		if (msg instanceof IncidentalParkingRequest) {
-			OnetimeService result = databaseController.insertIncidentalParking((IncidentalParkingRequest) msg);
-			sendToClient(client, ServerResponse.decide("Entry creation", result != null));
+		// TODO: replace this with a better dispatch method
+		if (message instanceof IncidentalParkingRequest) {
+			response = onetimeParkingController.handle((IncidentalParkingRequest) message);
+		} else if (message instanceof ListOnetimeEntriesRequest) {
+			response = onetimeParkingController.handle((ListOnetimeEntriesRequest) message);
+		} else {
+			response = ServerResponse.error("Unknown request");
 		}
 		
-		else if (msg instanceof ListOnetimeEntriesRequest) {
-			ListOnetimeEntriesRequest request = (ListOnetimeEntriesRequest) msg;
-			Collection<OnetimeService> result = databaseController.getOnetimeParkingEntriesForCustomer(request.getCustomerID());
-			System.out.println(result);
-			if (result == null) {
-				sendToClient(client, ServerResponse.error("Entry retrieval failed"));
-			} else {
-				sendToClient(client, new ListOnetimeEntriesResponse("Entry retrieval successful", result, request.getCustomerID()));
-			}
+		if (response != null) {
+			sendToClient(client, response);
 		}
 	}
 
@@ -120,7 +151,8 @@ public class ServerApplication extends AbstractServer {
 		}
 
 		try {
-			ServerApplication server = new ServerApplication(port, remote);
+			ServerConfig config = remote ? ServerConfig.getRemote() : ServerConfig.getLocal();
+			ServerApplication server = new ServerApplication(port, config);
 			server.listen(); // Start listening for connections
 		} catch (Exception ex) {
 			System.out.println("ERROR - Could not listen for clients!");

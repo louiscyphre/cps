@@ -2,7 +2,7 @@ package cps.api.request;
 
 import java.time.LocalDateTime ;
 
-public class ParkingExitRequest extends ClientRequest {
+public class ParkingExitRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
 
 	private LocalDateTime  exitTime;

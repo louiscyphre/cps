@@ -1,6 +1,8 @@
-package cps.server;
+package cps.server.controllers;
 
 import java.util.Map;
+
+import cps.server.devices.Robot;
 
 public class RobotController {
 	@SuppressWarnings("unused")

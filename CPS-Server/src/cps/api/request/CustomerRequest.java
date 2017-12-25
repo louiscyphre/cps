@@ -1,13 +1,11 @@
 package cps.api.request;
 
-import java.io.Serializable;
-
-public abstract class ClientRequest implements Serializable {
+public abstract class CustomerRequest extends Request {
 	private static final long serialVersionUID = 1L;
 	
 	private int customerID;
 
-	public ClientRequest(int customerID) {
+	public CustomerRequest(int customerID) {
 		this.customerID = customerID;
 	}
 
