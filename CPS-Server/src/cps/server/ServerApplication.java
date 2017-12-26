@@ -75,7 +75,7 @@ public class ServerApplication extends AbstractServer {
 			System.out.print("Sending to client: " + gson.toJson(msg));
 			client.sendToClient(msg);
 		} catch (Exception ex) {
-			System.out.println("ERROR - Could not send to client!");
+			System.out.println("ERROR - Could not send to client!!!");
 			ex.printStackTrace();
 		}
 	}
