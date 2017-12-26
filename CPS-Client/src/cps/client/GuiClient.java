@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package cps.client;
 
@@ -10,7 +10,7 @@ package cps.client;
 public class GuiClient implements ClientUI {
 
   /**
-   * 
+   *
    */
   public GuiClient() {
     // TODO Auto-generated constructor stub
@@ -23,6 +23,7 @@ public class GuiClient implements ClientUI {
   public void display(Object message) {
     // TODO Auto-generated method stub
     // TODO bla bla bla
+    // FIXME aaaaa zdarov
   }
 
   /* (non-Javadoc)
