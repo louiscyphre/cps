@@ -22,7 +22,7 @@ public class GuiClient implements ClientUI {
   @Override
   public void display(Object message) {
     // TODO Auto-generated method stub
-
+    // TODO bla bla bla
   }
 
   /* (non-Javadoc)
