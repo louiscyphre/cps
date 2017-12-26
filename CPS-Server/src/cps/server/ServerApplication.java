@@ -7,17 +7,19 @@ import com.google.gson.Gson;
 
 import cps.common.*;
 import cps.server.controllers.DatabaseController;
+import cps.server.controllers.EntryExitController;
 import cps.server.controllers.OnetimeParkingController;
 import cps.server.controllers.RobotController;
 import cps.api.request.*;
 import cps.api.response.*;
 
 public class ServerApplication extends AbstractServer {
+  Gson gson = new Gson();
 	private ServerConfig config;
 	private DatabaseController databaseController;
 	private RobotController robotController;
 	private OnetimeParkingController onetimeParkingController;
-	Gson gson = new Gson();
+  private EntryExitController entryExitController;
 	
 	/**
 	 * Constructs an instance of the server application.
@@ -32,6 +34,8 @@ public class ServerApplication extends AbstractServer {
 				config.get("db.password"));
 		robotController = new RobotController();
 		onetimeParkingController = new OnetimeParkingController(this);
+		entryExitController = new EntryExitController(this);
+		
 	}
 
 	public ServerConfig getConfig() {
@@ -96,10 +100,11 @@ public class ServerApplication extends AbstractServer {
 			response = onetimeParkingController.handle((IncidentalParkingRequest) message);
 		} else if (message instanceof ListOnetimeEntriesRequest) {
 			response = onetimeParkingController.handle((ListOnetimeEntriesRequest) message);
+		} else if (message instanceof ParkingEntryRequest) {
+		  response = entryExitController.handle((ParkingEntryRequest) message);
 		} else {
 			response = ServerResponse.error("Unknown request");
 		}
-		
 		if (response != null) {
 			sendToClient(client, response);
 		}
