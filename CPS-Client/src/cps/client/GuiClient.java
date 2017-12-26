@@ -23,6 +23,7 @@ public class GuiClient implements ClientUI {
   public void display(Object message) {
     // TODO Auto-generated method stub
     // TODO bla bla bla
+    // FIXME jahaha
   }
 
   /* (non-Javadoc)
