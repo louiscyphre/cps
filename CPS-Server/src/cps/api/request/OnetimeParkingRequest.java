@@ -2,7 +2,7 @@ package cps.api.request;
 
 import java.time.LocalDateTime;
 
-public abstract class OnetimeParkingRequest extends ClientRequest {
+public abstract class OnetimeParkingRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
 	public final static int TYPE = 2;
 

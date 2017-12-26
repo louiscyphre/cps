@@ -2,7 +2,7 @@ package cps.api.request;
 
 import java.time.LocalDateTime;
 
-public abstract class SubscriptionRequest extends ClientRequest {
+public abstract class SubscriptionRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
 	private int customerID;
 	private int carID;

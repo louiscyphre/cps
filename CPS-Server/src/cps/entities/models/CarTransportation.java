@@ -1,45 +1,33 @@
 package cps.entities.models;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.sql.Timestamp;
 
-public class CarTransportation extends Entity {
+public class CarTransportation implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	/* key - customer id + car id + lot id + inserted at */
-	private int customerId;
-	private String carId;
+	private int customerID;
+	private String carID;
 	private int authType;
-	private int lotId;
-	private Timestamp insertedAt;
-	private Timestamp removedAt;
-
-	public CarTransportation(int customerId, String carId, int authType, int lotId, Timestamp insertedAt,
-			Timestamp removedAt) {
-		this.customerId = customerId;
-		this.carId = carId;
-		this.authType = authType;
-		this.lotId = lotId;
-		this.insertedAt = insertedAt;
-		this.removedAt = removedAt;
+	private int lotID;
+	
+	public int getCustomerID() {
+		return customerID;
 	}
 
-	public int getCustomerId() {
-		return customerId;
+	public void setCustomerID(int customerID) {
+		this.customerID = customerID;
 	}
 
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
+	public String getCarID() {
+		return carID;
 	}
 
-	public String getCarId() {
-		return carId;
-	}
-
-	public void setCarId(String carId) {
-		this.carId = carId;
+	public void setCarID(String carID) {
+		this.carID = carID;
 	}
 
 	public int getAuthType() {
@@ -50,12 +38,12 @@ public class CarTransportation extends Entity {
 		this.authType = authType;
 	}
 
-	public int getLotId() {
-		return lotId;
+	public int getLotID() {
+		return lotID;
 	}
 
-	public void setLotId(int lotId) {
-		this.lotId = lotId;
+	public void setLotID(int lotID) {
+		this.lotID = lotID;
 	}
 
 	public Timestamp getInsertedAt() {
@@ -74,9 +62,21 @@ public class CarTransportation extends Entity {
 		this.removedAt = removedAt;
 	}
 
-	public static CarTransportation buildFromQueryResult(ResultSet rs) throws SQLException {
-		return new CarTransportation(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getTimestamp(5),
-				rs.getTimestamp(6));
+	public CarTransportation(int customerID, String carID, int authType, int lotID, Timestamp insertedAt,
+			Timestamp removedAt) {
+		this.customerID = customerID;
+		this.carID = carID;
+		this.authType = authType;
+		this.lotID = lotID;
+		this.insertedAt = insertedAt;
+		this.removedAt = removedAt;
+	}
+
+	private Timestamp insertedAt;
+	private Timestamp removedAt;
+
+	public CarTransportation(ResultSet rs) throws SQLException {
+		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getTimestamp(5), rs.getTimestamp(6));
 	}
 
 }

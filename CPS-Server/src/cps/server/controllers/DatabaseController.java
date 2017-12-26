@@ -1,4 +1,4 @@
-package cps.server;
+package cps.server.controllers;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,8 +9,12 @@ public class DatabaseController {
 	String dbName;
 	String username;
 	String password;
+	
+	public interface DatabaseAction {
+		void perform(Connection conn) throws SQLException;
+	}
 
-	DatabaseController(String host, String dbName, String username, String password) throws Exception {
+	public DatabaseController(String host, String dbName, String username, String password) throws Exception {
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		this.host = host;
 		this.dbName = dbName;
@@ -35,6 +39,19 @@ public class DatabaseController {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public void performAction(DatabaseAction action) {
+		Connection conn = null;
+		
+		try {
+			conn = getConnection();
+			action.perform(conn);
+		} catch (SQLException ex) {
+			handleSQLException(ex);
+		} finally {
+			closeConnection(conn);
 		}
 	}
 }

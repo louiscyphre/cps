@@ -17,4 +17,20 @@ public abstract class Utilities {
 	public static String dateToString(LocalDateTime localDateTime) {
 		return localDateTime.format(dateTimeFormatter);
 	}
+	
+    public static class Holder<T> {
+        private T value;
+        
+        public Holder(T value) {
+            setValue(value);
+        }
+        
+        public T getValue() {
+            return value;
+        }
+        
+        public void setValue(T value) {
+            this.value = value;
+        }
+    }
 }

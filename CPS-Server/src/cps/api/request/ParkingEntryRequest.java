@@ -2,7 +2,7 @@ package cps.api.request;
 
 import java.time.LocalDateTime;
 
-public class ParkingEntryRequest extends ClientRequest {
+public class ParkingEntryRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
 
 	private LocalDateTime entryTime;

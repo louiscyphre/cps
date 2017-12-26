@@ -1,10 +1,11 @@
 package cps.entities.models;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public class DailyStatistics extends Entity {
+public class DailyStatistics implements Serializable {
   // `day` date NOT NULL,
   // `realized_orders` int(11) DEFAULT NULL,
   // `canceled_orders` int(11) DEFAULT NULL,
@@ -27,6 +28,10 @@ public class DailyStatistics extends Entity {
     this.canceledOrders = canceledOrders;
     this.lateArrivals = lateArrivals;
     this.complaints = complaints;
+  }
+
+  public DailyStatistics(ResultSet rs) throws SQLException {
+    this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
   }
 
   public LocalDate getDay() {
@@ -68,9 +73,4 @@ public class DailyStatistics extends Entity {
   public void setComplaints(int complaints) {
     this.complaints = complaints;
   }
-
-  public static DailyStatistics buildFromQueryResult(ResultSet rs) throws SQLException {
-    return new DailyStatistics(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5)) ;
-  }
-
 }

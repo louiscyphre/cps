@@ -1,6 +1,6 @@
 package cps.api.request;
 
-public class ComplaintRequest extends ClientRequest {
+public class ComplaintRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
 
 	private String content;

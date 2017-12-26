@@ -152,12 +152,12 @@ DROP TABLE IF EXISTS `weekly_statistics`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `weekly_statistics` (
   `start` date NOT NULL,
-  `realized_orders_mean` int(11) NOT NULL DEFAULT '0',
-  `realized_orders_median` int(11) NOT NULL DEFAULT '0',
-  `canceled_orders_mean` int(11) NOT NULL DEFAULT '0',
-  `canceled_orders_median` int(11) NOT NULL DEFAULT '0',
-  `late_arrivals_mean` int(11) NOT NULL DEFAULT '0',
-  `late_arrivals_median` int(11) NOT NULL DEFAULT '0',
+  `realized_orders_mean` float NOT NULL DEFAULT '0',
+  `canceled_orders_mean` float NOT NULL DEFAULT '0',
+  `late_arrivals_mean` float NOT NULL DEFAULT '0',
+  `realized_orders_median` float NOT NULL DEFAULT '0',
+  `canceled_orders_median` float NOT NULL DEFAULT '0',
+  `late_arrivals_median` float NOT NULL DEFAULT '0',
   `realized_orders_dist` varchar(300) NOT NULL,
   `canceled_orders_dist` varchar(300) NOT NULL,
   `late_arrivals_dist` varchar(300) NOT NULL,
