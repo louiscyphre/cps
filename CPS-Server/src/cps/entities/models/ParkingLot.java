@@ -1,8 +1,13 @@
 package cps.entities.models;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
+import cps.common.Constants;
 
 public class ParkingLot implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -23,7 +28,8 @@ public class ParkingLot implements Serializable {
 	private String alternativeLots;
 	private String robotIP;
 
-	public ParkingLot(int id, String streetAddress, int size, String content, float price1, float price2, String alternativeLots, String robotIP) {
+	public ParkingLot(int id, String streetAddress, int size, String content, float price1, float price2,
+			String alternativeLots, String robotIP) {
 		this.id = id;
 		this.streetAddress = streetAddress;
 		this.size = size;
@@ -35,7 +41,8 @@ public class ParkingLot implements Serializable {
 	}
 
 	public ParkingLot(ResultSet rs) throws SQLException {
-		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getFloat(5), rs.getFloat(6), rs.getString(7), rs.getString(8));
+		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getFloat(5), rs.getFloat(6),
+				rs.getString(7), rs.getString(8));
 	}
 
 	public int getId() {
@@ -100,5 +107,49 @@ public class ParkingLot implements Serializable {
 
 	public void setRobotIP(String robotIP) {
 		this.robotIP = robotIP;
+	}
+
+	public static ParkingLot create(Connection conn, String streetAddress, int size, float price1, float price2,
+			String robotIP) throws SQLException {
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_PARKING_LOT,
+				Statement.RETURN_GENERATED_KEYS);
+
+		int field = 1;
+		stmt.setString(field++, streetAddress);
+		stmt.setInt(field++, size);
+		stmt.setFloat(field++, price1);
+		stmt.setFloat(field++, price2);
+		stmt.setString(field++, robotIP);
+		stmt.executeUpdate();
+
+		ResultSet keys = stmt.getGeneratedKeys();
+		int newID = 0;
+
+		if (keys != null && keys.next()) {
+			newID = keys.getInt(1);
+			keys.close();
+		}
+
+		// conn.commit();
+		stmt.close();
+
+		return new ParkingLot(newID, streetAddress, size, "", price1, price2, "", robotIP);
+	}
+
+	public static ParkingLot findByID(Connection conn, int id) throws SQLException {
+		ParkingLot result = null;
+
+		PreparedStatement stmt = conn.prepareStatement("SELECT * FROM parking_lot WHERE id = ?");
+		stmt.setInt(1, id);
+		ResultSet rs = stmt.executeQuery();
+
+		if (rs.next()) {
+			result = new ParkingLot(rs);
+		}
+
+		rs.close();
+		stmt.close();
+
+		return result;
 	}
 }

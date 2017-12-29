@@ -16,6 +16,8 @@ import cps.common.Constants;
 
 public class OnetimeService implements Serializable {
 	private static final long serialVersionUID = 1L;
+	public static final int TYPE = 1;
+	
 	private int id;
 	private int type; // 1 = incidental, 2 = reserved
 	private int customerID;
@@ -140,7 +142,6 @@ public class OnetimeService implements Serializable {
 			keys.close();
 		}
 
-		// conn.commit();
 		stmt.close();
 
 		return new OnetimeService(newID, type, customerID, email, carID, lotID, plannedStartTime, plannedEndTime,
@@ -165,18 +166,25 @@ public class OnetimeService implements Serializable {
 		return results;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder buffer = new StringBuilder();
-		buffer.append("{");
-		buffer.append("id: " + id + ", ");
-		buffer.append("type: " + type + ", ");
-		buffer.append("customerID: " + customerID + ", ");
-		buffer.append("email: " + email + ", ");
-		buffer.append("carID: " + carID + ", ");
-		buffer.append("lotID: " + lotID + ", ");
-		buffer.append("plannedStartTime: " + plannedStartTime + ", ");
-		buffer.append("plannedEndTime: " + plannedEndTime + "}");
-		return buffer.toString();
+	public static OnetimeService findForEntry(Connection conn, int customerID, String carID, int lotID) throws SQLException {
+		OnetimeService result = null;
+		
+		PreparedStatement stmt = conn
+				.prepareStatement("SELECT * FROM onetime_service WHERE customer_id = ? AND car_id = ? AND lot_id = ? ORDER BY id DESC LIMIT 1");
+		
+		stmt.setInt(1, customerID);
+		stmt.setString(2, carID);
+		stmt.setInt(3, lotID);
+		
+		ResultSet rs = stmt.executeQuery();
+
+		if (rs.next()) {
+			result = new OnetimeService(rs);
+		}
+
+		rs.close();
+		stmt.close();
+
+		return result;
 	}
 }

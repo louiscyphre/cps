@@ -28,8 +28,8 @@ CREATE TABLE `car_transportation` (
   `auth_type` int(11) DEFAULT NULL,
   `auth_id` int(11) DEFAULT NULL,
   `lot_id` int(11) DEFAULT NULL,
-  `inserted_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `removed_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+  `inserted_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `removed_at` timestamp DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -94,7 +94,6 @@ CREATE TABLE `onetime_service` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parking_type` int(11) DEFAULT NULL,
   `customer_id` int(11) DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `car_id` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `lot_id` int(11) DEFAULT NULL,
   `planned_start_time` datetime DEFAULT NULL,
@@ -118,6 +117,8 @@ CREATE TABLE `parking_lot` (
   `content` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `price1` float DEFAULT NULL,
   `price2` float DEFAULT NULL,
+  `alternative_lots` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,  
+  `robot_ip` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -133,7 +134,6 @@ CREATE TABLE `subscription_service` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `subs_type` int(11) DEFAULT NULL,
   `customer_id` int(11) DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `car_id` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `lot_id` int(11) DEFAULT NULL,
   `start_date` date DEFAULT NULL,

@@ -9,18 +9,18 @@ import cps.common.*;
 import cps.server.controllers.DatabaseController;
 import cps.server.controllers.EntryExitController;
 import cps.server.controllers.OnetimeParkingController;
-import cps.server.controllers.RobotController;
+import cps.server.controllers.LotController;
 import cps.api.request.*;
 import cps.api.response.*;
 
 public class ServerApplication extends AbstractServer {
-  Gson gson = new Gson();
+	Gson gson = new Gson();
 	private ServerConfig config;
 	private DatabaseController databaseController;
-	private RobotController robotController;
+	private LotController lotController;
 	private OnetimeParkingController onetimeParkingController;
-  private EntryExitController entryExitController;
-	
+	private EntryExitController entryExitController;
+
 	/**
 	 * Constructs an instance of the server application.
 	 *
@@ -29,13 +29,13 @@ public class ServerApplication extends AbstractServer {
 	 */
 	public ServerApplication(int port, ServerConfig config) throws Exception {
 		super(port);
-		this.config = config;		
-		databaseController = new DatabaseController(config.get("db.host"), config.get("db.name"), config.get("db.username"),
-				config.get("db.password"));
-		robotController = new RobotController();
+		this.config = config;
+		databaseController = new DatabaseController(config.get("db.host"), config.get("db.name"),
+				config.get("db.username"), config.get("db.password"));
+		lotController = new LotController();
 		onetimeParkingController = new OnetimeParkingController(this);
 		entryExitController = new EntryExitController(this);
-		
+
 	}
 
 	public ServerConfig getConfig() {
@@ -54,12 +54,12 @@ public class ServerApplication extends AbstractServer {
 		this.databaseController = databaseController;
 	}
 
-	public RobotController getRobotController() {
-		return robotController;
+	public LotController getLotController() {
+		return lotController;
 	}
 
-	public void setRobotController(RobotController robotController) {
-		this.robotController = robotController;
+	public void setRobotController(LotController lotController) {
+		this.lotController = lotController;
 	}
 
 	public OnetimeParkingController getOnetimeParkingController() {
@@ -72,7 +72,7 @@ public class ServerApplication extends AbstractServer {
 
 	private void sendToClient(ConnectionToClient client, Object msg) {
 		try {
-			System.out.print("Sending to client: " + gson.toJson(msg));
+			System.out.println("Sending to client: " + gson.toJson(msg));
 			client.sendToClient(msg);
 		} catch (Exception ex) {
 			System.out.println("ERROR - Could not send to client!!!");
@@ -90,21 +90,28 @@ public class ServerApplication extends AbstractServer {
 	 */
 	@Override
 	protected void handleMessageFromClient(Object message, ConnectionToClient client) {
-		if (message == null) return;
+		if (message == null) {
+			return;
+		}
+
+		System.out.println("Message from: " + client + ", type: " + message.getClass().getSimpleName() + ", content: "
+				+ gson.toJson(message));
 		
-		System.out.println("Message from: " + client + ", type: " + message.getClass().getSimpleName() + ", content: " + gson.toJson(message));
 		ServerResponse response = null;
-		
+
 		// TODO: replace this with a better dispatch method
 		if (message instanceof IncidentalParkingRequest) {
 			response = onetimeParkingController.handle((IncidentalParkingRequest) message);
 		} else if (message instanceof ListOnetimeEntriesRequest) {
 			response = onetimeParkingController.handle((ListOnetimeEntriesRequest) message);
 		} else if (message instanceof ParkingEntryRequest) {
-		  response = entryExitController.handle((ParkingEntryRequest) message);
+			response = entryExitController.handle((ParkingEntryRequest) message);
+		} else if (message instanceof ParkingExitRequest) {
+			response = entryExitController.handle((ParkingExitRequest) message);
 		} else {
 			response = ServerResponse.error("Unknown request");
 		}
+		
 		if (response != null) {
 			sendToClient(client, response);
 		}
@@ -146,9 +153,9 @@ public class ServerApplication extends AbstractServer {
 		} catch (Throwable t) {
 			port = Constants.DEFAULT_PORT;
 		}
-		
+
 		boolean remote = true;
-		
+
 		for (String elem : args) {
 			if (elem.equals("--local")) {
 				remote = false;

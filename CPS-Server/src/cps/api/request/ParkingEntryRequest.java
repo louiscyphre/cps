@@ -1,48 +1,25 @@
 package cps.api.request;
 
-import java.time.LocalDateTime;
-
 public class ParkingEntryRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
-
-	private LocalDateTime entryTime;
-	private int entryLicenseID;
-	private int entryLicenseType;
+	
+	private int subscriptionID;
 	private int lotID;
-	private int carID;
+	private String carID;
 
-	public ParkingEntryRequest(int customerID, LocalDateTime entryTime, int entryLicenseID, int entryLicenseType, int lotID,
-			int carID) {
+	public ParkingEntryRequest(int customerID, int subscriptionID, int lotID, String carID) {
 		super(customerID);
-		this.entryTime = entryTime;
-		this.entryLicenseID = entryLicenseID;
-		this.entryLicenseType = entryLicenseType;
+		this.subscriptionID = subscriptionID;
 		this.lotID = lotID;
 		this.carID = carID;
 	}
 
-	public LocalDateTime getEntryTime() {
-		return entryTime;
+	public int getSubscriptionID() {
+		return subscriptionID;
 	}
 
-	public void setEntryTime(LocalDateTime entryTime) {
-		this.entryTime = entryTime;
-	}
-
-	public int getEntryLicenseID() {
-		return entryLicenseID;
-	}
-
-	public void setEntryLicenseID(int entryLicenseID) {
-		this.entryLicenseID = entryLicenseID;
-	}
-
-	public int getEntryLicenseType() {
-		return entryLicenseType;
-	}
-
-	public void setEntryLicenseType(int entryLicenseType) {
-		this.entryLicenseType = entryLicenseType;
+	public void setSubscriptionID(int subscriptionID) {
+		this.subscriptionID = subscriptionID;
 	}
 
 	public int getLotID() {
@@ -53,12 +30,11 @@ public class ParkingEntryRequest extends CustomerRequest {
 		this.lotID = lotID;
 	}
 
-	public int getCarID() {
+	public String getCarID() {
 		return carID;
 	}
 
-	public void setCarID(int carID) {
+	public void setCarID(String carID) {
 		this.carID = carID;
 	}
-
 }

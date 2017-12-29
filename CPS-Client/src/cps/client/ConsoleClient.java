@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 
 import cps.api.request.IncidentalParkingRequest;
 import cps.api.request.ListOnetimeEntriesRequest;
+import cps.api.request.ParkingEntryRequest;
 import cps.api.response.ListOnetimeEntriesResponse;
 import cps.api.response.ServerResponse;
 import cps.common.*;
@@ -19,6 +20,7 @@ import cps.api.*;
 @SuppressWarnings("unused")
 public class ConsoleClient implements ClientUI {
 	ClientController client;
+	Gson gson = new Gson();
 
 	/**
 	 * Constructs an instance of the ConsoleClient UI.
@@ -47,9 +49,9 @@ public class ConsoleClient implements ClientUI {
 	public void display(Object message) {
 		if (message instanceof ListOnetimeEntriesResponse) { // TODO: find a more elegant way to check this
 			ListOnetimeEntriesResponse response = (ListOnetimeEntriesResponse) message;
-			System.out.println("Parking requests for customer id: " + response.getCustomerID() + ", count: " + response.getData().size());
+			System.out.println("OnetimeService entries for customer id: " + response.getCustomerID() + ", count: " + response.getData().size());
 			for (OnetimeService entry : response.getData()) {
-				System.out.println(entry);
+				System.out.println(gson.toJson(entry));
 			}
 		}
 		
@@ -73,7 +75,8 @@ public class ConsoleClient implements ClientUI {
 		return LocalDateTime.parse(timeStr);
 	}
 	
-	private IncidentalParkingRequest readParkingRequest() {
+	private void menuChoiceIncidentalParking() {
+		IncidentalParkingRequest request = null;
 		Scanner scanner = new Scanner(System.in);
 		boolean done = false;
 		
@@ -94,8 +97,8 @@ public class ConsoleClient implements ClientUI {
 				System.out.print("Planned end time> ");		
 				LocalDateTime date = readTime(scanner);
 				
-				IncidentalParkingRequest request = new IncidentalParkingRequest(userID, email, carID, lotID, date);
-				return request;
+				request = new IncidentalParkingRequest(userID, email, carID, lotID, date);
+				done = true;
 			} catch (Exception ex) {
 				System.out.println(ex);
 				System.out.println("Invalid data format. Try again? [y/n] ");
@@ -105,15 +108,10 @@ public class ConsoleClient implements ClientUI {
 			}
 		}
 		
-		return null;
-	}
-	
-	private void menuChoiceSendRequest() {
-		IncidentalParkingRequest request = readParkingRequest();
 		if (request != null) {
-			System.out.println("Sending parking request: " + request);
+			System.out.println("Sending IncidentalParking request: " + gson.toJson(request));
 			client.handleMessageFromClientUI(request);
-		}		
+		}
 	}
 	
 	@SuppressWarnings("resource")
@@ -131,8 +129,46 @@ public class ConsoleClient implements ClientUI {
 		}
 		
 		ListOnetimeEntriesRequest request = new ListOnetimeEntriesRequest(userID);
-//		System.out.println("Sending status query: " + request);
+		System.out.println("Sending status query: " + gson.toJson(request));
 		client.handleMessageFromClientUI(request);		
+	}
+	
+	@SuppressWarnings("resource")
+	private void menuChoiceParkingEntry() {
+		ParkingEntryRequest request = null;
+		Scanner scanner = new Scanner(System.in);
+		boolean done = false;
+		
+		while (!done) {
+			try {
+				System.out.print("User ID> ");
+				int userID = Integer.parseInt(scanner.nextLine().trim());
+				
+				System.out.print("Car ID> ");
+				String carID = scanner.nextLine().trim();
+				
+				System.out.print("Subscription ID> ");
+				int subsID = Integer.parseInt(scanner.nextLine().trim());
+				
+				System.out.print("Lot ID> ");
+				int lotID = Integer.parseInt(scanner.nextLine().trim());
+				
+				request = new ParkingEntryRequest(userID, subsID, lotID, carID);
+				done = true;
+			} catch (Exception ex) {
+				System.out.println(ex);
+				System.out.println("Invalid data format. Try again? [y/n] ");
+				if (scanner.nextLine().trim().equals("n")) {
+					done = true;
+				}
+			}
+		}
+		
+		if (request != null) {
+			System.out.println("Sending ParkingEntry request: " + gson.toJson(request));
+			client.handleMessageFromClientUI(request);
+		}
+		
 	}
 
 	/**
@@ -148,18 +184,22 @@ public class ConsoleClient implements ClientUI {
 				System.out.println("Main menu:");
 				System.out.println("[1] Request Incidental Parking");
 				System.out.println("[2] View my Parking Requests");
-				System.out.println("[3] Quit");				
+				System.out.println("[3] Request Parking Entry");
+				System.out.println("[4] Quit");				
 				input = fromConsole.readLine();
 				int choice = Utilities.stringToInteger(input, -1);
 				
 				switch (choice) {
 				case 1:
-					menuChoiceSendRequest();
+					menuChoiceIncidentalParking();
 					break;
 				case 2:
 					menuChoiceViewRequests();
 					break;
 				case 3:
+					menuChoiceParkingEntry();
+					break;
+				case 4:
 					client.closeConnection();
 					return;
 				default:
@@ -171,7 +211,7 @@ public class ConsoleClient implements ClientUI {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	private void testTime() {
 		Scanner scanner = new Scanner(System.in);
 		LocalDateTime date = readTime(scanner);

@@ -1,9 +1,14 @@
 package cps.entities.models;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
+
+import cps.common.Constants;
 
 public class CarTransportation implements Serializable {
 
@@ -12,6 +17,7 @@ public class CarTransportation implements Serializable {
 	private int customerID;
 	private String carID;
 	private int authType;
+	private int authID;
 	private int lotID;
 	
 	public int getCustomerID() {
@@ -38,6 +44,14 @@ public class CarTransportation implements Serializable {
 		this.authType = authType;
 	}
 
+	public int getAuthID() {
+		return authID;
+	}
+
+	public void setAuthID(int authID) {
+		this.authID = authID;
+	}
+
 	public int getLotID() {
 		return lotID;
 	}
@@ -62,11 +76,12 @@ public class CarTransportation implements Serializable {
 		this.removedAt = removedAt;
 	}
 
-	public CarTransportation(int customerID, String carID, int authType, int lotID, Timestamp insertedAt,
+	public CarTransportation(int customerID, String carID, int authType, int authID, int lotID, Timestamp insertedAt,
 			Timestamp removedAt) {
 		this.customerID = customerID;
 		this.carID = carID;
 		this.authType = authType;
+		this.authID = authID;
 		this.lotID = lotID;
 		this.insertedAt = insertedAt;
 		this.removedAt = removedAt;
@@ -76,7 +91,34 @@ public class CarTransportation implements Serializable {
 	private Timestamp removedAt;
 
 	public CarTransportation(ResultSet rs) throws SQLException {
-		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getTimestamp(5), rs.getTimestamp(6));
+		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getTimestamp(6), rs.getTimestamp(7));
+	}
+
+	public static CarTransportation create(Connection conn, int customerID, String carID, int authType, int authID, int lotID) throws SQLException {
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_CAR_TRANSPORTATION,
+				Statement.RETURN_GENERATED_KEYS);
+
+		int field = 1;
+		stmt.setInt(field++, customerID);
+		stmt.setString(field++, carID);
+		stmt.setInt(field++, authType);
+		stmt.setInt(field++, authID);
+		stmt.setInt(field++, lotID);
+		stmt.executeUpdate();
+
+		ResultSet keys = stmt.getGeneratedKeys();
+		Timestamp insertedAt = null;
+		Timestamp removedAt = null;
+
+		if (keys != null && keys.next()) {
+			insertedAt = keys.getTimestamp(1);
+			removedAt = keys.getTimestamp(2);
+			keys.close();
+		}
+		
+		stmt.close();
+
+		return new CarTransportation(customerID, carID, authType, authID, lotID, insertedAt, removedAt);
 	}
 
 }
