@@ -130,7 +130,6 @@ public class ParkingLot implements Serializable {
 			keys.close();
 		}
 
-		// conn.commit();
 		stmt.close();
 
 		return new ParkingLot(newID, streetAddress, size, "", price1, price2, "", robotIP);

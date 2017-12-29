@@ -32,7 +32,7 @@ public class ServerApplication extends AbstractServer {
 		this.config = config;
 		databaseController = new DatabaseController(config.get("db.host"), config.get("db.name"),
 				config.get("db.username"), config.get("db.password"));
-		lotController = new LotController();
+		lotController = new LotController(this);
 		onetimeParkingController = new OnetimeParkingController(this);
 		entryExitController = new EntryExitController(this);
 
