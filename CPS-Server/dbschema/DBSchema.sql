@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: cps
+-- Host: softengproject.cspvcqknb3vj.eu-central-1.rds.amazonaws.com    Database: kiwi_schema
 -- ------------------------------------------------------
--- Server version	5.7.20-log
+-- Server version	5.6.37-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,13 +23,14 @@ DROP TABLE IF EXISTS `car_transportation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `car_transportation` (
-  `customer_id` int(11) DEFAULT NULL,
-  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `auth_type` int(11) DEFAULT NULL,
-  `auth_id` int(11) DEFAULT NULL,
-  `lot_id` int(11) DEFAULT NULL,
-  `inserted_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `removed_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+  `customer_id` int(10) NOT NULL,
+  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `auth_type` int(10) NOT NULL,
+  `auth_id` int(10) NOT NULL,
+  `lot_id` int(10) NOT NULL,
+  `inserted_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `removed_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`customer_id`,`car_id`,`inserted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -41,11 +42,11 @@ DROP TABLE IF EXISTS `complaint`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `complaint` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `customer_id` int(11) DEFAULT NULL,
+  `id` int(10) NOT NULL,
+  `customer_id` int(10) NOT NULL,
   `description` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `employee_id` int(11) DEFAULT NULL,
+  `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Processing',
+  `employee_id` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -59,9 +60,12 @@ DROP TABLE IF EXISTS `customer`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `customer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `balance` float DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `username` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `balance` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -74,12 +78,31 @@ DROP TABLE IF EXISTS `daily_statistics`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `daily_statistics` (
   `day` date NOT NULL,
-  `lot_id` int(11) NOT NULL,
-  `realized_orders` int(11) DEFAULT NULL,
-  `canceled_orders` int(11) DEFAULT NULL,
-  `late_arrivals` int(11) DEFAULT NULL,
-  `inactive_slots` int(11) DEFAULT NULL,
+  `lot_id` int(10) NOT NULL,
+  `realized_orders` int(10) DEFAULT '0',
+  `canceled_orders` int(10) DEFAULT '0',
+  `late_arrivals` int(10) DEFAULT '0',
+  `inactive_slots` int(10) DEFAULT '0',
   PRIMARY KEY (`day`,`lot_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `employee`
+--
+
+DROP TABLE IF EXISTS `employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `employee` (
+  `id` int(10) NOT NULL,
+  `username` varchar(45) CHARACTER SET latin1 NOT NULL,
+  `password` varchar(45) CHARACTER SET latin1 NOT NULL,
+  `dept_type` varchar(45) CHARACTER SET latin1 DEFAULT NULL,
+  `lot_id` int(10) DEFAULT NULL,
+  `permissions` varchar(30) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -91,17 +114,17 @@ DROP TABLE IF EXISTS `onetime_service`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `onetime_service` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parking_type` int(11) DEFAULT NULL,
-  `customer_id` int(11) DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `lot_id` int(11) DEFAULT NULL,
-  `planned_start_time` datetime DEFAULT NULL,
-  `planned_end_time` datetime DEFAULT NULL,
-  `canceled` bit(1) DEFAULT NULL,
+  `id` int(10) NOT NULL,
+  `parking_type` int(10) NOT NULL,
+  `customer_id` int(10) NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lot_id` int(10) NOT NULL,
+  `planned_start_time` datetime NOT NULL,
+  `planned_end_time` datetime NOT NULL,
+  `canceled` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -112,12 +135,14 @@ DROP TABLE IF EXISTS `parking_lot`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `parking_lot` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `street_address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `size` int(11) DEFAULT NULL,
-  `content` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `price1` float DEFAULT NULL,
-  `price2` float DEFAULT NULL,
+  `id` int(10) NOT NULL,
+  `street_address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `size` int(10) NOT NULL,
+  `content` varchar(2000) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `price1` float NOT NULL DEFAULT '0',
+  `price2` float NOT NULL DEFAULT '0',
+  `alternative_lots` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `robot_ip` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -130,14 +155,14 @@ DROP TABLE IF EXISTS `subscription_service`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `subscription_service` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `subs_type` int(11) DEFAULT NULL,
-  `customer_id` int(11) DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `lot_id` int(11) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
+  `id` int(10) NOT NULL,
+  `subs_type` int(10) NOT NULL,
+  `customer_id` int(10) NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lot_id` int(10) DEFAULT '0',
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
   `planned_exit_time` time DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -152,16 +177,17 @@ DROP TABLE IF EXISTS `weekly_statistics`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `weekly_statistics` (
   `start` date NOT NULL,
-  `realized_orders_mean` float NOT NULL DEFAULT '0',
-  `canceled_orders_mean` float NOT NULL DEFAULT '0',
-  `late_arrivals_mean` float NOT NULL DEFAULT '0',
-  `realized_orders_median` float NOT NULL DEFAULT '0',
-  `canceled_orders_median` float NOT NULL DEFAULT '0',
-  `late_arrivals_median` float NOT NULL DEFAULT '0',
+  `lot_id` int(10) NOT NULL,
+  `realized_orders_mean` double NOT NULL DEFAULT '0',
+  `canceled_orders_mean` double NOT NULL DEFAULT '0',
+  `late_arrivals_mean` double NOT NULL DEFAULT '0',
+  `realized_orders_median` double NOT NULL DEFAULT '0',
+  `canceled_orders_median` double NOT NULL DEFAULT '0',
+  `late_arrivals_median` double NOT NULL DEFAULT '0',
   `realized_orders_dist` varchar(300) NOT NULL,
   `canceled_orders_dist` varchar(300) NOT NULL,
   `late_arrivals_dist` varchar(300) NOT NULL,
-  PRIMARY KEY (`start`)
+  PRIMARY KEY (`start`,`lot_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -174,4 +200,4 @@ CREATE TABLE `weekly_statistics` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-22 17:11:36
+-- Dump completed on 2017-12-29 19:14:31
