@@ -6,12 +6,10 @@ import ocsf.server.ConnectionToClient;
 import com.google.gson.Gson;
 
 import cps.common.*;
-import cps.server.controllers.DatabaseController;
-import cps.server.controllers.EntryExitController;
-import cps.server.controllers.OnetimeParkingController;
-import cps.server.controllers.LotController;
+import cps.api.action.*;
 import cps.api.request.*;
 import cps.api.response.*;
+import cps.server.controllers.*;
 
 public class ServerApplication extends AbstractServer {
 	Gson gson = new Gson();
@@ -108,6 +106,8 @@ public class ServerApplication extends AbstractServer {
 			response = entryExitController.handle((ParkingEntryRequest) message);
 		} else if (message instanceof ParkingExitRequest) {
 			response = entryExitController.handle((ParkingExitRequest) message);
+		} else if (message instanceof InitLotAction) {
+			response = lotController.handle((InitLotAction) message);
 		} else {
 			response = ServerResponse.error("Unknown request");
 		}

@@ -8,14 +8,12 @@ import java.util.Scanner;
 
 import com.google.gson.Gson;
 
-import cps.api.request.IncidentalParkingRequest;
-import cps.api.request.ListOnetimeEntriesRequest;
-import cps.api.request.ParkingEntryRequest;
-import cps.api.response.ListOnetimeEntriesResponse;
-import cps.api.response.ServerResponse;
 import cps.common.*;
-import cps.entities.models.OnetimeService;
-import cps.api.*;
+import cps.api.action.*;
+import cps.api.request.*;
+import cps.api.response.*;
+import cps.entities.models.*;
+import cps.entities.people.*;
 
 @SuppressWarnings("unused")
 public class ConsoleClient implements ClientUI {
@@ -171,6 +169,46 @@ public class ConsoleClient implements ClientUI {
 		
 	}
 
+	@SuppressWarnings("resource")
+	private void menuChoiceInitParkingLot() {
+		InitLotAction request = null;
+		Scanner scanner = new Scanner(System.in);
+		boolean done = false;
+		
+		while (!done) {
+			try {
+				System.out.print("Street Address> ");
+				String streetAddress = scanner.nextLine().trim();
+
+				System.out.print("Cars per row> ");
+				int width = Integer.parseInt(scanner.nextLine().trim());
+				
+				System.out.print("Price for IncidentalParkingRequest> ");
+				float price1 = Float.parseFloat(scanner.nextLine().trim());
+				
+				System.out.print("Price for ReservedParkingRequest> ");
+				float price2 = Float.parseFloat(scanner.nextLine().trim());
+
+				System.out.print("Robot IP> ");
+				String robotIP = scanner.nextLine().trim();
+				
+				request = new InitLotAction(1, streetAddress, width, price1, price2, robotIP);
+				done = true;
+			} catch (Exception ex) {
+				System.out.println(ex);
+				System.out.println("Invalid data format. Try again? [y/n] ");
+				if (scanner.nextLine().trim().equals("n")) {
+					done = true;
+				}
+			}
+		}
+		
+		if (request != null) {
+			System.out.println("Sending InitLotAction request: " + gson.toJson(request));
+			client.handleMessageFromClientUI(request);
+		}		
+	}
+
 	/**
 	 * This method waits for input from the console. Once it is received, it sends
 	 * it to the client's message handler.
@@ -182,26 +220,30 @@ public class ConsoleClient implements ClientUI {
 
 			while (true) {
 				System.out.println("Main menu:");
-				System.out.println("[1] Request Incidental Parking");
-				System.out.println("[2] View my Parking Requests");
-				System.out.println("[3] Request Parking Entry");
-				System.out.println("[4] Quit");				
+				System.out.println("[1] Quit");
+				System.out.println("[2] Request Incidental Parking");
+				System.out.println("[3] View my Parking Requests");
+				System.out.println("[4] Request Parking Entry");
+				System.out.println("[5] Init Parking Lot");
 				input = fromConsole.readLine();
 				int choice = Utilities.stringToInteger(input, -1);
 				
 				switch (choice) {
 				case 1:
-					menuChoiceIncidentalParking();
-					break;
-				case 2:
-					menuChoiceViewRequests();
-					break;
-				case 3:
-					menuChoiceParkingEntry();
-					break;
-				case 4:
 					client.closeConnection();
 					return;
+				case 2:
+					menuChoiceIncidentalParking();
+					break;
+				case 3:
+					menuChoiceViewRequests();
+					break;
+				case 4:
+					menuChoiceParkingEntry();
+					break;
+				case 5:
+					menuChoiceInitParkingLot();
+					break;
 				default:
 					System.out.println("Invalid choice. Please choose a number from 1 to 3.");
 				}

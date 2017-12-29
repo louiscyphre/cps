@@ -1,15 +1,12 @@
 package cps.server.controllers;
 
-import java.sql.Timestamp;
 import java.util.Map;
 
 import cps.api.action.InitLotAction;
-import cps.api.request.IncidentalParkingRequest;
 import cps.api.response.ServerResponse;
 import cps.common.Utilities.Holder;
 import cps.server.ServerApplication;
 import cps.server.devices.Robot;
-import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 
 public class LotController extends RequestController {
