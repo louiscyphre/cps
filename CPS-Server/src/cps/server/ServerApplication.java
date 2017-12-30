@@ -76,10 +76,10 @@ public class ServerApplication extends AbstractServer {
 	}
 
 	/**
-	 * Send to client.
+	 * Send Json serialisible object to client.
 	 *
-	 * @param client the client
-	 * @param msg the msg
+	 * @param client The client object
+	 * @param msg The Object to be serialized and sent
 	 */
 	private void sendToClient(ConnectionToClient client, Object msg) {
 		try {
