@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #E6DDD4" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.ClientController">
+<AnchorPane prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #E6DDD4" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.GuiClientController">
   <!-- TODO Add Nodes -->
   <children>
     <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" prefHeight="370.0" prefWidth="296.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox">
