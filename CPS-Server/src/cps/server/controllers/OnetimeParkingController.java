@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package cps.server.controllers;
 
 import java.sql.Connection;
@@ -14,12 +17,28 @@ import cps.entities.models.OnetimeService;
 import cps.server.ServerApplication;
 import cps.common.Utilities.Holder;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OnetimeParkingController.
+ */
 @SuppressWarnings("unused")
 public class OnetimeParkingController extends RequestController {	
+	
+	/**
+	 * Instantiates a new onetime parking controller.
+	 *
+	 * @param serverApplication the server application
+	 */
 	public OnetimeParkingController(ServerApplication serverApplication) {
 		super(serverApplication);
 	}
 
+	/**
+	 * Handle.
+	 *
+	 * @param request the request
+	 * @return the server response
+	 */
 	public ServerResponse handle(IncidentalParkingRequest request) {
 		Holder<OnetimeService> result = new Holder<>(null);
 		databaseController.performAction(conn -> {
@@ -34,10 +53,22 @@ public class OnetimeParkingController extends RequestController {
 		return ServerResponse.decide("Entry creation", result.getValue() != null);		
 	}
 	
+	/**
+	 * Handle.
+	 *
+	 * @param request the request
+	 * @return the server response
+	 */
 	public ServerResponse handle(ReservedParkingRequest request) {
 		return ServerResponse.error("Not implemented"); // TODO: implement		
 	}
 	
+	/**
+	 * Handle.
+	 *
+	 * @param request the request
+	 * @return the server response
+	 */
 	public ServerResponse handle(ListOnetimeEntriesRequest request) {
 		Holder<Collection<OnetimeService>> result = new Holder<>(null);
 		databaseController.performAction(conn -> result.setValue(OnetimeService.findByCustomerID(conn, request.getCustomerID())));		
