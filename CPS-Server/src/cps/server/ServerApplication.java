@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package cps.server;
 
 import ocsf.server.AbstractServer;
@@ -22,8 +25,9 @@ public class ServerApplication extends AbstractServer {
 	/**
 	 * Constructs an instance of the server application.
 	 *
-	 * @param port
-	 *            The port number to connect on.
+	 * @param port            The port number to connect on.
+	 * @param config the config
+	 * @throws Exception the exception
 	 */
 	public ServerApplication(int port, ServerConfig config) throws Exception {
 		super(port);

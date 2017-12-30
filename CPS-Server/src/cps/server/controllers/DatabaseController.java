@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package cps.server.controllers;
 
 import java.sql.Connection;
@@ -14,6 +17,15 @@ public class DatabaseController {
 		void perform(Connection conn) throws SQLException;
 	}
 
+	/**
+	 * Instantiates a new database controller.
+	 *
+	 * @param host the host
+	 * @param dbName the db name
+	 * @param username the username
+	 * @param password the password
+	 * @throws Exception the exception
+	 */
 	public DatabaseController(String host, String dbName, String username, String password) throws Exception {
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		this.host = host;
