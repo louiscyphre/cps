@@ -1,0 +1,4 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.shadowedBox {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 40, 0, 0,0);
+}
