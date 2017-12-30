@@ -33,26 +33,26 @@ public class ParkingLot implements Serializable {
 	/** The price of incidental parking. */
 	private float price1;
 	
-	/** The price of one time parking. */
+	/** The price one time parking. */
 	private float price2;
 	
 	/** Represents list of alternative parking lots that will be provided if the current lot is full. */
 	private String alternativeLots;
 	
-	/** IP adress of the robot. */
+	/** IP address of the robot. */
 	private String robotIP;
 
 	/**
 	 * Instantiates a new parking lot.
 	 *
-	 * @param id the Parking lot id
-	 * @param streetAddress the Parking lot street address
-	 * @param size the Amount of columns
-	 * @param content the content
-	 * @param price1 the price 1
-	 * @param price2 the price 2
-	 * @param alternativeLots the alternative lots
-	 * @param robotIP the robot IP
+	 * @param id Parking lot id
+	 * @param streetAddress Parking lot street address
+	 * @param size Amount of columns
+	 * @param content Serialized three dimensional array that reflects status of the parking spots
+	 * @param price1 Price of incidental parking
+	 * @param price2 Price of one time parking
+	 * @param alternativeLots List of alternative parking lots
+	 * @param robotIP IP address of the robot
 	 */
 	public ParkingLot(int id, String streetAddress, int size, String content, float price1, float price2,
 			String alternativeLots, String robotIP) {
@@ -69,7 +69,7 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Instantiates a new parking lot.
 	 *
-	 * @param rs the rs
+	 * @param rs the Result set
 	 * @throws SQLException the SQL exception
 	 */
 	public ParkingLot(ResultSet rs) throws SQLException {
@@ -150,36 +150,36 @@ public class ParkingLot implements Serializable {
 	}
 
 	/**
-	 * Gets the price 1.
+	 * Gets the price of incidental parking.
 	 *
-	 * @return the price 1
+	 * @return the price of incidental parking
 	 */
 	public float getPrice1() {
 		return price1;
 	}
 
 	/**
-	 * Sets the price 1.
+	 * Sets the price of incidental parking.
 	 *
-	 * @param price1 the new price 1
+	 * @param price1 the new price of incidental parking
 	 */
 	public void setPrice1(float price1) {
 		this.price1 = price1;
 	}
 
 	/**
-	 * Gets the price 2.
+	 * Gets the price of one time parking.
 	 *
-	 * @return the price 2
+	 * @return the price of one time parking
 	 */
 	public float getPrice2() {
 		return price2;
 	}
 
 	/**
-	 * Sets the price 2.
+	 * Sets the price of one time parking.
 	 *
-	 * @param price2 the new price 2
+	 * @param price2 the new price of one time parking
 	 */
 	public void setPrice2(float price2) {
 		this.price2 = price2;
@@ -222,15 +222,15 @@ public class ParkingLot implements Serializable {
 	}
 
 	/**
-	 * Creates the.
+	 * Insert new parking lot into the database and create a new parking lot object.
 	 *
-	 * @param conn the conn
-	 * @param streetAddress the street address
-	 * @param size the size
-	 * @param price1 the price 1
-	 * @param price2 the price 2
-	 * @param robotIP the robot IP
-	 * @return the parking lot
+	 * @param conn Connection to database server
+	 * @param streetAddress Parking lot street address
+	 * @param size Amount of columns in parking lot
+	 * @param price1 The price of incidental parking
+	 * @param price2 The price one time parking
+	 * @param robotIP IP address of the robot
+	 * @return New parking lot object
 	 * @throws SQLException the SQL exception
 	 */
 	public static ParkingLot create(Connection conn, String streetAddress, int size, float price1, float price2,
