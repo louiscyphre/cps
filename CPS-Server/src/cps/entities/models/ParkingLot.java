@@ -9,25 +9,51 @@ import java.sql.Statement;
 
 import cps.common.Constants;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ParkingLot.
+ */
 public class ParkingLot implements Serializable {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	// `id` int(11) NOT NULL AUTO_INCREMENT,
-	// `street_address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-	// `size` int(11) DEFAULT NULL,
-	// `content` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-	// `price1` float DEFAULT NULL,
-	// `price2` float DEFAULT NULL,
-	// `alternative_lots` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 
+	/** The id. */
 	private int id;
+	
+	/** The street address. */
 	private String streetAddress;
+	
+	/** The size. */
 	private int size;
+	
+	/** The content. */
 	private String content;
+	
+	/** The price 1. */
 	private float price1;
+	
+	/** The price 2. */
 	private float price2;
+	
+	/** The alternative lots. */
 	private String alternativeLots;
+	
+	/** The robot IP. */
 	private String robotIP;
 
+	/**
+	 * Instantiates a new parking lot.
+	 *
+	 * @param id the id
+	 * @param streetAddress the street address
+	 * @param size the size
+	 * @param content the content
+	 * @param price1 the price 1
+	 * @param price2 the price 2
+	 * @param alternativeLots the alternative lots
+	 * @param robotIP the robot IP
+	 */
 	public ParkingLot(int id, String streetAddress, int size, String content, float price1, float price2,
 			String alternativeLots, String robotIP) {
 		this.id = id;
@@ -40,75 +66,173 @@ public class ParkingLot implements Serializable {
 		this.robotIP = robotIP;
 	}
 
+	/**
+	 * Instantiates a new parking lot.
+	 *
+	 * @param rs the rs
+	 * @throws SQLException the SQL exception
+	 */
 	public ParkingLot(ResultSet rs) throws SQLException {
 		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getFloat(5), rs.getFloat(6),
 				rs.getString(7), rs.getString(8));
 	}
 
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * Sets the id.
+	 *
+	 * @param id the new id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * Gets the street address.
+	 *
+	 * @return the street address
+	 */
 	public String getStreetAddress() {
 		return streetAddress;
 	}
 
+	/**
+	 * Sets the street address.
+	 *
+	 * @param streetAddress the new street address
+	 */
 	public void setStreetAddress(String streetAddress) {
 		this.streetAddress = streetAddress;
 	}
 
+	/**
+	 * Gets the size.
+	 *
+	 * @return the size
+	 */
 	public int getSize() {
 		return size;
 	}
 
+	/**
+	 * Sets the size.
+	 *
+	 * @param size the new size
+	 */
 	public void setSize(int size) {
 		this.size = size;
 	}
 
+	/**
+	 * Gets the content.
+	 *
+	 * @return the content
+	 */
 	public String getContent() {
 		return content;
 	}
 
+	/**
+	 * Sets the content.
+	 *
+	 * @param content the new content
+	 */
 	public void setContent(String content) {
 		this.content = content;
 	}
 
+	/**
+	 * Gets the price 1.
+	 *
+	 * @return the price 1
+	 */
 	public float getPrice1() {
 		return price1;
 	}
 
+	/**
+	 * Sets the price 1.
+	 *
+	 * @param price1 the new price 1
+	 */
 	public void setPrice1(float price1) {
 		this.price1 = price1;
 	}
 
+	/**
+	 * Gets the price 2.
+	 *
+	 * @return the price 2
+	 */
 	public float getPrice2() {
 		return price2;
 	}
 
+	/**
+	 * Sets the price 2.
+	 *
+	 * @param price2 the new price 2
+	 */
 	public void setPrice2(float price2) {
 		this.price2 = price2;
 	}
 
+	/**
+	 * Gets the alternative lots.
+	 *
+	 * @return the alternative lots
+	 */
 	public String getAlternativeLots() {
 		return alternativeLots;
 	}
 
+	/**
+	 * Sets the alternative lots.
+	 *
+	 * @param alternativeLots the new alternative lots
+	 */
 	public void setAlternativeLots(String alternativeLots) {
 		this.alternativeLots = alternativeLots;
 	}
 
+	/**
+	 * Gets the robot IP.
+	 *
+	 * @return the robot IP
+	 */
 	public String getRobotIP() {
 		return robotIP;
 	}
 
+	/**
+	 * Sets the robot IP.
+	 *
+	 * @param robotIP the new robot IP
+	 */
 	public void setRobotIP(String robotIP) {
 		this.robotIP = robotIP;
 	}
 
+	/**
+	 * Creates the.
+	 *
+	 * @param conn the conn
+	 * @param streetAddress the street address
+	 * @param size the size
+	 * @param price1 the price 1
+	 * @param price2 the price 2
+	 * @param robotIP the robot IP
+	 * @return the parking lot
+	 * @throws SQLException the SQL exception
+	 */
 	public static ParkingLot create(Connection conn, String streetAddress, int size, float price1, float price2,
 			String robotIP) throws SQLException {
 		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_PARKING_LOT,
@@ -135,6 +259,14 @@ public class ParkingLot implements Serializable {
 		return new ParkingLot(newID, streetAddress, size, "", price1, price2, "", robotIP);
 	}
 
+	/**
+	 * Find by ID.
+	 *
+	 * @param conn the conn
+	 * @param id the id
+	 * @return the parking lot
+	 * @throws SQLException the SQL exception
+	 */
 	public static ParkingLot findByID(Connection conn, int id) throws SQLException {
 		ParkingLot result = null;
 
