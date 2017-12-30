@@ -18,36 +18,36 @@ public class ParkingLot implements Serializable {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The id. */
+	/** Parking lot id. */
 	private int id;
 	
-	/** The street address. */
+	/** Parking lot street address. */
 	private String streetAddress;
 	
-	/** The size. */
+	/** Amount of columns in parking lot. */
 	private int size;
 	
-	/** The content. */
+	/** Serialized three dimensional array that reflects status of the parking spots. */
 	private String content;
 	
-	/** The price 1. */
+	/** The price of incidental parking. */
 	private float price1;
 	
-	/** The price 2. */
+	/** The price of one time parking. */
 	private float price2;
 	
-	/** The alternative lots. */
+	/** Represents list of alternative parking lots that will be provided if the current lot is full. */
 	private String alternativeLots;
 	
-	/** The robot IP. */
+	/** IP adress of the robot. */
 	private String robotIP;
 
 	/**
 	 * Instantiates a new parking lot.
 	 *
-	 * @param id the id
-	 * @param streetAddress the street address
-	 * @param size the size
+	 * @param id the Parking lot id
+	 * @param streetAddress the Parking lot street address
+	 * @param size the Amount of columns
 	 * @param content the content
 	 * @param price1 the price 1
 	 * @param price2 the price 2
