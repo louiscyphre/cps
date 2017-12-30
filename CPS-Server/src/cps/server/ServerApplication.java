@@ -14,6 +14,9 @@ import cps.api.request.*;
 import cps.api.response.*;
 import cps.server.controllers.*;
 
+/**
+ * The Class ServerApplication.
+ */
 public class ServerApplication extends AbstractServer {
 	Gson gson = new Gson();
 	private ServerConfig config;
@@ -25,7 +28,7 @@ public class ServerApplication extends AbstractServer {
 	/**
 	 * Constructs an instance of the server application.
 	 *
-	 * @param port            The port number to connect on.
+	 * @param port The port number to connect on.
 	 * @param config the config
 	 * @throws Exception the exception
 	 */
@@ -72,6 +75,12 @@ public class ServerApplication extends AbstractServer {
 		this.onetimeParkingController = onetimeParkingController;
 	}
 
+	/**
+	 * Send to client.
+	 *
+	 * @param client the client
+	 * @param msg the msg
+	 */
 	private void sendToClient(ConnectionToClient client, Object msg) {
 		try {
 			System.out.println("Sending to client: " + gson.toJson(msg));
