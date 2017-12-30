@@ -14,45 +14,59 @@ import cps.common.Constants;
  * The Class ParkingLot.
  */
 public class ParkingLot implements Serializable {
-	
+
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/** Parking lot id. */
 	private int id;
-	
+
 	/** Parking lot street address. */
 	private String streetAddress;
-	
+
 	/** Amount of columns in parking lot. */
 	private int size;
-	
-	/** Serialized three dimensional array that reflects status of the parking spots. */
+
+	/**
+	 * Serialized three dimensional array that reflects status of the parking spots.
+	 */
 	private String content;
-	
+
 	/** The price of incidental parking. */
 	private float price1;
-	
+
 	/** The price one time parking. */
 	private float price2;
-	
-	/** Represents list of alternative parking lots that will be provided if the current lot is full. */
+
+	/**
+	 * Represents list of alternative parking lots that will be provided if the
+	 * current lot is full.
+	 */
 	private String alternativeLots;
-	
+
 	/** IP address of the robot. */
 	private String robotIP;
 
 	/**
 	 * Instantiates a new parking lot.
 	 *
-	 * @param id Parking lot id
-	 * @param streetAddress Parking lot street address
-	 * @param size Amount of columns
-	 * @param content Serialized three dimensional array that reflects status of the parking spots
-	 * @param price1 Price of incidental parking
-	 * @param price2 Price of one time parking
-	 * @param alternativeLots List of alternative parking lots
-	 * @param robotIP IP address of the robot
+	 * @param id
+	 *            Parking lot id
+	 * @param streetAddress
+	 *            Parking lot street address
+	 * @param size
+	 *            Amount of columns
+	 * @param content
+	 *            Serialized three dimensional array that reflects status of the
+	 *            parking spots
+	 * @param price1
+	 *            Price of incidental parking
+	 * @param price2
+	 *            Price of one time parking
+	 * @param alternativeLots
+	 *            List of alternative parking lots
+	 * @param robotIP
+	 *            IP address of the robot
 	 */
 	public ParkingLot(int id, String streetAddress, int size, String content, float price1, float price2,
 			String alternativeLots, String robotIP) {
@@ -69,8 +83,10 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Instantiates a new parking lot.
 	 *
-	 * @param rs the Result set
-	 * @throws SQLException the SQL exception
+	 * @param rs
+	 *            the Result set
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public ParkingLot(ResultSet rs) throws SQLException {
 		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getFloat(5), rs.getFloat(6),
@@ -89,7 +105,8 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Sets the id.
 	 *
-	 * @param id the new id
+	 * @param id
+	 *            the new id
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -107,7 +124,8 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Sets the street address.
 	 *
-	 * @param streetAddress the new street address
+	 * @param streetAddress
+	 *            the new street address
 	 */
 	public void setStreetAddress(String streetAddress) {
 		this.streetAddress = streetAddress;
@@ -125,7 +143,8 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Sets the size.
 	 *
-	 * @param size the new size
+	 * @param size
+	 *            the new size
 	 */
 	public void setSize(int size) {
 		this.size = size;
@@ -143,7 +162,8 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Sets the content.
 	 *
-	 * @param content the new content
+	 * @param content
+	 *            the new content
 	 */
 	public void setContent(String content) {
 		this.content = content;
@@ -161,7 +181,8 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Sets the price of incidental parking.
 	 *
-	 * @param price1 the new price of incidental parking
+	 * @param price1
+	 *            the new price of incidental parking
 	 */
 	public void setPrice1(float price1) {
 		this.price1 = price1;
@@ -179,7 +200,8 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Sets the price of one time parking.
 	 *
-	 * @param price2 the new price of one time parking
+	 * @param price2
+	 *            the new price of one time parking
 	 */
 	public void setPrice2(float price2) {
 		this.price2 = price2;
@@ -197,7 +219,8 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Sets the alternative lots.
 	 *
-	 * @param alternativeLots the new alternative lots
+	 * @param alternativeLots
+	 *            the new alternative lots
 	 */
 	public void setAlternativeLots(String alternativeLots) {
 		this.alternativeLots = alternativeLots;
@@ -215,7 +238,8 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Sets the robot IP.
 	 *
-	 * @param robotIP the new robot IP
+	 * @param robotIP
+	 *            the new robot IP
 	 */
 	public void setRobotIP(String robotIP) {
 		this.robotIP = robotIP;
@@ -224,31 +248,43 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Insert new parking lot into the database and create a new parking lot object.
 	 *
-	 * @param conn Connection to database server
-	 * @param streetAddress Parking lot street address
-	 * @param size Amount of columns in parking lot
-	 * @param price1 The price of incidental parking
-	 * @param price2 The price one time parking
-	 * @param robotIP IP address of the robot
+	 * @param conn
+	 *            Connection to database server
+	 * @param streetAddress
+	 *            Parking lot street address
+	 * @param size
+	 *            Amount of columns in parking lot
+	 * @param price1
+	 *            The price of incidental parking
+	 * @param price2
+	 *            The price one time parking
+	 * @param robotIP
+	 *            IP address of the robot
 	 * @return New parking lot object
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public static ParkingLot create(Connection conn, String streetAddress, int size, float price1, float price2,
 			String robotIP) throws SQLException {
+		// Create SQL statement and request table for table keys
 		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_PARKING_LOT,
 				Statement.RETURN_GENERATED_KEYS);
-
+		// Fill in the fields of SQL statement
 		int field = 1;
 		stmt.setString(field++, streetAddress);
 		stmt.setInt(field++, size);
 		stmt.setFloat(field++, price1);
 		stmt.setFloat(field++, price2);
 		stmt.setString(field++, robotIP);
+		// Execute SQL query
 		stmt.executeUpdate();
-
+		// Extract the auto-generated keys created as a result of executing this
+		// Statement object
 		ResultSet keys = stmt.getGeneratedKeys();
 		int newID = 0;
-
+		// if keys were created take the first one
+		// A ResultSet cursor is initially positioned before the first row; the first
+		// call to the method next makes the first row the current row
 		if (keys != null && keys.next()) {
 			newID = keys.getInt(1);
 			keys.close();
@@ -262,10 +298,13 @@ public class ParkingLot implements Serializable {
 	/**
 	 * Find by ID.
 	 *
-	 * @param conn the conn
-	 * @param id the id
+	 * @param conn
+	 *            the conn
+	 * @param id
+	 *            the id
 	 * @return the parking lot
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public static ParkingLot findByID(Connection conn, int id) throws SQLException {
 		ParkingLot result = null;
