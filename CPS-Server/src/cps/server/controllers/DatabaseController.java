@@ -13,16 +13,16 @@ import java.sql.SQLException;
  */
 public class DatabaseController {
 	
-	/** The host. */
+	/** The host adress. */
 	String host;
 	
-	/** The db name. */
+	/** Database name. */
 	String dbName;
 	
-	/** The username. */
+	/** Username. */
 	String username;
 	
-	/** The password. */
+	/** Password. */
 	String password;
 	
 	/**

@@ -9,11 +9,27 @@ import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.server.ServerApplication;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EntryExitController.
+ */
 public class EntryExitController extends RequestController {
+	
+	/**
+	 * Instantiates a new entry exit controller.
+	 *
+	 * @param serverApplication the server application
+	 */
 	public EntryExitController(ServerApplication serverApplication) {
 		super(serverApplication);
 	}
 
+	/**
+	 * Handle.
+	 *
+	 * @param request the request
+	 * @return the server response
+	 */
 	public ServerResponse handle(ParkingEntryRequest request) {
 		ServerResponse response = null;
 
@@ -28,11 +44,23 @@ public class EntryExitController extends RequestController {
 		return response == null ? ServerResponse.error("The ParkingEntry request was not handled properly") : response;
 	}
 
+	/**
+	 * Handle subscription entry.
+	 *
+	 * @param request the request
+	 * @return the server response
+	 */
 	private ServerResponse handleSubscriptionEntry(ParkingEntryRequest request) {
 		// TODO: implement
 		return null;
 	}
 
+	/**
+	 * Handle onetime entry.
+	 *
+	 * @param request the request
+	 * @return the server response
+	 */
 	private ServerResponse handleOnetimeEntry(ParkingEntryRequest request) {
 		// Response holder - the lambda function will save the ServerResponse in this
 		// object, and then we will retrieve the response and send it back to the user.
@@ -93,6 +121,12 @@ public class EntryExitController extends RequestController {
 		return responseHolder.getValue();
 	}
 
+	/**
+	 * Handle.
+	 *
+	 * @param request the request
+	 * @return the server response
+	 */
 	public ServerResponse handle(ParkingExitRequest request) {
 		Holder<CarTransportation> result = new Holder<>(null);
 		databaseController.performAction(conn -> {
