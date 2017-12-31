@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #E6DDD4" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.GuiClientController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" prefHeight="370.0" prefWidth="296.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox">
+      <children>
+        <Button id="" fx:id="incidentalParkingButton" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#switchToIncidentalParkingScene" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Pay and park">
+          <font>
+            <Font size="16.0" fx:id="x1" />
+          </font>
+          <VBox.margin>
+            <Insets bottom="50.0" />
+          </VBox.margin>
+        </Button>
+        <Button id="" fx:id="goBackButton" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Back">
+          <VBox.margin>
+            <Insets bottom="50.0" />
+          </VBox.margin>
+        </Button>
+      </children>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+    </VBox>
+    <Label font="$x1" layoutX="122.0" layoutY="68.0" text="Welcome to Automated Car Parking System!" />
+  </children>
+  <stylesheets>
+    <URL value="@application.css" />
+  </stylesheets>
+</AnchorPane>
