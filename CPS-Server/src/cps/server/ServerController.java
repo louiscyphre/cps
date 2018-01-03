@@ -114,8 +114,7 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(ReservedParkingRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		return onetimeParkingController.handle(request);
 	}
 
 	@Override

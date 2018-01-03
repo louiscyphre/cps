@@ -44,7 +44,7 @@ public class OnetimeParkingController extends RequestController {
 		return databaseController.performQuery(conn -> {
 			Timestamp startTime = new Timestamp(System.currentTimeMillis());
 			Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
-			OnetimeService result = OnetimeService.create(conn, IncidentalParkingRequest.TYPE, request.getCustomerID(),
+			OnetimeService result = OnetimeService.create(conn, request.getParkingType(), request.getCustomerID(),
 					request.getEmail(), request.getCarID(), request.getLotID(), startTime,
 					plannedEndTime, false);
 			// System.out.println(result.getValue());	
@@ -59,7 +59,15 @@ public class OnetimeParkingController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse handle(ReservedParkingRequest request) {
-		return ServerResponse.error("Not implemented"); // TODO: implement		
+		return databaseController.performQuery(conn -> {
+			Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
+			Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
+			OnetimeService result = OnetimeService.create(conn, request.getParkingType(), request.getCustomerID(),
+					request.getEmail(), request.getCarID(), request.getLotID(), startTime,
+					plannedEndTime, false);
+			// System.out.println(result.getValue());	
+			return ServerResponse.decide("Entry creation", result != null);	
+		});
 	}
 	
 	/**
