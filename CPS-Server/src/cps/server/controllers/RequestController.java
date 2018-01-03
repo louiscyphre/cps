@@ -1,6 +1,5 @@
 package cps.server.controllers;
 
-import cps.server.ServerApplication;
 import cps.server.ServerController;
 
 // TODO: Auto-generated Javadoc

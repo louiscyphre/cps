@@ -9,6 +9,7 @@ import ocsf.server.ConnectionToClient;
 import com.google.gson.Gson;
 
 import cps.common.*;
+import cps.api.request.Request;
 import cps.api.response.*;
 import cps.server.controllers.*;
 
@@ -66,14 +67,15 @@ public class ServerApplication extends AbstractServer {
 	 */
 	@Override
 	protected void handleMessageFromClient(Object message, ConnectionToClient client) {
-		if (message == null) {
+		if (message == null || !(message instanceof Request)) {
+			sendToClient(client, ServerResponse.error("Unknown request type"));
 			return;
 		}
 		
 		System.out.println("Message from: " + client + ", type: " + message.getClass().getSimpleName() + ", content: "
 				+ gson.toJson(message));
 		
-		ServerResponse response = serverController.handle(message);
+		ServerResponse response = serverController.dispatch((Request) message);
 		
 		if (response != null) {
 			sendToClient(client, response);

@@ -3,7 +3,6 @@ package cps.server.controllers;
 import cps.api.request.ParkingEntryRequest;
 import cps.api.request.ParkingExitRequest;
 import cps.api.response.ServerResponse;
-import cps.common.Utilities.Holder;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
@@ -36,8 +35,9 @@ public class EntryExitController extends RequestController {
 		if (request.getSubscriptionID() == 0) { // The customer wants to enter based on car ID only - check if they have
 												// a OnetimeService entry
 			response = handleOnetimeEntry(request);
-		} else { // The customer wants to enter based on car ID and subscription ID - check if
-					// they have a SubscriptionService entry
+		} else {
+			// The customer wants to enter based on car ID and subscription ID - check if
+			// they have a SubscriptionService entry
 			response = handleSubscriptionEntry(request);
 		}
 

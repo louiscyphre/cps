@@ -1,5 +1,8 @@
 package cps.api.action;
 
+import cps.api.response.ServerResponse;
+import cps.server.RequestHandler;
+
 public class SetFullLotAction extends LotAction {
 	private static final long serialVersionUID = 1L;
 	int alternativeLotID;
@@ -15,5 +18,10 @@ public class SetFullLotAction extends LotAction {
 
 	public void setAlternativeLotID(int alternativeLotID) {
 		this.alternativeLotID = alternativeLotID;
+	}
+
+	@Override
+	public ServerResponse handle(RequestHandler handler) {
+		return handler.handle(this);
 	}
 }

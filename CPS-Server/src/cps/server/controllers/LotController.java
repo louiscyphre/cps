@@ -4,8 +4,6 @@ import java.util.Map;
 
 import cps.api.action.InitLotAction;
 import cps.api.response.ServerResponse;
-import cps.common.Utilities.Holder;
-import cps.server.ServerApplication;
 import cps.server.ServerController;
 import cps.server.devices.Robot;
 import cps.entities.models.ParkingLot;

@@ -1,5 +1,8 @@
 package cps.api.request;
 
+import cps.api.response.ServerResponse;
+import cps.server.RequestHandler;
+
 public class ComplaintRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
 
@@ -16,6 +19,11 @@ public class ComplaintRequest extends CustomerRequest {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Override
+	public ServerResponse handle(RequestHandler handler) {
+		return handler.handle(this);
 	}
 
 }

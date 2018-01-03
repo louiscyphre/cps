@@ -3,16 +3,9 @@
  */
 package cps.server.controllers;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Collection;
 import java.util.LinkedList;
-
-import cps.common.Utilities.Holder;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -20,7 +13,7 @@ import cps.common.Utilities.Holder;
  */
 public class DatabaseController {
 	
-	/** The host adress. */
+	/** The host address. */
 	String host;
 	
 	/** Database name. */
@@ -40,7 +33,7 @@ public class DatabaseController {
 		/**
 		 * Perform.
 		 *
-		 * @param conn the conn
+		 * @param conn the SQL connection
 		 * @throws SQLException the SQL exception
 		 */
 		void perform(Connection conn) throws SQLException;
@@ -53,9 +46,9 @@ public class DatabaseController {
 	/**
 	 * Instantiates a new database controller.
 	 *
-	 * @param host the host
-	 * @param dbName the db name
-	 * @param username the username
+	 * @param host the database host address
+	 * @param dbName the database name
+	 * @param username the user name
 	 * @param password the password
 	 * @throws Exception the exception
 	 */
@@ -91,7 +84,7 @@ public class DatabaseController {
 	/**
 	 * Close connection.
 	 *
-	 * @param conn the connection
+	 * @param conn the SQL connection
 	 */
 	public void closeConnection(Connection conn) {
 		if (conn != null) {

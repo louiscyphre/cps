@@ -2,6 +2,9 @@ package cps.api.request;
 
 import java.time.LocalDateTime;
 
+import cps.api.response.ServerResponse;
+import cps.server.RequestHandler;
+
 public class RegularSubscriptionRequest extends SubscriptionRequest {
 	private static final long serialVersionUID = 1L;
 	private int lotID;
@@ -28,5 +31,10 @@ public class RegularSubscriptionRequest extends SubscriptionRequest {
 
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
+	}
+
+	@Override
+	public ServerResponse handle(RequestHandler handler) {
+		return handler.handle(this);
 	}
 }

@@ -43,7 +43,7 @@ public class TestServerController extends TestCase {
 		IncidentalParkingRequest request = new IncidentalParkingRequest(customerID, email, carID, lotID, plannedEndTime);
 		
 		// Test the response
-		ServerResponse response = server.handle(request);		
+		ServerResponse response = server.dispatch(request);	
 		assertTrue(response.success());
 		
 		// Test database result 
@@ -61,7 +61,7 @@ public class TestServerController extends TestCase {
 	
 	private void initParkingLot() {
 		InitLotAction request = new InitLotAction(1000, "Lot Address", 3, 5, 4, "113.0.1.14");		
-		ServerResponse response = server.handle(request);
+		ServerResponse response = server.dispatch(request);
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("parking_lot"));
 		ParkingLot lot = db.performQuery(conn -> ParkingLot.findByID(conn, 1));
@@ -70,7 +70,7 @@ public class TestServerController extends TestCase {
 	
 	private void requestParkingEntry(int customerID, String carID, int lotID) {
 		ParkingEntryRequest request = new ParkingEntryRequest(customerID, 0, lotID, carID);
-		ServerResponse response = server.handle(request);
+		ServerResponse response = server.dispatch(request);
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("car_transportation"));
 		// TODO: fetch the CarTransportation and check fields

@@ -2,6 +2,9 @@ package cps.api.request;
 
 import java.time.LocalDateTime;
 
+import cps.api.response.ServerResponse;
+import cps.server.RequestHandler;
+
 public class IncidentalParkingRequest extends OnetimeParkingRequest {
 	private static final long serialVersionUID = 1L;
 	public static final int TYPE = 1;
@@ -21,5 +24,10 @@ public class IncidentalParkingRequest extends OnetimeParkingRequest {
 		buffer.append("lotID: " + getLotID() + ", ");
 		buffer.append("plannedEndTime: " + getPlannedEndTime() + "}");
 		return buffer.toString();
+	}
+
+	@Override
+	public ServerResponse handle(RequestHandler handler) {
+		return handler.handle(this);
 	}
 }
