@@ -122,6 +122,7 @@ public class TestServerController extends TestCase {
 		initParkingLot();
 		requestIncidentalParking(customerID, email, carID, lotID);
 		requestParkingEntry(customerID, carID, lotID);
+		// TODO: send exit request
 	}
 	
 	@Test
@@ -140,5 +141,6 @@ public class TestServerController extends TestCase {
 		initParkingLot();
 		requestReservedParking(customerID, email, carID, lotID);
 		requestParkingEntry(customerID, carID, lotID);
+		// TODO: send exit request
 	}
 }
