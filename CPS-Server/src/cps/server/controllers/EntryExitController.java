@@ -7,7 +7,7 @@ import cps.common.Utilities.Holder;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
-import cps.server.ServerApplication;
+import cps.server.ServerController;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,14 +18,14 @@ public class EntryExitController extends RequestController {
 	/**
 	 * Instantiates a new entry exit controller.
 	 *
-	 * @param serverApplication the server application
+	 * @param serverController the server application
 	 */
-	public EntryExitController(ServerApplication serverApplication) {
-		super(serverApplication);
+	public EntryExitController(ServerController serverController) {
+		super(serverController);
 	}
 
 	/**
-	 * Handle.
+	 * Handle ParkingEntryRequest.
 	 *
 	 * @param request the request
 	 * @return the server response
@@ -45,7 +45,7 @@ public class EntryExitController extends RequestController {
 	}
 
 	/**
-	 * Handle subscription entry.
+	 * Handle ParkingEntryRequest with a subscription entry license.
 	 *
 	 * @param request the request
 	 * @return the server response
@@ -56,32 +56,27 @@ public class EntryExitController extends RequestController {
 	}
 
 	/**
-	 * Handle onetime entry.
+	 * Handle ParkingEntryRequest with a one-time entry license.
 	 *
 	 * @param request the request
 	 * @return the server response
 	 */
 	private ServerResponse handleOnetimeEntry(ParkingEntryRequest request) {
-		// Response holder - the lambda function will save the ServerResponse in this
-		// object, and then we will retrieve the response and send it back to the user.
-		Holder<ServerResponse> responseHolder = new Holder<ServerResponse>(null);
-
-		// Shortcuts for commonly used properties
-		int customerID = request.getCustomerID();
-		String carID = request.getCarID();
-		int lotID = request.getLotID();
-
-		databaseController.performAction(conn -> {
+		// The lambda function will return a ServerResponse object, which we will send back to the user.
+		return databaseController.performQuery(conn -> {
+			// Shortcuts for commonly used properties
+			int customerID = request.getCustomerID();
+			String carID = request.getCarID();
+			int lotID = request.getLotID();
+			
 			// Find the OnetimeService that gives this customer an entry license.
 			// If the OnetimeService with the right parameters exists, then they can park
 			// their car in specified parking lot.
-			OnetimeService service = OnetimeService.findForEntry(conn, request.getCustomerID(), request.getCarID(),
-					request.getLotID());
+			OnetimeService service = OnetimeService.findForEntry(conn, customerID, carID, lotID);
 
 			if (service == null) { // Entry license does not exist
-				responseHolder.setValue(ServerResponse
-						.error("Entry license not found for customer ID " + customerID + " with car ID " + carID));
-				return;
+				return ServerResponse
+						.error("Entry license not found for customer ID " + customerID + " with car ID " + carID);
 			}
 
 			// Entry license exists - continue
@@ -89,20 +84,18 @@ public class EntryExitController extends RequestController {
 			ParkingLot lot = ParkingLot.findByID(conn, lotID);
 
 			if (lot == null) { // Lot does not exist
-				responseHolder.setValue(ServerResponse.error("Parking Lot with ID " + lotID + " does not exist"));
-				return;
+				return ServerResponse.error("Parking Lot with ID " + lotID + " does not exist");
 			}
 
 			// Attempt to insert the car into the lot.
 			// Optimal coordinates are calculated before insertion.
 			// If the lot is full, or some other error occurs, LotController will return an
 			// appropriate error response, which we will send back to the user.
-			LotController lotController = serverApplication.getLotController();
+			LotController lotController = serverController.getLotController();
 			ServerResponse lotControllerResponse = lotController.insertCar(lot, carID);
 
 			if (lotControllerResponse != null) { // Car insertion failed - lot full or some other error
-				responseHolder.setValue(lotControllerResponse);
-				return;
+				return lotControllerResponse;
 			}
 
 			// All good - create a CarTransportation table entry to record the fact that a
@@ -111,29 +104,23 @@ public class EntryExitController extends RequestController {
 					request.getCarID(), OnetimeService.TYPE, service.getId(), request.getLotID());
 
 			if (transportation == null) { // Failed to create a CarTransportation entry - this normally shouldn't happen
-				responseHolder.setValue((ServerResponse.error("CarTransportation entry creation failed")));
-				return;
+				return ServerResponse.error("CarTransportation entry creation failed");
 			}
 
-			responseHolder.setValue(ServerResponse.ok("ParkingEntry request completed successfully"));
+			return ServerResponse.ok("ParkingEntry request completed successfully");
 		});
-
-		return responseHolder.getValue();
 	}
 
 	/**
-	 * Handle.
+	 * Handle ParkingExitRequest.
 	 *
 	 * @param request the request
 	 * @return the server response
 	 */
 	public ServerResponse handle(ParkingExitRequest request) {
-		Holder<CarTransportation> result = new Holder<>(null);
-		databaseController.performAction(conn -> {
-			// TODO: implement
+		return databaseController.performQuery(conn -> {
+			CarTransportation entry = null; // TODO: find entry by request data and update it
+			return ServerResponse.decide("Entry update", entry != null);
 		});
-
-		// System.out.println(result.getValue());
-		return ServerResponse.decide("Entry creation", result.getValue() != null);
 	}
 }

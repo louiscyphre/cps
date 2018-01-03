@@ -7,13 +7,7 @@ import java.util.HashMap;
  * The Class ServerConfig.
  */
 @SuppressWarnings("serial")
-public class ServerConfig extends HashMap<String, String> {	
-	
-	/** The Constant local. */
-	private static final ServerConfig local = new ServerConfig(new InitLocal());
-	
-	/** The Constant remote. */
-	private static final ServerConfig remote = new ServerConfig(new InitRemote());
+public class ServerConfig extends HashMap<String, String> {
 	
 	/**
 	 * The Interface Init.
@@ -60,22 +54,13 @@ public class ServerConfig extends HashMap<String, String> {
 		}		
 	}
 	
-	/**
-	 * Gets the local.
-	 *
-	 * @return the local
-	 */
-	public static ServerConfig getLocal() {
-		return local;
-	}
-	
-	/**
-	 * Gets the remote.
-	 *
-	 * @return the remote
-	 */
-	public static ServerConfig getRemote() {
-		return remote;
+	static class InitTesting implements Init {
+		public void visit(ServerConfig config) {
+			config.put("db.host", "localhost:3306");
+			config.put("db.name", "cps_test");
+			config.put("db.username", "cps");
+			config.put("db.password", "project");
+		}
 	}
 
 	/**
@@ -85,5 +70,27 @@ public class ServerConfig extends HashMap<String, String> {
 	 */
 	private ServerConfig(Init init) {
 		init.visit(this);
+	}
+	
+	/**
+	 * Gets the local.
+	 *
+	 * @return the local
+	 */
+	public static ServerConfig local() {
+		return new ServerConfig(new InitLocal());
+	}
+	
+	/**
+	 * Gets the remote.
+	 *
+	 * @return the remote
+	 */
+	public static ServerConfig remote() {
+		return new ServerConfig(new InitRemote());
+	}
+	
+	public static ServerConfig testing() {
+		return new ServerConfig(new InitTesting());
 	}
 }

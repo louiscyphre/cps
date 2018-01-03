@@ -132,4 +132,8 @@ public class ServerResponse implements Serializable {
 		
 		return "{status: " + statusRepr + ", description: " + description + "})";
 	}
+	
+	public boolean success() {
+		return this.status == STATUS_OK;
+	}
 }

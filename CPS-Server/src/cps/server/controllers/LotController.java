@@ -6,6 +6,7 @@ import cps.api.action.InitLotAction;
 import cps.api.response.ServerResponse;
 import cps.common.Utilities.Holder;
 import cps.server.ServerApplication;
+import cps.server.ServerController;
 import cps.server.devices.Robot;
 import cps.entities.models.ParkingLot;
 
@@ -18,10 +19,10 @@ public class LotController extends RequestController {
 	/**
 	 * Instantiates a new lot controller.
 	 *
-	 * @param serverApplication serverApplication object
+	 * @param serverController serverApplication object
 	 */
-	public LotController(ServerApplication serverApplication) {
-		super(serverApplication);
+	public LotController(ServerController serverController) {
+		super(serverController);
 	}
 
 	/** The robots. */
@@ -36,7 +37,7 @@ public class LotController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse insertCar(ParkingLot lot, String carID) {
-		return null; // return null if no error
+		return null; // TODO: calculate optimal coordinates and call Robot::insertCar
 	}
 	
 	/**
@@ -47,21 +48,19 @@ public class LotController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse retrieveCar(ParkingLot lot, String carID) {
-		return null; // return null if no error
+		return null; // TODO: find the coordinates and call Robot::retrieveCar
 	}
 	
 	/**
-	 * Handle.
+	 * Handle InitLotAction.
 	 *
 	 * @param request the request
 	 * @return the server response
 	 */
 	public ServerResponse handle(InitLotAction request) {
-		Holder<ParkingLot> result = new Holder<>(null);
-		databaseController.performAction(conn -> {
-			result.setValue(ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(), request.getPrice2(), request.getRobotIP()));
+		return databaseController.performQuery(conn -> {
+			ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(), request.getPrice2(), request.getRobotIP());
+			return ServerResponse.decide("Entry creation", result != null);
 		});
-
-		return ServerResponse.decide("Entry creation", result.getValue() != null);	
 	}
 }

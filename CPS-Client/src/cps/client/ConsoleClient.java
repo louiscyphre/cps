@@ -68,7 +68,7 @@ public class ConsoleClient implements ClientUI {
 		System.out.println("Error: " + message);		
 	}
 	
-	private LocalDateTime readTime(Scanner scanner) {
+	private static LocalDateTime readTime(Scanner scanner) {
 		String timeStr = scanner.nextLine().trim();
 		return LocalDateTime.parse(timeStr);
 	}
@@ -150,7 +150,7 @@ public class ConsoleClient implements ClientUI {
 				
 				System.out.print("Lot ID> ");
 				int lotID = Integer.parseInt(scanner.nextLine().trim());
-				
+
 				request = new ParkingEntryRequest(userID, subsID, lotID, carID);
 				done = true;
 			} catch (Exception ex) {
@@ -254,13 +254,6 @@ public class ConsoleClient implements ClientUI {
 		}
 	}
 
-	private void testTime() {
-		Scanner scanner = new Scanner(System.in);
-		LocalDateTime date = readTime(scanner);
-		System.out.println(date);
-		scanner.close();
-	}
-
 	public static void main(String[] args) {
 		String host = Constants.DEFAULT_HOST;
 		int port = Constants.DEFAULT_PORT;
@@ -276,9 +269,8 @@ public class ConsoleClient implements ClientUI {
 		} catch (Throwable t) {
 			port = Constants.DEFAULT_PORT;
 		}
-		
+
 		ConsoleClient app = new ConsoleClient(host, port);
 		app.interactWithUser();
-//		app.testTime();
 	}
 }

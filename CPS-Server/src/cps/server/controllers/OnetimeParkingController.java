@@ -15,6 +15,7 @@ import cps.api.response.ListOnetimeEntriesResponse;
 import cps.api.response.ServerResponse;
 import cps.entities.models.OnetimeService;
 import cps.server.ServerApplication;
+import cps.server.ServerController;
 import cps.common.Utilities.Holder;
 
 // TODO: Auto-generated Javadoc
@@ -25,36 +26,34 @@ import cps.common.Utilities.Holder;
 public class OnetimeParkingController extends RequestController {	
 	
 	/**
-	 * Instantiates a new onetime parking controller.
+	 * Instantiates a new one-time parking controller.
 	 *
-	 * @param serverApplication the server application
+	 * @param serverController the server application
 	 */
-	public OnetimeParkingController(ServerApplication serverApplication) {
-		super(serverApplication);
+	public OnetimeParkingController(ServerController serverController) {
+		super(serverController);
 	}
 
 	/**
-	 * Handle.
+	 * Handle IncidentalParkingRequest.
 	 *
 	 * @param request the request
 	 * @return the server response
 	 */
 	public ServerResponse handle(IncidentalParkingRequest request) {
-		Holder<OnetimeService> result = new Holder<>(null);
-		databaseController.performAction(conn -> {
+		return databaseController.performQuery(conn -> {
 			Timestamp startTime = new Timestamp(System.currentTimeMillis());
 			Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
-			result.setValue(OnetimeService.create(conn, IncidentalParkingRequest.TYPE, request.getCustomerID(),
+			OnetimeService result = OnetimeService.create(conn, IncidentalParkingRequest.TYPE, request.getCustomerID(),
 					request.getEmail(), request.getCarID(), request.getLotID(), startTime,
-					plannedEndTime, false));
+					plannedEndTime, false);
+			// System.out.println(result.getValue());	
+			return ServerResponse.decide("Entry creation", result != null);	
 		});
-
-		// System.out.println(result.getValue());
-		return ServerResponse.decide("Entry creation", result.getValue() != null);		
 	}
 	
 	/**
-	 * Handle.
+	 * Handle ReservedParkingRequest.
 	 *
 	 * @param request the request
 	 * @return the server response

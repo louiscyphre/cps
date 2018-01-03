@@ -1,6 +1,7 @@
 package cps.server.controllers;
 
 import cps.server.ServerApplication;
+import cps.server.ServerController;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -12,16 +13,16 @@ public abstract class RequestController {
 	protected final DatabaseController databaseController;
 	
 	/** The server application. */
-	protected final ServerApplication serverApplication;
+	protected final ServerController serverController;
 	
 	/**
 	 * Instantiates a new request controller.
 	 *
-	 * @param serverApplication the server application
+	 * @param serverController the server application
 	 */
-	public RequestController(ServerApplication serverApplication) {
-		this.databaseController = serverApplication.getDatabaseController();
-		this.serverApplication = serverApplication;
+	public RequestController(ServerController serverController) {
+		this.databaseController = serverController.getDatabaseController();
+		this.serverController = serverController;
 	}
 	
 	/**
@@ -38,8 +39,8 @@ public abstract class RequestController {
 	 *
 	 * @return the server application
 	 */
-	public ServerApplication getServerApplication() {
-		return serverApplication;
+	public ServerController getServerController() {
+		return serverController;
 	}
 
 }
