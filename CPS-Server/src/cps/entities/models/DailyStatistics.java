@@ -27,27 +27,32 @@ public class DailyStatistics implements Serializable {
 
 	/** The day. */
 	private LocalDate day;
-	
+
 	/** The realized orders. */
 	private int realizedOrders;
-	
+
 	/** The canceled orders. */
 	private int canceledOrders;
-	
+
 	/** The late arrivals. */
 	private int lateArrivals;
-	
+
 	/** The complaints. */
 	private int complaints;
 
 	/**
 	 * Instantiates a new daily statistics.
 	 *
-	 * @param day the day
-	 * @param realizedOrders the realized orders
-	 * @param canceledOrders the canceled orders
-	 * @param lateArrivals the late arrivals
-	 * @param complaints the complaints
+	 * @param day
+	 *            the day
+	 * @param realizedOrders
+	 *            the realized orders
+	 * @param canceledOrders
+	 *            the canceled orders
+	 * @param lateArrivals
+	 *            the late arrivals
+	 * @param complaints
+	 *            the complaints
 	 */
 	public DailyStatistics(LocalDate day, int realizedOrders, int canceledOrders, int lateArrivals, int complaints) {
 		super();
@@ -61,25 +66,30 @@ public class DailyStatistics implements Serializable {
 	/**
 	 * Instantiates a new daily statistics.
 	 *
-	 * @param rs the rs
-	 * @throws SQLException the SQL exception
+	 * @param rs
+	 *            the rs
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public DailyStatistics(ResultSet rs) throws SQLException {
 		this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
 	}
 
 	/**
-	 * Creates the.
+	 * Creates an empty entry in the table for specific date and lotId.
+	 * All other parameters are zero by default
 	 *
-	 * @param conn the conn
-	 * @param lotId the lot id
+	 * @param conn
+	 *            the conn
+	 * @param lotId
+	 *            the lot id
 	 * @return the daily statistics
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
-	public static DailyStatistics create(Connection conn, int lotId) throws SQLException {
+	public static DailyStatistics create(Connection conn, LocalDate today, int lotId) throws SQLException {
 		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_NEW_DAY);
 
-		LocalDate today = LocalDate.now();
 		int field = 1;
 		stmt.setDate(field++, Date.valueOf(today));
 		stmt.setInt(field++, lotId);
@@ -93,32 +103,41 @@ public class DailyStatistics implements Serializable {
 	/**
 	 * Increase realized order count by one for today in specific parking lot.
 	 *
-	 * @param conn the conn
-	 * @param lotId the lot id
-	 * @throws SQLException the SQL exception
+	 * @param conn
+	 *            the conn
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public static void IncreaseRealizedOrder(Connection conn, int lotId) throws SQLException {
 		IncreaseRealizedOrder(conn, LocalDate.now(), lotId);
 	}
 
 	/**
-	 * Increase realized order count by one in specific parking lot at specific date.
+	 * Increase realized order count by one in specific parking lot at specific
+	 * date.
 	 *
-	 * @param conn the conn
-	 * @param _date the date
-	 * @param lotId the lot id
-	 * @throws SQLException the SQL exception
+	 * @param conn
+	 *            the conn
+	 * @param _date
+	 *            the date
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public static void IncreaseRealizedOrder(Connection conn, LocalDate _date, int lotId) throws SQLException {
+		// check if line exists in database
 		PreparedStatement qwry = conn.prepareStatement(Constants.CHECK_DATE);
 		int index = 1;
 		int _order = 0;
 		qwry.setDate(index, Date.valueOf(_date));
 		ResultSet rs = qwry.executeQuery();
 		if (rs.wasNull())
-			create(conn, lotId);
+			create(conn, _date, lotId);// if doesn't exists - create empty line with zeroes
 		else
-			_order = rs.getInt("realized_orders") + 1;
+			_order = rs.getInt("realized_orders") + 1; // else get realized orders number and increase it
 		qwry.close();
 		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_REALIZED_ORDER);
 		stmt.setInt(index++, _order);
@@ -141,7 +160,8 @@ public class DailyStatistics implements Serializable {
 	/**
 	 * Sets the day.
 	 *
-	 * @param day the new day
+	 * @param day
+	 *            the new day
 	 */
 	public void setDay(LocalDate day) {
 		this.day = day;
@@ -159,7 +179,8 @@ public class DailyStatistics implements Serializable {
 	/**
 	 * Sets the realized orders.
 	 *
-	 * @param realizedOrders the new realized orders
+	 * @param realizedOrders
+	 *            the new realized orders
 	 */
 	public void setRealizedOrders(int realizedOrders) {
 		this.realizedOrders = realizedOrders;
@@ -177,7 +198,8 @@ public class DailyStatistics implements Serializable {
 	/**
 	 * Sets the canceled orders.
 	 *
-	 * @param canceledOrders the new canceled orders
+	 * @param canceledOrders
+	 *            the new canceled orders
 	 */
 	public void setCanceledOrders(int canceledOrders) {
 		this.canceledOrders = canceledOrders;
@@ -195,7 +217,8 @@ public class DailyStatistics implements Serializable {
 	/**
 	 * Sets the late arrivals.
 	 *
-	 * @param lateArrivals the new late arrivals
+	 * @param lateArrivals
+	 *            the new late arrivals
 	 */
 	public void setLateArrivals(int lateArrivals) {
 		this.lateArrivals = lateArrivals;
@@ -213,7 +236,8 @@ public class DailyStatistics implements Serializable {
 	/**
 	 * Sets the complaints.
 	 *
-	 * @param complaints the new complaints
+	 * @param complaints
+	 *            the new complaints
 	 */
 	public void setComplaints(int complaints) {
 		this.complaints = complaints;
