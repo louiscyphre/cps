@@ -3,6 +3,7 @@ package cps.client.alpha;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -38,11 +39,13 @@ public class AlphaGUIControllerMainMenu implements CPSViewController {
     Stage stage = (Stage) quitBtn.getScene().getWindow();
     // do what you have to do
     stage.close();
+    Platform.exit();
+    System.exit(0);
   }
 
   @FXML
   void handleRequestIncidentalParkingBtn(ActionEvent event) {
-    Scene scene = ControllersClientAdapter.fetchScene(AlphaGUIController2.class.getName());
+    Scene scene = ControllersClientAdapter.fetchScene("alpha2");
     CPSClientApplication clientApp = ControllersClientAdapter.getClient();
     Stage stage = clientApp.getPrimaryStage();
     stage.setScene(scene);
@@ -50,17 +53,26 @@ public class AlphaGUIControllerMainMenu implements CPSViewController {
 
   @FXML
   void handleViewParkingRequestsBtn(ActionEvent event) {
-    
+    Scene scene = ControllersClientAdapter.fetchScene("alpha3");
+    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
+    Stage stage = clientApp.getPrimaryStage();
+    stage.setScene(scene); 
   }
 
   @FXML
   void handleRequestParkingEntryBtn(ActionEvent event) {
-
+    Scene scene = ControllersClientAdapter.fetchScene("alpha4");
+    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
+    Stage stage = clientApp.getPrimaryStage();
+    stage.setScene(scene);
   }
 
   @FXML
   void handleInitParkingLot(ActionEvent event) {
-
+    Scene scene = ControllersClientAdapter.fetchScene("alpha5");
+    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
+    Stage stage = clientApp.getPrimaryStage();
+    stage.setScene(scene);
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is
@@ -73,8 +85,6 @@ public class AlphaGUIControllerMainMenu implements CPSViewController {
     assert incidentalParkingBtn != null : "fx:id=\"incidentalParkingBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
     ControllersClientAdapter.registerCtrl(this);
   }
-
-//    primaryStage.setTitle("Alpha Client - Main Menu");
 
   @Override
   public String getCtrlId() {

@@ -21,7 +21,7 @@ public class ClientControllerAlpha extends AbstractClient {
 	 */
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		clientUI.handleMessage(msg);
+		clientUI.receiveResponse(msg);
 	}
 
 	/**
