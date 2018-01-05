@@ -50,7 +50,7 @@ public class ServerConfig extends HashMap<String, String> {
 			config.put("db.host", "softengproject.cspvcqknb3vj.eu-central-1.rds.amazonaws.com:3306");
 			config.put("db.name", "kiwi_schema");
 			config.put("db.username", "kiwi_admin");
-			config.put("db.password", "*:_Tuu44\\3SJpH)f");			
+			config.put("db.password", "*:_Tuu44\\3SJpH)f");		
 		}		
 	}
 	

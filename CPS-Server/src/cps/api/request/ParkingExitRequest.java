@@ -8,23 +8,13 @@ import cps.server.RequestHandler;
 public class ParkingExitRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
 
-	private LocalDateTime  exitTime;
 	private int lotID;
-	private int carID;
+	private String carID;
 
-	public ParkingExitRequest(int customerID, LocalDateTime  exitTime, int lotID, int carID) {
+	public ParkingExitRequest(int customerID, int lotID, String carID) {
 		super(customerID);
-		this.exitTime = exitTime;
 		this.lotID = lotID;
 		this.carID = carID;
-	}
-
-	public LocalDateTime  getExitTime() {
-		return exitTime;
-	}
-
-	public void setExitTime(LocalDateTime  exitTime) {
-		this.exitTime = exitTime;
 	}
 
 	public int getLotID() {
@@ -35,11 +25,11 @@ public class ParkingExitRequest extends CustomerRequest {
 		this.lotID = lotID;
 	}
 
-	public int getCarID() {
+	public String getCarID() {
 		return carID;
 	}
 
-	public void setCarID(int carID) {
+	public void setCarID(String carID) {
 		this.carID = carID;
 	}
 
