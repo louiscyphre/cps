@@ -48,7 +48,7 @@ public class CmdParser {
       cmd = parser.parse(options, args);
     } catch (ParseException e) {
       System.out.println(e.getMessage());
-      formatter.printHelp("utility-name", options);
+      formatter.printHelp("java -jar yourClientJarName.jar", options);
 
       System.exit(1);// FIXME?
       return;
