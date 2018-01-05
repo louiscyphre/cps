@@ -5,7 +5,9 @@ import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class AlphaGUIController5 implements CPSViewController {
 
@@ -39,7 +41,10 @@ public class AlphaGUIController5 implements CPSViewController {
 
   @FXML
   void backHandler(ActionEvent event) {
-
+    Scene scene = ControllersClientAdapter.fetchScene("alphaMain");
+    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
+    Stage stage = clientApp.getPrimaryStage();
+    stage.setScene(scene);
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is
@@ -52,8 +57,6 @@ public class AlphaGUIController5 implements CPSViewController {
     assert robotIPTF != null : "fx:id=\"robotIPTF\" was not injected: check your FXML file 'AlphaGUI_5.fxml'.";
     ControllersClientAdapter.registerCtrl(this);
   }
-
-//    primaryStage.setTitle("Alpha Client - Init Parking Lot");
 
   @Override
   public String getCtrlId() {

@@ -19,7 +19,8 @@ public class ControllersClientAdapter {
   }
 
   public static ControllersClientAdapter getInstance() {
-    return instance == null ? new ControllersClientAdapter() : instance;
+    instance = instance == null ? new ControllersClientAdapter() : instance;
+    return instance;
   }
 
   static CPSViewController registerCtrl(CPSViewController ctrl) {
@@ -30,8 +31,8 @@ public class ControllersClientAdapter {
     return getInstance().ctrlMapping.get(name);
   }
 
-  static Scene registerScene(Scene ctrl) {
-    return getInstance().sceneMapping.put(Scene.class.getName(), ctrl);
+  static Scene registerScene(String key, Scene ctrl) {
+    return getInstance().sceneMapping.put(key, ctrl);
   }
 
   static Scene fetchScene(String name) {
