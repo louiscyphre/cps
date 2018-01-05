@@ -94,6 +94,7 @@ public class CarTransportation implements Serializable {
 		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getTimestamp(6), rs.getTimestamp(7));
 	}
 
+	// Creates a new CarTransportation entry in the SQL table
 	public static CarTransportation create(Connection conn, int customerID, String carID, int authType, int authID, int lotID) throws SQLException {
 		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_CAR_TRANSPORTATION,
 				Statement.RETURN_GENERATED_KEYS);
@@ -119,6 +120,14 @@ public class CarTransportation implements Serializable {
 		stmt.close();
 
 		return new CarTransportation(customerID, carID, authType, authID, lotID, insertedAt, removedAt);
+	}
+
+	public static CarTransportation findForExit(int customerID, String carID, int lotID) throws SQLException {
+		return null; // TODO: implement
+	}
+
+	public void updateRemovedAt(Timestamp removedAt) throws SQLException {		
+		
 	}
 
 }

@@ -1,6 +1,7 @@
 package cps.entities.models;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -10,7 +11,7 @@ public class SubscriptionService implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	int id;
-	int type; // 1 = regular, 2 = full
+	int subscriptionType; // 1 = regular, 2 = full
 	int customerID;
 	int carID;
 	int lotID; // if null then full, else regular
@@ -22,7 +23,7 @@ public class SubscriptionService implements Serializable {
 	public SubscriptionService(int id, int type, int customerID, int carID, int lotID, Timestamp startDate,
 			Timestamp endDate, Timestamp endTime, String email) {
 		this.id = id;
-		this.type = type;
+		this.subscriptionType = type;
 		this.customerID = customerID;
 		this.carID = carID;
 		this.lotID = lotID;
@@ -45,12 +46,12 @@ public class SubscriptionService implements Serializable {
 		this.id = id;
 	}
 
-	public int getType() {
-		return type;
+	public int getSubscriptionType() {
+		return subscriptionType;
 	}
 
-	public void setType(int type) {
-		this.type = type;
+	public void setSubscriptionType(int type) {
+		this.subscriptionType = type;
 	}
 
 	public int getCustomerID() {
@@ -107,6 +108,10 @@ public class SubscriptionService implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID) {
+		return null; // TODO: implement
 	}
 
 }

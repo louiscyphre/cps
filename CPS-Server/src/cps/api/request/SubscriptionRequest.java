@@ -40,4 +40,5 @@ public abstract class SubscriptionRequest extends CustomerRequest {
 		this.startDate = startDate;
 	}
 
+	public abstract int getSubscriptionType();
 }

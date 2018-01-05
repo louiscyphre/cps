@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 public abstract class OnetimeParkingRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
-	public final static int PARKING_TYPE = 2;
 
 	private String carID;
 	private int lotID;

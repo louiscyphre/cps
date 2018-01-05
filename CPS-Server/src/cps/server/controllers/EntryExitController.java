@@ -1,11 +1,15 @@
 package cps.server.controllers;
 
+import java.sql.Timestamp;
+
 import cps.api.request.ParkingEntryRequest;
 import cps.api.request.ParkingExitRequest;
 import cps.api.response.ServerResponse;
+import cps.common.Constants;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
+import cps.entities.models.SubscriptionService;
 import cps.server.ServerController;
 
 // TODO: Auto-generated Javadoc
@@ -51,8 +55,57 @@ public class EntryExitController extends RequestController {
 	 * @return the server response
 	 */
 	private ServerResponse handleSubscriptionEntry(ParkingEntryRequest request) {
-		// TODO: implement
-		return null;
+		return databaseController.performQuery(conn -> {
+			// Shortcuts for commonly used properties
+			int customerID = request.getCustomerID();
+			String carID = request.getCarID();
+			int lotID = request.getLotID();
+			int subsID = request.getSubscriptionID();
+			
+			// Find the OnetimeService that gives this customer an entry license.
+			// If the OnetimeService with the right parameters exists, then they can park
+			// their car in specified parking lot.
+			SubscriptionService service = SubscriptionService.findForEntry(conn, customerID, carID, subsID);
+
+			if (service == null) { // Entry license does not exist
+				return ServerResponse
+						.error("Entry license not found for customer ID " + customerID + " with car ID " + carID);
+			}
+			
+			if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && lotID != service.getLotID()) {
+				return ServerResponse.error(String.format("Requested parking in lotID = %s, but subscription is for lotID = %s", lotID, service.getLotID()));
+			}
+
+			// Entry license exists - continue
+			// Find the parking lot that the customer wants to enter
+			ParkingLot lot = ParkingLot.findByID(conn, lotID);
+
+			if (lot == null) { // Lot does not exist
+				return ServerResponse.error("Parking Lot with ID " + lotID + " does not exist");
+			}
+
+			// Attempt to insert the car into the lot.
+			// Optimal coordinates are calculated before insertion.
+			// If the lot is full, or some other error occurs, LotController will return an
+			// appropriate error response, which we will send back to the user.
+			LotController lotController = serverController.getLotController();
+			ServerResponse lotControllerResponse = lotController.insertCar(lot, carID);
+
+			if (lotControllerResponse != null) { // Car insertion failed - lot full or some other error
+				return lotControllerResponse;
+			}
+
+			// All good - create a CarTransportation table entry to record the fact that a
+			// successful parking was made.
+			CarTransportation transportation = CarTransportation.create(conn, request.getCustomerID(),
+					request.getCarID(), OnetimeService.TYPE, service.getId(), request.getLotID());
+
+			if (transportation == null) { // Failed to create a CarTransportation entry - this normally shouldn't happen
+				return ServerResponse.error("CarTransportation entry creation failed");
+			}
+
+			return ServerResponse.ok("ParkingEntry request completed successfully");
+		});
 	}
 
 	/**
@@ -118,8 +171,17 @@ public class EntryExitController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse handle(ParkingExitRequest request) {
+		// TODO: calculate payment
 		return databaseController.performQuery(conn -> {
-			CarTransportation entry = null; // TODO: find entry by request data and update it
+			CarTransportation entry = CarTransportation.findForExit(request.getCustomerID(), request.getCarID(), request.getLotID()); // TODO: find entry by request data and update it
+			
+			if (entry == null) { // CarTransportation does not exist
+				return ServerResponse.error("CarTransportation with the requested parameters does not exist");
+			}
+			// update the removedAt field
+			Timestamp removedAt = new Timestamp(System.currentTimeMillis());
+			entry.updateRemovedAt(removedAt);
+			// TODO: additional checks
 			return ServerResponse.decide("Entry update", entry != null);
 		});
 	}

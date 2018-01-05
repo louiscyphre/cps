@@ -98,9 +98,18 @@ public class TestServerController extends TestCase {
 //		System.out.println(gson.toJson(lot));
 	}
 	
-	private void requestParkingEntry(int customerID, String carID, int lotID) {
-		ParkingEntryRequest request = new ParkingEntryRequest(customerID, 0, lotID, carID);
+	private void requestEntryForOnetimeParking(int customerID, String carID, int lotID) {
+		ParkingEntryRequest request = new ParkingEntryRequest(customerID, 0, lotID, carID); // subscriptionID = 0 means entry by OnetimeParking license
 		ServerResponse response = server.dispatch(request);
+		assertTrue(response.success());
+		assertEquals(1, db.countEntities("car_transportation"));
+		// TODO: fetch the CarTransportation and check fields
+	}
+	
+	private void requestParkingExit(int customerID, String carID, int lotID) {
+		ParkingExitRequest request = new ParkingExitRequest(customerID, lotID, carID);
+		ServerResponse response = server.dispatch(request);
+		System.out.println(gson.toJson(response));
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("car_transportation"));
 		// TODO: fetch the CarTransportation and check fields
@@ -121,8 +130,8 @@ public class TestServerController extends TestCase {
 		
 		initParkingLot();
 		requestIncidentalParking(customerID, email, carID, lotID);
-		requestParkingEntry(customerID, carID, lotID);
-		// TODO: send exit request
+		requestEntryForOnetimeParking(customerID, carID, lotID);
+		requestParkingExit(customerID, carID, lotID);
 	}
 	
 	@Test
@@ -140,7 +149,7 @@ public class TestServerController extends TestCase {
 		
 		initParkingLot();
 		requestReservedParking(customerID, email, carID, lotID);
-		requestParkingEntry(customerID, carID, lotID);
+		requestEntryForOnetimeParking(customerID, carID, lotID);
 		// TODO: send exit request
 	}
 }
