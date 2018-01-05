@@ -1,12 +1,18 @@
 package cps.client.alpha;
 
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
+import cps.api.request.IncidentalParkingRequest;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class AlphaGUIController2 implements CPSViewController {
 
@@ -36,11 +42,98 @@ public class AlphaGUIController2 implements CPSViewController {
   @FXML
   void submitHandler(ActionEvent event) {
 
+    int userID = 0;
+    String strUserID = userIdTF.getText();
+    try {
+      userID = Integer.parseInt(strUserID);
+    } catch (NumberFormatException e) {
+      displayError(InputVerification.MISSING_USERID.msg);
+      return;
+    } catch (NullPointerException e) {
+      displayError(InputVerification.MISSING_USERID.msg);
+      return;
+    }
+
+    String email = emailTF.getText();
+
+    String carID = carIDTF.getText();
+    if (carID == null || carID.length() < 1) {
+      displayError(InputVerification.MISSING_CARID.msg);
+      return;
+    }
+
+    int lotID = 0;
+    String strLotID = lotIDTF.getText();
+    try {
+      lotID = Integer.parseInt(strLotID);
+    } catch (NumberFormatException e) {
+      displayError(InputVerification.MISSING_LOTID.msg);
+      return;
+    } catch (NullPointerException e) {
+      displayError(InputVerification.MISSING_LOTID.msg);
+      return;
+    }
+
+    LocalDateTime date = null;
+    try {
+      String dateStr = plannedEndTimeTF.getText();
+      date = LocalDateTime.parse(dateStr);
+    } catch (DateTimeParseException e) {
+      displayError(InputVerification.MISSING_PLANNEDENDTIME.msg);
+      return;
+    } catch (NullPointerException e) {
+      displayError(InputVerification.MISSING_PLANNEDENDTIME.msg);
+      return;
+    }
+
+    // TODO Maybe useful
+    // InputVerification verified = verifyInput(userID, email, carID, lotID,
+    // date);
+
+    IncidentalParkingRequest request = new IncidentalParkingRequest(userID, email, carID, lotID, date);
+    ControllersClientAdapter.getClient().sendRequest(request);
+  }
+
+  private void displayError(String errorMsg) {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setContentText(errorMsg);
+    alert.showAndWait();
+  }
+
+  // private InputVerification verifyInput(int userID, String email, String
+  // carID, int lotID, LocalDateTime date) {
+  //
+  // return null;
+  // }
+
+  public enum InputVerification {
+    INPUT_OK(0, "The request is valid"), MISSING_USERID(0, "Missing or bad UserID"), MISSING_EMAIL(1,
+        "Missing or bad Email"), MISSING_CARID(3, "Missing or bad CarID"), MISSING_LOTID(4,
+            "Missing or bad LotID"), MISSING_PLANNEDENDTIME(5, "Missing or bad Planned End Time");
+
+    private final int    id;
+    private final String msg;
+
+    InputVerification(int id, String msg) {
+      this.id = id;
+      this.msg = msg;
+    }
+
+    public int getId() {
+      return this.id;
+    }
+
+    public String getMsg() {
+      return this.msg;
+    }
   }
 
   @FXML
   void backHandler(ActionEvent event) {
-
+    Scene scene = ControllersClientAdapter.fetchScene("alphaMain");
+    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
+    Stage stage = clientApp.getPrimaryStage();
+    stage.setScene(scene);
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is
@@ -51,10 +144,10 @@ public class AlphaGUIController2 implements CPSViewController {
     assert emailTF != null : "fx:id=\"emailTF\" was not injected: check your FXML file 'AlphaGUI_2.fxml'.";
     assert carIDTF != null : "fx:id=\"carIDTF\" was not injected: check your FXML file 'AlphaGUI_2.fxml'.";
     assert plannedEndTimeTF != null : "fx:id=\"plannedEndTimeTF\" was not injected: check your FXML file 'AlphaGUI_2.fxml'.";
+    plannedEndTimeTF.setText(LocalDateTime.now().toString());
     ControllersClientAdapter.registerCtrl(this);
-  }
 
-//    primaryStage.setTitle("Alpha Client - Incidental Parking");
+  }
 
   @Override
   public String getCtrlId() {

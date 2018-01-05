@@ -19,7 +19,7 @@
             <TextField fx:id="emailTF" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="carIDTF" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="lotIDTF" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="plannedEndTimeTF" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="plannedEndTimeTF" promptText="yyyy-mm-ddT23:45" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Car ID" GridPane.rowIndex="2" />
             <Label text="Lot ID" GridPane.rowIndex="3" />
             <Label text="Planned end time" GridPane.rowIndex="4" />
