@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="175.0" style="-fx-background-color: lightblue;" text="Employee Login" textFill="WHITE">
+               <HBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </Button>
+            <Button alignment="CENTER" contentDisplay="BOTTOM" mnemonicParsing="false" prefHeight="50.0" prefWidth="175.0" style="-fx-background-color: lightblue;" text="Customer View" textFill="WHITE">
+               <HBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </top>
+   <bottom>
+      <TextField alignment="CENTER" editable="false" promptText="Welcome to CPS Kiosk!" BorderPane.alignment="CENTER" />
+   </bottom>
+   <center>
+      <GridPane alignment="CENTER" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" percentWidth="50.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" percentWidth="50.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button mnemonicParsing="false" text="Request Onetime parking" />
+            <Button mnemonicParsing="false" text="Purchase Full Subscription" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" text="View my parking requests" GridPane.rowIndex="1" />
+            <Button mnemonicParsing="false" text="Purchase Regular Subscription" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button mnemonicParsing="false" text="Cancel parking request" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" text="Prolong Subscription" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" text="File Complaint" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+   </center>
+</BorderPane>
