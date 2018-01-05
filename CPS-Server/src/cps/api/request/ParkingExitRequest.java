@@ -2,6 +2,9 @@ package cps.api.request;
 
 import java.time.LocalDateTime ;
 
+import cps.api.response.ServerResponse;
+import cps.server.RequestHandler;
+
 public class ParkingExitRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
 
@@ -40,4 +43,8 @@ public class ParkingExitRequest extends CustomerRequest {
 		this.carID = carID;
 	}
 
+	@Override
+	public ServerResponse handle(RequestHandler handler) {
+		return handler.handle(this);
+	}
 }

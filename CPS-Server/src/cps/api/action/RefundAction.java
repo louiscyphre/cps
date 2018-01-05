@@ -1,5 +1,8 @@
 package cps.api.action;
 
+import cps.api.response.ServerResponse;
+import cps.server.RequestHandler;
+
 public class RefundAction extends ServiceAction {
 	private static final long serialVersionUID = 1L;
 	private double amount;
@@ -29,5 +32,10 @@ public class RefundAction extends ServiceAction {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	@Override
+	public ServerResponse handle(RequestHandler handler) {
+		return handler.handle(this);
 	}
 }

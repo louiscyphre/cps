@@ -1,5 +1,8 @@
 package cps.api.action;
 
+import cps.api.response.ServerResponse;
+import cps.server.RequestHandler;
+
 public class DisableParkingSlotsAction extends LotAction {
 	private static final long serialVersionUID = 1L;
 	private int locationI;
@@ -35,5 +38,10 @@ public class DisableParkingSlotsAction extends LotAction {
 
 	public void setLocationK(int locationK) {
 		this.locationK = locationK;
+	}
+
+	@Override
+	public ServerResponse handle(RequestHandler handler) {
+		return handler.handle(this);
 	}
 }

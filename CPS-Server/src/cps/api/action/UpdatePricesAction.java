@@ -1,5 +1,8 @@
 package cps.api.action;
 
+import cps.api.response.ServerResponse;
+import cps.server.RequestHandler;
+
 public class UpdatePricesAction extends LotAction {
 	private static final long serialVersionUID = 1L;
 	private float price1;
@@ -25,5 +28,10 @@ public class UpdatePricesAction extends LotAction {
 
 	public void setPrice2(float price2) {
 		this.price2 = price2;
+	}
+
+	@Override
+	public ServerResponse handle(RequestHandler handler) {
+		return handler.handle(this);
 	}
 }

@@ -1,5 +1,8 @@
 package cps.api.action;
 
+import cps.api.response.ServerResponse;
+import cps.server.RequestHandler;
+
 public class InitLotAction extends ServiceAction {
 	private static final long serialVersionUID = 1L;
 	
@@ -56,5 +59,10 @@ public class InitLotAction extends ServiceAction {
 
 	public void setRobotIP(String robotIP) {
 		this.robotIP = robotIP;
+	}
+
+	@Override
+	public ServerResponse handle(RequestHandler handler) {
+		return handler.handle(this);
 	}
 }

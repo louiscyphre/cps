@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public abstract class OnetimeParkingRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
-	public final static int TYPE = 2;
+	public final static int PARKING_TYPE = 2;
 
 	private String carID;
 	private int lotID;
@@ -50,5 +50,7 @@ public abstract class OnetimeParkingRequest extends CustomerRequest {
 	public void setLotID(int lotID) {
 		this.lotID = lotID;
 	}
+
+	public abstract int getParkingType();
 
 }
