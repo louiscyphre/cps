@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
 import cps.common.Constants;
+import javafx.util.converter.LocalDateStringConverter;
 
 public class DailyStatistics implements Serializable {
 	// `day` date NOT NULL,
@@ -50,6 +51,29 @@ public class DailyStatistics implements Serializable {
 		stmt.close();
 		return new DailyStatistics(today, lotId, 0, 0, 0);
 
+	}
+
+	public static void IncreaseRealizedOrder(Connection conn, int lotId) throws SQLException {
+		IncreaseRealizedOrder(conn, LocalDate.now(), lotId);
+	}
+
+	public static void IncreaseRealizedOrder(Connection conn, LocalDate _date, int lotId) throws SQLException {
+		PreparedStatement qwry = conn.prepareStatement(Constants.CHECK_DATE);
+		int index = 1;
+		int _order = 0;
+		qwry.setDate(index, Date.valueOf(_date));
+		ResultSet rs = qwry.executeQuery();
+		if (rs.wasNull())
+			create(conn, lotId);
+		else
+			_order = rs.getInt("realized_orders") + 1;
+		qwry.close();
+		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_REALIZED_ORDER);
+		stmt.setInt(index++, _order);
+		stmt.setDate(index++, Date.valueOf(_date));
+		stmt.setInt(index++, lotId);
+		if (stmt.executeUpdate() == 0)
+			throw new SQLException("Failed to increase Realized Order Count");
 	}
 
 	public LocalDate getDay() {
