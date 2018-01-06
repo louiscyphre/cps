@@ -24,5 +24,5 @@ public interface Constants {
 	public final String GET_ONETIME_SERVICE_BY_CUSTOMER_ID= "SELECT * FROM onetime_service WHERE customer_id = ? ORDER BY id";
 	public final String GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID= "SELECT * FROM onetime_service WHERE customer_id = ? AND car_id = ? AND lot_id = ? ORDER BY id DESC LIMIT 1";
 	public final String SQL_FIND_CAR_TRANSPORTATION = "SELECT * FROM car_transportation WHERE customer_id=? AND car_id=? AND lot_id=? AND removed_at=NULL";
-	
+	public final String SQL_UPDATE_REMOVED_AT = "UPDATE car_transportation SET removed_at = ? WHERE customer_id=? AND car_id=? AND lot_id=? AND inserted_at=?";
 }

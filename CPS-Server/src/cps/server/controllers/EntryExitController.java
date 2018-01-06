@@ -17,11 +17,12 @@ import cps.server.ServerController;
  * The Class EntryExitController.
  */
 public class EntryExitController extends RequestController {
-	
+
 	/**
 	 * Instantiates a new entry exit controller.
 	 *
-	 * @param serverController the server application
+	 * @param serverController
+	 *            the server application
 	 */
 	public EntryExitController(ServerController serverController) {
 		super(serverController);
@@ -30,7 +31,8 @@ public class EntryExitController extends RequestController {
 	/**
 	 * Handle ParkingEntryRequest.
 	 *
-	 * @param request the request
+	 * @param request
+	 *            the request
 	 * @return the server response
 	 */
 	public ServerResponse handle(ParkingEntryRequest request) {
@@ -51,7 +53,8 @@ public class EntryExitController extends RequestController {
 	/**
 	 * Handle ParkingEntryRequest with a subscription entry license.
 	 *
-	 * @param request the request
+	 * @param request
+	 *            the request
 	 * @return the server response
 	 */
 	private ServerResponse handleSubscriptionEntry(ParkingEntryRequest request) {
@@ -61,7 +64,7 @@ public class EntryExitController extends RequestController {
 			String carID = request.getCarID();
 			int lotID = request.getLotID();
 			int subsID = request.getSubscriptionID();
-			
+
 			// Find the OnetimeService that gives this customer an entry license.
 			// If the OnetimeService with the right parameters exists, then they can park
 			// their car in specified parking lot.
@@ -71,9 +74,11 @@ public class EntryExitController extends RequestController {
 				return ServerResponse
 						.error("Entry license not found for customer ID " + customerID + " with car ID " + carID);
 			}
-			
+
 			if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && lotID != service.getLotID()) {
-				return ServerResponse.error(String.format("Requested parking in lotID = %s, but subscription is for lotID = %s", lotID, service.getLotID()));
+				return ServerResponse
+						.error(String.format("Requested parking in lotID = %s, but subscription is for lotID = %s",
+								lotID, service.getLotID()));
 			}
 
 			// Entry license exists - continue
@@ -111,17 +116,19 @@ public class EntryExitController extends RequestController {
 	/**
 	 * Handle ParkingEntryRequest with a one-time entry license.
 	 *
-	 * @param request the request
+	 * @param request
+	 *            the request
 	 * @return the server response
 	 */
 	private ServerResponse handleOnetimeEntry(ParkingEntryRequest request) {
-		// The lambda function will return a ServerResponse object, which we will send back to the user.
+		// The lambda function will return a ServerResponse object, which we will send
+		// back to the user.
 		return databaseController.performQuery(conn -> {
 			// Shortcuts for commonly used properties
 			int customerID = request.getCustomerID();
 			String carID = request.getCarID();
 			int lotID = request.getLotID();
-			
+
 			// Find the OnetimeService that gives this customer an entry license.
 			// If the OnetimeService with the right parameters exists, then they can park
 			// their car in specified parking lot.
@@ -167,21 +174,26 @@ public class EntryExitController extends RequestController {
 	/**
 	 * Handle ParkingExitRequest.
 	 *
-	 * @param request the request
+	 * @param request
+	 *            the request
 	 * @return the server response
 	 */
 	public ServerResponse handle(ParkingExitRequest request) {
 		// TODO: calculate payment
 		return databaseController.performQuery(conn -> {
-			CarTransportation entry = CarTransportation.findForExit(request.getCustomerID(), request.getCarID(), request.getLotID()); // TODO: find entry by request data and update it
-			
+			CarTransportation entry = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
+					request.getLotID());
+
 			if (entry == null) { // CarTransportation does not exist
 				return ServerResponse.error("CarTransportation with the requested parameters does not exist");
 			}
 			// update the removedAt field
 			Timestamp removedAt = new Timestamp(System.currentTimeMillis());
-			entry.updateRemovedAt(removedAt);
-			// TODO: additional checks
+			
+			if (0 <= entry.updateRemovedAt(conn, removedAt)) {
+				return ServerResponse.error("Failed to update car transportation");
+			}
+
 			return ServerResponse.decide("Entry update", entry != null);
 		});
 	}

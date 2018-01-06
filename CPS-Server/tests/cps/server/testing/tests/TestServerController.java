@@ -150,6 +150,6 @@ public class TestServerController extends TestCase {
 		initParkingLot();
 		requestReservedParking(customerID, email, carID, lotID);
 		requestEntryForOnetimeParking(customerID, carID, lotID);
-		// TODO: send exit request
+		requestParkingExit(customerID, carID, lotID);
 	}
 }
