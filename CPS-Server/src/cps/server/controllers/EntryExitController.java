@@ -12,7 +12,6 @@ import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
 import cps.server.ServerController;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class EntryExitController.
  */

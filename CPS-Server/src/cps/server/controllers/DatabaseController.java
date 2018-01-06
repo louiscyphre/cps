@@ -7,7 +7,6 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.LinkedList;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DatabaseController.
  */

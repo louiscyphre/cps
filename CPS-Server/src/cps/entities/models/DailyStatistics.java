@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.sql.Date;
 import cps.common.Constants;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DailyStatistics.
  */
@@ -74,6 +73,7 @@ public class DailyStatistics implements Serializable {
 		this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
 	}
 
+//TODO: Cauchy check this 
 	/**
 	 * Creates an empty entry in the table for specific date and lotId. All other
 	 * parameters are zero by default
