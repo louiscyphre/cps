@@ -1,15 +1,14 @@
-package cps.client.alpha;
+package cps.client.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import cps.client.alpha.ControllersClientAdapter.SceneCode;
+import cps.client.controller.ControllersClientAdapter.SceneCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class AlphaGUIController4 implements CPSViewController {
-  
+public class AlphaGUIController3 implements CPSViewController {
 
   @FXML // ResourceBundle that was given to the FXMLLoader
   private ResourceBundle resources;
@@ -31,7 +30,7 @@ public class AlphaGUIController4 implements CPSViewController {
 
   @FXML
   void submitHandler(ActionEvent event) {
-
+    
   }
 
   @FXML
@@ -39,13 +38,14 @@ public class AlphaGUIController4 implements CPSViewController {
     ControllersClientAdapter.setStage(SceneCode.MAIN_MENU);
   }
 
-  @FXML // This method is called by the FXMLLoader when initialization is complete
+  @FXML // This method is called by the FXMLLoader when initialization is
+        // complete
   void initialize() {
-      assert userIDTF != null : "fx:id=\"userIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
-      assert lotIDTF != null : "fx:id=\"lotIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
-      assert carIDTF != null : "fx:id=\"carIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
-      assert subIDTF != null : "fx:id=\"subIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
-      ControllersClientAdapter.registerCtrl(this,SceneCode.REQUEST_PARKING_ENTRY);
+    assert userIDTF != null : "fx:id=\"userIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
+    assert lotIDTF != null : "fx:id=\"lotIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
+    assert carIDTF != null : "fx:id=\"carIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
+    assert subIDTF != null : "fx:id=\"subIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
+    ControllersClientAdapter.registerCtrl(this,SceneCode.VIEW_MY_REQUESTS);
   }
-  
+
 }
