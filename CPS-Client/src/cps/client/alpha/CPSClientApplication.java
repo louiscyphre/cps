@@ -14,10 +14,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
-/**
- * @author student
- *
- */
 public class CPSClientApplication extends Application implements ClientUIAlpha {
 
   private ClientControllerAlpha client;
@@ -28,22 +24,11 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
    *
    */
   public CPSClientApplication() {
-    try {
-      this.client = new ClientControllerAlpha(cps.common.Constants.DEFAULT_HOST, cps.common.Constants.DEFAULT_PORT,
-          this);
-      ControllersClientAdapter.registerClient(this);
-    } catch (IOException e) {
-      System.out.println("Error: Can't setup connection! Terminating client.");
-      System.exit(1);
-    }
   }
 
-  @Override
-  public void start(Stage primaryStage) {
+  public void loadKiosk() throws IOException {
     try {
       Scene scene = ControllersClientAdapter.registerScene(SceneCode.MAIN_MENU, "AlphaGUI_mainMenu.fxml");
-
-      this.primaryStage = primaryStage;
 
       primaryStage.setScene(scene);
       primaryStage.setTitle("CPS Alpha Client");
@@ -63,6 +48,39 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
 
     } catch (IOException e) {
       e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void start(Stage primaryStage) {
+    try {
+
+      this.primaryStage = primaryStage;
+      CmdParser parser = new CmdParser();
+      parser.extract(getParameters().getRaw().toArray(new String[0]));
+
+      this.client = new ClientControllerAlpha(parser.getHost(),
+          parser.getPort(), this);
+
+      ControllersClientAdapter.registerClient(this);
+
+      switch (parser.getMode()) {
+        case "webclient":
+          // loadWebclient();
+          break;
+        case "service":
+          // loadService();
+          break;
+        default:
+          loadKiosk();
+      }
+
+    } catch (IOException e) {
+      System.out.println("Error: Can't setup connection! Terminating client.");
+      System.exit(1);
+    } catch (NumberFormatException e) {
+      System.out.println("Error: Wrong port or parking lot id");
+      System.exit(1);
     }
   }
 
@@ -87,7 +105,7 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
           alert.setContentText(srvrResp.getDescription());
           alert.showAndWait();
         });
-      }
+ }
     }
   }
 
@@ -98,5 +116,4 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
   public void setPrimaryStage(Stage primaryStage) {
     this.primaryStage = primaryStage;
   }
-
 }
