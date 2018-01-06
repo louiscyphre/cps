@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import cps.api.request.ParkingEntryRequest;
 import cps.api.request.ParkingExitRequest;
 import cps.api.response.ServerResponse;
-import cps.common.Constants;
+import cps.common.*;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
@@ -179,7 +179,6 @@ public class EntryExitController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse handle(ParkingExitRequest request) {
-		// TODO: calculate payment
 		return databaseController.performQuery(conn -> {
 			CarTransportation entry = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
 					request.getLotID());
@@ -193,7 +192,10 @@ public class EntryExitController extends RequestController {
 			if (0 <= entry.updateRemovedAt(conn, removedAt)) {
 				return ServerResponse.error("Failed to update car transportation");
 			}
-
+			// TODO: calculate payment
+			// Calculating and charging of customer is independent of exiting the parking lot
+			Utilities.ChargeCustomer(conn,entry,request);
+			
 			return ServerResponse.decide("Entry update", entry != null);
 		});
 	}

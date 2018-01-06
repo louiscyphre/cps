@@ -111,7 +111,7 @@ public class SubscriptionService implements Serializable {
 	}
 
 	public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID) {
-		return null; // TODO: implement
+		return null; // TODO: implement find subscription
 	}
 
 }
