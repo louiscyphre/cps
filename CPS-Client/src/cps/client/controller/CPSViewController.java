@@ -1,4 +1,4 @@
-package cps.client.alpha;
+package cps.client.controller;
 
 public interface CPSViewController {
 

@@ -1,9 +1,10 @@
-package cps.client.alpha;
+package cps.client.controller;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
+import cps.client.main.AlphaCPSClientApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -11,7 +12,7 @@ import javafx.stage.Stage;
 
 public class ControllersClientAdapter {
 
-  CPSClientApplication cpsClient;
+  AlphaCPSClientApplication cpsClient;
 
   private static ControllersClientAdapter instance;
 
@@ -36,9 +37,9 @@ public class ControllersClientAdapter {
     return getInstance().ctrlMapping.get(code.getCode());
   }
 
-  static Scene registerScene(SceneCode code, String fxmlName) throws IOException {
+  public static Scene registerScene(SceneCode code, String fxmlName) throws IOException {
 
-    URL url = getClient().getClass().getResource(fxmlName);
+    URL url = getClient().getClass().getResource("../view/"+fxmlName);
     Pane pane;
     pane = FXMLLoader.load(url);
     Scene scene = new Scene(pane);
@@ -50,18 +51,18 @@ public class ControllersClientAdapter {
     return getInstance().sceneMapping.get(code.getCode());
   }
 
-  static CPSClientApplication registerClient(CPSClientApplication cpsClient) {
+  public static AlphaCPSClientApplication registerClient(AlphaCPSClientApplication cpsClient) {
     getInstance().cpsClient = cpsClient;
     return getInstance().cpsClient = cpsClient;
   }
 
-  static CPSClientApplication getClient() {
+  static AlphaCPSClientApplication getClient() {
     return getInstance().cpsClient;
   }
 
   static void setStage(SceneCode code) {
     Scene scene = ControllersClientAdapter.fetchScene(code);
-    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
+    AlphaCPSClientApplication clientApp = ControllersClientAdapter.getClient();
     Stage stage = clientApp.getPrimaryStage();
     stage.setScene(scene);
   }
