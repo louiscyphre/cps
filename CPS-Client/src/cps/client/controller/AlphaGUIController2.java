@@ -1,4 +1,4 @@
-package cps.client.alpha;
+package cps.client.controller;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -6,7 +6,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 import cps.api.request.IncidentalParkingRequest;
-import cps.client.alpha.ControllersClientAdapter.SceneCode;
+import cps.client.controller.ControllersClientAdapter.SceneCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -14,7 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 
-public class AlphaGUIController2 implements CPSViewController {
+public class AlphaGUIController2 implements ViewController {
 
   Scene myScene;
 

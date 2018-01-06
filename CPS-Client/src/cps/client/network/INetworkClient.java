@@ -1,6 +1,6 @@
-package cps.client.alpha;
+package cps.client.network;
 
-public interface ClientUIAlpha {
+public interface INetworkClient {
   public void sendRequest(Object rqst);
   public void receiveResponse(Object resp);
 }

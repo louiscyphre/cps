@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cps.client.alpha;
+package cps.client.utils;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;

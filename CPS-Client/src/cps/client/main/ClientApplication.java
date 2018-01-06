@@ -1,12 +1,16 @@
 /**
  *
  */
-package cps.client.alpha;
+package cps.client.main;
 
 import java.io.IOException;
 
 import cps.api.response.ServerResponse;
-import cps.client.alpha.ControllersClientAdapter.SceneCode;
+import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ControllersClientAdapter.SceneCode;
+import cps.client.network.CPSNetworkClient;
+import cps.client.network.INetworkClient;
+import cps.client.utils.CmdParser;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -14,9 +18,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
-public class CPSClientApplication extends Application implements ClientUIAlpha {
+public class ClientApplication extends Application implements INetworkClient {
 
-  private ClientControllerAlpha client;
+  private CPSNetworkClient client;
 
   private Stage primaryStage;
 
@@ -33,13 +37,12 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
   /**
    *
    */
-  public CPSClientApplication() {
+  public ClientApplication() {
   }
 
   public void loadKiosk() throws IOException {
     try {
-      Scene scene = ControllersClientAdapter.registerScene(SceneCode.MAIN_MENU, "AlphaGUI_mainMenu.fxml");
-
+      Scene scene = ControllersClientAdapter.registerScene(SceneCode.MAIN_MENU);
       primaryStage.setScene(scene);
       primaryStage.setTitle("CPS Alpha Client");
       primaryStage.show();
@@ -47,14 +50,10 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
         Platform.exit();
         System.exit(0);
       });
-
-      ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING, "AlphaGUI_2.fxml");
-
-      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_REQUESTS, "AlphaGUI_3.fxml");
-
-      ControllersClientAdapter.registerScene(SceneCode.REQUEST_PARKING_ENTRY, "AlphaGUI_4.fxml");
-
-      ControllersClientAdapter.registerScene(SceneCode.INIT_PARKING_LOT, "AlphaGUI_5.fxml");
+      ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
+      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_REQUESTS);
+      ControllersClientAdapter.registerScene(SceneCode.REQUEST_PARKING_ENTRY);
+      ControllersClientAdapter.registerScene(SceneCode.INIT_PARKING_LOT);
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -69,7 +68,7 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
       CmdParser parser = new CmdParser();
       parser.extract(getParameters().getRaw().toArray(new String[0]));
 
-      this.client = new ClientControllerAlpha(parser.getHost(),
+      this.client = new CPSNetworkClient(parser.getHost(),
           parser.getPort(), this);
 
       ControllersClientAdapter.registerClient(this);
@@ -79,7 +78,7 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
           // loadWebclient();
           break;
         case "service":
-          // loadService();
+          loadService();
           break;
         default:
           loadKiosk();
@@ -94,6 +93,10 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
       System.out.println("Error: Wrong port or parking lot id");
       System.exit(1);
     }
+  }
+
+  private void loadService() {
+
   }
 
   public static void main(String[] args) {
