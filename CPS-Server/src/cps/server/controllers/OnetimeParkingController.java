@@ -11,6 +11,7 @@ import java.util.Collection;
 import cps.api.request.*;
 import cps.api.response.ListOnetimeEntriesResponse;
 import cps.api.response.ServerResponse;
+import cps.entities.models.DailyStatistics;
 import cps.entities.models.OnetimeService;
 import cps.server.ServerApplication;
 import cps.server.ServerController;
@@ -73,16 +74,17 @@ public class OnetimeParkingController extends RequestController {
 			// Mark Order as canceled
 			Timestamp _now;
 			OnetimeService toc = OnetimeService.findById(conn, request.getOnetimeServiceID());
-			//chance field in the object
+			// chance field in the object
 			toc.setCanceled(true);
-			//Find entry in the db and update it to match all the fields
-			toc.UpdateById(conn);
-			
+			// Find entry in the db and update it to match all the fields
+			toc.Update(conn);
+			// TODO:i'm here
 			// Increase daily counter of canceled orders
+			DailyStatistics.IncreaseCanceledOrder(conn, toc.getLotID());
 
 			// Give customer all/some money back
-			
-			//Return Server Response
+
+			// Return Server Response
 			return ServerResponse.decide("123", true);
 		});
 	}
