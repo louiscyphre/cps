@@ -72,20 +72,19 @@ public class OnetimeParkingController extends RequestController {
 	public ServerResponse handle(CancelOnetimeParkingRequest request) {
 		return databaseController.performQuery(conn -> {
 			// Mark Order as canceled
-			Timestamp _now;
-			OnetimeService toc = OnetimeService.findById(conn, request.getOnetimeServiceID());
+			Timestamp now;
+			OnetimeService serviceToCancel = OnetimeService.findById(conn, request.getOnetimeServiceID());
 			// chance field in the object
-			toc.setCanceled(true);
+			serviceToCancel.setCanceled(true);
 			// Find entry in the db and update it to match all the fields
-			toc.Update(conn);
-			// TODO:i'm here
+			serviceToCancel.update(conn);
 			// Increase daily counter of canceled orders
-			DailyStatistics.IncreaseCanceledOrder(conn, toc.getLotID());
-
-			// Give customer all/some money back
+			DailyStatistics.IncreaseCanceledOrder(conn, serviceToCancel.getLotID());
+			
+			// TODO: Cauchy Give customer all/some money back
 
 			// Return Server Response
-			return ServerResponse.decide("123", true);
+			return ServerResponse.ok("Order canceled successfully");
 		});
 	}
 

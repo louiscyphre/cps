@@ -214,7 +214,7 @@ public class OnetimeService implements Serializable {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public void Update(Connection conn) throws SQLException {
+	public void update(Connection conn) throws SQLException {
 		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_ONETIME_BY_ID);
 		int i = 1;
 		st.setInt(i++, this.parkingType);
