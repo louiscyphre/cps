@@ -20,6 +20,16 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
 
   private Stage primaryStage;
 
+  private int lotID; // required : -1 if web-client
+  
+  public int getLotID() {
+    return lotID;
+  }
+
+  private void setLotID(int lotID) {
+    this.lotID = lotID;
+  }
+
   /**
    *
    */
@@ -74,6 +84,8 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
         default:
           loadKiosk();
       }
+      
+      setLotID(parser.getLotId());
 
     } catch (IOException e) {
       System.out.println("Error: Can't setup connection! Terminating client.");
