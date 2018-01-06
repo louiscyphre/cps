@@ -4,16 +4,14 @@
 package cps.client.alpha;
 
 import java.io.IOException;
-import java.net.URL;
 
 import cps.api.response.ServerResponse;
+import cps.client.alpha.ControllersClientAdapter.SceneCode;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -43,41 +41,25 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
   @Override
   public void start(Stage primaryStage) {
     try {
-      URL url = getClass().getResource("AlphaGUI_mainMenu.fxml");
-      Pane pane;
-      pane = FXMLLoader.load(url);
-      Scene scene = new Scene(pane);
-      ControllersClientAdapter.registerScene("alphaMain", scene);
+      Scene scene = ControllersClientAdapter.registerScene(SceneCode.MAIN_MENU, "AlphaGUI_mainMenu.fxml");
 
       this.primaryStage = primaryStage;
 
       primaryStage.setScene(scene);
-      primaryStage.setTitle("CPS Kiosk Client");
+      primaryStage.setTitle("CPS Alpha Client");
       primaryStage.show();
       primaryStage.setOnCloseRequest(e -> {
         Platform.exit();
         System.exit(0);
       });
 
-      url = getClass().getResource("AlphaGUI_2.fxml");
-      pane = FXMLLoader.load(url);
-      scene = new Scene(pane);
-      ControllersClientAdapter.registerScene("alpha2", scene);
+      ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING, "AlphaGUI_2.fxml");
 
-      url = getClass().getResource("AlphaGUI_3.fxml");
-      pane = FXMLLoader.load(url);
-      scene = new Scene(pane);
-      ControllersClientAdapter.registerScene("alpha3", scene);
+      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_REQUESTS, "AlphaGUI_3.fxml");
 
-      url = getClass().getResource("AlphaGUI_4.fxml");
-      pane = FXMLLoader.load(url);
-      scene = new Scene(pane);
-      ControllersClientAdapter.registerScene("alpha4", scene);
+      ControllersClientAdapter.registerScene(SceneCode.REQUEST_PARKING_ENTRY, "AlphaGUI_4.fxml");
 
-      url = getClass().getResource("AlphaGUI_5.fxml");
-      pane = FXMLLoader.load(url);
-      scene = new Scene(pane);
-      ControllersClientAdapter.registerScene("alpha5", scene);
+      ControllersClientAdapter.registerScene(SceneCode.INIT_PARKING_LOT, "AlphaGUI_5.fxml");
 
     } catch (IOException e) {
       e.printStackTrace();
