@@ -48,4 +48,17 @@ public class ControllersClientAdapter {
     return getInstance().cpsClient;
   }
 
+  static void setStage(StageCode code) {
+    
+  }
+
+  public enum StageCode {
+
+    MAIN_MENU, INCIDENTAL_PARKING, VIEW_MY_REQUESTS, REQUEST_PARKING_ENTRY, INIT_PARKING_LOT;
+
+    String getCode() {
+      return this.name();
+    }
+
+  }
 }

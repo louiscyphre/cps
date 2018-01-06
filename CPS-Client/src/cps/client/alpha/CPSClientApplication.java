@@ -95,13 +95,16 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
 
   @Override
   public void receiveResponse(Object resp) {
-    if(resp instanceof ServerResponse) {
+    if (resp instanceof ServerResponse) {
       ServerResponse srvrResp = (ServerResponse) resp;
-      if(srvrResp.getStatus() == ServerResponse.STATUS_OK) {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Success");
-        alert.setHeaderText("Operation was successful");
-        alert.showAndWait();
+      if (srvrResp.getStatus() == ServerResponse.STATUS_OK) {
+        Platform.runLater(() -> {
+          Alert alert = new Alert(AlertType.INFORMATION);
+          alert.setTitle("Success");
+          alert.setHeaderText("The operation was successful");
+          alert.setContentText(srvrResp.getDescription());
+          alert.showAndWait();
+        });
       }
     }
   }
