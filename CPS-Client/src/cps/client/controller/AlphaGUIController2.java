@@ -14,7 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 
-public class AlphaGUIController2 implements CPSViewController {
+public class AlphaGUIController2 implements ViewController {
 
   Scene myScene;
 

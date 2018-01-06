@@ -8,7 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class AlphaGUIController3 implements CPSViewController {
+public class AlphaGUIController3 implements ViewController {
 
   @FXML // ResourceBundle that was given to the FXMLLoader
   private ResourceBundle resources;
