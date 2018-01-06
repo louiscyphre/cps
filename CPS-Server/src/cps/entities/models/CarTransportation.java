@@ -122,8 +122,31 @@ public class CarTransportation implements Serializable {
 		return new CarTransportation(customerID, carID, authType, authID, lotID, insertedAt, removedAt);
 	}
 
-	public static CarTransportation findForExit(int customerID, String carID, int lotID) throws SQLException {
-		return null; // TODO: implement
+	/**
+	 * Find a car of the customer when he wants to exit parking.
+	 *
+	 * @param customerID the customer ID
+	 * @param carID the car ID
+	 * @param lotID the lot ID
+	 * @return the car transportation
+	 * @throws SQLException the SQL exception
+	 */
+	public static CarTransportation findForExit(Connection conn,int customerID, String carID, int lotID) throws SQLException {
+		//TODO: Tegra started to work here
+		// Under construction
+		//First - find the insertion of the car
+		PreparedStatement qwry=conn.prepareStatement(Constants.SQL_FIND_CAR_TRANSPORTATION);
+		int index=1;
+		qwry.setInt(index++, customerID);
+		qwry.setString(index++, carID);
+		qwry.setInt(index++, lotID);
+		ResultSet insertionSet=qwry.executeQuery();
+		if(insertionSet.wasNull()) //TODO: Plazner - Decide how to handle car that was not found
+		{
+			throw new SQLException("Car was not found in the parking lot");
+		}
+		
+		return null;
 	}
 
 	public void updateRemovedAt(Timestamp removedAt) throws SQLException {		
