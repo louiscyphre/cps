@@ -64,7 +64,8 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(CancelOnetimeParkingRequest request) {
-		// TODO Auto-generated method stub
+		// TODO:Tegra - Under construction
+		//onetimeParkingController.handle(request);
 		return null;
 	}
 

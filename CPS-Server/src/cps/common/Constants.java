@@ -27,4 +27,5 @@ public interface Constants {
 	public final String SQL_UPDATE_REMOVED_AT = "UPDATE car_transportation SET removed_at = ? WHERE customer_id=? AND car_id=? AND lot_id=? AND inserted_at=?";
 	public final String GET_ONETIME_SERVICE_BY_ID = "SELECT * FROM onetime_service WHERE id=?";
 	public final String SQL_GET_LOT_BY_ID = "SELECT * FROM parking_lot WHERE id=?";
+	public final String SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR="SELECT * FROM subscription_service WHERE ID=? AND customer_id=? AND car_id=?";
 }
