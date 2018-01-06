@@ -12,6 +12,7 @@ public class ServerController implements RequestHandler {
 	private final OnetimeParkingController onetimeParkingController;
 	private final EntryExitController entryExitController;
 	private final SubscriptionController subscriptionController;
+	private final UserController userController;
 	
 	/**
 	 * Constructs an instance of the server controller.
@@ -30,6 +31,7 @@ public class ServerController implements RequestHandler {
 		onetimeParkingController = new OnetimeParkingController(this);
 		entryExitController = new EntryExitController(this);
 		subscriptionController = new SubscriptionController(this);
+		userController = new UserController(this);
 	}
 
 	public ServerConfig getConfig() {
@@ -50,6 +52,10 @@ public class ServerController implements RequestHandler {
 	
 	public SubscriptionController getSubscriptionController() {
 		return subscriptionController;
+	}
+
+	public UserController getUserController() {
+		return userController;
 	}
 
 	public ServerResponse dispatch(Request message) {

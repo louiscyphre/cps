@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 
 public class SubscriptionService implements Serializable {
 	private static final long serialVersionUID = 1L;
+	public static final int LICENSE_TYPE = Constants.LICENSE_TYPE_SUBSCRIPTION;
 
 	int id;
 	int subscriptionType; // 1 = regular, 2 = full

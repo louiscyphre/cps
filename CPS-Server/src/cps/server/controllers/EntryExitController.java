@@ -1,5 +1,7 @@
 package cps.server.controllers;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import cps.api.request.ParkingEntryRequest;
@@ -7,6 +9,7 @@ import cps.api.request.ParkingExitRequest;
 import cps.api.response.ServerResponse;
 import cps.common.*;
 import cps.entities.models.CarTransportation;
+import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
@@ -102,7 +105,7 @@ public class EntryExitController extends RequestController {
 			// All good - create a CarTransportation table entry to record the fact that a
 			// successful parking was made.
 			CarTransportation transportation = CarTransportation.create(conn, request.getCustomerID(),
-					request.getCarID(), OnetimeService.TYPE, service.getId(), request.getLotID());
+					request.getCarID(), OnetimeService.LICENSE_TYPE, service.getId(), request.getLotID());
 
 			if (transportation == null) { // Failed to create a CarTransportation entry - this normally shouldn't happen
 				return ServerResponse.error("CarTransportation entry creation failed");
@@ -160,7 +163,7 @@ public class EntryExitController extends RequestController {
 			// All good - create a CarTransportation table entry to record the fact that a
 			// successful parking was made.
 			CarTransportation transportation = CarTransportation.create(conn, request.getCustomerID(),
-					request.getCarID(), OnetimeService.TYPE, service.getId(), request.getLotID());
+					request.getCarID(), OnetimeService.LICENSE_TYPE, service.getId(), request.getLotID());
 
 			if (transportation == null) { // Failed to create a CarTransportation entry - this normally shouldn't happen
 				return ServerResponse.error("CarTransportation entry creation failed");
@@ -178,24 +181,103 @@ public class EntryExitController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse handle(ParkingExitRequest request) {
-		return databaseController.performQuery(conn -> {
+		return databaseController.performQuery(conn -> {			
 			CarTransportation entry = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
 					request.getLotID());
 
 			if (entry == null) { // CarTransportation does not exist
 				return ServerResponse.error("CarTransportation with the requested parameters does not exist");
 			}
-			// update the removedAt field
+			
+			// Update the removedAt field
 			Timestamp removedAt = new Timestamp(System.currentTimeMillis());
 			
-			if (0 <= entry.updateRemovedAt(conn, removedAt)) {
+			if (!entry.updateRemovedAt(conn, removedAt)) {
 				return ServerResponse.error("Failed to update car transportation");
 			}
-			// TODO: calculate payment - DONE
-			// TODO: calculate subscription exit late fine
-			Utilities.ChargeCustomer(conn,entry,request);
 			
-			return ServerResponse.decide("Entry update", entry != null);
+			// Calculate the amount of money that the customer has to pay
+			float sum = calculatePayment(conn, entry, request);
+			
+			// TODO: finish customer login/registration for this to work
+//			// Find customer
+//			Customer customer = Customer.findByID(conn, request.getCustomerID());
+//			
+//			if (customer == null) {
+//				return ServerResponse.error("Failed to find customer with id " + request.getCustomerID());
+//			}
+//			
+//			// Write payment
+//			customer.setDebit(sum + customer.getDebit());
+//			
+//			if (!customer.update(conn)) {
+//				return ServerResponse.error("Failed to update customer");
+//			}
+			
+			// Success
+			return ServerResponse.ok("ParkingExit request completed successfully");
 		});
+	}
+
+	public static float calculatePayment(Connection conn, CarTransportation carTransportation,
+			ParkingExitRequest exitRequest) throws SQLException {
+		float tariffLow = 0, tariffHigh = 0;
+		
+		long startedLate, inside, endedLate;
+		
+		// Determine if this is a subscription or one time
+		if (carTransportation.getAuthType() == OnetimeService.LICENSE_TYPE) {
+			// If customer did not park by subscription charge him according to park type
+			// Determine incidental or reserved parking
+			OnetimeService parkingService = OnetimeService.findByID(conn, carTransportation.getAuthID());
+
+			// Determine prices at that parking lot
+			ParkingLot parkingLot = ParkingLot.findByID(conn, exitRequest.getLotID());
+
+			if (parkingService.getParkingType() == Constants.PARKING_TYPE_INCIDENTAL) {
+				tariffLow = parkingLot.getPrice1() / 60; // get incidental price
+				tariffHigh = tariffLow / 60; // fine price equals regular price
+			} else {
+				tariffLow = parkingLot.getPrice2() / 60; // get reserved price
+				tariffHigh = parkingLot.getPrice1() / 60; // fine price is higher
+			}
+
+			// Was the customer late or early? negative means early positive means late
+			startedLate = carTransportation.getInsertedAt().getTime() - parkingService.getPlannedStartTime().getTime();
+			startedLate = startedLate / (60 * 1000); // convert to minutes
+
+			// How much time the customer ordered?
+			inside = parkingService.getPlannedEndTime().getTime() - parkingService.getPlannedStartTime().getTime();
+			inside = inside / (60 * 1000);
+
+			// Has the customer left late or early? negative means early positive means late
+			endedLate = carTransportation.getRemovedAt().getTime() - parkingService.getPlannedEndTime().getTime();
+			endedLate = endedLate / (60 * 1000);
+
+			// If the customer running late less that 30 minutes - discard being late and
+			// charge full ordered time
+			if (startedLate < 30) {
+				startedLate = (long) 0;
+			} else {
+				// if the customer came in early simply add minutes to total time and charge
+				// normal
+				if (startedLate < 0) {
+					inside -= startedLate;
+				}
+			}
+
+			// If the customer exits early - charge full time and discard early minutes
+			if (endedLate < 0) {
+				endedLate = (long) 0;
+			}
+			// At last we calculate the sum
+			// The formula is according to the requirements
+			return startedLate * tariffLow * 1.2f + inside * tariffLow + endedLate * tariffHigh;
+		}
+		
+		// TODO: if customer has subscription - charge him only for being late
+		// TODO: calculate subscription exit late fine
+		
+		return 0f;
 	}
 }

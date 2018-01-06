@@ -13,10 +13,12 @@ import cps.api.request.ListOnetimeEntriesRequest;
 import cps.api.request.ReservedParkingRequest;
 import cps.api.response.ListOnetimeEntriesResponse;
 import cps.api.response.ServerResponse;
+import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.server.ServerApplication;
 import cps.server.ServerController;
 import cps.common.Utilities.Holder;
+import cps.common.Utilities.Pair;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -42,12 +44,19 @@ public class OnetimeParkingController extends RequestController {
 	 */
 	public ServerResponse handle(IncidentalParkingRequest request) {
 		return databaseController.performQuery(conn -> {
+			// TODO: finish customer login/registration for this to work
+//			Pair<Customer, ServerResponse> customerExists = serverController.getUserController().findOrCreateCustomer(conn, request.getCustomerID());
+//			
+//			if (customerExists.b != null) {
+//				return customerExists.b;
+//			}
+			
 			Timestamp startTime = new Timestamp(System.currentTimeMillis());
 			Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
 			OnetimeService result = OnetimeService.create(conn, request.getParkingType(), request.getCustomerID(),
 					request.getEmail(), request.getCarID(), request.getLotID(), startTime,
 					plannedEndTime, false);
-			// System.out.println(result.getValue());	
+			// System.out.println(result.getValue());
 			return ServerResponse.decide("Entry creation", result != null);	
 		});
 	}
