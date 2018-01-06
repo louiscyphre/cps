@@ -1,15 +1,14 @@
-package cps.client.alpha;
+package cps.client.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import cps.client.controller.ControllersClientAdapter.SceneCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
-public class AlphaGUIController4 implements CPSViewController {
+public class AlphaGUIController4 implements ViewController {
   
 
   @FXML // ResourceBundle that was given to the FXMLLoader
@@ -37,10 +36,7 @@ public class AlphaGUIController4 implements CPSViewController {
 
   @FXML
   void backHandler(ActionEvent event) {
-    Scene scene = ControllersClientAdapter.fetchScene("alphaMain");
-    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
-    Stage stage = clientApp.getPrimaryStage();
-    stage.setScene(scene);
+    ControllersClientAdapter.setStage(SceneCode.MAIN_MENU);
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -49,11 +45,7 @@ public class AlphaGUIController4 implements CPSViewController {
       assert lotIDTF != null : "fx:id=\"lotIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
       assert carIDTF != null : "fx:id=\"carIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
       assert subIDTF != null : "fx:id=\"subIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
-      ControllersClientAdapter.registerCtrl(this);
+      ControllersClientAdapter.registerCtrl(this,SceneCode.REQUEST_PARKING_ENTRY);
   }
   
-  @Override
-  public String getCtrlId() {
-    return "alpha4";
-  }
 }

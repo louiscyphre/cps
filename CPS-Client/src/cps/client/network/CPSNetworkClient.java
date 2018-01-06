@@ -1,13 +1,13 @@
-package cps.client.alpha;
+package cps.client.network;
 
 import java.io.IOException;
 
 import ocsf.client.AbstractClient;
 
-public class ClientControllerAlpha extends AbstractClient {
-	ClientUIAlpha clientUI;
+public class CPSNetworkClient extends AbstractClient {
+	INetworkClient clientUI;
 
-	public ClientControllerAlpha(String host, int port, ClientUIAlpha clientUI) throws IOException {
+	public CPSNetworkClient(String host, int port, INetworkClient clientUI) throws IOException {
 		super(host, port);
 		this.clientUI = clientUI;
 		openConnection();

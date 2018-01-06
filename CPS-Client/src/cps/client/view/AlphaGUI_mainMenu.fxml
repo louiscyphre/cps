@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cps.client.controller.AlphaGUIControllerMainMenu">
+  <bottom>
+    <Label text="Welcome to CPS Kiosk!" BorderPane.alignment="CENTER" />
+  </bottom>
+  <center>
+    <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <children>
+        <Button fx:id="quitBtn" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleQuitBtn" text="[1] Quit" />
+        <Button alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleRequestIncidentalParkingBtn" text="[1] Quit" />
+        <Button alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleViewParkingRequestsBtn" text="[1] Quit" />
+        <Button alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleRequestParkingEntryBtn" text="[1] Quit" />
+        <Button alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleInitParkingLot" text="[1] Quit" />
+      </children>
+    </VBox>
+  </center>
+  <top>
+    <Label text="Main menu" BorderPane.alignment="CENTER" />
+  </top>
+</BorderPane>

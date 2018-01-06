@@ -1,16 +1,16 @@
-package cps.client.alpha;
+package cps.client.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import cps.client.controller.ControllersClientAdapter.SceneCode;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class AlphaGUIControllerMainMenu implements CPSViewController {
+public class AlphaGUIControllerMainMenu implements ViewController {
 
   @FXML // ResourceBundle that was given to the FXMLLoader
   private ResourceBundle resources;
@@ -45,34 +45,22 @@ public class AlphaGUIControllerMainMenu implements CPSViewController {
 
   @FXML
   void handleRequestIncidentalParkingBtn(ActionEvent event) {
-    Scene scene = ControllersClientAdapter.fetchScene("alpha2");
-    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
-    Stage stage = clientApp.getPrimaryStage();
-    stage.setScene(scene);
+    ControllersClientAdapter.setStage(SceneCode.INCIDENTAL_PARKING);
   }
 
   @FXML
   void handleViewParkingRequestsBtn(ActionEvent event) {
-    Scene scene = ControllersClientAdapter.fetchScene("alpha3");
-    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
-    Stage stage = clientApp.getPrimaryStage();
-    stage.setScene(scene); 
+    ControllersClientAdapter.setStage(SceneCode.VIEW_MY_REQUESTS);
   }
 
   @FXML
   void handleRequestParkingEntryBtn(ActionEvent event) {
-    Scene scene = ControllersClientAdapter.fetchScene("alpha4");
-    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
-    Stage stage = clientApp.getPrimaryStage();
-    stage.setScene(scene);
+    ControllersClientAdapter.setStage(SceneCode.REQUEST_PARKING_ENTRY);
   }
 
   @FXML
   void handleInitParkingLot(ActionEvent event) {
-    Scene scene = ControllersClientAdapter.fetchScene("alpha5");
-    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
-    Stage stage = clientApp.getPrimaryStage();
-    stage.setScene(scene);
+    ControllersClientAdapter.setStage(SceneCode.INIT_PARKING_LOT);
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is
@@ -83,11 +71,7 @@ public class AlphaGUIControllerMainMenu implements CPSViewController {
     assert viewParkingRequestsBtn != null : "fx:id=\"viewParkingRequestsBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
     assert quitBtn != null : "fx:id=\"quitBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
     assert incidentalParkingBtn != null : "fx:id=\"incidentalParkingBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
-    ControllersClientAdapter.registerCtrl(this);
+    ControllersClientAdapter.registerCtrl(this,SceneCode.MAIN_MENU);
   }
 
-  @Override
-  public String getCtrlId() {
-    return "alphaMain";
-  }
 }

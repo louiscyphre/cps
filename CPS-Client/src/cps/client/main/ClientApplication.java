@@ -1,68 +1,59 @@
 /**
  *
  */
-package cps.client.alpha;
+package cps.client.main;
 
 import java.io.IOException;
-import java.net.URL;
 
 import cps.api.response.ServerResponse;
+import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ControllersClientAdapter.SceneCode;
+import cps.client.network.CPSNetworkClient;
+import cps.client.network.INetworkClient;
+import cps.client.utils.CmdParser;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class CPSClientApplication extends Application implements ClientUIAlpha {
+public class ClientApplication extends Application implements INetworkClient {
 
-  private ClientControllerAlpha client;
+  private CPSNetworkClient client;
 
   private Stage primaryStage;
+
+  private int lotID; // required : -1 if web-client
+  
+  public int getLotID() {
+    return lotID;
+  }
+
+  private void setLotID(int lotID) {
+    this.lotID = lotID;
+  }
 
   /**
    *
    */
-  public CPSClientApplication() {
+  public ClientApplication() {
   }
 
   public void loadKiosk() throws IOException {
     try {
-      URL url = getClass().getResource("AlphaGUI_mainMenu.fxml");
-      Pane pane;
-      pane = FXMLLoader.load(url);
-      Scene scene = new Scene(pane);
-      ControllersClientAdapter.registerScene("alphaMain", scene);
-
+      Scene scene = ControllersClientAdapter.registerScene(SceneCode.MAIN_MENU);
       primaryStage.setScene(scene);
-      primaryStage.setTitle("CPS Kiosk Client");
+      primaryStage.setTitle("CPS Alpha Client");
       primaryStage.show();
       primaryStage.setOnCloseRequest(e -> {
         Platform.exit();
         System.exit(0);
       });
-
-      url = getClass().getResource("AlphaGUI_2.fxml");
-      pane = FXMLLoader.load(url);
-      scene = new Scene(pane);
-      ControllersClientAdapter.registerScene("alpha2", scene);
-
-      url = getClass().getResource("AlphaGUI_3.fxml");
-      pane = FXMLLoader.load(url);
-      scene = new Scene(pane);
-      ControllersClientAdapter.registerScene("alpha3", scene);
-
-      url = getClass().getResource("AlphaGUI_4.fxml");
-      pane = FXMLLoader.load(url);
-      scene = new Scene(pane);
-      ControllersClientAdapter.registerScene("alpha4", scene);
-
-      url = getClass().getResource("AlphaGUI_5.fxml");
-      pane = FXMLLoader.load(url);
-      scene = new Scene(pane);
-      ControllersClientAdapter.registerScene("alpha5", scene);
+      ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
+      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_REQUESTS);
+      ControllersClientAdapter.registerScene(SceneCode.REQUEST_PARKING_ENTRY);
+      ControllersClientAdapter.registerScene(SceneCode.INIT_PARKING_LOT);
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -77,7 +68,7 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
       CmdParser parser = new CmdParser();
       parser.extract(getParameters().getRaw().toArray(new String[0]));
 
-      this.client = new ClientControllerAlpha(parser.getHost(),
+      this.client = new CPSNetworkClient(parser.getHost(),
           parser.getPort(), this);
 
       ControllersClientAdapter.registerClient(this);
@@ -87,11 +78,13 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
           // loadWebclient();
           break;
         case "service":
-          // loadService();
+          loadService();
           break;
         default:
           loadKiosk();
       }
+      
+      setLotID(parser.getLotId());
 
     } catch (IOException e) {
       System.out.println("Error: Can't setup connection! Terminating client.");
@@ -100,6 +93,10 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
       System.out.println("Error: Wrong port or parking lot id");
       System.exit(1);
     }
+  }
+
+  private void loadService() {
+
   }
 
   public static void main(String[] args) {
@@ -116,11 +113,14 @@ public class CPSClientApplication extends Application implements ClientUIAlpha {
     if (resp instanceof ServerResponse) {
       ServerResponse srvrResp = (ServerResponse) resp;
       if (srvrResp.getStatus() == ServerResponse.STATUS_OK) {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Success");
-        alert.setHeaderText("Operation was successful");
-        alert.showAndWait();
-      }
+        Platform.runLater(() -> {
+          Alert alert = new Alert(AlertType.INFORMATION);
+          alert.setTitle("Success");
+          alert.setHeaderText("The operation was successful");
+          alert.setContentText(srvrResp.getDescription());
+          alert.showAndWait();
+        });
+ }
     }
   }
 

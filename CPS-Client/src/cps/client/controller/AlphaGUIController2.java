@@ -1,4 +1,4 @@
-package cps.client.alpha;
+package cps.client.controller;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -6,15 +6,15 @@ import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 import cps.api.request.IncidentalParkingRequest;
+import cps.client.controller.ControllersClientAdapter.SceneCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
-public class AlphaGUIController2 implements CPSViewController {
+public class AlphaGUIController2 implements ViewController {
 
   Scene myScene;
 
@@ -86,10 +86,6 @@ public class AlphaGUIController2 implements CPSViewController {
       return;
     }
 
-    // TODO Maybe useful
-    // InputVerification verified = verifyInput(userID, email, carID, lotID,
-    // date);
-
     IncidentalParkingRequest request = new IncidentalParkingRequest(userID, email, carID, lotID, date);
     ControllersClientAdapter.getClient().sendRequest(request);
   }
@@ -100,11 +96,6 @@ public class AlphaGUIController2 implements CPSViewController {
     alert.showAndWait();
   }
 
-  // private InputVerification verifyInput(int userID, String email, String
-  // carID, int lotID, LocalDateTime date) {
-  //
-  // return null;
-  // }
 
   public enum InputVerification {
     INPUT_OK(0, "The request is valid"), MISSING_USERID(0, "Missing or bad UserID"), MISSING_EMAIL(1,
@@ -130,10 +121,7 @@ public class AlphaGUIController2 implements CPSViewController {
 
   @FXML
   void backHandler(ActionEvent event) {
-    Scene scene = ControllersClientAdapter.fetchScene("alphaMain");
-    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
-    Stage stage = clientApp.getPrimaryStage();
-    stage.setScene(scene);
+    ControllersClientAdapter.setStage(SceneCode.MAIN_MENU);
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is
@@ -145,12 +133,7 @@ public class AlphaGUIController2 implements CPSViewController {
     assert carIDTF != null : "fx:id=\"carIDTF\" was not injected: check your FXML file 'AlphaGUI_2.fxml'.";
     assert plannedEndTimeTF != null : "fx:id=\"plannedEndTimeTF\" was not injected: check your FXML file 'AlphaGUI_2.fxml'.";
     plannedEndTimeTF.setText(LocalDateTime.now().toString());
-    ControllersClientAdapter.registerCtrl(this);
-
+    ControllersClientAdapter.registerCtrl(this,SceneCode.INCIDENTAL_PARKING);
   }
 
-  @Override
-  public String getCtrlId() {
-    return "alpha2";
-  }
 }
