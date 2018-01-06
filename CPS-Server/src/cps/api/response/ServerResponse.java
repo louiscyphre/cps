@@ -2,7 +2,6 @@ package cps.api.response;
 
 import java.io.Serializable;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ServerResponse.
  */

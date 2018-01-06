@@ -9,7 +9,6 @@ import java.sql.Statement;
 
 import cps.common.Constants;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ParkingLot.
  */

@@ -20,7 +20,6 @@ import cps.server.ServerController;
 import cps.common.Utilities.Holder;
 import cps.common.Utilities.Pair;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OnetimeParkingController.
  */

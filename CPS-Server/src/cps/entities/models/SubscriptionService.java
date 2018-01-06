@@ -118,20 +118,24 @@ public class SubscriptionService implements Serializable {
 
 	public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID)
 			throws SQLException {
-		//TODO : Cauchy check this
 		SubscriptionService result = null;
-		ResultSet rs = null;
-		PreparedStatement _ps = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR);
+		
+		PreparedStatement st = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR);
+		
 		int index = 1;
 		
-		_ps.setInt(index++, subsID);
-		_ps.setInt(index++, customerID);
-		_ps.setString(index++, carID);
+		st.setInt(index++, subsID);
+		st.setInt(index++, customerID);
+		st.setString(index++, carID);
 		
-		rs = _ps.executeQuery();
-		_ps.close();
+		ResultSet rs = st.executeQuery();
 		
-		result = new SubscriptionService(rs);
+		if (rs.next()) {			
+			result = new SubscriptionService(rs);			
+		}
+		rs.close();
+		st.close();
+		
 		return result;
 	}
 
