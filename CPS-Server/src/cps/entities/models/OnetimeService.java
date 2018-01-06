@@ -16,7 +16,7 @@ import cps.common.Constants;
 public class OnetimeService implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final int TYPE = 1;
-	
+
 	private int id;
 	private int parkingType; // 1 = incidental, 2 = reserved
 	private int customerID;
@@ -164,15 +164,16 @@ public class OnetimeService implements Serializable {
 		return results;
 	}
 
-	public static OnetimeService findForEntry(Connection conn, int customerID, String carID, int lotID) throws SQLException {
+	public static OnetimeService findForEntry(Connection conn, int customerID, String carID, int lotID)
+			throws SQLException {
 		OnetimeService result = null;
-		
+
 		PreparedStatement stmt = conn.prepareStatement(Constants.GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID);
-		
+
 		stmt.setInt(1, customerID);
 		stmt.setString(2, carID);
 		stmt.setInt(3, lotID);
-		
+
 		ResultSet rs = stmt.executeQuery();
 
 		if (rs.next()) {
@@ -184,4 +185,49 @@ public class OnetimeService implements Serializable {
 
 		return result;
 	}
+
+	public static OnetimeService findById(Connection conn, int sId) throws SQLException {
+		OnetimeService result = null;
+
+		PreparedStatement stmt = conn.prepareStatement(Constants.GET_ONETIME_SERVICE_BY_ID);
+
+		stmt.setInt(1, sId);
+
+		ResultSet rs = stmt.executeQuery();
+
+		if (rs.next()) {
+			result = new OnetimeService(rs);
+		}
+
+		rs.close();
+		stmt.close();
+
+		return result;
+	}
+
+	/**
+	 * Finds onetime service in database by it's id and updates all fields in db to
+	 * match fields in instance.
+	 *
+	 * @param conn
+	 *            the conn
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void UpdateById(Connection conn) throws SQLException {
+		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_ONETIME_BY_ID);
+		int i = 1;
+		st.setInt(i++, this.parkingType);
+		st.setInt(i++, this.customerID);
+		st.setString(i++, this.email);
+		st.setString(i++, this.carID);
+		st.setInt(i++, this.lotID);
+		st.setTimestamp(i++, this.plannedStartTime);
+		st.setTimestamp(i++, this.plannedEndTime);
+		st.setBoolean(i++, this.canceled);
+		st.setInt(i++, this.id);
+		st.executeUpdate();
+		st.close();
+	}
+
 }

@@ -65,7 +65,7 @@ public class ServerController implements RequestHandler {
 	@Override
 	public ServerResponse handle(CancelOnetimeParkingRequest request) {
 		// TODO:Tegra - Under construction
-		//onetimeParkingController.handle(request);
+		onetimeParkingController.handle(request);
 		return null;
 	}
 

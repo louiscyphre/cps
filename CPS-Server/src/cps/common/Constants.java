@@ -28,4 +28,5 @@ public interface Constants {
 	public final String GET_ONETIME_SERVICE_BY_ID = "SELECT * FROM onetime_service WHERE id=?";
 	public final String SQL_GET_LOT_BY_ID = "SELECT * FROM parking_lot WHERE id=?";
 	public final String SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR="SELECT * FROM subscription_service WHERE ID=? AND customer_id=? AND car_id=?";
+	public final String SQL_UPDATE_ONETIME_BY_ID = "UPDATE onetime_service SET parking_type = ?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, canceled=? WHERE id=?";
 }
