@@ -30,7 +30,7 @@ public class AlphaGUIController3 implements CPSViewController {
 
   @FXML
   void submitHandler(ActionEvent event) {
-
+    
   }
 
   @FXML
