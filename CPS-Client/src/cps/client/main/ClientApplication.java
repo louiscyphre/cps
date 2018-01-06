@@ -18,7 +18,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
-public class AlphaCPSClientApplication extends Application implements INetworkClient {
+public class ClientApplication extends Application implements INetworkClient {
 
   private CPSNetworkClient client;
 
@@ -37,7 +37,7 @@ public class AlphaCPSClientApplication extends Application implements INetworkCl
   /**
    *
    */
-  public AlphaCPSClientApplication() {
+  public ClientApplication() {
   }
 
   public void loadKiosk() throws IOException {

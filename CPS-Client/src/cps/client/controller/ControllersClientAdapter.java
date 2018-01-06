@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
-import cps.client.main.AlphaCPSClientApplication;
+import cps.client.main.ClientApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -12,15 +12,15 @@ import javafx.stage.Stage;
 
 public class ControllersClientAdapter {
 
-  AlphaCPSClientApplication cpsClient;
+  ClientApplication cpsClient;
 
   private static ControllersClientAdapter instance;
 
-  private HashMap<String, CPSViewController> ctrlMapping;
+  private HashMap<String, ViewController> ctrlMapping;
   private HashMap<String, Scene>             sceneMapping;
 
   private ControllersClientAdapter() {
-    this.ctrlMapping = new HashMap<String, CPSViewController>();
+    this.ctrlMapping = new HashMap<String, ViewController>();
     this.sceneMapping = new HashMap<String, Scene>();
   }
 
@@ -29,11 +29,11 @@ public class ControllersClientAdapter {
     return instance;
   }
 
-  static CPSViewController registerCtrl(CPSViewController ctrl, SceneCode code) {
+  static ViewController registerCtrl(ViewController ctrl, SceneCode code) {
     return getInstance().ctrlMapping.put(code.getCode(), ctrl);
   }
 
-  static CPSViewController fetchCtrl(SceneCode code) {
+  static ViewController fetchCtrl(SceneCode code) {
     return getInstance().ctrlMapping.get(code.getCode());
   }
 
@@ -51,18 +51,18 @@ public class ControllersClientAdapter {
     return getInstance().sceneMapping.get(code.getCode());
   }
 
-  public static AlphaCPSClientApplication registerClient(AlphaCPSClientApplication cpsClient) {
+  public static ClientApplication registerClient(ClientApplication cpsClient) {
     getInstance().cpsClient = cpsClient;
     return getInstance().cpsClient = cpsClient;
   }
 
-  static AlphaCPSClientApplication getClient() {
+  static ClientApplication getClient() {
     return getInstance().cpsClient;
   }
 
   static void setStage(SceneCode code) {
     Scene scene = ControllersClientAdapter.fetchScene(code);
-    AlphaCPSClientApplication clientApp = ControllersClientAdapter.getClient();
+    ClientApplication clientApp = ControllersClientAdapter.getClient();
     Stage stage = clientApp.getPrimaryStage();
     stage.setScene(scene);
   }
