@@ -33,7 +33,7 @@ public class ControllersClientAdapter {
     return getInstance().ctrlMapping.put(code.getCode(), ctrl);
   }
 
-  static ViewController fetchCtrl(SceneCode code) {
+  public static ViewController fetchCtrl(SceneCode code) {
     return getInstance().ctrlMapping.get(code.getCode());
   }
 
