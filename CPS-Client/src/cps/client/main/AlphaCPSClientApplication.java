@@ -42,8 +42,7 @@ public class AlphaCPSClientApplication extends Application implements INetworkCl
 
   public void loadKiosk() throws IOException {
     try {
-      Scene scene = ControllersClientAdapter.registerScene(SceneCode.MAIN_MENU, "AlphaGUI_mainMenu.fxml");
-
+      Scene scene = ControllersClientAdapter.registerScene(SceneCode.MAIN_MENU);
       primaryStage.setScene(scene);
       primaryStage.setTitle("CPS Alpha Client");
       primaryStage.show();
@@ -51,14 +50,10 @@ public class AlphaCPSClientApplication extends Application implements INetworkCl
         Platform.exit();
         System.exit(0);
       });
-
-      ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING, "AlphaGUI_2.fxml");
-
-      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_REQUESTS, "AlphaGUI_3.fxml");
-
-      ControllersClientAdapter.registerScene(SceneCode.REQUEST_PARKING_ENTRY, "AlphaGUI_4.fxml");
-
-      ControllersClientAdapter.registerScene(SceneCode.INIT_PARKING_LOT, "AlphaGUI_5.fxml");
+      ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
+      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_REQUESTS);
+      ControllersClientAdapter.registerScene(SceneCode.REQUEST_PARKING_ENTRY);
+      ControllersClientAdapter.registerScene(SceneCode.INIT_PARKING_LOT);
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -101,28 +96,7 @@ public class AlphaCPSClientApplication extends Application implements INetworkCl
   }
 
   private void loadService() {
-    try {
-      Scene scene = ControllersClientAdapter.registerScene(SceneCode.MAIN_MENU, "ServiceMainMenu.fxml");
 
-      primaryStage.setScene(scene);
-      primaryStage.setTitle("CPS Alpha Client");
-      primaryStage.show();
-      primaryStage.setOnCloseRequest(e -> {
-        Platform.exit();
-        System.exit(0);
-      });
-
-      ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING, "AlphaGUI_2.fxml");
-
-      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_REQUESTS, "AlphaGUI_3.fxml");
-
-      ControllersClientAdapter.registerScene(SceneCode.REQUEST_PARKING_ENTRY, "AlphaGUI_4.fxml");
-
-      ControllersClientAdapter.registerScene(SceneCode.INIT_PARKING_LOT, "AlphaGUI_5.fxml");
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   public static void main(String[] args) {

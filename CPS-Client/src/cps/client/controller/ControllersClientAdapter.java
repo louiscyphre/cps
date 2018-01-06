@@ -37,9 +37,9 @@ public class ControllersClientAdapter {
     return getInstance().ctrlMapping.get(code.getCode());
   }
 
-  public static Scene registerScene(SceneCode code, String fxmlName) throws IOException {
+  public static Scene registerScene(SceneCode code) throws IOException {
 
-    URL url = getClient().getClass().getResource("../view/"+fxmlName);
+    URL url = getClient().getClass().getResource(code.myRelativePath);
     Pane pane;
     pane = FXMLLoader.load(url);
     Scene scene = new Scene(pane);
@@ -69,8 +69,18 @@ public class ControllersClientAdapter {
 
   public enum SceneCode {
 
-    MAIN_MENU, INCIDENTAL_PARKING, VIEW_MY_REQUESTS, REQUEST_PARKING_ENTRY, INIT_PARKING_LOT;
+    MAIN_MENU("../view/AlphaGUI_mainMenu.fxml"),
+    INCIDENTAL_PARKING("../view/AlphaGUI_2.fxml"),
+    VIEW_MY_REQUESTS("../view/AlphaGUI_3.fxml"),
+    REQUEST_PARKING_ENTRY("../view/AlphaGUI_4.fxml"),
+    INIT_PARKING_LOT("../view/AlphaGUI_5.fxml");
 
+    String myRelativePath;
+    
+    SceneCode(String relativePath){
+      this.myRelativePath = relativePath;
+    }
+    
     String getCode() {
       return this.name();
     }
