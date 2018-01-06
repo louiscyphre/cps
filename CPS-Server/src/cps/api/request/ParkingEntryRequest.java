@@ -1,5 +1,8 @@
 package cps.api.request;
 
+import cps.api.response.ServerResponse;
+import cps.server.RequestHandler;
+
 public class ParkingEntryRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
 	
@@ -36,5 +39,10 @@ public class ParkingEntryRequest extends CustomerRequest {
 
 	public void setCarID(String carID) {
 		this.carID = carID;
+	}
+
+	@Override
+	public ServerResponse handle(RequestHandler handler) {
+		return handler.handle(this);
 	}
 }

@@ -19,7 +19,7 @@ public class OnetimeService implements Serializable {
 	public static final int TYPE = 1;
 	
 	private int id;
-	private int type; // 1 = incidental, 2 = reserved
+	private int parkingType; // 1 = incidental, 2 = reserved
 	private int customerID;
 	private String email;
 	private String carID;
@@ -31,7 +31,7 @@ public class OnetimeService implements Serializable {
 	public OnetimeService(int id, int type, int customerID, String email, String carID, int lotID,
 			Timestamp plannedStartTime, Timestamp plannedEndTime, boolean canceled) {
 		this.id = id;
-		this.type = type;
+		this.parkingType = type;
 		this.customerID = customerID;
 		this.email = email;
 		this.carID = carID;
@@ -54,12 +54,12 @@ public class OnetimeService implements Serializable {
 		this.id = id;
 	}
 
-	public int getType() {
-		return type;
+	public int getParkingType() {
+		return parkingType;
 	}
 
-	public void setType(int type) {
-		this.type = type;
+	public void setParkingType(int type) {
+		this.parkingType = type;
 	}
 
 	public int getCustomerID() {

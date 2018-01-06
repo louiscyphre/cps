@@ -1,5 +1,8 @@
 package cps.api.action;
 
+import cps.api.response.ServerResponse;
+import cps.server.RequestHandler;
+
 public class RequestReportAction extends ServiceAction {
 	private static final long serialVersionUID = 1L;
 	private String reportType; 
@@ -16,4 +19,9 @@ public class RequestReportAction extends ServiceAction {
 	public void setReportType(String reportType) {
 		this.reportType = reportType;
 	}	
+
+	@Override
+	public ServerResponse handle(RequestHandler handler) {
+		return handler.handle(this);
+	}
 }
