@@ -5,6 +5,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
+import cps.common.Constants;
+
+import java.sql.PreparedStatement;
+
 // Database entity for monthly parking subscriptions - regular or full both stored in the same table .
 
 public class SubscriptionService implements Serializable {
@@ -110,8 +115,23 @@ public class SubscriptionService implements Serializable {
 		this.email = email;
 	}
 
-	public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID) {
-		return null; // TODO: implement find subscription
+	public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID)
+			throws SQLException {
+		//TODO : Cauchy check this
+		SubscriptionService result = null;
+		ResultSet rs = null;
+		PreparedStatement _ps = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR);
+		int index = 1;
+		
+		_ps.setInt(index++, subsID);
+		_ps.setInt(index++, customerID);
+		_ps.setString(index++, carID);
+		
+		rs = _ps.executeQuery();
+		_ps.close();
+		
+		result = new SubscriptionService(rs);
+		return result;
 	}
 
 }
