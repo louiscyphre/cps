@@ -19,4 +19,6 @@ public interface Constants {
 	public final String CHECK_DATE = "SELECT * FROM daily_statistics DS WHERE ds.day=?";
 	public final String INCREASE_REALIZED_ORDER = "UPDATE daily_statistics SET realized_orders = ? WHERE day=? AND lot_id=?";
 	public final String INCREASE_CANCELED_ORDER = "UPDATE daily_statistics SET canceled_orders = ? WHERE day=? AND lot_id=?";
+	public final String INCREASE_LATE_ARRIVAL = "UPDATE daily_statistics SET late_arrivals = ? WHERE day=? AND lot_id=?";
+	public final String INCREASE_INACTIVE_SLOTS= "UPDATE daily_statistics SET inactive_slots = ? WHERE day=? AND lot_id=?";
 }
