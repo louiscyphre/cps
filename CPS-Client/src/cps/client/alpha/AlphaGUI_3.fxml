@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.alpha.AlphaGUIController3">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.alpha.AlphaGUIController3">
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
@@ -33,8 +33,15 @@
             </GridPane>
             <TableView>
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn minWidth="-1.0" prefWidth="75.0" text="id" />
+                <TableColumn minWidth="-1.0" prefWidth="75.0" text="type" />
+                  <TableColumn minWidth="-1.0" prefWidth="75.0" text="customerID" />
+                  <TableColumn minWidth="-1.0" prefWidth="75.0" text="email" />
+                  <TableColumn minWidth="-1.0" prefWidth="75.0" text="carID" />
+                  <TableColumn prefWidth="75.0" text="lotID" />
+                  <TableColumn prefWidth="75.0" text="plannedStartTime" />
+                  <TableColumn prefWidth="75.0" text="plannedEndTime" />
+                  <TableColumn prefWidth="75.0" text="canceled" />
               </columns>
             </TableView>
          </children>

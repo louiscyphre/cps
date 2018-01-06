@@ -3,11 +3,10 @@ package cps.client.alpha;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import cps.client.alpha.ControllersClientAdapter.SceneCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 public class AlphaGUIController5 implements CPSViewController {
 
@@ -41,10 +40,7 @@ public class AlphaGUIController5 implements CPSViewController {
 
   @FXML
   void backHandler(ActionEvent event) {
-    Scene scene = ControllersClientAdapter.fetchScene("alphaMain");
-    CPSClientApplication clientApp = ControllersClientAdapter.getClient();
-    Stage stage = clientApp.getPrimaryStage();
-    stage.setScene(scene);
+    ControllersClientAdapter.setStage(SceneCode.MAIN_MENU);
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is
@@ -55,11 +51,7 @@ public class AlphaGUIController5 implements CPSViewController {
     assert carsPerRowTF != null : "fx:id=\"carsPerRowTF\" was not injected: check your FXML file 'AlphaGUI_5.fxml'.";
     assert priceForIncidentalParkingRequestTF != null : "fx:id=\"priceForIncidentalParkingRequestTF\" was not injected: check your FXML file 'AlphaGUI_5.fxml'.";
     assert robotIPTF != null : "fx:id=\"robotIPTF\" was not injected: check your FXML file 'AlphaGUI_5.fxml'.";
-    ControllersClientAdapter.registerCtrl(this);
+    ControllersClientAdapter.registerCtrl(this,SceneCode.INIT_PARKING_LOT);
   }
 
-  @Override
-  public String getCtrlId() {
-    return "alpha5";
-  }
 }
