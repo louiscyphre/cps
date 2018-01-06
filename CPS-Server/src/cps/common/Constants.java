@@ -18,4 +18,5 @@ public interface Constants {
 	public final String SQL_CREATE_NEW_DAY = "INSERT INTO daily_statistics(? ,? ,default ,default ,default ,default)";
 	public final String CHECK_DATE = "SELECT * FROM daily_statistics DS WHERE ds.day=?";
 	public final String INCREASE_REALIZED_ORDER = "UPDATE daily_statistics SET realized_orders = ? WHERE day=? AND lot_id=?";
+	public final String INCREASE_CANCELED_ORDER = "UPDATE daily_statistics SET canceled_orders = ? WHERE day=? AND lot_id=?";
 }

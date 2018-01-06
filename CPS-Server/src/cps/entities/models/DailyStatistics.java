@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
 import cps.common.Constants;
-import javafx.util.converter.LocalDateStringConverter;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -67,7 +66,7 @@ public class DailyStatistics implements Serializable {
 	 * Instantiates a new daily statistics.
 	 *
 	 * @param rs
-	 *            the rs
+	 *            Result Set
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
@@ -76,11 +75,13 @@ public class DailyStatistics implements Serializable {
 	}
 
 	/**
-	 * Creates an empty entry in the table for specific date and lotId.
-	 * All other parameters are zero by default
+	 * Creates an empty entry in the table for specific date and lotId. All other
+	 * parameters are zero by default
 	 *
 	 * @param conn
 	 *            the conn
+	 * @param today
+	 *            the today
 	 * @param lotId
 	 *            the lot id
 	 * @return the daily statistics
@@ -98,6 +99,35 @@ public class DailyStatistics implements Serializable {
 		stmt.close();
 		return new DailyStatistics(today, lotId, 0, 0, 0);
 
+	}
+
+	/**
+	 * If statistics for set Date exists in database, the function returns the
+	 * corresponding line as ResultSet. Else creates an empty line in database and
+	 * returns null ResltSet
+	 *
+	 * @param conn
+	 *            the connection
+	 * @param _date
+	 *            the date
+	 * @param lotId
+	 *            Id of the parking lot
+	 * @return Result Set with given fields: Date day,int lot_id, int
+	 *         realized_orders, int canceled_orders,int late_arrivals,int
+	 *         inactive_slots.
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static ResultSet CreateIfNotExists(Connection conn, LocalDate _date, int lotId) throws SQLException {
+		int index = 1;
+		ResultSet rs;
+		PreparedStatement qwry = conn.prepareStatement(Constants.CHECK_DATE);
+		qwry.setDate(index, Date.valueOf(_date));
+		rs = qwry.executeQuery();
+		if (rs.wasNull())
+			create(conn, _date, lotId);// if doesn't exists - create empty line with zeroes
+		qwry.close();
+		return rs;
 	}
 
 	/**
@@ -129,22 +159,60 @@ public class DailyStatistics implements Serializable {
 	 */
 	public static void IncreaseRealizedOrder(Connection conn, LocalDate _date, int lotId) throws SQLException {
 		// check if line exists in database
-		PreparedStatement qwry = conn.prepareStatement(Constants.CHECK_DATE);
 		int index = 1;
 		int _order = 0;
-		qwry.setDate(index, Date.valueOf(_date));
-		ResultSet rs = qwry.executeQuery();
-		if (rs.wasNull())
-			create(conn, _date, lotId);// if doesn't exists - create empty line with zeroes
-		else
-			_order = rs.getInt("realized_orders") + 1; // else get realized orders number and increase it
-		qwry.close();
+		ResultSet rs = CreateIfNotExists(conn, _date, lotId);
+		if (!rs.wasNull())
+			_order = rs.getInt("realized_orders") + 1; // get realized orders number and increase it
 		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_REALIZED_ORDER);
 		stmt.setInt(index++, _order);
 		stmt.setDate(index++, Date.valueOf(_date));
 		stmt.setInt(index++, lotId);
 		if (stmt.executeUpdate() == 0)
 			throw new SQLException("Failed to increase Realized Order Count");
+		stmt.close();
+	}
+
+	/**
+	 * Increase canceled order count by one for today in specific parking lot.
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static void IncreaseCanceledOrder(Connection conn, int lotId) throws SQLException {
+		IncreaseCanceledOrder(conn, LocalDate.now(), lotId);
+	}
+
+	/**
+	 * Increase canceled order count by one in specific parking lot at specific date.
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param _date
+	 *            the date
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static void IncreaseCanceledOrder(Connection conn, LocalDate _date, int lotId) throws SQLException {
+		// check if line exists in database
+
+		int index = 1;
+		int _order = 0;
+		ResultSet rs = CreateIfNotExists(conn, _date, lotId);
+		if (!rs.wasNull())
+			_order = rs.getInt("canceled_orders") + 1; // get canceled orders number and increase it
+		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_CANCELED_ORDER);
+		stmt.setInt(index++, _order);
+		stmt.setDate(index++, Date.valueOf(_date));
+		stmt.setInt(index++, lotId);
+		if (stmt.executeUpdate() == 0)
+			throw new SQLException("Failed to increase Canceled Order Count");
 		stmt.close();
 	}
 
