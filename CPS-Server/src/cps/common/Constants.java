@@ -21,4 +21,6 @@ public interface Constants {
 	public final String INCREASE_CANCELED_ORDER = "UPDATE daily_statistics SET canceled_orders = ? WHERE day=? AND lot_id=?";
 	public final String INCREASE_LATE_ARRIVAL = "UPDATE daily_statistics SET late_arrivals = ? WHERE day=? AND lot_id=?";
 	public final String INCREASE_INACTIVE_SLOTS= "UPDATE daily_statistics SET inactive_slots = ? WHERE day=? AND lot_id=?";
+	public final String GET_ONETIME_SERVICE_BY_CUSTOMER_ID= "SELECT * FROM onetime_service WHERE customer_id = ? ORDER BY id";
+	public final String GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID= "SELECT * FROM onetime_service WHERE customer_id = ? AND car_id = ? AND lot_id = ? ORDER BY id DESC LIMIT 1";
 }

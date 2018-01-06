@@ -9,7 +9,6 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.LinkedList;
-
 import cps.common.Constants;
 
 // Database entity for one-time parking services - incidental parking or reserved parking both stored in the same table.
@@ -151,8 +150,7 @@ public class OnetimeService implements Serializable {
 	public static Collection<OnetimeService> findByCustomerID(Connection conn, int userID) throws SQLException {
 		LinkedList<OnetimeService> results = new LinkedList<OnetimeService>();
 
-		PreparedStatement stmt = conn
-				.prepareStatement("SELECT * FROM onetime_service WHERE customer_id = ? ORDER BY id");
+		PreparedStatement stmt = conn.prepareStatement(Constants.GET_ONETIME_SERVICE_BY_CUSTOMER_ID);
 		stmt.setInt(1, userID);
 		ResultSet rs = stmt.executeQuery();
 
@@ -169,8 +167,7 @@ public class OnetimeService implements Serializable {
 	public static OnetimeService findForEntry(Connection conn, int customerID, String carID, int lotID) throws SQLException {
 		OnetimeService result = null;
 		
-		PreparedStatement stmt = conn
-				.prepareStatement("SELECT * FROM onetime_service WHERE customer_id = ? AND car_id = ? AND lot_id = ? ORDER BY id DESC LIMIT 1");
+		PreparedStatement stmt = conn.prepareStatement(Constants.GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID);
 		
 		stmt.setInt(1, customerID);
 		stmt.setString(2, carID);
