@@ -192,8 +192,8 @@ public class EntryExitController extends RequestController {
 			if (0 <= entry.updateRemovedAt(conn, removedAt)) {
 				return ServerResponse.error("Failed to update car transportation");
 			}
-			// TODO: calculate payment
-			// Calculating and charging of customer is independent of exiting the parking lot
+			// TODO: calculate payment - DONE
+			// TODO: calculate subscription exit late fine
 			Utilities.ChargeCustomer(conn,entry,request);
 			
 			return ServerResponse.decide("Entry update", entry != null);
