@@ -15,12 +15,14 @@ public class SubscriptionController extends RequestController {
 	public ServerResponse handle(FullSubscriptionRequest request) {
 		return databaseController.performQuery(conn -> {
 			SubscriptionService result = null;
+			// TODO: implement FullSubscriptionRequest
 			return ServerResponse.decide("Entry creation", result != null);
 		});
 	}
 	
 	public ServerResponse handle(RegularSubscriptionRequest request) {
-		return ServerResponse.error("Not implemented"); // TODO: implement
+		return ServerResponse.error("Not implemented");
+// TODO: implement RegularSubscriptionRequest
 	}
 
 }
