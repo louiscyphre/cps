@@ -92,6 +92,7 @@ public class TestServerController extends TestCase {
 	private void initParkingLot() {
 		InitLotAction request = new InitLotAction(1000, "Lot Address", 3, 5, 4, "113.0.1.14");		
 		ServerResponse response = server.dispatch(request);
+//		System.out.println(gson.toJson(response));
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("parking_lot"));
 		ParkingLot lot = db.performQuery(conn -> ParkingLot.findByID(conn, 1));
@@ -109,7 +110,7 @@ public class TestServerController extends TestCase {
 	private void requestParkingExit(int customerID, String carID, int lotID) {
 		ParkingExitRequest request = new ParkingExitRequest(customerID, lotID, carID);
 		ServerResponse response = server.dispatch(request);
-		System.out.println(gson.toJson(response));
+//		System.out.println(gson.toJson(response));
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("car_transportation"));
 		// TODO: fetch the CarTransportation and check fields

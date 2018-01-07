@@ -2,7 +2,6 @@ package cps.server;
 
 import java.util.HashMap;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ServerConfig.
  */

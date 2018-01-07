@@ -12,6 +12,7 @@ public class ServerController implements RequestHandler {
 	private final OnetimeParkingController onetimeParkingController;
 	private final EntryExitController entryExitController;
 	private final SubscriptionController subscriptionController;
+	private final UserController userController;
 	
 	/**
 	 * Constructs an instance of the server controller.
@@ -30,6 +31,7 @@ public class ServerController implements RequestHandler {
 		onetimeParkingController = new OnetimeParkingController(this);
 		entryExitController = new EntryExitController(this);
 		subscriptionController = new SubscriptionController(this);
+		userController = new UserController(this);
 	}
 
 	public ServerConfig getConfig() {
@@ -52,6 +54,10 @@ public class ServerController implements RequestHandler {
 		return subscriptionController;
 	}
 
+	public UserController getUserController() {
+		return userController;
+	}
+
 	public ServerResponse dispatch(Request message) {
 		ServerResponse response = message.handle(this);
 		
@@ -71,13 +77,11 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(ComplaintRequest request) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ServerResponse handle(FullSubscriptionRequest request) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -93,7 +97,6 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(OnetimeParkingRequest request) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -109,7 +112,6 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(RegularSubscriptionRequest request) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -120,13 +122,11 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(SubscriptionRequest request) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ServerResponse handle(DisableParkingSlotsAction action) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -137,37 +137,31 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(RefundAction action) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ServerResponse handle(RequestLotStateAction action) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ServerResponse handle(RequestReportAction action) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ServerResponse handle(ReserveParkingSlotsAction action) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ServerResponse handle(SetFullLotAction action) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ServerResponse handle(UpdatePricesAction action) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

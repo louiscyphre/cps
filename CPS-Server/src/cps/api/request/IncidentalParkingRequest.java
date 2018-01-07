@@ -11,7 +11,6 @@ public class IncidentalParkingRequest extends OnetimeParkingRequest {
 
 	public IncidentalParkingRequest(int customerID, String email, String carID, int lotID, LocalDateTime plannedEndTime) {
 		super(customerID, email, carID, lotID, plannedEndTime);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

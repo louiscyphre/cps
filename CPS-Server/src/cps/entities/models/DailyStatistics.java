@@ -73,7 +73,6 @@ public class DailyStatistics implements Serializable {
 		this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
 	}
 
-//TODO: Cauchy check this 
 	/**
 	 * Creates an empty entry in the table for specific date and lotId. All other
 	 * parameters are zero by default
@@ -104,7 +103,7 @@ public class DailyStatistics implements Serializable {
 	/**
 	 * If statistics for set Date exists in database, the function returns the
 	 * corresponding line as ResultSet. Else creates an empty line in database and
-	 * returns null ResltSet
+	 * returns null ResultSet
 	 *
 	 * @param conn
 	 *            the connection
@@ -118,15 +117,15 @@ public class DailyStatistics implements Serializable {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public static ResultSet CreateIfNotExists(Connection conn, LocalDate _date, int lotId) throws SQLException {
+	public static ResultSet createIfNotExists(Connection conn, LocalDate _date, int lotId) throws SQLException {
 		int index = 1;
 		ResultSet rs;
-		PreparedStatement qwry = conn.prepareStatement(Constants.CHECK_DATE);
-		qwry.setDate(index, Date.valueOf(_date));
-		rs = qwry.executeQuery();
+		PreparedStatement st = conn.prepareStatement(Constants.CHECK_DATE);
+		st.setDate(index, Date.valueOf(_date));
+		rs = st.executeQuery();
 		if (rs.wasNull())
 			create(conn, _date, lotId);// if doesn't exists - create empty line with zeroes
-		qwry.close();
+		st.close();
 		return rs;
 	}
 
@@ -140,8 +139,8 @@ public class DailyStatistics implements Serializable {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public static void IncreaseRealizedOrder(Connection conn, int lotId) throws SQLException {
-		IncreaseRealizedOrder(conn, LocalDate.now(), lotId);
+	public static void increaseRealizedOrder(Connection conn, int lotId) throws SQLException {
+		increaseRealizedOrder(conn, LocalDate.now(), lotId);
 	}
 
 	/**
@@ -157,11 +156,11 @@ public class DailyStatistics implements Serializable {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public static void IncreaseRealizedOrder(Connection conn, LocalDate _date, int lotId) throws SQLException {
+	public static void increaseRealizedOrder(Connection conn, LocalDate _date, int lotId) throws SQLException {
 		// check if line exists in database
 		int index = 1;
 		int _order = 0;
-		ResultSet rs = CreateIfNotExists(conn, _date, lotId);
+		ResultSet rs = createIfNotExists(conn, _date, lotId);
 		if (!rs.wasNull())
 			_order = rs.getInt("realized_orders") + 1; // get realized orders number and increase it
 		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_REALIZED_ORDER);
@@ -183,8 +182,8 @@ public class DailyStatistics implements Serializable {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public static void IncreaseCanceledOrder(Connection conn, int lotId) throws SQLException {
-		IncreaseCanceledOrder(conn, LocalDate.now(), lotId);
+	public static void increaseCanceledOrder(Connection conn, int lotId) throws SQLException {
+		increaseCanceledOrder(conn, LocalDate.now(), lotId);
 	}
 
 	/**
@@ -199,12 +198,12 @@ public class DailyStatistics implements Serializable {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public static void IncreaseCanceledOrder(Connection conn, LocalDate _date, int lotId) throws SQLException {
+	public static void increaseCanceledOrder(Connection conn, LocalDate _date, int lotId) throws SQLException {
 		// check if line exists in database
 
 		int index = 1;
 		int _order = 0;
-		ResultSet rs = CreateIfNotExists(conn, _date, lotId);
+		ResultSet rs = createIfNotExists(conn, _date, lotId);
 		if (!rs.wasNull())
 			_order = rs.getInt("canceled_orders") + 1; // get canceled orders number and increase it
 		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_CANCELED_ORDER);
@@ -226,8 +225,8 @@ public class DailyStatistics implements Serializable {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public static void IncreaseLateArrival(Connection conn, int lotId) throws SQLException {
-		IncreaseLateArrival(conn, LocalDate.now(), lotId);
+	public static void increaseLateArrival(Connection conn, int lotId) throws SQLException {
+		increaseLateArrival(conn, LocalDate.now(), lotId);
 	}
 
 	/**
@@ -242,10 +241,10 @@ public class DailyStatistics implements Serializable {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public static void IncreaseLateArrival(Connection conn, LocalDate _date, int lotId) throws SQLException {
+	public static void increaseLateArrival(Connection conn, LocalDate _date, int lotId) throws SQLException {
 		int index = 1;
 		int _lateArrivals = 0;
-		ResultSet rs = CreateIfNotExists(conn, _date, lotId);
+		ResultSet rs = createIfNotExists(conn, _date, lotId);
 		if (!rs.wasNull())
 			_lateArrivals = rs.getInt("late_arrivals") + 1; // get canceled orders number and increase it
 		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_LATE_ARRIVAL);
@@ -267,7 +266,7 @@ public class DailyStatistics implements Serializable {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public static void IncreaseIncactiveSlots(Connection conn, int lotId) throws SQLException {
+	public static void increaseIncactiveSlots(Connection conn, int lotId) throws SQLException {
 		IncreaseIncactiveSlots(conn, LocalDate.now(), lotId);
 	}
 
@@ -286,7 +285,7 @@ public class DailyStatistics implements Serializable {
 	public static void IncreaseIncactiveSlots(Connection conn, LocalDate _date, int lotId) throws SQLException {
 		int index = 1;
 		int _lateArrivals = 0;
-		ResultSet rs = CreateIfNotExists(conn, _date, lotId);
+		ResultSet rs = createIfNotExists(conn, _date, lotId);
 		if (!rs.wasNull())
 			_lateArrivals = rs.getInt("inactive_slots") + 1; // get canceled orders number and increase it
 		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_INACTIVE_SLOTS);

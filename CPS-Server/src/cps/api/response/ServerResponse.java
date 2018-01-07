@@ -2,7 +2,6 @@ package cps.api.response;
 
 import java.io.Serializable;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ServerResponse.
  */
@@ -43,6 +42,17 @@ public class ServerResponse implements Serializable {
 	}
 	
 	/**
+	 * Instantiates a new server response.
+	 *
+	 * @param success was the request completed successfully
+	 * @param description short description, will get extended with success message
+	 */	
+	public ServerResponse(boolean success, String description) {
+		this.status = success ? STATUS_OK : STATUS_ERROR;
+		this.description = description + (success ? " completed successfully" : " failed");
+	}
+	
+	/**
 	 * Returns Server Response OK.
 	 *
 	 * @param description the description
@@ -72,7 +82,7 @@ public class ServerResponse implements Serializable {
 	 */
 	public static ServerResponse decide(String description, boolean condition) {
 		if (condition) {
-			return ServerResponse.ok(description + " successful");
+			return ServerResponse.ok(description + " completed successfully");
 		} else {
 			return ServerResponse.error(description + " failed");
 		}		

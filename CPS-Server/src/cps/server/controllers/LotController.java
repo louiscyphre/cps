@@ -8,7 +8,6 @@ import cps.server.ServerController;
 import cps.server.devices.Robot;
 import cps.entities.models.ParkingLot;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LotController.
  */
