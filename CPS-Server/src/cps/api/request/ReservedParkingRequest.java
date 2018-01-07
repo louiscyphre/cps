@@ -10,10 +10,10 @@ public class ReservedParkingRequest extends OnetimeParkingRequest {
 	private static final long serialVersionUID = 1L;
 	private LocalDateTime plannedStartTime;
 
-	public ReservedParkingRequest(int customerID, String email, String carID, int lotID, LocalDateTime plannedEndTime,
-			LocalDateTime startTime) {
+	public ReservedParkingRequest(int customerID, String email, String carID, int lotID, LocalDateTime plannedStartTime,
+			LocalDateTime plannedEndTime) {
 		super(customerID, email, carID, lotID, plannedEndTime);
-		this.plannedStartTime = startTime;
+		this.plannedStartTime = plannedStartTime;
 	}
 
 	public LocalDateTime getPlannedStartTime() {
