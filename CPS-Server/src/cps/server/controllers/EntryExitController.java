@@ -229,7 +229,7 @@ public class EntryExitController extends RequestController {
 		if (carTransportation.getAuthType() == OnetimeService.LICENSE_TYPE) {
 			// If customer did not park by subscription charge him according to park type
 			// Determine incidental or reserved parking
-			OnetimeService parkingService = OnetimeService.findByID(conn, carTransportation.getAuthID());
+			OnetimeService parkingService = OnetimeService.findById(conn, carTransportation.getAuthID());
 
 			// Determine prices at that parking lot
 			ParkingLot parkingLot = ParkingLot.findByID(conn, exitRequest.getLotID());

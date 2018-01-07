@@ -15,13 +15,9 @@ import cps.common.Constants;
 
 public class OnetimeService implements Serializable {
 	private static final long serialVersionUID = 1L;
-<<<<<<< HEAD
 	public static final int TYPE = 1;
-
-=======
 	public static final int LICENSE_TYPE = Constants.LICENSE_TYPE_ONETIME;
-	
->>>>>>> refs/remotes/origin/dev-server-cauchy
+
 	private int id;
 	private int parkingType; // 1 = incidental, 2 = reserved
 	private int customerID;
@@ -191,7 +187,6 @@ public class OnetimeService implements Serializable {
 		return result;
 	}
 
-<<<<<<< HEAD
 	public static OnetimeService findById(Connection conn, int sId) throws SQLException {
 		OnetimeService result = null;
 
@@ -235,24 +230,4 @@ public class OnetimeService implements Serializable {
 		st.executeUpdate();
 		st.close();
 	}
-
-=======
-	public static OnetimeService findByID(Connection conn, int id) throws SQLException {
-		OnetimeService result = null;	
-		
-		PreparedStatement st = conn.prepareStatement(Constants.GET_ONETIME_SERVICE_BY_ID);
-		
-		st.setInt(1, id);
-		ResultSet rs = st.executeQuery();
-
-		if (rs.next()) {
-			result = new OnetimeService(rs);
-		}
-		
-		rs.close();
-		st.close();
-		
-		return result;
-	}
->>>>>>> refs/remotes/origin/dev-server-cauchy
 }
