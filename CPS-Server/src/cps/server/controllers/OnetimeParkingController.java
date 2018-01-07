@@ -46,8 +46,6 @@ public class OnetimeParkingController extends RequestController {
 	public ServerResponse handle(OnetimeParkingRequest request, OnetimeParkingResponse response, Timestamp startTime, Timestamp plannedEndTime) {
 		return databaseController.performQuery(conn -> {			
 			// TODO: check request parameters
-			
-			// TODO: finish customer login/registration
 			CustomerSession session = new CustomerSession();
 			session.findOrRegisterCustomer(conn, response, request.getCustomerID(), request.getEmail());
 			
@@ -61,11 +59,15 @@ public class OnetimeParkingController extends RequestController {
 					request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);
 
 			if (result == null) { // error
-				return new IncidentalParkingResponse(false, request.getCustomerID(), "", 0);
+				response.setError("Failed to create OnetimeService entry");
+				return response;
 			}
 
 			// success
-			return new IncidentalParkingResponse(true, customer.getId(), "", result.getId());
+			response.setCustomerID(customer.getId());
+			response.setServiceID(result.getId());
+			response.setSuccess("Parking Request completed successfully");
+			return response;
 		});
 	}
 
@@ -79,7 +81,7 @@ public class OnetimeParkingController extends RequestController {
 	public ServerResponse handle(IncidentalParkingRequest request) {
 		Timestamp startTime = new Timestamp(System.currentTimeMillis());
 		Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
-		IncidentalParkingResponse response = new IncidentalParkingResponse(false, 0, null, 0);
+		IncidentalParkingResponse response = new IncidentalParkingResponse(false, "");
 		return handle(request, response, startTime, plannedEndTime);
 	}
 
@@ -93,10 +95,17 @@ public class OnetimeParkingController extends RequestController {
 	public ServerResponse handle(ReservedParkingRequest request) {
 		Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
 		Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
-		ReservedParkingResponse response = new ReservedParkingResponse(false, 0, null, 0);
+		ReservedParkingResponse response = new ReservedParkingResponse(false, "");
 		return handle(request, response, startTime, plannedEndTime);
 	}
 
+	/**
+	 * Handle CancelOnetimeParkingRequest.
+	 *
+	 * @param request
+	 *            the request
+	 * @return the server response
+	 */
 	public ServerResponse handle(CancelOnetimeParkingRequest request) {
 		return databaseController.performQuery(conn -> {
 			// Mark Order as canceled

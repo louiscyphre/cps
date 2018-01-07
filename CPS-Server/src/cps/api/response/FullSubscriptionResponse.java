@@ -5,6 +5,10 @@ public class FullSubscriptionResponse extends SubscriptionResponse {
 	
 	public FullSubscriptionResponse(boolean success, String description, int customerID, String password,
 			int serviceID) {
-		super(success, "FullSubscriptionRequest", customerID, password, serviceID);
+		super(success, description, customerID, password, serviceID);
+	}
+	
+	public FullSubscriptionResponse(boolean success, String description) {
+		super(success, description, 0, "", 0);
 	}
 }

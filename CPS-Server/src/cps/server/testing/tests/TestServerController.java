@@ -42,12 +42,12 @@ public class TestServerController extends TestCase {
 	private OnetimeService requestOnetimeParking(CustomerData data, OnetimeParkingRequest request) {
 		// Test the response
 		ServerResponse response = server.dispatch(request); 	
-		System.out.println(gson.toJson(response));
+//		System.out.println(gson.toJson(response));
 		assertTrue(response.success());
 		
 		// Retrieve customer
-		assertThat(response, instanceOf(IncidentalParkingResponse.class));
-		IncidentalParkingResponse specificResponse = (IncidentalParkingResponse) response;
+		assertThat(response, instanceOf(OnetimeParkingResponse.class));
+		OnetimeParkingResponse specificResponse = (OnetimeParkingResponse) response;
 		data.customerID = specificResponse.getCustomerID();
 		assertEquals(1, data.customerID);
 		
@@ -102,6 +102,7 @@ public class TestServerController extends TestCase {
 	private void requestEntryForOnetimeParking(CustomerData data) {
 		ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, 0, data.lotID, data.carID); // subscriptionID = 0 means entry by OnetimeParking license
 		ServerResponse response = server.dispatch(request);
+//		System.out.println(gson.toJson(response));
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("car_transportation"));
 		// TODO: fetch the CarTransportation and check fields
@@ -110,7 +111,7 @@ public class TestServerController extends TestCase {
 	private void requestParkingExit(CustomerData data) {
 		ParkingExitRequest request = new ParkingExitRequest(data.customerID, data.lotID, data.carID);
 		ServerResponse response = server.dispatch(request);
-		System.out.println(gson.toJson(response));
+//		System.out.println(gson.toJson(response));
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("car_transportation"));
 		// TODO: fetch the CarTransportation and check fields

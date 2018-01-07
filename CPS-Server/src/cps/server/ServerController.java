@@ -10,7 +10,8 @@ public class ServerController implements RequestHandler {
 	private final DatabaseController databaseController;
 	private final LotController lotController;
 	private final OnetimeParkingController onetimeParkingController;
-	private final EntryExitController entryExitController;
+	private final ParkingEntryController entryController;
+	private final ParkingExitController exitController;
 	private final SubscriptionController subscriptionController;
 	
 	/**
@@ -28,7 +29,8 @@ public class ServerController implements RequestHandler {
 		
 		lotController = new LotController(this);
 		onetimeParkingController = new OnetimeParkingController(this);
-		entryExitController = new EntryExitController(this);
+		entryController = new ParkingEntryController(this);
+		exitController = new ParkingExitController(this);
 		subscriptionController = new SubscriptionController(this);
 	}
 
@@ -96,12 +98,12 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(ParkingEntryRequest request) {
-		return entryExitController.handle(request);
+		return entryController.handle(request);
 	}
 
 	@Override
 	public ServerResponse handle(ParkingExitRequest request) {
-		return entryExitController.handle(request);
+		return exitController.handle(request);
 	}
 
 	@Override

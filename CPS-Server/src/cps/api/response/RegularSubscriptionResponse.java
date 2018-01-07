@@ -5,6 +5,10 @@ public class RegularSubscriptionResponse extends SubscriptionResponse {
 
 	public RegularSubscriptionResponse(boolean success, String description, int customerID, String password,
 			int serviceID) {
-		super(success, "RegularSubscriptionRequest", customerID, password, serviceID);
+		super(success, description, customerID, password, serviceID);
+	}
+
+	public RegularSubscriptionResponse(boolean success, String description) {
+		super(success, description, 0, "", 0);
 	}
 }

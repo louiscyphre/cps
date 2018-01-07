@@ -1,6 +1,5 @@
 package cps.entities.models;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,9 +11,8 @@ import java.sql.PreparedStatement;
 
 // Database entity for monthly parking subscriptions - regular or full both stored in the same table .
 
-public class SubscriptionService implements Serializable {
+public class SubscriptionService implements ParkingService {
 	private static final long serialVersionUID = 1L;
-	public static final int LICENSE_TYPE = Constants.LICENSE_TYPE_SUBSCRIPTION;
 
 	int id;
 	int subscriptionType; // 1 = regular, 2 = full
@@ -116,6 +114,11 @@ public class SubscriptionService implements Serializable {
 		this.email = email;
 	}
 
+	@Override
+	public int getLicenseType() {
+		return Constants.LICENSE_TYPE_SUBSCRIPTION;
+	}
+
 	public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID)
 			throws SQLException {
 		SubscriptionService result = null;
@@ -138,5 +141,4 @@ public class SubscriptionService implements Serializable {
 		
 		return result;
 	}
-
 }
