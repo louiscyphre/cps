@@ -66,7 +66,7 @@ public class OnetimeParkingController extends RequestController {
 			// success
 			response.setCustomerID(customer.getId());
 			response.setServiceID(result.getId());
-			response.setSuccess("Parking Request completed successfully");
+			response.setSuccess("OnetimeParkingRequest completed successfully");
 			return response;
 		});
 	}
