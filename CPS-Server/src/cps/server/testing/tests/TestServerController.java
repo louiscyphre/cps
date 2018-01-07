@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import cps.server.ServerController;
 import cps.server.controllers.DatabaseController;
+import cps.server.testing.utilities.CustomerData;
 import cps.api.request.*;
 import cps.api.action.*;
 import cps.api.response.*;
@@ -38,10 +39,10 @@ public class TestServerController extends TestCase {
 		db.truncateTables();
 	}
 
-	private void requestIncidentalParking(int customerID, String email, String carID, int lotID) {
+	private void requestIncidentalParking(CustomerData data) {
 		// Make the request
 		LocalDateTime plannedEndTime = LocalDateTime.parse("2018-01-21T17:00:00");
-		IncidentalParkingRequest request = new IncidentalParkingRequest(customerID, email, carID, lotID, plannedEndTime);
+		IncidentalParkingRequest request = new IncidentalParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedEndTime);
 		
 		// Test the response
 		ServerResponse response = server.dispatch(request);	
@@ -50,18 +51,18 @@ public class TestServerController extends TestCase {
 		// Test database result 
 		assertEquals(1, db.countEntities("onetime_service"));
 		
-		Collection<OnetimeService> entries = db.performQuery(conn -> OnetimeService.findByCustomerID(conn, customerID));
+		Collection<OnetimeService> entries = db.performQuery(conn -> OnetimeService.findByCustomerID(conn, data.customerID));
 		assertEquals(1, entries.size());
 
 		OnetimeService entry = entries.iterator().next();
 		checkEntryFields(entry, request);
 	}
 
-	private void requestReservedParking(int customerID, String email, String carID, int lotID) {
+	private void requestReservedParking(CustomerData data) {
 		// Make the request
 		LocalDateTime plannedStartTime = LocalDateTime.parse("2018-01-21T09:00:00");
 		LocalDateTime plannedEndTime = LocalDateTime.parse("2018-01-21T17:00:00");
-		ReservedParkingRequest request = new ReservedParkingRequest(customerID, email, carID, lotID, plannedStartTime, plannedEndTime);
+		ReservedParkingRequest request = new ReservedParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedStartTime, plannedEndTime);
 		
 		// Test the response
 		ServerResponse response = server.dispatch(request);	
@@ -70,7 +71,7 @@ public class TestServerController extends TestCase {
 		// Test database result 
 		assertEquals(1, db.countEntities("onetime_service"));
 		
-		Collection<OnetimeService> entries = db.performQuery(conn -> OnetimeService.findByCustomerID(conn, customerID));
+		Collection<OnetimeService> entries = db.performQuery(conn -> OnetimeService.findByCustomerID(conn, data.customerID));
 		assertEquals(1, entries.size());
 
 		OnetimeService entry = entries.iterator().next();
@@ -99,18 +100,18 @@ public class TestServerController extends TestCase {
 //		System.out.println(gson.toJson(lot));
 	}
 	
-	private void requestEntryForOnetimeParking(int customerID, String carID, int lotID) {
-		ParkingEntryRequest request = new ParkingEntryRequest(customerID, 0, lotID, carID); // subscriptionID = 0 means entry by OnetimeParking license
+	private void requestEntryForOnetimeParking(CustomerData data) {
+		ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, 0, data.lotID, data.carID); // subscriptionID = 0 means entry by OnetimeParking license
 		ServerResponse response = server.dispatch(request);
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("car_transportation"));
 		// TODO: fetch the CarTransportation and check fields
 	}
 	
-	private void requestParkingExit(int customerID, String carID, int lotID) {
-		ParkingExitRequest request = new ParkingExitRequest(customerID, lotID, carID);
+	private void requestParkingExit(CustomerData data) {
+		ParkingExitRequest request = new ParkingExitRequest(data.customerID, data.lotID, data.carID);
 		ServerResponse response = server.dispatch(request);
-//		System.out.println(gson.toJson(response));
+		System.out.println(gson.toJson(response));
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("car_transportation"));
 		// TODO: fetch the CarTransportation and check fields
@@ -124,15 +125,12 @@ public class TestServerController extends TestCase {
 		 * 3. Send Parking Entry request - license: IncidentalParking
 		 * 4. Send Parking Exit request */
 		
-		int customerID = 1;
-		String email = "user@email";
-		String carID = "IL11-222-33";
-		int lotID = 1;
+		CustomerData data = new CustomerData(1, "user@email", "", "IL11-222-33", 1);
 		
 		initParkingLot();
-		requestIncidentalParking(customerID, email, carID, lotID);
-		requestEntryForOnetimeParking(customerID, carID, lotID);
-		requestParkingExit(customerID, carID, lotID);
+		requestIncidentalParking(data);
+		requestEntryForOnetimeParking(data);
+		requestParkingExit(data);
 	}
 	
 	@Test
@@ -143,14 +141,11 @@ public class TestServerController extends TestCase {
 		 * 3. Send Parking Entry request - license: ReservedParking
 		 * 4. Send Parking Exit request */
 		
-		int customerID = 1;
-		String email = "user@email";
-		String carID = "IL11-222-33";
-		int lotID = 1;
+		CustomerData data = new CustomerData(1, "user@email", "", "IL11-222-33", 1);
 		
 		initParkingLot();
-		requestReservedParking(customerID, email, carID, lotID);
-		requestEntryForOnetimeParking(customerID, carID, lotID);
-		requestParkingExit(customerID, carID, lotID);
+		requestReservedParking(data);
+		requestEntryForOnetimeParking(data);
+		requestParkingExit(data);
 	}
 }
