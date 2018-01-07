@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import cps.common.Constants;
 
@@ -26,10 +28,10 @@ public class SubscriptionService implements ParkingService {
 	int lotID; // if null then full, else regular
 	LocalDate startDate;
 	LocalDate endDate;
-	LocalTime endTime; // null for full subscription
+	LocalTime dailyExitTime; // null for full subscription
 
 	public SubscriptionService(int id, int type, int customerID, String email, String carID, int lotID, LocalDate startDate,
-			LocalDate endDate, LocalTime endTime) {
+			LocalDate endDate, LocalTime dailyExitTime) {
 		this.id = id;
 		this.subscriptionType = type;
 		this.customerID = customerID;
@@ -38,7 +40,7 @@ public class SubscriptionService implements ParkingService {
 		this.lotID = lotID;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.endTime = endTime;
+		this.dailyExitTime = dailyExitTime;
 	}
 
 	public SubscriptionService(ResultSet rs) throws SQLException {
@@ -102,12 +104,12 @@ public class SubscriptionService implements ParkingService {
 		this.endDate = endDate;
 	}
 
-	public LocalTime getEndTime() {
-		return endTime;
+	public LocalTime getDailyExitTime() {
+		return dailyExitTime;
 	}
 
-	public void setEndTime(LocalTime endTime) {
-		this.endTime = endTime;
+	public void setDailyExitTime(LocalTime endTime) {
+		this.dailyExitTime = endTime;
 	}
 
 	public String getEmail() {
@@ -124,7 +126,7 @@ public class SubscriptionService implements ParkingService {
 	}
 
 	public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID, int lotID, LocalDate startDate,
-			LocalDate endDate, LocalTime endTime) throws SQLException {
+			LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
 		PreparedStatement st = conn.prepareStatement(Constants.SQL_CREATE_SUBSCRIPTION_SERVICE,
 				Statement.RETURN_GENERATED_KEYS);
 
@@ -136,7 +138,7 @@ public class SubscriptionService implements ParkingService {
 		st.setInt(field++, lotID);
 		st.setDate(field++, Date.valueOf(startDate));
 		st.setDate(field++, Date.valueOf(endDate));
-		st.setTime(field++, Time.valueOf(endTime));
+		st.setTime(field++, Time.valueOf(dailyExitTime));
 		st.executeUpdate();
 
 		ResultSet keys = st.getGeneratedKeys();
@@ -149,7 +151,7 @@ public class SubscriptionService implements ParkingService {
 
 		st.close();
 
-		return new SubscriptionService(newID, type, customerID, email, carID, lotID, startDate, endDate, endTime);
+		return new SubscriptionService(newID, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime);
 	}
 
 	public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID)
@@ -173,5 +175,22 @@ public class SubscriptionService implements ParkingService {
 		st.close();
 		
 		return result;
+	}
+	
+	public static Collection<SubscriptionService> findByCustomerID(Connection conn, int customerID) throws SQLException {
+		LinkedList<SubscriptionService> results = new LinkedList<SubscriptionService>();
+
+		PreparedStatement stmt = conn.prepareStatement(Constants.GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID);
+		stmt.setInt(1, customerID);
+		ResultSet rs = stmt.executeQuery();
+
+		while (rs.next()) {
+			results.add(new SubscriptionService(rs));
+		}
+
+		rs.close();
+		stmt.close();
+
+		return results;
 	}
 }

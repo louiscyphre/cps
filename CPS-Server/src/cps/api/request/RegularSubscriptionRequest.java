@@ -10,13 +10,13 @@ import cps.server.RequestHandler;
 public class RegularSubscriptionRequest extends SubscriptionRequest {
 	private static final long serialVersionUID = 1L;
 	private int lotID;
-	private LocalTime plannedExitTime;
+	private LocalTime dailyExitTime;
 
 	public RegularSubscriptionRequest(int customerID, String email, String carID, LocalDate startDate, int lotID,
-			LocalTime endTime) {
+			LocalTime dailyExitTime) {
 		super(customerID, email, carID, startDate);
 		this.lotID = lotID;
-		this.plannedExitTime = endTime;
+		this.dailyExitTime = dailyExitTime;
 	}
 
 	@Override
@@ -28,12 +28,12 @@ public class RegularSubscriptionRequest extends SubscriptionRequest {
 		this.lotID = lotID;
 	}
 
-	public LocalTime getPlannedExitTime() {
-		return plannedExitTime;
+	public LocalTime getDailyExitTime() {
+		return dailyExitTime;
 	}
 
-	public void setPlannedExitTime(LocalTime endTime) {
-		this.plannedExitTime = endTime;
+	public void setDailyExitTime(LocalTime endTime) {
+		this.dailyExitTime = endTime;
 	}
 
 	@Override

@@ -22,19 +22,20 @@ public class SubscriptionController extends RequestController {
 	public ServerResponse handle(FullSubscriptionRequest request) {
 		LocalDate startDate = request.getStartDate();
 		LocalDate endDate = startDate.plusDays(28);
+		LocalTime dailyExitTime = LocalTime.of(0, 0, 0);
 		FullSubscriptionResponse response = new FullSubscriptionResponse(false, "");
-		return handle(request, response, startDate, endDate, null);
+		return handle(request, response, startDate, endDate, dailyExitTime);
 	}
 	
 	public ServerResponse handle(RegularSubscriptionRequest request) {
 		LocalDate startDate = request.getStartDate();
 		LocalDate endDate = startDate.plusDays(28);
-		LocalTime plannedExitTime = request.getPlannedExitTime();
+		LocalTime dailyExitTime = request.getDailyExitTime();
 		RegularSubscriptionResponse response = new RegularSubscriptionResponse(false, "");
-		return handle(request, response, startDate, endDate, plannedExitTime);
+		return handle(request, response, startDate, endDate, dailyExitTime);
 	}
 	
-	public ServerResponse handle(SubscriptionRequest request, SubscriptionResponse response, LocalDate startDate, LocalDate endDate, LocalTime plannedExitTime) {
+	public ServerResponse handle(SubscriptionRequest request, SubscriptionResponse response, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
 		return databaseController.performQuery(conn -> {			
 			// TODO: check request parameters
 			CustomerSession session = new CustomerSession();
@@ -47,7 +48,7 @@ public class SubscriptionController extends RequestController {
 			}
 
 			SubscriptionService result = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(),
-					request.getEmail(), request.getCarID(), request.getLotID(), startDate, endDate, plannedExitTime);
+					request.getEmail(), request.getCarID(), request.getLotID(), startDate, endDate, dailyExitTime);
 
 			if (result == null) { // error
 				response.setError("Failed to create SubscriptionService entry");
@@ -61,5 +62,4 @@ public class SubscriptionController extends RequestController {
 			return response;
 		});
 	}
-
 }

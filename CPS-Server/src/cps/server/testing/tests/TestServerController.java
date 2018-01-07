@@ -1,7 +1,9 @@
 package cps.server.testing.tests;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
 
 import cps.server.ServerController;
@@ -10,9 +12,11 @@ import cps.server.testing.utilities.CustomerData;
 import cps.api.request.*;
 import cps.api.action.*;
 import cps.api.response.*;
+import cps.common.Utilities.Pair;
 import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
+import cps.entities.models.SubscriptionService;
 import cps.server.ServerConfig;
 
 import junit.framework.TestCase;
@@ -39,7 +43,143 @@ public class TestServerController extends TestCase {
 		db.truncateTables();
 	}
 	
-	private OnetimeService requestOnetimeParking(CustomerData data, OnetimeParkingRequest request) {
+	@Test
+	public void testIncidentalParking() {
+		/* Scenario:
+		 * 1. Create Parking Lot
+		 * 2. Send Incidental Parking request
+		 * 3. Send Parking Entry request - license: IncidentalParking
+		 * 4. Send Parking Exit request */
+		
+		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+		
+		initParkingLot();
+		requestIncidentalParking(data);
+		requestParkingEntry(data);
+		requestParkingExit(data);
+	}
+	
+	@Test
+	public void testReservedParking() {
+		/* Scenario:
+		 * 1. Create Parking Lot
+		 * 2. Send Reserved Parking request
+		 * 3. Send Parking Entry request - license: ReservedParking
+		 * 4. Send Parking Exit request */
+		
+		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+		
+		initParkingLot();
+		requestReservedParking(data);
+		requestParkingEntry(data);
+		requestParkingExit(data);
+	}
+	
+	@Test
+	public void testFullSubscription() {
+		/* Scenario:
+		 * 1. Create Parking Lot
+		 * 2. Send Full Subscription request
+		 * 3. Send Parking Entry request - license: FullSubscription
+		 * 4. Send Parking Exit request */
+		
+		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+		
+		initParkingLot();
+		requestFullSubscription(data);
+		requestParkingEntry(data);
+		requestParkingExit(data);
+		
+	}
+	
+	@Test
+	public void testRegularSubscription() {
+		/* Scenario:
+		 * 1. Create Parking Lot
+		 * 2. Send Full Subscription request
+		 * 3. Send Parking Entry request - license: FullSubscription
+		 * 4. Send Parking Exit request */
+		
+		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+		
+		initParkingLot();
+		requestRegularSubscription(data);
+		requestParkingEntry(data);
+		requestParkingExit(data);
+		
+	}
+	
+	private void requestSubscription(CustomerData data, SubscriptionRequest request, Pair<SubscriptionService, SubscriptionResponse> holder) {		
+		// Test the response
+		ServerResponse response = server.dispatch(request); 	
+//		System.out.println(gson.toJson(response));
+		assertTrue(response.success());
+		
+		// Retrieve customer
+		assertThat(response, instanceOf(SubscriptionResponse.class));
+		SubscriptionResponse specificResponse = (SubscriptionResponse) response;
+		data.customerID = specificResponse.getCustomerID();
+		assertEquals(1, data.customerID);
+		
+		// Update subscription ID
+		data.subsID = specificResponse.getServiceID();
+		
+		// Test database result
+		assertEquals(1, db.countEntities("customer"));
+		assertEquals(1, db.countEntities("subscription_service"));
+		
+		Collection<SubscriptionService> entries = db.performQuery(conn -> SubscriptionService.findByCustomerID(conn, data.customerID));
+		assertEquals(1, entries.size());
+
+		SubscriptionService entry = entries.iterator().next();
+		assertNotNull(entry);		
+
+		assertEquals(entry.getSubscriptionType(), request.getSubscriptionType());
+		assertEquals(entry.getCustomerID(), specificResponse.getCustomerID());
+		assertEquals(entry.getEmail(), request.getEmail());
+		assertEquals(entry.getCarID(), request.getCarID());
+		assertEquals(entry.getLotID(), request.getLotID());
+		assertEquals(entry.getStartDate(), request.getStartDate());
+		assertEquals(entry.getEndDate(), request.getStartDate().plusDays(28));
+		
+		holder.setA(entry);
+		holder.setB(specificResponse);
+	}
+	
+	private void requestFullSubscription(CustomerData data) {
+		// Holder for data to be checked later with type-specific tests
+		Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
+		
+		// Make the request
+		LocalDate startDate = LocalDate.now();
+		FullSubscriptionRequest request = new FullSubscriptionRequest(data.customerID, data.email, data.carID, startDate);
+		
+		// Run general tests
+		requestSubscription(data, request, holder);
+		
+		// Run type-specific tests
+		assertThat(holder.getB(), instanceOf(FullSubscriptionResponse.class));
+	}
+	
+	private void requestRegularSubscription(CustomerData data) {
+		// Holder for data to be checked later with type-specific tests
+		Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
+		
+		// Make the request
+		LocalDate startDate = LocalDate.now();
+		LocalTime dailyExitTime = LocalTime.of(17, 30);
+		RegularSubscriptionRequest request = new RegularSubscriptionRequest(data.customerID, data.email, data.carID, startDate, data.lotID, dailyExitTime);
+		
+		// Run general tests
+		requestSubscription(data, request, holder);
+		
+		// Run type-specific tests
+		SubscriptionService entry = holder.getA();
+		assertEquals(entry.getDailyExitTime(), request.getDailyExitTime());
+		assertThat(holder.getB(), instanceOf(RegularSubscriptionResponse.class));
+	}
+	
+	private void requestOnetimeParking(CustomerData data, OnetimeParkingRequest request, Pair<OnetimeService, OnetimeParkingResponse> holder) {
 		// Test the response
 		ServerResponse response = server.dispatch(request); 	
 //		System.out.println(gson.toJson(response));
@@ -69,24 +209,41 @@ public class TestServerController extends TestCase {
 		assertEquals(entry.getPlannedEndTime().toLocalDateTime(), request.getPlannedEndTime());
 		assertEquals(entry.isCanceled(), false);
 		
-		return entry;
+		holder.setA(entry);
+		holder.setB(specificResponse);
 	}
 
 	private void requestIncidentalParking(CustomerData data) {
+		// Holder for data to be checked later with type-specific tests
+		Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
+		
 		// Make the request
 		LocalDateTime plannedEndTime = LocalDateTime.parse("2018-01-21T17:00:00");
 		IncidentalParkingRequest request = new IncidentalParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedEndTime);
-		requestOnetimeParking(data, request);
+		
+		// Run general tests
+		requestOnetimeParking(data, request, holder);
+		
+		// Run type-specific tests
+		assertThat(holder.getB(), instanceOf(IncidentalParkingResponse.class));
 	}
 
 	private void requestReservedParking(CustomerData data) {
+		// Holder for data to be checked later with type-specific tests
+		Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
+		
 		// Make the request
 		LocalDateTime plannedStartTime = LocalDateTime.parse("2018-01-21T09:00:00");
 		LocalDateTime plannedEndTime = LocalDateTime.parse("2018-01-21T17:00:00");
 		ReservedParkingRequest request = new ReservedParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedStartTime, plannedEndTime);
 		
-		OnetimeService entry = requestOnetimeParking(data, request);
+		// Run general tests
+		requestOnetimeParking(data, request, holder);
+		
+		// Run type-specific tests
+		OnetimeService entry = holder.getA();
 		assertEquals(entry.getPlannedStartTime().toLocalDateTime(), request.getPlannedStartTime());
+		assertThat(holder.getB(), instanceOf(ReservedParkingResponse.class));
 	}
 	
 	private void initParkingLot() {
@@ -99,8 +256,8 @@ public class TestServerController extends TestCase {
 //		System.out.println(gson.toJson(lot));
 	}
 	
-	private void requestEntryForOnetimeParking(CustomerData data) {
-		ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, 0, data.lotID, data.carID); // subscriptionID = 0 means entry by OnetimeParking license
+	private void requestParkingEntry(CustomerData data) {
+		ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, data.subsID, data.lotID, data.carID); // subscriptionID = 0 means entry by OnetimeParking license
 		ServerResponse response = server.dispatch(request);
 //		System.out.println(gson.toJson(response));
 		assertTrue(response.success());
@@ -115,37 +272,5 @@ public class TestServerController extends TestCase {
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("car_transportation"));
 		// TODO: fetch the CarTransportation and check fields
-	}
-	
-	@Test
-	public void testIncidentalParking() {
-		/* Scenario:
-		 * 1. Create Parking Lot
-		 * 2. Send Incidental Parking request
-		 * 3. Send Parking Entry request - license: IncidentalParking
-		 * 4. Send Parking Exit request */
-		
-		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1);
-		
-		initParkingLot();
-		requestIncidentalParking(data);
-		requestEntryForOnetimeParking(data);
-		requestParkingExit(data);
-	}
-	
-	@Test
-	public void testReservedParking() {
-		/* Scenario:
-		 * 1. Create Parking Lot
-		 * 2. Send Reserved Parking request
-		 * 3. Send Parking Entry request - license: ReservedParking
-		 * 4. Send Parking Exit request */
-		
-		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1);
-		
-		initParkingLot();
-		requestReservedParking(data);
-		requestEntryForOnetimeParking(data);
-		requestParkingExit(data);
 	}
 }

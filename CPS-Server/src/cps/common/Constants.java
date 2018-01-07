@@ -40,4 +40,5 @@ public interface Constants {
 	public final int COMPLAINT_STATUS_ACCEPTED = 2;
 	public final int COMPLAINT_STATUS_REJECTED = 3;
 	public final String SQL_CREATE_SUBSCRIPTION_SERVICE = "INSERT INTO subscription_service values(default, ?, ?, ?, ?, ?, ?, ?, ?)";
+	public final String GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID = "SELECT * FROM subscription_service WHERE customer_id=? ORDER BY id";
 }

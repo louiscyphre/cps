@@ -67,8 +67,7 @@ public class ServerController implements RequestHandler {
 	@Override
 	public ServerResponse handle(CancelOnetimeParkingRequest request) {
 		// TODO:Tegra - Under construction
-		onetimeParkingController.handle(request);
-		return null;
+		return onetimeParkingController.handle(request);
 	}
 
 	@Override
@@ -78,7 +77,7 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(FullSubscriptionRequest request) {
-		return null;
+		return subscriptionController.handle(request);
 	}
 
 	@Override
@@ -89,11 +88,6 @@ public class ServerController implements RequestHandler {
 	@Override
 	public ServerResponse handle(ListOnetimeEntriesRequest request) {
 		return onetimeParkingController.handle(request);
-	}
-
-	@Override
-	public ServerResponse handle(OnetimeParkingRequest request) {
-		return null;
 	}
 
 	@Override
@@ -108,17 +102,12 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(RegularSubscriptionRequest request) {
-		return null;
+		return subscriptionController.handle(request);
 	}
 
 	@Override
 	public ServerResponse handle(ReservedParkingRequest request) {
 		return onetimeParkingController.handle(request);
-	}
-
-	@Override
-	public ServerResponse handle(SubscriptionRequest request) {
-		return null;
 	}
 
 	@Override

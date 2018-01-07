@@ -26,7 +26,7 @@ public class CustomerSession {
 
 	public boolean registerCustomer(Connection conn, ServerResponse response, int customerID, String email) throws SQLException {
 		String password = "1234"; // TODO: generate password
-		System.out.println(String.format("Sending password '%s' to email %s", password, email));
+//		System.out.println(String.format("Sending password '%s' to email %s", password, email));
 		customer = Customer.create(conn, email, password);
 		return customer != null;
 	}

@@ -100,7 +100,7 @@ public class ParkingEntryController extends RequestController {
 			OnetimeService service = OnetimeService.findForEntry(conn, customerID, carID, lotID);
 
 			if (service == null) { // Entry license does not exist
-				response.setError("Entry license not found for customer ID " + customerID + " with car ID " + carID);
+				response.setError("OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
 				return null;
 			}
 			
@@ -112,7 +112,7 @@ public class ParkingEntryController extends RequestController {
 			SubscriptionService service = SubscriptionService.findForEntry(conn, customerID, carID, subsID);
 
 			if (service == null) { // Entry license does not exist
-				response.setError("Entry license not found for customer ID " + customerID + " with car ID " + carID);
+				response.setError("SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
 				return null;
 			}
 
