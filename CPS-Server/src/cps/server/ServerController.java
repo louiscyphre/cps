@@ -10,9 +10,9 @@ public class ServerController implements RequestHandler {
 	private final DatabaseController databaseController;
 	private final LotController lotController;
 	private final OnetimeParkingController onetimeParkingController;
-	private final EntryExitController entryExitController;
+	private final ParkingEntryController entryController;
+	private final ParkingExitController exitController;
 	private final SubscriptionController subscriptionController;
-	private final UserController userController;
 	
 	/**
 	 * Constructs an instance of the server controller.
@@ -29,9 +29,9 @@ public class ServerController implements RequestHandler {
 		
 		lotController = new LotController(this);
 		onetimeParkingController = new OnetimeParkingController(this);
-		entryExitController = new EntryExitController(this);
+		entryController = new ParkingEntryController(this);
+		exitController = new ParkingExitController(this);
 		subscriptionController = new SubscriptionController(this);
-		userController = new UserController(this);
 	}
 
 	public ServerConfig getConfig() {
@@ -54,10 +54,6 @@ public class ServerController implements RequestHandler {
 		return subscriptionController;
 	}
 
-	public UserController getUserController() {
-		return userController;
-	}
-
 	public ServerResponse dispatch(Request message) {
 		ServerResponse response = message.handle(this);
 		
@@ -71,8 +67,7 @@ public class ServerController implements RequestHandler {
 	@Override
 	public ServerResponse handle(CancelOnetimeParkingRequest request) {
 		// TODO:Tegra - Under construction
-		onetimeParkingController.handle(request);
-		return null;
+		return onetimeParkingController.handle(request);
 	}
 
 	@Override
@@ -82,7 +77,7 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(FullSubscriptionRequest request) {
-		return null;
+		return subscriptionController.handle(request);
 	}
 
 	@Override
@@ -96,33 +91,23 @@ public class ServerController implements RequestHandler {
 	}
 
 	@Override
-	public ServerResponse handle(OnetimeParkingRequest request) {
-		return null;
-	}
-
-	@Override
 	public ServerResponse handle(ParkingEntryRequest request) {
-		return entryExitController.handle(request);
+		return entryController.handle(request);
 	}
 
 	@Override
 	public ServerResponse handle(ParkingExitRequest request) {
-		return entryExitController.handle(request);
+		return exitController.handle(request);
 	}
 
 	@Override
 	public ServerResponse handle(RegularSubscriptionRequest request) {
-		return null;
+		return subscriptionController.handle(request);
 	}
 
 	@Override
 	public ServerResponse handle(ReservedParkingRequest request) {
 		return onetimeParkingController.handle(request);
-	}
-
-	@Override
-	public ServerResponse handle(SubscriptionRequest request) {
-		return null;
 	}
 
 	@Override

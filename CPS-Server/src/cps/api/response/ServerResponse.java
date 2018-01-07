@@ -72,21 +72,21 @@ public class ServerResponse implements Serializable {
 		return new ServerResponse(STATUS_ERROR, description);
 	}
 	
-	/**
-	 * Returns Server Response OK if condition == true
-	 * else returns Server Response Error
-	 *
-	 * @param description the description
-	 * @param condition the condition
-	 * @return the server response
-	 */
-	public static ServerResponse decide(String description, boolean condition) {
-		if (condition) {
-			return ServerResponse.ok(description + " completed successfully");
-		} else {
-			return ServerResponse.error(description + " failed");
-		}		
-	}
+//	/**
+//	 * Returns Server Response OK if condition == true
+//	 * else returns Server Response Error
+//	 *
+//	 * @param description the description
+//	 * @param condition the condition
+//	 * @return the server response
+//	 */
+//	public static ServerResponse decide(String description, boolean condition) {
+//		if (condition) {
+//			return ServerResponse.ok(description + " completed successfully");
+//		} else {
+//			return ServerResponse.error(description + " failed");
+//		}		
+//	}
 	
 	/**
 	 * Gets the status.
@@ -123,6 +123,24 @@ public class ServerResponse implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	/**
+	 * Sets status = STATUS_ERROR and updates the description
+	 * @param description
+	 */
+	public void setError(String description) {
+		this.status = STATUS_ERROR;
+		this.description = description;		
+	}
+	
+	/**
+	 * Sets status = STATUS_OK and updates the description
+	 * @param description
+	 */
+	public void setSuccess(String description) {
+		this.status = STATUS_OK;
+		this.description = description;		
+	}
 
 	
 	/** 
@@ -145,5 +163,9 @@ public class ServerResponse implements Serializable {
 	
 	public boolean success() {
 		return this.status == STATUS_OK;
+	}
+	
+	public boolean isError() {
+		return this.status == STATUS_ERROR;
 	}
 }

@@ -120,11 +120,12 @@ public class Customer implements Serializable, User {
 		st.setString(index++, password);
 		st.setFloat(index++, debit);
 		st.setFloat(index++, credit);
+		st.setInt(index++, id);
 
 		int updated = st.executeUpdate();
 
 		st.close();
 
-		return updated > 0;		
+		return updated > 0;	
 	}
 }

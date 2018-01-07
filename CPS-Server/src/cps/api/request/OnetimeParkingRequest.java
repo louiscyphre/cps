@@ -5,17 +5,17 @@ import java.time.LocalDateTime;
 public abstract class OnetimeParkingRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
 
+	private String email;
 	private String carID;
 	private int lotID;
 	private LocalDateTime plannedEndTime;
-	private String email;
 
 	public OnetimeParkingRequest(int customerID, String email, String carID, int lotID, LocalDateTime plannedEndTime) {
 		super(customerID);
+		this.email = email;
 		this.carID = carID;
 		this.lotID = lotID;
 		this.plannedEndTime = plannedEndTime;
-		this.email = email;
 	}
 
 	public String getCarID() {

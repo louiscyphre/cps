@@ -1,6 +1,6 @@
 package cps.api.response;
 
-public abstract class OnetimeParkingResponse extends CustomerResponse {
+public abstract class OnetimeParkingResponse extends CustomerPasswordResponse {
 	private static final long serialVersionUID = 1L;
 	
 	private int serviceID;

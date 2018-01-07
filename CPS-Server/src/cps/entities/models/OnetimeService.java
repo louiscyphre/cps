@@ -1,6 +1,5 @@
 package cps.entities.models;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,10 +12,8 @@ import cps.common.Constants;
 
 // Database entity for one-time parking services - incidental parking or reserved parking both stored in the same table.
 
-public class OnetimeService implements Serializable {
+public class OnetimeService implements ParkingService {
 	private static final long serialVersionUID = 1L;
-	public static final int TYPE = 1;
-	public static final int LICENSE_TYPE = Constants.LICENSE_TYPE_ONETIME;
 
 	private int id;
 	private int parkingType; // 1 = incidental, 2 = reserved
@@ -116,6 +113,11 @@ public class OnetimeService implements Serializable {
 
 	public void setCanceled(boolean canceled) {
 		this.canceled = canceled;
+	}
+
+	@Override
+	public int getLicenseType() {
+		return Constants.LICENSE_TYPE_ONETIME;
 	}
 
 	public static OnetimeService create(Connection conn, int type, int customerID, String email, String carID,
