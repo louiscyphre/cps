@@ -110,7 +110,7 @@ public class TestServerController extends TestCase {
 	private void requestParkingExit(int customerID, String carID, int lotID) {
 		ParkingExitRequest request = new ParkingExitRequest(customerID, lotID, carID);
 		ServerResponse response = server.dispatch(request);
-		System.out.println(gson.toJson(response));
+//		System.out.println(gson.toJson(response));
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("car_transportation"));
 		// TODO: fetch the CarTransportation and check fields
@@ -135,22 +135,22 @@ public class TestServerController extends TestCase {
 		requestParkingExit(customerID, carID, lotID);
 	}
 	
-//	@Test
-//	public void testReservedParking() {
-//		/* Scenario:
-//		 * 1. Create Parking Lot
-//		 * 2. Send Reserved Parking request
-//		 * 3. Send Parking Entry request - license: ReservedParking
-//		 * 4. Send Parking Exit request */
-//		
-//		int customerID = 1;
-//		String email = "user@email";
-//		String carID = "IL11-222-33";
-//		int lotID = 1;
-//		
-//		initParkingLot();
-//		requestReservedParking(customerID, email, carID, lotID);
-//		requestEntryForOnetimeParking(customerID, carID, lotID);
-//		requestParkingExit(customerID, carID, lotID);
-//	}
+	@Test
+	public void testReservedParking() {
+		/* Scenario:
+		 * 1. Create Parking Lot
+		 * 2. Send Reserved Parking request
+		 * 3. Send Parking Entry request - license: ReservedParking
+		 * 4. Send Parking Exit request */
+		
+		int customerID = 1;
+		String email = "user@email";
+		String carID = "IL11-222-33";
+		int lotID = 1;
+		
+		initParkingLot();
+		requestReservedParking(customerID, email, carID, lotID);
+		requestEntryForOnetimeParking(customerID, carID, lotID);
+		requestParkingExit(customerID, carID, lotID);
+	}
 }
