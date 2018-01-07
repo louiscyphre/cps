@@ -17,7 +17,7 @@ public interface Constants {
 	public final int PARKING_TYPE_RESERVED = 2;
 	public final int SUBSCRIPTION_TYPE_REGULAR = 1;
 	public final int SUBSCRIPTION_TYPE_FULL = 2;
-	public final String SQL_CREATE_NEW_DAY = "INSERT INTO daily_statistics(? ,? ,default ,default ,default ,default)";
+	public final String SQL_CREATE_NEW_DAY = "INSERT INTO daily_statistics values(? ,? ,default ,default ,default ,default)";
 	public final String CHECK_DATE = "SELECT * FROM daily_statistics DS WHERE ds.day=?";
 	public final String INCREASE_REALIZED_ORDER = "UPDATE daily_statistics SET realized_orders=? WHERE day=? AND lot_id=?";
 	public final String INCREASE_CANCELED_ORDER = "UPDATE daily_statistics SET canceled_orders=? WHERE day=? AND lot_id=?";
@@ -32,4 +32,5 @@ public interface Constants {
 	public final String SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR="SELECT * FROM subscription_service WHERE ID=? AND customer_id=? AND car_id=?";
 	public final String SQL_UPDATE_ONETIME_BY_ID = "UPDATE onetime_service SET parking_type = ?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, canceled=? WHERE id=?";
 	public final String SQL_UPDATE_CUSTOMER = "UPDATE customer SET email=?, password=?, debit=?, credit=? WHERE id=?";
+	public final String SQL_CREATE_CUSTOMER = "INSERT INTO customer values(default, ?, ?)";
 }

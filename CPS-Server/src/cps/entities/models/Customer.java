@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import cps.common.Constants;
 import cps.entities.people.User;
@@ -13,20 +14,21 @@ public class Customer implements Serializable, User {
 	private static final long serialVersionUID = 1L;
 
 	public int id;
-	public String password;
 	public String email;
+	public String password;
 	public float debit;
 	public float credit;
 
-	public Customer(int id, String email, float debit, float credit) {
+	public Customer(int id, String email, String password, float debit, float credit) {
 		this.id = id;
 		this.email = email;
+		this.password = password;
 		this.debit = debit;
 		this.credit = credit;
 	}
 
 	public Customer(ResultSet rs) throws SQLException {
-		this(rs.getInt(1), rs.getString(2), rs.getFloat(3), rs.getFloat(4));
+		this(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getFloat(4), rs.getFloat(5));
 	}
 
 	public int getId() {
@@ -45,6 +47,14 @@ public class Customer implements Serializable, User {
 		this.email = email;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public float getDebit() {
 		return debit;
 	}
@@ -59,6 +69,29 @@ public class Customer implements Serializable, User {
 
 	public void setCredit(float credit) {
 		this.credit = credit;
+	}
+
+	public static Customer create(Connection conn, String email, String password) throws SQLException {
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_CUSTOMER,
+				Statement.RETURN_GENERATED_KEYS);
+
+		int field = 1;
+		stmt.setString(field++, email);
+		stmt.setString(field++, password);
+		stmt.executeUpdate();
+
+		ResultSet keys = stmt.getGeneratedKeys();
+		int newID = 0;
+
+		if (keys != null && keys.next()) {
+			newID = keys.getInt(1);
+			keys.close();
+		}
+
+		stmt.close();
+
+		return new Customer(newID, email, password, 0f, 0f);
+
 	}
 
 	public static Customer findByID(Connection conn, int id) throws SQLException {

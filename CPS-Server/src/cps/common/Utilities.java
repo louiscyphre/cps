@@ -1,17 +1,7 @@
 package cps.common;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import cps.api.request.ParkingExitRequest;
-import cps.entities.models.CarTransportation;
-import cps.entities.models.Customer;
-import cps.entities.models.OnetimeService;
-import cps.entities.models.ParkingLot;
 
 public abstract class Utilities {
 	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT);
