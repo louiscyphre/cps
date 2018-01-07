@@ -125,6 +125,6 @@ public class Customer implements Serializable, User {
 
 		st.close();
 
-		return updated > 0;		
+		return updated > 0;	
 	}
 }

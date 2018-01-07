@@ -33,4 +33,10 @@ public interface Constants {
 	public final String SQL_UPDATE_ONETIME_BY_ID = "UPDATE onetime_service SET parking_type = ?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, canceled=? WHERE id=?";
 	public final String SQL_UPDATE_CUSTOMER = "UPDATE customer SET email=?, password=?, debit=?, credit=? WHERE id=?";
 	public final String SQL_CREATE_CUSTOMER = "INSERT INTO customer values(default, ?, ?)";
+	public final String SQL_CREATE_COMPLAINT = "INSERT INTO complaint values(default, ?, ?, ?, ?)";
+	public final String SQL_UPDATE_COMPLAINT_LIGHT = "UPDATE complaint SET customer_id = ?, employee_id = ?, status = ?";
+	public final String SQL_UPDATE_COMPLAINT = "UPDATE complaint SET customer_id = ?, employee_id = ?, status = ?, description = ?";
+	public final int COMPLAINT_STATUS_PROCESSING = 1;
+	public final int COMPLAINT_STATUS_ACCEPTED = 2;
+	public final int COMPLAINT_STATUS_REJECTED = 3;
 }
