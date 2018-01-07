@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import cps.api.response.ServerResponse;
+import cps.common.Utilities;
 import cps.entities.models.Customer;
 
 public class CustomerSession {
@@ -25,7 +26,7 @@ public class CustomerSession {
 	}
 
 	public boolean registerCustomer(Connection conn, ServerResponse response, int customerID, String email) throws SQLException {
-		String password = "1234"; // TODO: generate password
+		String password = Utilities.randomString("0123456789", 4);
 //		System.out.println(String.format("Sending password '%s' to email %s", password, email));
 		customer = Customer.create(conn, email, password);
 		return customer != null;

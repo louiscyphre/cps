@@ -60,4 +60,16 @@ public abstract class Utilities {
 			this.b = b;
 		}
 	}
+
+	public static String randomString(String characterSet, int length) {		
+		StringBuilder builder = new StringBuilder();
+		int setLength = characterSet.length();
+		
+		while (length-- != 0) {		
+			int character = (int)(Math.random() * setLength);
+			builder.append(characterSet.charAt(character));
+		}
+		
+		return builder.toString();
+	}
 }

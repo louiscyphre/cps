@@ -45,7 +45,7 @@ public class ConsoleClient implements ClientUI {
 	 *          The string to be displayed.
 	 */
 	public void display(Object message) {
-		if (message instanceof ListOnetimeEntriesResponse) { // TODO: find a more elegant way to check this
+		if (message instanceof ListOnetimeEntriesResponse) {
 			ListOnetimeEntriesResponse response = (ListOnetimeEntriesResponse) message;
 			System.out.println("OnetimeService entries for customer id: " + response.getCustomerID() + ", count: " + response.getData().size());
 			for (OnetimeService entry : response.getData()) {
