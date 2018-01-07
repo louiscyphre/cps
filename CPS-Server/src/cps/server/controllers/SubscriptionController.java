@@ -13,6 +13,7 @@ import cps.api.request.SubscriptionRequest;
 import cps.server.ServerController;
 import cps.server.handlers.CustomerSession;
 
+// TODO: handle payment for subscription
 public class SubscriptionController extends RequestController {
 
 	public SubscriptionController(ServerController serverController) {
