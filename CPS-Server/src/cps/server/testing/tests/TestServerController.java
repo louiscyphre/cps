@@ -38,24 +38,45 @@ public class TestServerController extends TestCase {
 		this.db = server.getDatabaseController();
 		db.truncateTables();
 	}
-
-	private void requestIncidentalParking(CustomerData data) {
-		// Make the request
-		LocalDateTime plannedEndTime = LocalDateTime.parse("2018-01-21T17:00:00");
-		IncidentalParkingRequest request = new IncidentalParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedEndTime);
-		
+	
+	private OnetimeService requestOnetimeParking(CustomerData data, OnetimeParkingRequest request) {
 		// Test the response
-		ServerResponse response = server.dispatch(request);	
+		ServerResponse response = server.dispatch(request); 	
+		System.out.println(gson.toJson(response));
 		assertTrue(response.success());
 		
-		// Test database result 
+		// Retrieve customer
+		assertThat(response, instanceOf(IncidentalParkingResponse.class));
+		IncidentalParkingResponse specificResponse = (IncidentalParkingResponse) response;
+		data.customerID = specificResponse.getCustomerID();
+		assertEquals(1, data.customerID);
+		
+		// Test database result
+		assertEquals(1, db.countEntities("customer"));
 		assertEquals(1, db.countEntities("onetime_service"));
 		
 		Collection<OnetimeService> entries = db.performQuery(conn -> OnetimeService.findByCustomerID(conn, data.customerID));
 		assertEquals(1, entries.size());
 
 		OnetimeService entry = entries.iterator().next();
-		checkEntryFields(entry, request);
+		assertNotNull(entry);		
+
+		assertEquals(entry.getParkingType(), request.getParkingType());
+		assertEquals(entry.getCustomerID(), specificResponse.getCustomerID());
+		assertEquals(entry.getEmail(), request.getEmail());
+		assertEquals(entry.getCarID(), request.getCarID());
+		assertEquals(entry.getLotID(), request.getLotID());
+		assertEquals(entry.getPlannedEndTime().toLocalDateTime(), request.getPlannedEndTime());
+		assertEquals(entry.isCanceled(), false);
+		
+		return entry;
+	}
+
+	private void requestIncidentalParking(CustomerData data) {
+		// Make the request
+		LocalDateTime plannedEndTime = LocalDateTime.parse("2018-01-21T17:00:00");
+		IncidentalParkingRequest request = new IncidentalParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedEndTime);
+		requestOnetimeParking(data, request);
 	}
 
 	private void requestReservedParking(CustomerData data) {
@@ -64,30 +85,8 @@ public class TestServerController extends TestCase {
 		LocalDateTime plannedEndTime = LocalDateTime.parse("2018-01-21T17:00:00");
 		ReservedParkingRequest request = new ReservedParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedStartTime, plannedEndTime);
 		
-		// Test the response
-		ServerResponse response = server.dispatch(request);	
-		assertTrue(response.success());
-		
-		// Test database result 
-		assertEquals(1, db.countEntities("onetime_service"));
-		
-		Collection<OnetimeService> entries = db.performQuery(conn -> OnetimeService.findByCustomerID(conn, data.customerID));
-		assertEquals(1, entries.size());
-
-		OnetimeService entry = entries.iterator().next();
-		checkEntryFields(entry, request);
+		OnetimeService entry = requestOnetimeParking(data, request);
 		assertEquals(entry.getPlannedStartTime().toLocalDateTime(), request.getPlannedStartTime());
-	}
-	
-	private void checkEntryFields(OnetimeService entry, OnetimeParkingRequest request) {
-		assertEquals(entry.getParkingType(), request.getParkingType());
-		assertEquals(entry.getCustomerID(), request.getCustomerID());
-		assertEquals(entry.getEmail(), request.getEmail());
-		assertEquals(entry.getCarID(), request.getCarID());
-		assertEquals(entry.getLotID(), request.getLotID());
-		assertEquals(entry.getPlannedEndTime().toLocalDateTime(), request.getPlannedEndTime());
-		assertEquals(entry.isCanceled(), false);
-		
 	}
 	
 	private void initParkingLot() {
@@ -125,7 +124,7 @@ public class TestServerController extends TestCase {
 		 * 3. Send Parking Entry request - license: IncidentalParking
 		 * 4. Send Parking Exit request */
 		
-		CustomerData data = new CustomerData(1, "user@email", "", "IL11-222-33", 1);
+		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1);
 		
 		initParkingLot();
 		requestIncidentalParking(data);
@@ -141,7 +140,7 @@ public class TestServerController extends TestCase {
 		 * 3. Send Parking Entry request - license: ReservedParking
 		 * 4. Send Parking Exit request */
 		
-		CustomerData data = new CustomerData(1, "user@email", "", "IL11-222-33", 1);
+		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1);
 		
 		initParkingLot();
 		requestReservedParking(data);

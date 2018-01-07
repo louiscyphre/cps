@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-
 import cps.common.Constants;
 
 public class Complaint implements Serializable {

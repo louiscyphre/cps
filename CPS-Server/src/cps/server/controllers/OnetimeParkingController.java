@@ -11,15 +11,19 @@ import java.util.Collection;
 import cps.api.request.CancelOnetimeParkingRequest;
 import cps.api.request.IncidentalParkingRequest;
 import cps.api.request.ListOnetimeEntriesRequest;
+import cps.api.request.OnetimeParkingRequest;
 import cps.api.request.ReservedParkingRequest;
 import cps.api.response.IncidentalParkingResponse;
 import cps.api.response.ListOnetimeEntriesResponse;
+import cps.api.response.OnetimeParkingResponse;
+import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
 import cps.entities.models.DailyStatistics;
 import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.server.ServerApplication;
 import cps.server.ServerController;
+import cps.server.handlers.CustomerSession;
 import cps.common.Utilities.Holder;
 import cps.common.Utilities.Pair;
 
@@ -38,6 +42,32 @@ public class OnetimeParkingController extends RequestController {
 	public OnetimeParkingController(ServerController serverController) {
 		super(serverController);
 	}
+	
+	public ServerResponse handle(OnetimeParkingRequest request, OnetimeParkingResponse response, Timestamp startTime, Timestamp plannedEndTime) {
+		return databaseController.performQuery(conn -> {			
+			// TODO: check request parameters
+			
+			// TODO: finish customer login/registration
+			CustomerSession session = new CustomerSession();
+			session.findOrRegisterCustomer(conn, response, request.getCustomerID(), request.getEmail());
+			
+			Customer customer = session.getCustomer(); // By this time customer has to exist
+			
+			if (customer == null) {
+			 	return response; // the response was modified by the customer session
+			}
+
+			OnetimeService result = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
+					request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);
+
+			if (result == null) { // error
+				return new IncidentalParkingResponse(false, request.getCustomerID(), "", 0);
+			}
+
+			// success
+			return new IncidentalParkingResponse(true, customer.getId(), "", result.getId());
+		});
+	}
 
 	/**
 	 * Handle IncidentalParkingRequest.
@@ -47,29 +77,10 @@ public class OnetimeParkingController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse handle(IncidentalParkingRequest request) {
-		return databaseController.performQuery(conn -> {
-			// TODO: finish customer login/registration for this to work
-			// Pair<Customer, ServerResponse> customerExists =
-			// serverController.getUserController().findOrCreateCustomer(conn,
-			// request.getCustomerID());
-			//
-			// if (customerExists.b != null) {
-			// return customerExists.b;
-			// }
-
-			Timestamp startTime = new Timestamp(System.currentTimeMillis());
-			Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
-
-			OnetimeService result = OnetimeService.create(conn, request.getParkingType(), request.getCustomerID(),
-					request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);
-
-			if (result == null) { // error
-				return new IncidentalParkingResponse(false, request.getCustomerID(), "", 0);
-			}
-
-			// success
-			return new IncidentalParkingResponse(true, request.getCustomerID(), "", result.getId());
-		});
+		Timestamp startTime = new Timestamp(System.currentTimeMillis());
+		Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
+		IncidentalParkingResponse response = new IncidentalParkingResponse(false, 0, null, 0);
+		return handle(request, response, startTime, plannedEndTime);
 	}
 
 	/**
@@ -80,21 +91,10 @@ public class OnetimeParkingController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse handle(ReservedParkingRequest request) {
-		return databaseController.performQuery(conn -> {
-			Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
-			Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
-
-			OnetimeService result = OnetimeService.create(conn, request.getParkingType(), request.getCustomerID(),
-					request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);
-			// System.out.println(result.getValue());
-
-			if (result == null) { // error
-				return new IncidentalParkingResponse(false, request.getCustomerID(), "", 0);
-			}
-
-			// success
-			return new IncidentalParkingResponse(true, request.getCustomerID(), "", result.getId());
-		});
+		Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
+		Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
+		ReservedParkingResponse response = new ReservedParkingResponse(false, 0, null, 0);
+		return handle(request, response, startTime, plannedEndTime);
 	}
 
 	public ServerResponse handle(CancelOnetimeParkingRequest request) {
@@ -108,7 +108,7 @@ public class OnetimeParkingController extends RequestController {
 			serviceToCancel.update(conn);
 			// Increase daily counter of canceled orders
 			DailyStatistics.increaseCanceledOrder(conn, serviceToCancel.getLotID());
-			
+
 			// TODO: Cauchy Give customer all/some money back
 
 			// Return Server Response

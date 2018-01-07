@@ -123,6 +123,15 @@ public class ServerResponse implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	/**
+	 * Sets status = STATUS_ERROR and updates the description
+	 * @param description
+	 */
+	public void setError(String description) {
+		this.status = STATUS_ERROR;
+		this.description = description;		
+	}
 
 	
 	/** 
@@ -145,5 +154,9 @@ public class ServerResponse implements Serializable {
 	
 	public boolean success() {
 		return this.status == STATUS_OK;
+	}
+	
+	public boolean isError() {
+		return this.status == STATUS_ERROR;
 	}
 }

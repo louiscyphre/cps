@@ -200,19 +200,19 @@ public class EntryExitController extends RequestController {
 			float sum = calculatePayment(conn, entry, request);
 			
 			// TODO: finish customer login/registration for this to work
-//			// Find customer
-//			Customer customer = Customer.findByID(conn, request.getCustomerID());
-//			
-//			if (customer == null) {
-//				return ServerResponse.error("Failed to find customer with id " + request.getCustomerID());
-//			}
-//			
-//			// Write payment
-//			customer.setDebit(sum + customer.getDebit());
-//			
-//			if (!customer.update(conn)) {
-//				return ServerResponse.error("Failed to update customer");
-//			}
+			// Find customer
+			Customer customer = Customer.findByID(conn, request.getCustomerID());
+			
+			if (customer == null) {
+				return ServerResponse.error("Failed to find customer with id " + request.getCustomerID());
+			}
+			
+			// Write payment
+			customer.setDebit(sum + customer.getDebit());
+			
+			if (!customer.update(conn)) {
+				return ServerResponse.error("Failed to update customer");
+			}
 			
 			// Success
 			return ServerResponse.ok("ParkingExit request completed successfully");
