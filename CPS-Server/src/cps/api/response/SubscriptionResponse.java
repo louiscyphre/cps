@@ -20,4 +20,9 @@ public class SubscriptionResponse extends CustomerPasswordResponse {
 	public void setServiceID(int serviceID) {
 		this.serviceID = serviceID;
 	}
+	
+  @Override
+  public ServerResponse handle(ResponseHandler handler) {
+    return handler.handle(this);
+  }
 }

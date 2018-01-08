@@ -10,4 +10,9 @@ public class IncidentalParkingResponse extends OnetimeParkingResponse {
 	public IncidentalParkingResponse(boolean success, String description) {
 		this(success, description, 0, "", 0);
 	}
+	
+	@Override
+	public ServerResponse handle(ResponseHandler handler) {
+	  return handler.handle(this);
+	}
 }
