@@ -10,4 +10,9 @@ public class ReservedParkingResponse extends OnetimeParkingResponse {
 	public ReservedParkingResponse(boolean success, String description) {
 		super(success, description, 0, "", 0);
 	}
+	
+  @Override
+  public ServerResponse handle(ResponseHandler handler) {
+    return handler.handle(this);
+  }
 }

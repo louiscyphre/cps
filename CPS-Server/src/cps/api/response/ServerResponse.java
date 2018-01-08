@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * The Class ServerResponse.
  */
-public class ServerResponse implements Serializable {
+public class ServerResponse extends Response implements Serializable {
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -168,4 +168,9 @@ public class ServerResponse implements Serializable {
 	public boolean isError() {
 		return this.status == STATUS_ERROR;
 	}
+
+  @Override
+  public ServerResponse handle(ResponseHandler handler) {
+    return handler.handle(this);
+  }
 }

@@ -20,4 +20,9 @@ public class CancelOnetimeParkingResponse extends CustomerResponse {
 	public void setOnetimeServiceID(int onetimeServiceID) {
 		this.onetimeServiceID = onetimeServiceID;
 	}
+	
+  @Override
+  public ServerResponse handle(ResponseHandler handler) {
+    return handler.handle(this);
+  }
 }

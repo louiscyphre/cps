@@ -20,4 +20,9 @@ public class ParkingExitResponse extends CustomerResponse {
 	public void setPayment(float payment) {
 		this.payment = payment;
 	}
+	
+  @Override
+  public ServerResponse handle(ResponseHandler handler) {
+    return handler.handle(this);
+  }
 }
