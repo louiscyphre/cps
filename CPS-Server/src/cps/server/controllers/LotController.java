@@ -185,8 +185,21 @@ public class LotController extends RequestController {
 	}
 
 	private int CalculatePath(String[][][] _pl, int iSize, int iHeight, int iDepth) {
-		// TODO Auto-generated method stub
-		return 0;
+		int totalcars = 0;
+		int h = iHeight, d = iDepth;
+		while (d != 0) {
+			d--;
+			if (_pl[iSize][h][d] != "0") {
+				totalcars++;
+			}
+		}
+		while (h != 0) {
+			h--;
+			if (_pl[iSize][h][d] != "0") {
+				totalcars++;
+			}
+		}
+		return totalcars;
 	}
 
 	protected int freeSpaceCount(ParkingLot lot, String[][][] content) {
