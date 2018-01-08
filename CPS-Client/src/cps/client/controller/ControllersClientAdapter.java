@@ -29,15 +29,15 @@ public class ControllersClientAdapter {
     return instance;
   }
 
-  static ViewController registerCtrl(ViewController ctrl, SceneCode code) {
+  static ViewController registerCtrl(ViewController ctrl, ControllerConstants.SceneCode code) {
     return getInstance().ctrlMapping.put(code.getCode(), ctrl);
   }
 
-  public static ViewController fetchCtrl(SceneCode code) {
+  public static ViewController fetchCtrl(ControllerConstants.SceneCode code) {
     return getInstance().ctrlMapping.get(code.getCode());
   }
 
-  public static Scene registerScene(SceneCode code) throws IOException {
+  public static Scene registerScene(ControllerConstants.SceneCode code) throws IOException {
 
     URL url = getClient().getClass().getResource(code.myRelativePath);
     Pane pane;
@@ -47,7 +47,7 @@ public class ControllersClientAdapter {
     return scene;
   }
 
-  static Scene fetchScene(SceneCode code) {
+  static Scene fetchScene(ControllerConstants.SceneCode code) {
     return getInstance().sceneMapping.get(code.getCode());
   }
 
@@ -60,30 +60,10 @@ public class ControllersClientAdapter {
     return getInstance().cpsClient;
   }
 
-  static void setStage(SceneCode code) {
+  static void setStage(ControllerConstants.SceneCode code) {
     Scene scene = ControllersClientAdapter.fetchScene(code);
     ClientApplication clientApp = ControllersClientAdapter.getClient();
     Stage stage = clientApp.getPrimaryStage();
     stage.setScene(scene);
-  }
-
-  public enum SceneCode {
-
-    MAIN_MENU("../view/AlphaGUI_mainMenu.fxml"),
-    INCIDENTAL_PARKING("../view/AlphaGUI_2.fxml"),
-    VIEW_MY_REQUESTS("../view/AlphaGUI_3.fxml"),
-    REQUEST_PARKING_ENTRY("../view/AlphaGUI_4.fxml"),
-    INIT_PARKING_LOT("../view/AlphaGUI_5.fxml");
-
-    String myRelativePath;
-    
-    SceneCode(String relativePath){
-      this.myRelativePath = relativePath;
-    }
-    
-    String getCode() {
-      return this.name();
-    }
-
   }
 }

@@ -3,7 +3,7 @@ package cps.client.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import cps.client.controller.ControllersClientAdapter.SceneCode;
+import cps.client.controller.ControllerConstants.SceneCode;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,22 +45,22 @@ public class AlphaGUIControllerMainMenu implements ViewController {
 
   @FXML
   void handleRequestIncidentalParkingBtn(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.INCIDENTAL_PARKING);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INCIDENTAL_PARKING);
   }
 
   @FXML
   void handleViewParkingRequestsBtn(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.VIEW_MY_REQUESTS);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_REQUESTS);
   }
 
   @FXML
   void handleRequestParkingEntryBtn(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.REQUEST_PARKING_ENTRY);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REQUEST_PARKING_ENTRY);
   }
 
   @FXML
   void handleInitParkingLot(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.INIT_PARKING_LOT);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INIT_PARKING_LOT);
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is
@@ -71,7 +71,7 @@ public class AlphaGUIControllerMainMenu implements ViewController {
     assert viewParkingRequestsBtn != null : "fx:id=\"viewParkingRequestsBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
     assert quitBtn != null : "fx:id=\"quitBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
     assert incidentalParkingBtn != null : "fx:id=\"incidentalParkingBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
-    ControllersClientAdapter.registerCtrl(this,SceneCode.MAIN_MENU);
+    ControllersClientAdapter.registerCtrl(this,ControllerConstants.SceneCode.MAIN_MENU);
   }
 
 }
