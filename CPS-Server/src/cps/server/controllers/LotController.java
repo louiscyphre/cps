@@ -258,10 +258,12 @@ public class LotController extends RequestController {
 	 *            the car ID
 	 * @return the server response
 	 */
-	public boolean retrieveCar(Connection conn, ParkingLot lot, String carID, ServerResponse response) {
+	public boolean retrieveCar(Connection conn, int lotId, String carID) throws SQLException {
 		Stack<String> carIds = new Stack<String>();
 		Stack<LocalTime> exitTimes = new Stack<LocalTime>();
-		
+		ParkingLot lot=ParkingLot.findByID(conn, lotId);
+		String[][][] content=lot.getContentAsArray();
+				
 
 		return true; // TODO: find the coordinates and call Robot::retrieveCar
 
