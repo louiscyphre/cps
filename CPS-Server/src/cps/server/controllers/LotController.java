@@ -53,7 +53,14 @@ public class LotController extends RequestController {
 		// Lower number represents higher priority - the car will be closer to exit
 		// 0<-->4
 		int priority = 0;
-		int iSize, iHeight, iDepth;
+		int iSize, iHeight, iDepth, maxSize, maxHeight, maxDepth, path = 4, minPath = 4;
+
+		// check if there is free space at all
+		if (freeSpaceCount(lot, thisContent) <= 0) {
+			response.setError("No free space in the parking lot!");
+			return false;
+		}
+
 		// Calculate exit priority
 		// if there is no exit time - it means we deal with full subscription which will
 		// perhaps stay for long hours or even more than one day
@@ -64,13 +71,67 @@ public class LotController extends RequestController {
 			// divide difference between now and exit time
 			// by the time left today
 			// and round down the calculations
-			priority = (int) (4 * (exitTime.toSecondOfDay() - LocalTime.now().toSecondOfDay())
+			priority = (int) (5 * (exitTime.toSecondOfDay() - LocalTime.now().toSecondOfDay())
 					/ (LocalTime.MAX.toSecondOfDay() - LocalTime.now().toSecondOfDay()));
+			if (priority == 5) {
+				priority = 4;
+			}
 		}
 		// now with priority, find spot for the car
 
-		// call robot
+		switch (priority) {
+		case 0:
+			for (iSize = 0; iSize < lot.getSize(); iSize++) {
+				if (thisContent[iSize][0][0] == "0") {
+					thisContent[iSize][0][0] = carId;
+					maxSize = iSize;
+					maxHeight = 0;
+					maxDepth = 0;
+					break;
+				}
+			}
+			break;
+		case 1:
+
+			break;
+		case 2:
+
+			break;
+		case 3:
+
+			break;
+		case 4:
+
+			break;
+
+		default:
+			maxSize = 0;
+			maxHeight = 0;
+			maxDepth = 0;
+			break;
+		}
+
+		// call a robot
+		this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId, maxSize, maxHeight, maxDepth);
+
 		return true;
+	}
+
+	protected int freeSpaceCount(ParkingLot lot, String[][][] content) {
+		int iSize, iHeight, iDepth;
+		int free = 3 * 3 * lot.getSize();
+
+		for (iSize = 0; iSize < lot.getSize(); iSize++) {
+			for (iHeight = 0; iHeight < 3; iHeight++) {
+				for (iDepth = 0; iDepth < 3; iDepth++) {
+					if (content[iSize][iHeight][iDepth] == "0") {
+						free--;
+					}
+				}
+			}
+		}
+
+		return free;
 	}
 
 	/**
