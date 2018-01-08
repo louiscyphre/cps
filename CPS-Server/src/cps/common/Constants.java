@@ -41,4 +41,5 @@ public interface Constants {
 	public final int COMPLAINT_STATUS_REJECTED = 3;
 	public final String SQL_CREATE_SUBSCRIPTION_SERVICE = "INSERT INTO subscription_service values(default, ?, ?, ?, ?, ?, ?, ?, ?)";
 	public final String GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID = "SELECT * FROM subscription_service WHERE customer_id=? ORDER BY id";
+	public final String SQL_UPDATE_PARKING_LOT= "UPDATE parking_lot SET street_address = ?, size=?, content=?, price1=?, price2=?, alternative_lots=?, robot_ip=?, WHERE id=?";
 }
