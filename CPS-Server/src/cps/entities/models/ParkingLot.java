@@ -158,6 +158,23 @@ public class ParkingLot implements Serializable {
 		return content;
 	}
 
+	public String[][][] getContentAsArray() {
+		String[][][] result = new String[this.size][3][3];
+		int iSize, iHeight, iDepth;
+		String[] pSize, pHeight, pDepth;
+		pSize = this.content.split("&&&");
+		for (iSize = 0; iSize < this.size; iSize++) {
+			pHeight = pSize[iSize].split("&&");
+			for (iHeight = 0; iHeight < 3; iHeight++) {
+				pDepth = pHeight[iHeight].split("&");
+				for (iDepth = 0; iDepth < 3; iDepth++) {
+					result[iSize][iHeight][iDepth] = pDepth[iDepth];
+				}
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * Sets the content.
 	 *
@@ -166,6 +183,24 @@ public class ParkingLot implements Serializable {
 	 */
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public void setContentFromArray(String[][][] newContent) {
+
+		String result = "";
+		int iSize, iHeight, iDepth;
+
+		for (iSize = 0; iSize < this.size; iSize++) {
+			for (iHeight = 0; iHeight < 3; iHeight++) {
+				for (iDepth = 0; iDepth < 3; iDepth++) {
+					result += newContent[iSize][iHeight][iDepth];
+					result += "&";
+				}
+				result += "&";
+			}
+			result += "&";
+		}
+		this.content = result;
 	}
 
 	/**

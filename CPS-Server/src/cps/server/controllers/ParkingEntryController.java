@@ -67,7 +67,7 @@ public class ParkingEntryController extends RequestController {
 			// appropriate error response, which we will send back to the user.
 			LotController lotController = serverController.getLotController();
 
-			if (!lotController.insertCar(lot, carID, response)) { // Car insertion failed - lot full or some other error
+			if (!lotController.insertCar(lot, service, response)) { // Car insertion failed - lot full or some other error
 				return response;
 			}
 
