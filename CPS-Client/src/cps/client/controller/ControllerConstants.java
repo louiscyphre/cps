@@ -46,5 +46,7 @@ public class ControllerConstants {
       return this.msg;
     }
   }
+  
+  // TODO Title maybe unnecessary in 'fxml' files serviceActionsMenuScene/serviceLoginScene/serviceMainMenuScene
 
 }
