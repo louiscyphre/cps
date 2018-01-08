@@ -2,11 +2,10 @@ package cps.api.response;
 
 import java.io.Serializable;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ServerResponse.
  */
-public class ServerResponse implements Serializable {
+public class ServerResponse extends Response implements Serializable {
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -43,6 +42,17 @@ public class ServerResponse implements Serializable {
 	}
 	
 	/**
+	 * Instantiates a new server response.
+	 *
+	 * @param success was the request completed successfully
+	 * @param description short description, will get extended with success message
+	 */	
+	public ServerResponse(boolean success, String description) {
+		this.status = success ? STATUS_OK : STATUS_ERROR;
+		this.description = description + (success ? " completed successfully" : " failed");
+	}
+	
+	/**
 	 * Returns Server Response OK.
 	 *
 	 * @param description the description
@@ -62,21 +72,21 @@ public class ServerResponse implements Serializable {
 		return new ServerResponse(STATUS_ERROR, description);
 	}
 	
-	/**
-	 * Returns Server Response OK if condition == true
-	 * else returns Server Response Error
-	 *
-	 * @param description the description
-	 * @param condition the condition
-	 * @return the server response
-	 */
-	public static ServerResponse decide(String description, boolean condition) {
-		if (condition) {
-			return ServerResponse.ok(description + " successful");
-		} else {
-			return ServerResponse.error(description + " failed");
-		}		
-	}
+//	/**
+//	 * Returns Server Response OK if condition == true
+//	 * else returns Server Response Error
+//	 *
+//	 * @param description the description
+//	 * @param condition the condition
+//	 * @return the server response
+//	 */
+//	public static ServerResponse decide(String description, boolean condition) {
+//		if (condition) {
+//			return ServerResponse.ok(description + " completed successfully");
+//		} else {
+//			return ServerResponse.error(description + " failed");
+//		}		
+//	}
 	
 	/**
 	 * Gets the status.
@@ -113,6 +123,24 @@ public class ServerResponse implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	/**
+	 * Sets status = STATUS_ERROR and updates the description
+	 * @param description
+	 */
+	public void setError(String description) {
+		this.status = STATUS_ERROR;
+		this.description = description;		
+	}
+	
+	/**
+	 * Sets status = STATUS_OK and updates the description
+	 * @param description
+	 */
+	public void setSuccess(String description) {
+		this.status = STATUS_OK;
+		this.description = description;		
+	}
 
 	
 	/** 
@@ -136,4 +164,13 @@ public class ServerResponse implements Serializable {
 	public boolean success() {
 		return this.status == STATUS_OK;
 	}
+	
+	public boolean isError() {
+		return this.status == STATUS_ERROR;
+	}
+
+  @Override
+  public ServerResponse handle(ResponseHandler handler) {
+    return handler.handle(this);
+  }
 }

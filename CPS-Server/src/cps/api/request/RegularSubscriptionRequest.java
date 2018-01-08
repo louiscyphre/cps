@@ -1,6 +1,7 @@
 package cps.api.request;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
@@ -9,15 +10,16 @@ import cps.server.RequestHandler;
 public class RegularSubscriptionRequest extends SubscriptionRequest {
 	private static final long serialVersionUID = 1L;
 	private int lotID;
-	private LocalDateTime endTime;
+	private LocalTime dailyExitTime;
 
-	public RegularSubscriptionRequest(int customerID, int carID, LocalDateTime startDate, int lotID,
-			LocalDateTime endTime) {
-		super(customerID, carID, startDate);
+	public RegularSubscriptionRequest(int customerID, String email, String carID, LocalDate startDate, int lotID,
+			LocalTime dailyExitTime) {
+		super(customerID, email, carID, startDate);
 		this.lotID = lotID;
-		this.endTime = endTime;
+		this.dailyExitTime = dailyExitTime;
 	}
 
+	@Override
 	public int getLotID() {
 		return lotID;
 	}
@@ -26,12 +28,12 @@ public class RegularSubscriptionRequest extends SubscriptionRequest {
 		this.lotID = lotID;
 	}
 
-	public LocalDateTime getEndTime() {
-		return endTime;
+	public LocalTime getDailyExitTime() {
+		return dailyExitTime;
 	}
 
-	public void setEndTime(LocalDateTime endTime) {
-		this.endTime = endTime;
+	public void setDailyExitTime(LocalTime endTime) {
+		this.dailyExitTime = endTime;
 	}
 
 	@Override

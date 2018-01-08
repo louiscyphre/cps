@@ -19,7 +19,7 @@ public class CarTransportation implements Serializable {
 	private int authType;
 	private int authID;
 	private int lotID;
-	
+
 	public int getCustomerID() {
 		return customerID;
 	}
@@ -91,23 +91,25 @@ public class CarTransportation implements Serializable {
 	private Timestamp removedAt;
 
 	public CarTransportation(ResultSet rs) throws SQLException {
-		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getTimestamp(6), rs.getTimestamp(7));
+		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getTimestamp(6),
+				rs.getTimestamp(7));
 	}
 
 	// Creates a new CarTransportation entry in the SQL table
-	public static CarTransportation create(Connection conn, int customerID, String carID, int authType, int authID, int lotID) throws SQLException {
-		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_CAR_TRANSPORTATION,
+	public static CarTransportation create(Connection conn, int customerID, String carID, int authType, int authID,
+			int lotID) throws SQLException {
+		PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_CAR_TRANSPORTATION,
 				Statement.RETURN_GENERATED_KEYS);
 
 		int field = 1;
-		stmt.setInt(field++, customerID);
-		stmt.setString(field++, carID);
-		stmt.setInt(field++, authType);
-		stmt.setInt(field++, authID);
-		stmt.setInt(field++, lotID);
-		stmt.executeUpdate();
+		statement.setInt(field++, customerID);
+		statement.setString(field++, carID);
+		statement.setInt(field++, authType);
+		statement.setInt(field++, authID);
+		statement.setInt(field++, lotID);
+		statement.executeUpdate();
 
-		ResultSet keys = stmt.getGeneratedKeys();
+		ResultSet keys = statement.getGeneratedKeys();
 		Timestamp insertedAt = null;
 		Timestamp removedAt = null;
 
@@ -116,18 +118,67 @@ public class CarTransportation implements Serializable {
 			removedAt = keys.getTimestamp(2);
 			keys.close();
 		}
-		
-		stmt.close();
+
+		statement.close();
 
 		return new CarTransportation(customerID, carID, authType, authID, lotID, insertedAt, removedAt);
 	}
 
-	public static CarTransportation findForExit(int customerID, String carID, int lotID) throws SQLException {
-		return null; // TODO: implement
+	/**
+	 * Find a car of the customer when he wants to exit parking.
+	 *
+	 * @param customerID
+	 *            the customer ID
+	 * @param carID
+	 *            the car ID
+	 * @param lotID
+	 *            the lot ID
+	 * @return the car transportation
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static CarTransportation findForExit(Connection conn, int customerID, String carID, int lotID)
+			throws SQLException {
+		// First - find the insertion of the car
+
+		CarTransportation result = null;
+		PreparedStatement query = conn.prepareStatement(Constants.SQL_FIND_CAR_TRANSPORTATION);
+		
+		int index = 1;
+		query.setInt(index++, customerID);
+		query.setString(index++, carID);
+		query.setInt(index++, lotID);
+		
+		ResultSet insertionSet = query.executeQuery();
+
+		// if exists - return the object
+		if (insertionSet.next()) {
+			result = new CarTransportation(insertionSet);
+		}
+		// else return null;
+
+		insertionSet.close();
+		query.close();
+		return result;
 	}
 
-	public void updateRemovedAt(Timestamp removedAt) throws SQLException {		
-		
+	public boolean updateRemovedAt(Connection conn, Timestamp removedAt) throws SQLException {
+		PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_REMOVED_AT);
+
+		this.removedAt = removedAt;
+		int index = 1;
+
+		st.setTimestamp(index++, removedAt);
+		st.setInt(index++, this.customerID);
+		st.setString(index++, this.carID);
+		st.setInt(index++, this.lotID);
+		st.setTimestamp(index++, this.insertedAt);
+
+		int updated = st.executeUpdate();
+
+		st.close();
+
+		return updated > 0;
 	}
 
 }

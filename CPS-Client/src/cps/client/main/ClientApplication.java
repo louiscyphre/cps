@@ -8,8 +8,9 @@ import java.io.IOException;
 import org.apache.commons.cli.ParseException;
 
 import cps.api.response.ServerResponse;
+import cps.client.controller.ControllerConstants;
+import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
-import cps.client.controller.ControllersClientAdapter.SceneCode;
 import cps.client.network.CPSNetworkClient;
 import cps.client.network.INetworkClient;
 import cps.client.utils.CmdParser;
@@ -44,7 +45,7 @@ public class ClientApplication extends Application implements INetworkClient {
 
   public void loadKiosk() throws IOException {
     try {
-      Scene scene = ControllersClientAdapter.registerScene(SceneCode.MAIN_MENU);
+      Scene scene = ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.MAIN_MENU);
       primaryStage.setScene(scene);
       primaryStage.setTitle("CPS Alpha Client");
       primaryStage.show();
@@ -52,10 +53,10 @@ public class ClientApplication extends Application implements INetworkClient {
         Platform.exit();
         System.exit(0);
       });
-      ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
-      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_REQUESTS);
-      ControllersClientAdapter.registerScene(SceneCode.REQUEST_PARKING_ENTRY);
-      ControllersClientAdapter.registerScene(SceneCode.INIT_PARKING_LOT);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.INCIDENTAL_PARKING);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.VIEW_MY_REQUESTS);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.REQUEST_PARKING_ENTRY);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.INIT_PARKING_LOT);
 
     } catch (IOException e) {
       e.printStackTrace();

@@ -7,7 +7,6 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.LinkedList;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DatabaseController.
  */
@@ -79,6 +78,7 @@ public class DatabaseController {
 		System.out.println("SQLException: " + ex.getMessage());
 		System.out.println("SQLState: " + ex.getSQLState());
 		System.out.println("VendorError: " + ex.getErrorCode());
+		ex.printStackTrace();
 	}
 
 	/**

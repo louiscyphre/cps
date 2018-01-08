@@ -8,8 +8,8 @@ public class ListOnetimeEntriesResponse extends ServerResponse {
 	private Collection<OnetimeService> data;
 	private int customerID;
 
-	public ListOnetimeEntriesResponse(String description, Collection<OnetimeService> data, int customerID) {
-		super(STATUS_OK, description);
+	public ListOnetimeEntriesResponse(Collection<OnetimeService> data, int customerID) {
+		super(data != null, "ListOnetimeEntriesRequest");
 		this.data = data;
 		this.customerID = customerID;
 	}
@@ -29,4 +29,9 @@ public class ListOnetimeEntriesResponse extends ServerResponse {
 	public void setCustomerID(int customerID) {
 		this.customerID = customerID;
 	}
+	
+  @Override
+  public ServerResponse handle(ResponseHandler handler) {
+    return handler.handle(this);
+  }
 }
