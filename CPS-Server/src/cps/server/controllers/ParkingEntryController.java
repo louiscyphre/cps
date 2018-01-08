@@ -65,6 +65,7 @@ public class ParkingEntryController extends RequestController {
 			// Optimal coordinates are calculated before insertion.
 			// If the lot is full, or some other error occurs, LotController will return an
 			// appropriate error response, which we will send back to the user.
+			//The function will create table entry to record where the car was placed
 			LotController lotController = serverController.getLotController();
 
 			if (!lotController.insertCar(lot, carID, service.getExitTime(), response)) { // Car insertion failed - lot full or some other error
