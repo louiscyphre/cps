@@ -220,16 +220,16 @@ public class OnetimeService implements ParkingService {
 	 */
 	public void update(Connection conn) throws SQLException {
 		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_ONETIME_BY_ID);
-		int i = 1;
-		st.setInt(i++, this.parkingType);
-		st.setInt(i++, this.customerID);
-		st.setString(i++, this.email);
-		st.setString(i++, this.carID);
-		st.setInt(i++, this.lotID);
-		st.setTimestamp(i++, this.plannedStartTime);
-		st.setTimestamp(i++, this.plannedEndTime);
-		st.setBoolean(i++, this.canceled);
-		st.setInt(i++, this.id);
+		int index = 1;
+		st.setInt(index++, this.parkingType);
+		st.setInt(index++, this.customerID);
+		st.setString(index++, this.email);
+		st.setString(index++, this.carID);
+		st.setInt(index++, this.lotID);
+		st.setTimestamp(index++, this.plannedStartTime);
+		st.setTimestamp(index++, this.plannedEndTime);
+		st.setBoolean(index++, this.canceled);
+		st.setInt(index++, this.id);
 		st.executeUpdate();
 		st.close();
 	}

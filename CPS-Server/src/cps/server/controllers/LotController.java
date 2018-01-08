@@ -1,5 +1,7 @@
 package cps.server.controllers;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.util.Map;
@@ -46,14 +48,15 @@ public class LotController extends RequestController {
 	 *            the car ID
 	 * @return the server response
 	 */
-	public boolean insertCar(ParkingLot lot, String carId, LocalTime exitTime, ServerResponse response) {
+	public boolean insertCar(Connection conn, ParkingLot lot, String carId, LocalTime exitTime, ServerResponse response)
+			throws SQLException {
 		// TODO: calculate optimal coordinates and call Robot::insertCar
 		// Get the parking lot
 		String[][][] thisContent = lot.getContentAsArray();
 		// Lower number represents higher priority - the car will be closer to exit
 		// 0<-->4
 		int priority = 0;
-		int iSize, iHeight, iDepth, maxSize=0, maxHeight=0, maxDepth=0, path = 4, minPath = 4;
+		int iSize, iHeight, iDepth, maxSize = -1, maxHeight = -1, maxDepth = -1, path = 5, minPath = 5;
 
 		// check if there is free space at all
 		if (freeSpaceCount(lot, thisContent) <= 0) {
@@ -78,40 +81,112 @@ public class LotController extends RequestController {
 			}
 		}
 		// now with priority, find spot for the car
-
-		switch (priority) {
-		case 0:
-			for (iSize = 0; iSize < lot.getSize(); iSize++) {
-				if (thisContent[iSize][0][0] == "0") {
-					thisContent[iSize][0][0] = carId;
-					maxSize = iSize;
-					maxHeight = 0;
-					maxDepth = 0;
+		while (maxSize == -1) {
+			switch (priority) {
+			case 0:
+				for (iSize = 0; iSize < lot.getSize(); iSize++) {
+					if (thisContent[iSize][0][0] == "0") {
+						maxSize = iSize;
+						maxHeight = 0;
+						maxDepth = 0;
+					}
+					// if we reached end of the line and have not found a place for this priority,
+					// lower and try again
 				}
-				//if(iSize)
+				if (maxSize == -1) {
+					priority++;
+				}
+				break;
+			case 1:
+				for (iSize = 0; iSize < lot.getSize(); iSize++) {
+					for (iHeight = 0; iHeight < priority + 1; iHeight++) {
+						if (thisContent[iSize][iHeight][priority - iHeight] == "0") {
+							path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
+							if (path < minPath) {
+								minPath = path;
+								maxSize = iSize;
+								maxHeight = iHeight;
+								maxDepth = priority - iHeight;
+							}
+						}
+					}
+				}
+				if (maxSize == -1) {
+					priority++;
+				}
+				break;
+			case 2:
+				for (iSize = 0; iSize < lot.getSize(); iSize++) {
+					for (iHeight = 0; iHeight < priority + 1; iHeight++)
+						if (thisContent[iSize][iHeight][priority - iHeight] == "0") {
+							path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
+							if (path < minPath) {
+								minPath = path;
+								maxSize = iSize;
+								maxHeight = iHeight;
+								maxDepth = priority - iHeight;
+							}
+						}
+				}
+				if (maxSize == -1) {
+					priority++;
+				}
+				break;
+			case 3:
+				for (iSize = 0; iSize < lot.getSize(); iSize++) {
+					for (iHeight = 1; iHeight < priority; iHeight++) {
+						if (thisContent[iSize][iHeight][priority - iHeight] == "0") {
+							path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
+							if (path < minPath) {
+								minPath = path;
+								maxSize = iSize;
+								maxHeight = iHeight;
+								maxDepth = priority - iHeight;
+							}
+						}
+					}
+				}
+				if (maxSize == -1) {
+					priority++;
+				}
+				break;
+			case 4:
+				for (iSize = 0; iSize < lot.getSize(); iSize++) {
+					if (thisContent[iSize][2][2] == "0") {
+						path = CalculatePath(thisContent, iSize, 2, 2);
+						if (path < minPath) {
+							minPath = path;
+							maxSize = iSize;
+							maxHeight = 2;
+							maxDepth = 2;
+						}
+					}
+				}
+				// if we reached end of the line and have not found a place for this priority,
+				// Randomize the priority
+				if (maxSize == -1) {
+					priority = (int) Math.random() * 4;
+				}
+				break;
+
+			default:
+				break;
 			}
-			break;
-		case 1:
-
-			break;
-		case 2:
-
-			break;
-		case 3:
-
-			break;
-		case 4:
-
-			break;
-
-		default:
-			break;
 		}
-
+		// insert the car
+		thisContent[maxSize][maxHeight][maxDepth] = carId;
+		lot.setContentFromArray(thisContent);
+		lot.update(conn);
 		// call a robot
 		this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId, maxSize, maxHeight, maxDepth);
-
+		response.setSuccess("Insertion successful");
 		return true;
+
+	}
+
+	private int CalculatePath(String[][][] _pl, int iSize, int iHeight, int iDepth) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	protected int freeSpaceCount(ParkingLot lot, String[][][] content) {

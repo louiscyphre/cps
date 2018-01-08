@@ -356,4 +356,19 @@ public class ParkingLot implements Serializable {
 
 		return result;
 	}
+
+	public void update(Connection conn) throws SQLException {
+		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_ONETIME_BY_ID);
+		int index = 1;
+		st.setString(index++, this.streetAddress);
+		st.setInt(index++, this.size);
+		st.setString(index++, this.content);
+		st.setFloat(index++, this.price1);
+		st.setFloat(index++, this.price2);
+		st.setString(index++, this.alternativeLots);
+		st.setString(index++, this.robotIP);
+		st.setInt(index++, this.id);
+		st.executeUpdate();
+		st.close();
+	}
 }
