@@ -53,7 +53,7 @@ public class LotController extends RequestController {
 		// Lower number represents higher priority - the car will be closer to exit
 		// 0<-->4
 		int priority = 0;
-		int iSize, iHeight, iDepth, maxSize, maxHeight, maxDepth, path = 4, minPath = 4;
+		int iSize, iHeight, iDepth, maxSize=0, maxHeight=0, maxDepth=0, path = 4, minPath = 4;
 
 		// check if there is free space at all
 		if (freeSpaceCount(lot, thisContent) <= 0) {
@@ -87,8 +87,8 @@ public class LotController extends RequestController {
 					maxSize = iSize;
 					maxHeight = 0;
 					maxDepth = 0;
-					break;
 				}
+				//if(iSize)
 			}
 			break;
 		case 1:
@@ -105,9 +105,6 @@ public class LotController extends RequestController {
 			break;
 
 		default:
-			maxSize = 0;
-			maxHeight = 0;
-			maxDepth = 0;
 			break;
 		}
 
