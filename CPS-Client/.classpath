@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="/CPS-Server/lib/gson-2.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.4/commons-cli-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/jfxrt.jar"/>
+	<classpathentry kind="lib" path="lib/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

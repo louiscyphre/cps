@@ -5,6 +5,8 @@ package cps.client.main;
 
 import java.io.IOException;
 
+import org.apache.commons.cli.ParseException;
+
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ControllersClientAdapter.SceneCode;
@@ -66,7 +68,11 @@ public class ClientApplication extends Application implements INetworkClient {
 
       this.primaryStage = primaryStage;
       CmdParser parser = new CmdParser();
-      parser.extract(getParameters().getRaw().toArray(new String[0]));
+      try {
+        parser.extract(getParameters().getRaw().toArray(new String[0]));
+      } catch (ParseException e) {
+        System.exit(1);
+      }
 
       this.client = new CPSNetworkClient(parser.getHost(),
           parser.getPort(), this);

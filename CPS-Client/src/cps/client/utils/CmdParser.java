@@ -17,8 +17,7 @@ import org.apache.commons.cli.ParseException;
 public class CmdParser {
 
   private CommandLine cmd;
-
-  public void extract(String[] args) {
+  public void extract(String[] args) throws ParseException {
 
     Options options = new Options();
 
@@ -47,9 +46,7 @@ public class CmdParser {
     } catch (ParseException e) {
       System.out.println(e.getMessage());
       formatter.printHelp("java -jar yourClientJarName.jar", options);
-
-      System.exit(1);// FIXME?
-      return;
+      throw e;
     }
   }
 
