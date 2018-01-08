@@ -46,33 +46,29 @@ public class LotController extends RequestController {
 	 *            the car ID
 	 * @return the server response
 	 */
-	public boolean insertCar(ParkingLot lot, ParkingService service, ServerResponse response) {
+	public boolean insertCar(ParkingLot lot, String carId, LocalTime exitTime, ServerResponse response) {
 		// TODO: calculate optimal coordinates and call Robot::insertCar
 		// Get the parking lot
 		String[][][] thisContent = lot.getContentAsArray();
-		OnetimeService a = null;
-		SubscriptionService b = null;
-		LocalTime _exitTime = null;
 		// Lower number represents higher priority - the car will be closer to exit
+		// 0<-->4
 		int priority = 0;
-		int iSize,iHeight,iDepth;
-		// extract exit time
-		if (service.getLicenseType() == Constants.LICENSE_TYPE_ONETIME) {
-			a = (OnetimeService) service;
-			_exitTime = a.getPlannedEndTime().toLocalDateTime().toLocalTime();
-		} else {
-			b = (SubscriptionService) service;
-			_exitTime = b.getDailyExitTime();
-		}
+		int iSize, iHeight, iDepth;
+		// Calculate exit priority
 		// if there is no exit time - it means we deal with full subscription which will
 		// perhaps stay for long hours or even more than one day
-		if (_exitTime == null || _exitTime.equals(LocalTime.MIDNIGHT)) {
-			//assign lowest priority
-			priority = 9;
+		if (exitTime == null || exitTime.equals(LocalTime.MIDNIGHT)) {
+			// assign worst priority
+			priority = 4;
+		} else {
+			// divide difference between now and exit time
+			// by the time left today
+			// and round down the calculations
+			priority = (int) (4 * (exitTime.toSecondOfDay() - LocalTime.now().toSecondOfDay())
+					/ (LocalTime.MAX.toSecondOfDay() - LocalTime.now().toSecondOfDay()));
 		}
-		
-		
-		
+		// now with priority, find spot for the car
+
 		// call robot
 		return true;
 	}

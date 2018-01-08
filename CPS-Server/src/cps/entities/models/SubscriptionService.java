@@ -30,8 +30,8 @@ public class SubscriptionService implements ParkingService {
 	LocalDate endDate;
 	LocalTime dailyExitTime; // null for full subscription
 
-	public SubscriptionService(int id, int type, int customerID, String email, String carID, int lotID, LocalDate startDate,
-			LocalDate endDate, LocalTime dailyExitTime) {
+	public SubscriptionService(int id, int type, int customerID, String email, String carID, int lotID,
+			LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
 		this.id = id;
 		this.subscriptionType = type;
 		this.customerID = customerID;
@@ -125,8 +125,8 @@ public class SubscriptionService implements ParkingService {
 		return Constants.LICENSE_TYPE_SUBSCRIPTION;
 	}
 
-	public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID, int lotID, LocalDate startDate,
-			LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
+	public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID,
+			int lotID, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
 		PreparedStatement st = conn.prepareStatement(Constants.SQL_CREATE_SUBSCRIPTION_SERVICE,
 				Statement.RETURN_GENERATED_KEYS);
 
@@ -157,27 +157,28 @@ public class SubscriptionService implements ParkingService {
 	public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID)
 			throws SQLException {
 		SubscriptionService result = null;
-		
+
 		PreparedStatement st = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR);
-		
+
 		int index = 1;
-		
+
 		st.setInt(index++, subsID);
 		st.setInt(index++, customerID);
 		st.setString(index++, carID);
-		
+
 		ResultSet rs = st.executeQuery();
-		
-		if (rs.next()) {			
-			result = new SubscriptionService(rs);			
+
+		if (rs.next()) {
+			result = new SubscriptionService(rs);
 		}
 		rs.close();
 		st.close();
-		
+
 		return result;
 	}
-	
-	public static Collection<SubscriptionService> findByCustomerID(Connection conn, int customerID) throws SQLException {
+
+	public static Collection<SubscriptionService> findByCustomerID(Connection conn, int customerID)
+			throws SQLException {
 		LinkedList<SubscriptionService> results = new LinkedList<SubscriptionService>();
 
 		PreparedStatement stmt = conn.prepareStatement(Constants.GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID);
@@ -192,5 +193,10 @@ public class SubscriptionService implements ParkingService {
 		stmt.close();
 
 		return results;
+	}
+
+	@Override
+	public LocalTime getExitTime() {
+		return this.dailyExitTime;
 	}
 }
