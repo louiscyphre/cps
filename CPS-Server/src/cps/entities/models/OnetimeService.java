@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.LinkedList;
 import cps.common.Constants;
@@ -231,5 +232,10 @@ public class OnetimeService implements ParkingService {
 		st.setInt(i++, this.id);
 		st.executeUpdate();
 		st.close();
+	}
+
+	@Override
+	public LocalTime getExitTime() {
+		return this.getExitTime();
 	}
 }
