@@ -199,4 +199,20 @@ public class SubscriptionService implements ParkingService {
 	public LocalTime getExitTime() {
 		return this.dailyExitTime;
 	}
+
+	public static ParkingService findByID(Connection conn, int authID) throws SQLException {
+		ParkingService results = null;
+
+		PreparedStatement stmt = conn.prepareStatement(Constants.GET_SUBSCRIPTION_SERVICE_BY_ID);
+		stmt.setInt(1, authID);
+		ResultSet rs = stmt.executeQuery();
+
+		results = new SubscriptionService(rs);
+
+		rs.close();
+		stmt.close();
+
+		return results;
+
+	}
 }
