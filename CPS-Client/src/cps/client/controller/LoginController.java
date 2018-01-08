@@ -10,8 +10,6 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import cps.api.request.IncidentalParkingRequest;
-import cps.client.controller.AlphaGUIController2.InputVerification;
-import cps.client.controller.ControllersClientAdapter.SceneCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
