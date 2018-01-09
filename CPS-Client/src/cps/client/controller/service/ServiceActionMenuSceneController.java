@@ -39,42 +39,42 @@ public class ServiceActionMenuSceneController implements ViewController {
 
   @FXML
   void handleInitializeLotButton(ActionEvent event) {
-
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_INIT_LOT);
   }
 
   @FXML
   void handleDisableSlotButton(ActionEvent event) {
-
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_DISABLE_SLOT);
   }
 
   @FXML
   void handleRefundButton(ActionEvent event) {
-
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_REFUND);
   }
 
   @FXML
   void handleLotIsFullButton(ActionEvent event) {
-
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOT_IS_FULL);
   }
 
   @FXML
   void handleReserveSlotButton(ActionEvent event) {
-
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_RESERVE_SLOT);
   }
 
   @FXML
   void handleUpdatePricesButton(ActionEvent event) {
-
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
   }
 
   @FXML
   void handleLotStateButton(ActionEvent event) {
-
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOT_STATE);
   }
 
   @FXML
   void handleLogoutButton(ActionEvent event) {
-
+    // TODO logout handle
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is

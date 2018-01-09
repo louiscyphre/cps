@@ -17,7 +17,7 @@
       <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="296.0" spacing="20.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="usernameTF" alignment="CENTER" prefHeight="50.0" prefWidth="242.0" promptText="Enter your Employee Username here" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="" />
-            <TextField fx:id="passwordTF" alignment="CENTER" prefHeight="50.0" prefWidth="242.0" promptText="Enter your car password here" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="" />
+            <TextField fx:id="passwordTF" alignment="CENTER" prefHeight="50.0" prefWidth="242.0" promptText="Enter your password here" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="" />
             <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="100.0" spacing="10.0">
                <children>
                   <ProgressIndicator fx:id="infoProgress" visible="false" />

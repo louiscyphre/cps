@@ -6,8 +6,10 @@ import java.util.HashMap;
 
 import cps.client.main.ClientApplication;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class ControllersClientAdapter {
@@ -65,5 +67,11 @@ public class ControllersClientAdapter {
     ClientApplication clientApp = ControllersClientAdapter.getClient();
     Stage stage = clientApp.getPrimaryStage();
     stage.setScene(scene);
+    Screen screen = Screen.getPrimary();
+    Rectangle2D bounds = screen.getVisualBounds();
+    stage.setX(bounds.getMinX());
+    stage.setY(bounds.getMinY());
+    stage.setWidth(bounds.getWidth());
+    stage.setHeight(bounds.getHeight());
   }
 }

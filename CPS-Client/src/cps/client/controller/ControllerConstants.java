@@ -16,16 +16,16 @@ public class ControllerConstants {
     CUSTOMER_LIST_SUBSCRIPTIONS("../view/CustomerListSubscriptionsScene.fxml"),
     
     // service views 
-    SERVICE_ACTION_DISABLE_SLOT("..view/service/ServiceActionDisableSlot.fxml"),
+    SERVICE_ACTION_DISABLE_SLOT("../view/service/ServiceActionDisableSlot.fxml"),
     SERVICE_ACTION_INIT_LOT("../view/service/ServiceActionInitLotScene.fxml"),
     SERVICE_ACTION_LOT_IS_FULL("../view/service/ServiceActionLotIsFull.fxml"),
-    SERVICE_ACTION_LOT_STATE("..view/service/ServiceActionLotState.fmxl"),
-    SERVICE_ACTION_MENU("..view/service/ServiceActionMenuScene.fmxl"),
-    SERVICE_ACTION_REFUND("..view/service/ServiceActionRefund.fmxl"),
-    SERVICE_ACTION_RESERVE_SLOT("..view/service/ServiceActionReserveSlot.fmxl"),
-    SERVICE_ACTION_UPDATE_PRICES("..view/service/ServiceActionUpdatePrices.fmxl"),
-    SERVICE_ACTION_LOGIN("..view/service/ServiceLoginScene.fmxl"),
-    SERVICE_ACTION_MAIN_MENU("..view/service/ServiceMainMenuScene.fmxl"),
+    SERVICE_ACTION_LOT_STATE("../view/service/ServiceActionLotState.fxml"),
+    SERVICE_ACTION_MENU("../view/service/ServiceActionMenuScene.fxml"),
+    SERVICE_ACTION_REFUND("../view/service/ServiceActionRefund.fxml"),
+    SERVICE_ACTION_RESERVE_SLOT("../view/service/ServiceActionReserveSlot.fxml"),
+    SERVICE_ACTION_UPDATE_PRICES("../view/service/ServiceActionUpdatePrices.fxml"),
+    SERVICE_ACTION_LOGIN("../view/service/ServiceLoginScene.fxml"),
+    SERVICE_ACTION_MAIN_MENU("../view/service/ServiceMainMenuScene.fxml"),
     ;
     
     String myRelativePath;
