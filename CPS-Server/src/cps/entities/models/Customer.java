@@ -128,4 +128,22 @@ public class Customer implements Serializable, User {
 
 		return updated > 0;	
 	}
+
+	public static Customer findByEmailAndPassword(Connection conn, String email, String password) throws SQLException {
+		Customer result = null;
+		PreparedStatement st = conn.prepareStatement("SELECT * FROM customer WHERE email=? AND password=?");
+		
+		st.setString(1, email);
+		st.setString(2, password);
+		ResultSet rs = st.executeQuery();
+
+		if (rs.next()) {
+			result = new Customer(rs);
+		}
+
+		st.close();
+		rs.close();
+		
+		return result;
+	}
 }

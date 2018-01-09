@@ -15,6 +15,7 @@ public interface RequestHandler {
 	public ServerResponse handle(ParkingExitRequest request);
 	public ServerResponse handle(RegularSubscriptionRequest request);
 	public ServerResponse handle(ReservedParkingRequest request);
+	public ServerResponse handle(LoginRequest request);
 
 	// CompanyPerson actions
 	public ServerResponse handle(DisableParkingSlotsAction action);
