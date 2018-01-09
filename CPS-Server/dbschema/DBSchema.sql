@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `kiwi_schema` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `kiwi_schema`;
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: softengproject.cspvcqknb3vj.eu-central-1.rds.amazonaws.com    Database: kiwi_schema
