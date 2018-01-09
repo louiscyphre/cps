@@ -8,9 +8,11 @@ import java.util.Stack;
 
 import cps.common.*;
 import cps.api.action.InitLotAction;
+import cps.api.action.SetFullLotAction;
 import cps.api.action.UpdatePricesAction;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ServerResponse;
+import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.server.ServerController;
 import cps.server.devices.Robot;
@@ -110,7 +112,7 @@ public class LotController extends RequestController {
 				switch (priority) {
 				case 0:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
-						if ((thisContent[iSize][0][0]).compareTo(Constants.SPOT_IS_EMPTY)==0) {
+						if ((thisContent[iSize][0][0]).compareTo(Constants.SPOT_IS_EMPTY) == 0) {
 							maxSize = iSize;
 							maxHeight = 0;
 							maxDepth = 0;
@@ -127,7 +129,8 @@ public class LotController extends RequestController {
 				case 1:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
 						for (iHeight = 0; iHeight < priority + 1; iHeight++) {
-							if ((thisContent[iSize][iHeight][priority - iHeight]).compareTo(Constants.SPOT_IS_EMPTY) ==0 ) {
+							if ((thisContent[iSize][iHeight][priority - iHeight])
+									.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
 								path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
 								if (path < minPath) {
 									minPath = path;
@@ -145,7 +148,8 @@ public class LotController extends RequestController {
 				case 2:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
 						for (iHeight = 0; iHeight < priority + 1; iHeight++)
-							if ((thisContent[iSize][iHeight][priority - iHeight]).compareTo(Constants.SPOT_IS_EMPTY) ==0 ) {
+							if ((thisContent[iSize][iHeight][priority - iHeight])
+									.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
 								path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
 								if (path < minPath) {
 									minPath = path;
@@ -162,7 +166,8 @@ public class LotController extends RequestController {
 				case 3:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
 						for (iHeight = 1; iHeight < priority; iHeight++) {
-							if ((thisContent[iSize][iHeight][priority - iHeight]).compareTo(Constants.SPOT_IS_EMPTY) == 0) {
+							if ((thisContent[iSize][iHeight][priority - iHeight])
+									.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
 								path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
 								if (path < minPath) {
 									minPath = path;
@@ -398,19 +403,39 @@ public class LotController extends RequestController {
 		});
 	}
 
+	/**
+	 * Handle Update Prices Action.
+	 *
+	 * @param action
+	 *            the action
+	 * @return the update prices response
+	 */
 	public UpdatePricesResponse handle(UpdatePricesAction action) {
-	return databaseController.performQuery(conn ->{
-		ParkingLot lot=ParkingLot.findByID(conn, action.getLotID());
-		lot.setPrice1(action.getPrice1());
-		lot.setPrice2(action.getPrice2());
-		if (lot.update(conn)==1) {
-			return new UpdatePricesResponse(true, "Prices updates succsessfully");
-		}
-		else
-		{
-			return new UpdatePricesResponse(false, "Failed to update prices");
-		}
-		
-	});
+		return databaseController.performQuery(conn -> {
+			ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
+			lot.setPrice1(action.getPrice1());
+			lot.setPrice2(action.getPrice2());
+			if (lot.update(conn) == 1) {
+				return new UpdatePricesResponse(true, "Prices updates succsessfully");
+			} else {
+				return new UpdatePricesResponse(false, "Failed to update prices");
+			}
+
+		});
 	}
+
+	public SetFullLotResponse handle(SetFullLotAction action) {
+		return databaseController.performQuery(conn -> {
+			ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
+			lot.setLotFull(action.getLotFull());
+			lot.setAlternativeLots(Integer.toString(action.getAlternativeLotID()));
+			if (lot.update(conn) == 1) {
+				return new SetFullLotResponse(true, "Lot status set");
+			} else {
+				return new SetFullLotResponse(false, "Failed to update lot status");
+			}
+
+		});
+	}
+
 }

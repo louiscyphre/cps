@@ -46,6 +46,8 @@ public class ParkingLot implements Serializable {
 	/** IP address of the robot. */
 	private String robotIP;
 
+	private boolean lotFull;
+
 	/**
 	 * Instantiates a new parking lot.
 	 *
@@ -68,7 +70,7 @@ public class ParkingLot implements Serializable {
 	 *            IP address of the robot
 	 */
 	public ParkingLot(int id, String streetAddress, int size, String content, float price1, float price2,
-			String alternativeLots, String robotIP) {
+			String alternativeLots, String robotIP, boolean lotfull) {
 		this.id = id;
 		this.streetAddress = streetAddress;
 		this.size = size;
@@ -77,6 +79,7 @@ public class ParkingLot implements Serializable {
 		this.price2 = price2;
 		this.alternativeLots = alternativeLots;
 		this.robotIP = robotIP;
+		this.lotFull = lotfull;
 	}
 
 	/**
@@ -88,8 +91,9 @@ public class ParkingLot implements Serializable {
 	 *             the SQL exception
 	 */
 	public ParkingLot(ResultSet rs) throws SQLException {
-		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getFloat(5), rs.getFloat(6),
-				rs.getString(7), rs.getString(8));
+		this(rs.getInt("id"), rs.getString("street_address"), rs.getInt("size"), rs.getString("content"),
+				rs.getFloat("price1"), rs.getFloat("price2"), rs.getString("alternative_lots"),
+				rs.getString("robot_ip"), rs.getBoolean("lot_full"));
 	}
 
 	/**
@@ -280,6 +284,14 @@ public class ParkingLot implements Serializable {
 		this.robotIP = robotIP;
 	}
 
+	public boolean isLotFull() {
+		return lotFull;
+	}
+
+	public void setLotFull(boolean lotFull) {
+		this.lotFull = lotFull;
+	}
+
 	/**
 	 * Insert new parking lot into the database and create a new parking lot object.
 	 *
@@ -330,7 +342,7 @@ public class ParkingLot implements Serializable {
 
 		stmt.close();
 
-		return new ParkingLot(newID, streetAddress, size, lotContent, price1, price2, "", robotIP);
+		return new ParkingLot(newID, streetAddress, size, lotContent, price1, price2, "", robotIP, false);
 	}
 
 	private static String generateEmptyContent(int size) {
@@ -397,7 +409,7 @@ public class ParkingLot implements Serializable {
 	}
 
 	public int update(Connection conn) throws SQLException {
-		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_ONETIME_BY_ID);
+		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
 		int index = 1;
 		int result = 0;
 		st.setString(index++, this.streetAddress);
@@ -408,6 +420,7 @@ public class ParkingLot implements Serializable {
 		st.setString(index++, this.alternativeLots);
 		st.setString(index++, this.robotIP);
 		st.setInt(index++, this.id);
+		st.setBoolean(index++, this.lotFull);
 		result = st.executeUpdate();
 		st.close();
 		return result;
