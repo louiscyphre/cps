@@ -2,13 +2,9 @@ package cps.server.controllers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalTime;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Stack;
-
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Commons;
 
 import cps.common.*;
 import cps.api.action.InitLotAction;
@@ -22,7 +18,6 @@ import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
 import cps.entities.models.SubscriptionService;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LotController.
  */
@@ -39,7 +34,6 @@ public class LotController extends RequestController {
 	}
 
 	/** The robots. */
-	@SuppressWarnings("unused")
 	private Map<Integer, Robot> robots;
 
 	/**
@@ -114,7 +108,7 @@ public class LotController extends RequestController {
 				switch (priority) {
 				case 0:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
-						if (thisContent[iSize][0][0] == Constants.SPOT_IS_EMPTY) {
+						if ((thisContent[iSize][0][0]).compareTo(Constants.SPOT_IS_EMPTY)==0) {
 							maxSize = iSize;
 							maxHeight = 0;
 							maxDepth = 0;
@@ -131,7 +125,7 @@ public class LotController extends RequestController {
 				case 1:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
 						for (iHeight = 0; iHeight < priority + 1; iHeight++) {
-							if (thisContent[iSize][iHeight][priority - iHeight] == Constants.SPOT_IS_EMPTY) {
+							if ((thisContent[iSize][iHeight][priority - iHeight]).compareTo(Constants.SPOT_IS_EMPTY) ==0 ) {
 								path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
 								if (path < minPath) {
 									minPath = path;
@@ -149,7 +143,7 @@ public class LotController extends RequestController {
 				case 2:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
 						for (iHeight = 0; iHeight < priority + 1; iHeight++)
-							if (thisContent[iSize][iHeight][priority - iHeight] == Constants.SPOT_IS_EMPTY) {
+							if ((thisContent[iSize][iHeight][priority - iHeight]).compareTo(Constants.SPOT_IS_EMPTY) ==0 ) {
 								path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
 								if (path < minPath) {
 									minPath = path;
@@ -166,7 +160,7 @@ public class LotController extends RequestController {
 				case 3:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
 						for (iHeight = 1; iHeight < priority; iHeight++) {
-							if (thisContent[iSize][iHeight][priority - iHeight] == Constants.SPOT_IS_EMPTY) {
+							if ((thisContent[iSize][iHeight][priority - iHeight]).compareTo(Constants.SPOT_IS_EMPTY) == 0) {
 								path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
 								if (path < minPath) {
 									minPath = path;
@@ -183,7 +177,7 @@ public class LotController extends RequestController {
 					break;
 				case 4:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
-						if (thisContent[iSize][2][2] == Constants.SPOT_IS_EMPTY) {
+						if ((thisContent[iSize][2][2]).compareTo(Constants.SPOT_IS_EMPTY) == 0) {
 							path = CalculatePath(thisContent, iSize, 2, 2);
 							if (path < minPath) {
 								minPath = path;
@@ -378,7 +372,6 @@ public class LotController extends RequestController {
 		if (!insertCars(conn, lot, carIds, exitTimes)) {
 			return false;
 		}
-		// TODO: call Robot::retrieveCar
 		return true;
 
 	}
