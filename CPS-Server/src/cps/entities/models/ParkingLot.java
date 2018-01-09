@@ -359,14 +359,14 @@ public class ParkingLot implements Serializable {
 
 	public int getFreeSpotsNumber() {
 		int iSize, iHeight, iDepth;
-		int free = 3 * 3 * this.size;
+		int free = 0;
 		String[][][] content = this.getContentAsArray();
 
 		for (iSize = 0; iSize < this.size; iSize++) {
 			for (iHeight = 0; iHeight < 3; iHeight++) {
 				for (iDepth = 0; iDepth < 3; iDepth++) {
-					if (content[iSize][iHeight][iDepth] == Constants.SPOT_IS_EMPTY) {
-						free--;
+					if ((content[iSize][iHeight][iDepth]).equals(Constants.SPOT_IS_EMPTY)) {
+						free++;
 					}
 				}
 			}
