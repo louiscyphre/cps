@@ -11,6 +11,7 @@ public interface ResponseHandler {
   public ServerResponse handle(ParkingExitResponse response);
   public ServerResponse handle(RegularSubscriptionResponse response);
   public ServerResponse handle(ReservedParkingResponse response);
+  public ServerResponse handle(LoginResponse response);
   public ServerResponse handle(ServerResponse response);
 
   // CompanyPerson responses
