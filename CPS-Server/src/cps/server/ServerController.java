@@ -152,8 +152,7 @@ public class ServerController implements RequestHandler {
 
     @Override
     public ServerResponse handle(UpdatePricesAction action) {
-	// TODO: Update Prices Action
-	return null;
+    	return lotController.handle(action);
     }
 
 }

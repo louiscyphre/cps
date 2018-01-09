@@ -374,9 +374,10 @@ public class ParkingLot implements Serializable {
 		return free;
 	}
 
-	public void update(Connection conn) throws SQLException {
+	public int update(Connection conn) throws SQLException {
 		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_ONETIME_BY_ID);
 		int index = 1;
+		int result = 0;
 		st.setString(index++, this.streetAddress);
 		st.setInt(index++, this.size);
 		st.setString(index++, this.content);
@@ -385,7 +386,8 @@ public class ParkingLot implements Serializable {
 		st.setString(index++, this.alternativeLots);
 		st.setString(index++, this.robotIP);
 		st.setInt(index++, this.id);
-		st.executeUpdate();
+		result = st.executeUpdate();
 		st.close();
+		return result;
 	}
 }

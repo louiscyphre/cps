@@ -8,8 +8,10 @@ import java.util.Stack;
 
 import cps.common.*;
 import cps.api.action.InitLotAction;
+import cps.api.action.UpdatePricesAction;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ServerResponse;
+import cps.api.response.UpdatePricesResponse;
 import cps.server.ServerController;
 import cps.server.devices.Robot;
 import cps.entities.models.CarTransportation;
@@ -394,5 +396,21 @@ public class LotController extends RequestController {
 
 			return new InitLotResponse(true, "Parking lot created successfully", result.getId());
 		});
+	}
+
+	public UpdatePricesResponse handle(UpdatePricesAction action) {
+	return databaseController.performQuery(conn ->{
+		ParkingLot lot=ParkingLot.findByID(conn, action.getLotID());
+		lot.setPrice1(action.getPrice1());
+		lot.setPrice2(action.getPrice2());
+		if (lot.update(conn)==1) {
+			return new UpdatePricesResponse(true, "Prices updates succsessfully");
+		}
+		else
+		{
+			return new UpdatePricesResponse(false, "Failed to update prices");
+		}
+		
+	});
 	}
 }
