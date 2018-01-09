@@ -45,7 +45,7 @@ public class ClientApplication extends Application implements INetworkClient {
 
   public void loadKiosk() throws IOException {
     try {
-      Scene scene = ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.MAIN_MENU);
+      Scene scene = ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
       primaryStage.setScene(scene);
       primaryStage.setTitle("CPS Alpha Client");
       primaryStage.show();
@@ -53,9 +53,11 @@ public class ClientApplication extends Application implements INetworkClient {
         Platform.exit();
         System.exit(0);
       });
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.LOGIN);
       ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.INCIDENTAL_PARKING);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.VIEW_MY_REQUESTS);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
       ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.REQUEST_PARKING_ENTRY);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.VIEW_MY_REQUESTS);
       ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.INIT_PARKING_LOT);
 
     } catch (IOException e) {

@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.ServiceMainMenuSceneController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.ServiceMainMenuSceneController">
   <top>
     <Label text="Action Menu" BorderPane.alignment="CENTER" />
   </top>
@@ -97,12 +97,6 @@
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
-         <stylesheets>
-            <URL value="@../../../../../CPS-GuiClient/src/application/view/application.css" />
-         </stylesheets>
       </VBox>
    </center>
-   <bottom>
-      <Label font="$x1" text="Welcome to Automated Car Parking System!" BorderPane.alignment="CENTER" />
-   </bottom>
 </BorderPane>
