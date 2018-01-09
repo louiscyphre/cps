@@ -200,6 +200,7 @@ public class ParkingLot implements Serializable {
 			}
 			result += "&";
 		}
+		result = result.substring(0, result.length() - 3);
 		this.content = result;
 	}
 
@@ -303,10 +304,13 @@ public class ParkingLot implements Serializable {
 		// Create SQL statement and request table for table keys
 		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_PARKING_LOT,
 				Statement.RETURN_GENERATED_KEYS);
+		String lotContent = generateEmptyContent(size);
 		// Fill in the fields of SQL statement
 		int field = 1;
 		stmt.setString(field++, streetAddress);
 		stmt.setInt(field++, size);
+		// Parking lot content as a string
+		stmt.setString(field++, lotContent);
 		stmt.setFloat(field++, price1);
 		stmt.setFloat(field++, price2);
 		stmt.setString(field++, robotIP);
@@ -326,7 +330,25 @@ public class ParkingLot implements Serializable {
 
 		stmt.close();
 
-		return new ParkingLot(newID, streetAddress, size, "", price1, price2, "", robotIP);
+		return new ParkingLot(newID, streetAddress, size, lotContent, price1, price2, "", robotIP);
+	}
+
+	private static String generateEmptyContent(int size) {
+		String result = "";
+		int iSize, iHeight, iDepth;
+
+		for (iSize = 0; iSize < size; iSize++) {
+			for (iHeight = 0; iHeight < 3; iHeight++) {
+				for (iDepth = 0; iDepth < 3; iDepth++) {
+					result += Constants.SPOT_IS_EMPTY;
+					result += "&";
+				}
+				result += "&";
+			}
+			result += "&";
+		}
+		result = result.substring(0, result.length() - 3);
+		return result;
 	}
 
 	/**
