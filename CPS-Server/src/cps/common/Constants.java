@@ -17,7 +17,7 @@ public interface Constants {
 	public final int PARKING_TYPE_RESERVED = 2;
 	public final int SUBSCRIPTION_TYPE_REGULAR = 1;
 	public final int SUBSCRIPTION_TYPE_FULL = 2;
-	public final String LOT_IS_EMPTY = "0"; 
+	public final String SPOT_IS_EMPTY = "0"; 
 	public final String SQL_CREATE_NEW_DAY = "INSERT INTO daily_statistics values(? ,? ,default ,default ,default ,default)";
 	public final String CHECK_DATE = "SELECT * FROM daily_statistics DS WHERE ds.day=?";
 	public final String INCREASE_REALIZED_ORDER = "UPDATE daily_statistics SET realized_orders=? WHERE day=? AND lot_id=?";

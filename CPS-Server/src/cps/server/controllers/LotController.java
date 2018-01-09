@@ -2,13 +2,9 @@ package cps.server.controllers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalTime;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Stack;
-
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Commons;
 
 import cps.common.*;
 import cps.api.action.InitLotAction;
@@ -38,10 +34,25 @@ public class LotController extends RequestController {
 	}
 
 	/** The robots. */
-	@SuppressWarnings("unused")
 	private Map<Integer, Robot> robots;
 
-	public boolean insertCars(Connection conn, ParkingLot lot, Stack<String> carIds, Stack<LocalTime> exitTimes)
+	/**
+	 * Insert multiply cars.
+	 * 
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param lot
+	 *            the lot
+	 * @param carIds
+	 *            Stack holding the car id's
+	 * @param exitTimes
+	 *            Stack holding the exit time's, correlated with car id's
+	 * @return true, if successful
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	private boolean insertCars(Connection conn, ParkingLot lot, Stack<String> carIds, Stack<LocalTime> exitTimes)
 			throws SQLException {
 		// Get the parking lot
 		String[][][] thisContent = lot.getContentAsArray();
@@ -60,41 +71,53 @@ public class LotController extends RequestController {
 			 */
 			priority = 0;
 
+			/*
+			 * Optimal coordinates for insertion These are selected based on the lowest
+			 * "cars in the way" number
+			 */
 			maxSize = -1;
 			maxHeight = -1;
 			maxDepth = -1;
+
+			// How much cars are in the way in this spot
 			path = 5;
+			// What is the lowest number of "cars in the way" that we encountered so far
 			minPath = 5;
 
-			// Calculate exit priority
-			// if there is no exit time - it means we deal with full subscription which will
-			// perhaps stay for long hours or even more than one day
+			/*
+			 * Calculate exit priority if there is no exit time - it means we deal with FULL
+			 * SUBSCRIPTION which will perhaps stay for long hours or even more than one day
+			 */
 			if (exitTime == null || exitTime.equals(LocalTime.MIDNIGHT)) {
 				// assign worst priority
 				priority = 4;
 			} else {
-				// divide difference between now and exit time
-				// by the time left today
-				// and round down the calculations
+
+				/*
+				 * divide difference between now and exit time by the time left today and round
+				 * down the calculations
+				 */
 				priority = (int) (5 * (exitTime.toSecondOfDay() - LocalTime.now().toSecondOfDay())
 						/ (LocalTime.MAX.toSecondOfDay() - LocalTime.now().toSecondOfDay()));
 				if (priority == 5) {
 					priority = 4;
 				}
 			}
-			// now with priority, find spot for the car
+			// Find spot for the car, based on priority
 			while (maxSize == -1) {
 				switch (priority) {
 				case 0:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
-						if (thisContent[iSize][0][0] == Constants.LOT_IS_EMPTY) {
+						if ((thisContent[iSize][0][0]).compareTo(Constants.SPOT_IS_EMPTY)==0) {
 							maxSize = iSize;
 							maxHeight = 0;
 							maxDepth = 0;
 						}
-						// if we reached end of the line and have not found a place for this priority,
-						// lower and try again
 					}
+					/*
+					 * If we reached end of the line and have not found a place for this priority,
+					 * lower the priority and try again
+					 */
 					if (maxSize == -1) {
 						priority++;
 					}
@@ -102,7 +125,7 @@ public class LotController extends RequestController {
 				case 1:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
 						for (iHeight = 0; iHeight < priority + 1; iHeight++) {
-							if (thisContent[iSize][iHeight][priority - iHeight] == Constants.LOT_IS_EMPTY) {
+							if ((thisContent[iSize][iHeight][priority - iHeight]).compareTo(Constants.SPOT_IS_EMPTY) ==0 ) {
 								path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
 								if (path < minPath) {
 									minPath = path;
@@ -120,7 +143,7 @@ public class LotController extends RequestController {
 				case 2:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
 						for (iHeight = 0; iHeight < priority + 1; iHeight++)
-							if (thisContent[iSize][iHeight][priority - iHeight] == Constants.LOT_IS_EMPTY) {
+							if ((thisContent[iSize][iHeight][priority - iHeight]).compareTo(Constants.SPOT_IS_EMPTY) ==0 ) {
 								path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
 								if (path < minPath) {
 									minPath = path;
@@ -137,7 +160,7 @@ public class LotController extends RequestController {
 				case 3:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
 						for (iHeight = 1; iHeight < priority; iHeight++) {
-							if (thisContent[iSize][iHeight][priority - iHeight] == Constants.LOT_IS_EMPTY) {
+							if ((thisContent[iSize][iHeight][priority - iHeight]).compareTo(Constants.SPOT_IS_EMPTY) == 0) {
 								path = CalculatePath(thisContent, iSize, iHeight, priority - iHeight);
 								if (path < minPath) {
 									minPath = path;
@@ -154,7 +177,7 @@ public class LotController extends RequestController {
 					break;
 				case 4:
 					for (iSize = 0; iSize < lot.getSize(); iSize++) {
-						if (thisContent[iSize][2][2] == Constants.LOT_IS_EMPTY) {
+						if ((thisContent[iSize][2][2]).compareTo(Constants.SPOT_IS_EMPTY) == 0) {
 							path = CalculatePath(thisContent, iSize, 2, 2);
 							if (path < minPath) {
 								minPath = path;
@@ -193,72 +216,88 @@ public class LotController extends RequestController {
 	 * LotController will return an appropriate error response, which we will send
 	 * back to the user
 	 *
-	 *
+	 * @param conn
+	 *            the conn
 	 * @param lot
 	 *            the lot
-	 * @param carID
-	 *            the car ID
+	 * @param carId
+	 *            the car id
+	 * @param exitTime
+	 *            the exit time
+	 * @param response
+	 *            the response
 	 * @return the server response
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public boolean insertCar(Connection conn, ParkingLot lot, String carId, LocalTime exitTime, ServerResponse response)
 			throws SQLException {
+		boolean car_response;
 		Stack<String> carIds = new Stack<String>();
 		carIds.push(carId);
 		Stack<LocalTime> exitTimes = new Stack<LocalTime>();
 		exitTimes.push(exitTime);
 		// check if there is free space at all
-		if (freeSpaceCount(lot, lot.getContentAsArray()) <= 0) {
+		if (lot.getFreeSpotsNumber() <= 0) {
 			response.setError("No free space in the parking lot!");
 			return false;
 		}
-		response.setSuccess("Insertion successful");
-		return insertCars(conn, lot, carIds, exitTimes);
+		if (insertCars(conn, lot, carIds, exitTimes)) {
+			response.setSuccess("Insertion successful");
+			car_response = true;
+		} else {
+			response.setError("Insertion failed");
+			car_response = false;
+		}
+
+		return car_response;
 
 	}
 
+	/**
+	 * This function will calculate how much cars we need to move in order to insert
+	 * a car to the specified spot.
+	 *
+	 * @param _pl
+	 *            Lot content as array
+	 * @param iSize
+	 *            X coordinate of the spot
+	 * @param iHeight
+	 *            Y coordinate of the spot
+	 * @param iDepth
+	 *            Z coordinate of the spot
+	 * @return Number of cars that are in the way of the desired car insertion
+	 */
 	private int CalculatePath(String[][][] _pl, int iSize, int iHeight, int iDepth) {
 		int totalcars = 0;
 		int h = iHeight, d = iDepth;
 		while (d != 0) {
 			d--;
-			if (_pl[iSize][h][d] != Constants.LOT_IS_EMPTY) {
+			if (_pl[iSize][h][d] != Constants.SPOT_IS_EMPTY) {
 				totalcars++;
 			}
 		}
 		while (h != 0) {
 			h--;
-			if (_pl[iSize][h][d] != Constants.LOT_IS_EMPTY) {
+			if (_pl[iSize][h][d] != Constants.SPOT_IS_EMPTY) {
 				totalcars++;
 			}
 		}
 		return totalcars;
 	}
 
-	protected int freeSpaceCount(ParkingLot lot, String[][][] content) {
-		int iSize, iHeight, iDepth;
-		int free = 3 * 3 * lot.getSize();
-
-		for (iSize = 0; iSize < lot.getSize(); iSize++) {
-			for (iHeight = 0; iHeight < 3; iHeight++) {
-				for (iDepth = 0; iDepth < 3; iDepth++) {
-					if (content[iSize][iHeight][iDepth] == Constants.LOT_IS_EMPTY) {
-						free--;
-					}
-				}
-			}
-		}
-
-		return free;
-	}
-
 	/**
 	 * Retrieve car.
 	 *
-	 * @param lot
-	 *            the lotId
+	 * @param conn
+	 *            the conn
+	 * @param lotId
+	 *            the lot id
 	 * @param carID
 	 *            the car ID
 	 * @return the server response
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public boolean retrieveCar(Connection conn, int lotId, String carID) throws SQLException {
 		Stack<String> carIds = new Stack<String>();
@@ -266,20 +305,26 @@ public class LotController extends RequestController {
 
 		ParkingLot lot = ParkingLot.findByID(conn, lotId);
 		String[][][] content = lot.getContentAsArray();
-
+		// Get the robot in the parking lot
+		Robot robbie = robots.get(Integer.parseInt(lot.getRobotIP()));
+		if (robbie == null) {
+			return false;
+		}
 		int iSize, iHeight, iDepth, eSize = -1, eHeight = -1, eDepth = -1;
 
 		CarTransportation entry = null;
 		ParkingService a = null;
-
+		// Find a car in the lot by carId
 		for (iSize = 0; iSize < lot.getSize(); iSize++) {
 			for (iHeight = 0; iHeight < 3; iHeight++) {
 				for (iDepth = 0; iDepth < 3; iDepth++) {
 					if (content[iSize][iHeight][iDepth] == carID) {
+						// When found empty the spot and store the place
 						eSize = iSize;
 						eHeight = iHeight;
 						eDepth = iDepth;
-						content[iSize][iHeight][iDepth] = Constants.LOT_IS_EMPTY;
+
+						content[iSize][iHeight][iDepth] = Constants.SPOT_IS_EMPTY;
 					}
 					if (eSize > 0) {
 						break;
@@ -293,6 +338,10 @@ public class LotController extends RequestController {
 				break;
 			}
 		}
+		/*
+		 * We need to remove all the cars in the way before we will be able to
+		 * "retrieve the car"
+		 */
 		for (iHeight = 0; iHeight < eHeight; iHeight++) {
 			entry = CarTransportation.findByCarId(conn, content[eSize][iHeight][0], lotId);
 			a = null;
@@ -303,7 +352,8 @@ public class LotController extends RequestController {
 			}
 			carIds.push(content[eSize][iHeight][0]);
 			exitTimes.push(a.getExitTime());
-			content[eSize][iHeight][0] = Constants.LOT_IS_EMPTY;
+			content[eSize][iHeight][0] = Constants.SPOT_IS_EMPTY;
+			robbie.retrieveCar(carIds.peek(), eSize, iHeight, 0);
 		}
 		for (iDepth = 0; iDepth < eDepth; iDepth++) {
 			entry = CarTransportation.findByCarId(conn, content[eSize][iHeight][iDepth], lotId);
@@ -315,13 +365,13 @@ public class LotController extends RequestController {
 			}
 			carIds.push(content[eSize][iHeight][iDepth]);
 			exitTimes.push(a.getExitTime());
-			content[eSize][iHeight][iDepth] = Constants.LOT_IS_EMPTY;
+			content[eSize][iHeight][iDepth] = Constants.SPOT_IS_EMPTY;
+			robbie.retrieveCar(carIds.peek(), eSize, iHeight, iDepth);
 		}
-
+		robbie.retrieveCar(carID, eSize, iHeight, iDepth);
 		if (!insertCars(conn, lot, carIds, exitTimes)) {
 			return false;
 		}
-		// TODO: call Robot::retrieveCar
 		return true;
 
 	}
