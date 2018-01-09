@@ -357,6 +357,23 @@ public class ParkingLot implements Serializable {
 		return result;
 	}
 
+	public int getFreeSpotsNumber() {
+		int iSize, iHeight, iDepth;
+		int free = 3 * 3 * this.size;
+		String[][][] content = this.getContentAsArray();
+
+		for (iSize = 0; iSize < this.size; iSize++) {
+			for (iHeight = 0; iHeight < 3; iHeight++) {
+				for (iDepth = 0; iDepth < 3; iDepth++) {
+					if (content[iSize][iHeight][iDepth] == Constants.SPOT_IS_EMPTY) {
+						free--;
+					}
+				}
+			}
+		}
+		return free;
+	}
+
 	public void update(Connection conn) throws SQLException {
 		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_ONETIME_BY_ID);
 		int index = 1;
