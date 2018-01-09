@@ -10,6 +10,7 @@
     -fx-border-radius: 8 8 8 8;
     -fx-background-radius: 8 8 8 8;
     -fx-font-size: 16;
+    -fx-font-family: 'Sans-serif';
 }
 
 .subscriptionDetailsSquare {
@@ -20,6 +21,7 @@
     -fx-border-width: 2;
     -fx-text-fill: #555753;
     -fx-font-size: 16;
+    -fx-font-family: 'Sans-serif';
 }
 
 .regularButton {
@@ -28,5 +30,6 @@
     -fx-border-radius: 8 8 8 8;
     -fx-background-radius: 8 8 8 8;
     -fx-font-size: 16;
+    -fx-font-family: 'Sans-serif';
 }
 
