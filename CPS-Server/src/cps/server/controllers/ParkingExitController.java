@@ -39,7 +39,7 @@ public class ParkingExitController extends RequestController {
 	public ServerResponse handle(ParkingExitRequest request) {
 		return databaseController.performQuery(conn -> {
 			ParkingExitResponse response = new ParkingExitResponse(false, "");
-			
+
 			CarTransportation entry = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
 					request.getLotID());
 
@@ -47,34 +47,45 @@ public class ParkingExitController extends RequestController {
 				response.setError("CarTransportation with the requested parameters does not exist");
 				return response;
 			}
-			
+
 			// Update the removedAt field
 			Timestamp removedAt = new Timestamp(System.currentTimeMillis());
-			
+
 			if (!entry.updateRemovedAt(conn, removedAt)) {
 				response.setError("Failed to update car transportation");
 				return response;
 			}
-			
+
 			// Calculate the amount of money that the customer has to pay
 			float sum = calculatePayment(conn, entry, request);
-			
+
 			// Find customer
 			Customer customer = Customer.findByID(conn, request.getCustomerID());
-			
+
 			if (customer == null) {
 				response.setError("Failed to find customer with id " + request.getCustomerID());
 				return response;
 			}
-			
+
 			// Write payment
 			customer.setDebit(sum + customer.getDebit());
-			
+
 			if (!customer.update(conn)) {
 				response.setError("Failed to update customer");
 				return response;
 			}
-			
+			/*
+			 * Attempt to retrieve the car from the lot The function will shuffle the cars
+			 * that get in the way in an attempt to locate them in accordance to the current
+			 * situation
+			 */
+			LotController lotController = serverController.getLotController();
+
+			if (!lotController.retrieveCar(conn, request.getLotID(), request.getCarID())) { // Car retrieval failed
+				response.setError("Failed to retrieve the car from the parking lot");
+				return response;
+			}
+
 			// Success
 			response.setCustomerID(customer.getId());
 			response.setPayment(sum);
@@ -86,9 +97,9 @@ public class ParkingExitController extends RequestController {
 	public static float calculatePayment(Connection conn, CarTransportation carTransportation,
 			ParkingExitRequest exitRequest) throws SQLException {
 		float tariffLow = 0, tariffHigh = 0;
-		
+
 		long startedLate, inside, endedLate;
-		
+
 		// Determine if this is a subscription or one time
 		if (carTransportation.getAuthType() == Constants.LICENSE_TYPE_ONETIME) {
 			// If customer did not park by subscription charge him according to park type
@@ -138,10 +149,10 @@ public class ParkingExitController extends RequestController {
 			// The formula is according to the requirements
 			return startedLate * tariffLow * 1.2f + inside * tariffLow + endedLate * tariffHigh;
 		}
-		
+
 		// TODO: if customer has subscription - charge him only for being late
 		// TODO: calculate subscription exit late fine
-		
+
 		return 0f;
 	}
 }

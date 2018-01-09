@@ -143,12 +143,12 @@ public class CarTransportation implements Serializable {
 
 		CarTransportation result = null;
 		PreparedStatement query = conn.prepareStatement(Constants.SQL_FIND_CAR_TRANSPORTATION);
-		
+
 		int index = 1;
 		query.setInt(index++, customerID);
 		query.setString(index++, carID);
 		query.setInt(index++, lotID);
-		
+
 		ResultSet insertionSet = query.executeQuery();
 
 		// if exists - return the object
@@ -179,6 +179,30 @@ public class CarTransportation implements Serializable {
 		st.close();
 
 		return updated > 0;
+	}
+
+	public static CarTransportation findByCarId(Connection conn, String carID, int lotID) throws SQLException {
+		// First - find the insertion of the car
+
+		CarTransportation result = null;
+		PreparedStatement query = conn.prepareStatement(Constants.SQL_FIND_CAR_TRANSPORTATION_BY_CAR_NUMBER);
+
+		int index = 1;
+		query.setString(index++, carID);
+		query.setInt(index++, lotID);
+
+		ResultSet insertionSet = query.executeQuery();
+
+		// if exists - return the object
+		if (insertionSet.next()) {
+			result = new CarTransportation(insertionSet);
+		}
+		// else return null;
+
+		insertionSet.close();
+		query.close();
+		return result;
+
 	}
 
 }
