@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.ServiceMainMenuSceneController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceMainMenuSceneController">
   <top>
     <Label text="Action Menu" BorderPane.alignment="CENTER" />
   </top>
@@ -42,51 +42,19 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Initialize Lot" textAlignment="CENTER">
-                     <font>
-                        <Font size="13.0" fx:id="x1" />
-                     </font>
-                  </Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Disable Slot" textAlignment="CENTER" GridPane.columnIndex="1">
-                     <font>
-                        <Font size="13.0" fx:id="x11" />
-                     </font>
-                  </Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Refund" textAlignment="CENTER" GridPane.columnIndex="2">
-                     <font>
-                        <Font size="13.0" fx:id="x111" />
-                     </font>
-                  </Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Lot is full" textAlignment="CENTER" GridPane.rowIndex="1">
-                     <font>
-                        <Font size="13.0" fx:id="x1111" />
-                     </font>
-                  </Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Reserve Slot" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <font>
-                        <Font size="13.0" fx:id="x11111" />
-                     </font>
-                  </Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Update Prices" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                     <font>
-                        <Font size="13.0" fx:id="x111111" />
-                     </font>
-                  </Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Lot State" textAlignment="CENTER" GridPane.rowIndex="2">
-                     <font>
-                        <Font size="13.0" fx:id="x1111111" />
-                     </font>
-                  </Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Logout" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                     <font>
-                        <Font size="13.0" fx:id="x111111111" />
-                     </font>
-                  </Button>
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleInitializeLotButton" prefHeight="50.0" prefWidth="150.0" styleClass="regularButton" text="Initialize Lot" textAlignment="CENTER" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleDisableSlotButton" prefHeight="50.0" prefWidth="150.0" styleClass="regularButton" text="Disable Slot" textAlignment="CENTER" GridPane.columnIndex="1" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRefundButton" prefHeight="50.0" prefWidth="150.0" styleClass="regularButton" text="Refund" textAlignment="CENTER" GridPane.columnIndex="2" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLotIsFullButton" prefHeight="50.0" prefWidth="150.0" styleClass="regularButton" text="Lot is full" textAlignment="CENTER" GridPane.rowIndex="1" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleReserveSlotButton" prefHeight="50.0" prefWidth="150.0" styleClass="regularButton" text="Reserve Slot" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleUpdatePricesButton" prefHeight="50.0" prefWidth="150.0" styleClass="regularButton" text="Update Prices" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLotStateButton" prefHeight="50.0" prefWidth="150.0" styleClass="regularButton" text="Lot State" textAlignment="CENTER" GridPane.rowIndex="2" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="50.0" prefWidth="150.0" styleClass="regularButton" text="Logout" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                </children>
             </GridPane>
             <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="360.0" spacing="10.0">
                <children>
-                  <ProgressIndicator fx:id="infoProgress" />
+                  <ProgressIndicator fx:id="infoProgress" visible="false" />
                   <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="73.0" prefWidth="340.0" style="-fx-background-color: #d9edf7; -fx-background-radius: 8 8 8 8; -fx-text-fill: #31708f; -fx-border-radius: 8 8 8 8; -fx-border-color: #bce8f1;" text="Just some info goes here" textAlignment="CENTER" wrapText="true" />
                </children>
                <padding>

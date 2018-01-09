@@ -4,15 +4,30 @@ public class ControllerConstants {
 
   public enum SceneCode {
   
-    MAIN_MENU("../view/AlphaGUI_mainMenu.fxml"),
-    LOGIN("../view/LoginScene.fxml"),
-    CUSTOMER_INITIAL_MENU("../view/CustomerInitialMenuScene.fxml"),
-    CUSTOMER_LIST_SUBSCRIPTIONS("../view/CustomerListSubscriptionsScene.fxml"),
     INCIDENTAL_PARKING("../view/AlphaGUI_2.fxml"),
     VIEW_MY_REQUESTS("../view/AlphaGUI_3.fxml"),
     REQUEST_PARKING_ENTRY("../view/AlphaGUI_4.fxml"),
-    INIT_PARKING_LOT("../view/AlphaGUI_5.fxml");
-  
+    INIT_PARKING_LOT("../view/AlphaGUI_5.fxml"),
+    MAIN_MENU("../view/AlphaGUI_mainMenu.fxml"),
+    
+    
+    LOGIN("../view/LoginScene.fxml"),
+    CUSTOMER_INITIAL_MENU("../view/CustomerInitialMenuScene.fxml"),
+    CUSTOMER_LIST_SUBSCRIPTIONS("../view/CustomerListSubscriptionsScene.fxml"),
+    
+    // service views 
+    SERVICE_ACTION_DISABLE_SLOT("..view/service/ServiceActionDisableSlot.fxml"),
+    SERVICE_ACTION_INIT_LOT("../view/service/ServiceActionInitLotScene.fxml"),
+    SERVICE_ACTION_LOT_IS_FULL("../view/service/ServiceActionLotIsFull.fxml"),
+    SERVICE_ACTION_LOT_STATE("..view/service/ServiceActionLotState.fmxl"),
+    SERVICE_ACTION_MENU("..view/service/ServiceActionMenuScene.fmxl"),
+    SERVICE_ACTION_REFUND("..view/service/ServiceActionRefund.fmxl"),
+    SERVICE_ACTION_RESERVE_SLOT("..view/service/ServiceActionReserveSlot.fmxl"),
+    SERVICE_ACTION_UPDATE_PRICES("..view/service/ServiceActionUpdatePrices.fmxl"),
+    SERVICE_ACTION_LOGIN_SCENE("..view/service/ServiceLoginScene.fmxl"),
+    SERVICE_ACTION_MAIN_MENU("..view/service/ServiceMainMenuScene.fmxl"),
+    ;
+    
     String myRelativePath;
     
     SceneCode(String relativePath){
