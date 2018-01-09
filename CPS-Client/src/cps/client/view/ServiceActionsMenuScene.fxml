@@ -21,7 +21,7 @@
                <children>
                   <Label fx:id="usernameLabel" text="Username" />
                   <Separator orientation="VERTICAL" prefHeight="200.0" />
-                  <Label fx:id="jobTitleLabel" text="JobTitle">
+                  <Label fx:id="jobTitleLabel" text="JobTitle / Access Level">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font></Label>
@@ -47,7 +47,7 @@
                         <Font size="13.0" fx:id="x1" />
                      </font>
                   </Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Disable Slots" textAlignment="CENTER" GridPane.columnIndex="1">
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Disable Slot" textAlignment="CENTER" GridPane.columnIndex="1">
                      <font>
                         <Font size="13.0" fx:id="x11" />
                      </font>
@@ -62,7 +62,7 @@
                         <Font size="13.0" fx:id="x1111" />
                      </font>
                   </Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Reserve Slots" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Reserve Slot" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font size="13.0" fx:id="x11111" />
                      </font>
