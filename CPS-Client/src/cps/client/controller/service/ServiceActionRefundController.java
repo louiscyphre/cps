@@ -40,7 +40,7 @@ public class ServiceActionRefundController implements ViewController {
 
   @FXML
   void handleCancelButton(ActionEvent event) {
-
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
   }
 
   @FXML

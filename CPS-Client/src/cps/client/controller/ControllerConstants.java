@@ -24,7 +24,7 @@ public class ControllerConstants {
     SERVICE_ACTION_REFUND("..view/service/ServiceActionRefund.fmxl"),
     SERVICE_ACTION_RESERVE_SLOT("..view/service/ServiceActionReserveSlot.fmxl"),
     SERVICE_ACTION_UPDATE_PRICES("..view/service/ServiceActionUpdatePrices.fmxl"),
-    SERVICE_ACTION_LOGIN_SCENE("..view/service/ServiceLoginScene.fmxl"),
+    SERVICE_ACTION_LOGIN("..view/service/ServiceLoginScene.fmxl"),
     SERVICE_ACTION_MAIN_MENU("..view/service/ServiceMainMenuScene.fmxl"),
     ;
     

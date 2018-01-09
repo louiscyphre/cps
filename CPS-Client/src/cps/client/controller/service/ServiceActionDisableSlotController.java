@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
+import cps.client.controller.ControllerConstants.SceneCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -42,12 +43,12 @@ public class ServiceActionDisableSlotController implements ViewController {
 
   @FXML
   void handleBackButton(ActionEvent event) {
-
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
   }
 
   @FXML
   void handleOkButton(ActionEvent event) {
-
+    
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is

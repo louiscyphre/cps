@@ -3,6 +3,7 @@ package cps.client.controller.service;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
+import cps.client.controller.ControllerConstants.SceneCode;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -49,7 +50,7 @@ public class ServiceActionInitLotSceneController implements ViewController {
 
   @FXML
   void handleBackButton(ActionEvent event) {
-
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
   }
 
   @FXML

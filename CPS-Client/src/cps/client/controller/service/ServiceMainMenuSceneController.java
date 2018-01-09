@@ -4,6 +4,8 @@
 
 package cps.client.controller.service;
 
+import cps.client.controller.ControllerConstants.SceneCode;
+import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
 
 import java.net.URL;
@@ -26,66 +28,38 @@ public class ServiceMainMenuSceneController implements ViewController {
   @FXML // fx:id="infoLabel"
   private Label infoLabel; // Value injected by FXMLLoader
 
-  @FXML // fx:id="jobTitleLabel"
-  private Label jobTitleLabel; // Value injected by FXMLLoader
-
   @FXML // fx:id="infoProgress"
   private ProgressIndicator infoProgress; // Value injected by FXMLLoader
 
   @FXML // fx:id="infoBox"
   private VBox infoBox; // Value injected by FXMLLoader
 
-  @FXML // fx:id="usernameLabel"
-  private Label usernameLabel; // Value injected by FXMLLoader
-
   @FXML
-  void handleInitializeLotButton(ActionEvent event) {
+  void loginAsEmployee(ActionEvent event) {
 
   }
 
   @FXML
-  void handleDisableSlotButton(ActionEvent event) {
+  void loginAsManager(ActionEvent event) {
 
   }
 
   @FXML
-  void handleRefundButton(ActionEvent event) {
+  void loginAsGlobalManager(ActionEvent event) {
 
   }
 
   @FXML
-  void handleLotIsFullButton(ActionEvent event) {
-
-  }
-
-  @FXML
-  void handleReserveSlotButton(ActionEvent event) {
-
-  }
-
-  @FXML
-  void handleUpdatePricesButton(ActionEvent event) {
-
-  }
-
-  @FXML
-  void handleLotStateButton(ActionEvent event) {
-
-  }
-
-  @FXML
-  void handleLogoutButton(ActionEvent event) {
+  void loginAsCustomerService(ActionEvent event) {
 
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
-    assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
-    assert jobTitleLabel != null : "fx:id=\"jobTitleLabel\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
-    assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
-    assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
-    assert usernameLabel != null : "fx:id=\"usernameLabel\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
-
+    assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'ServiceMainMenuScene.fxml'.";
+    assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'ServiceMainMenuScene.fxml'.";
+    assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ServiceMainMenuScene.fxml'.";
+    ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_MAIN_MENU);
   }
 }
