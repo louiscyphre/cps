@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Assert;
 
-import cps.server.controllers.LotController;
+import cps.server.controllers.*;
 import org.junit.Before;
 import org.junit.Test;
 
