@@ -419,8 +419,8 @@ public class ParkingLot implements Serializable {
 		st.setFloat(index++, this.price2);
 		st.setString(index++, this.alternativeLots);
 		st.setString(index++, this.robotIP);
-		st.setInt(index++, this.id);
 		st.setBoolean(index++, this.lotFull);
+		st.setInt(index++, this.id);
 		result = st.executeUpdate();
 		st.close();
 		return result;

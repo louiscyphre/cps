@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -235,7 +236,7 @@ public class OnetimeService implements ParkingService {
 	}
 
 	@Override
-	public LocalTime getExitTime() {
-		return this.getExitTime();
+	public LocalDateTime getExitTime() {
+		return this.plannedEndTime.toLocalDateTime();
 	}
 }

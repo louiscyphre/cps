@@ -2,6 +2,7 @@ package cps.server.controllers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Map;
 import java.util.Stack;
@@ -56,12 +57,12 @@ public class LotController extends RequestController {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	private boolean insertCars(Connection conn, ParkingLot lot, Stack<String> carIds, Stack<LocalTime> exitTimes)
+	private boolean insertCars(Connection conn, ParkingLot lot, Stack<String> carIds, Stack<LocalDateTime> exitTimes)
 			throws SQLException {
 		// Get the parking lot
 		String[][][] thisContent = lot.getContentAsArray();
 		String carId = null;
-		LocalTime exitTime = null;
+		LocalDateTime exitTime = null;
 		int priority;
 		int iSize, iHeight, maxSize, maxHeight, maxDepth, path, minPath;
 
@@ -101,16 +102,23 @@ public class LotController extends RequestController {
 				 * divide difference between now and exit time by the time left today and round
 				 * down the calculations
 				 */
-				if (exitTime.toSecondOfDay() - LocalTime.now().toSecondOfDay() < 0) {
-					priority = (int) (5 * ((LocalTime.MAX.toSecondOfDay()+exitTime.toSecondOfDay()) - LocalTime.now().toSecondOfDay())
-							/ (LocalTime.MAX.toSecondOfDay()*2 - LocalTime.now().toSecondOfDay()));
-				} else {
-					priority = (int) (5 * (exitTime.toSecondOfDay() - LocalTime.now().toSecondOfDay())
-							/ (LocalTime.MAX.toSecondOfDay()*2 - LocalTime.now().toSecondOfDay()));
-				}
-				if (priority == 5) {
+				if (exitTime.isAfter(LocalDateTime.now().plusDays(2))) {
 					priority = 4;
+				} else {
+					if (exitTime.isAfter(LocalDateTime.now().plusDays(1))) {
+						priority = (int) (5
+								* ((LocalTime.MAX.toSecondOfDay() + exitTime.toLocalTime().toSecondOfDay())
+										- LocalTime.now().toSecondOfDay())
+								/ (LocalTime.MAX.toSecondOfDay() * 2 - LocalTime.now().toSecondOfDay()));
+					} else {
+						priority = (int) (5 * (exitTime.toLocalTime().toSecondOfDay() - LocalTime.now().toSecondOfDay())
+								/ (LocalTime.MAX.toSecondOfDay() * 2 - LocalTime.now().toSecondOfDay()));
+					}
+					if (priority == 5) {
+						priority = 4;
+					}
 				}
+
 			}
 			// Find spot for the car, based on priority
 			while (maxSize == -1) {
@@ -213,7 +221,7 @@ public class LotController extends RequestController {
 			// insert the car
 			thisContent[maxSize][maxHeight][maxDepth] = carId;
 			// call a robot
-			this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId, maxSize, maxHeight, maxDepth);
+			//this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId, maxSize, maxHeight, maxDepth);
 		}
 		lot.setContentFromArray(thisContent);
 		lot.update(conn);
@@ -242,12 +250,12 @@ public class LotController extends RequestController {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public boolean insertCar(Connection conn, ParkingLot lot, String carId, LocalTime exitTime, ServerResponse response)
+	public boolean insertCar(Connection conn, ParkingLot lot, String carId, LocalDateTime exitTime, ServerResponse response)
 			throws SQLException {
 		boolean car_response;
 		Stack<String> carIds = new Stack<String>();
 		carIds.push(carId);
-		Stack<LocalTime> exitTimes = new Stack<LocalTime>();
+		Stack<LocalDateTime> exitTimes = new Stack<LocalDateTime>();
 		exitTimes.push(exitTime);
 		// check if there is free space at all
 		if (lot.getFreeSpotsNumber() <= 0) {
@@ -313,15 +321,15 @@ public class LotController extends RequestController {
 	 */
 	public boolean retrieveCar(Connection conn, int lotId, String carID) throws SQLException {
 		Stack<String> carIds = new Stack<String>();
-		Stack<LocalTime> exitTimes = new Stack<LocalTime>();
+		Stack<LocalDateTime> exitTimes = new Stack<LocalDateTime>();
 
 		ParkingLot lot = ParkingLot.findByID(conn, lotId);
 		String[][][] content = lot.getContentAsArray();
 		// Get the robot in the parking lot
-		Robot robbie = robots.get(Integer.parseInt(lot.getRobotIP()));
+		/*Robot robbie = robots.get(Integer.parseInt(lot.getRobotIP()));
 		if (robbie == null) {
 			return false;
-		}
+		}*/
 		int iSize, iHeight, iDepth, eSize = -1, eHeight = -1, eDepth = -1;
 
 		CarTransportation entry = null;
@@ -363,9 +371,9 @@ public class LotController extends RequestController {
 				a = SubscriptionService.findByID(conn, entry.getAuthID());
 			}
 			carIds.push(content[eSize][iHeight][0]);
-			exitTimes.push(a.getExitTime());
+			exitTimes.push((a.getExitTime()));
 			content[eSize][iHeight][0] = Constants.SPOT_IS_EMPTY;
-			robbie.retrieveCar(carIds.peek(), eSize, iHeight, 0);
+			//robbie.retrieveCar(carIds.peek(), eSize, iHeight, 0);
 		}
 		for (iDepth = 0; iDepth < eDepth; iDepth++) {
 			entry = CarTransportation.findByCarId(conn, content[eSize][iHeight][iDepth], lotId);
@@ -378,9 +386,9 @@ public class LotController extends RequestController {
 			carIds.push(content[eSize][iHeight][iDepth]);
 			exitTimes.push(a.getExitTime());
 			content[eSize][iHeight][iDepth] = Constants.SPOT_IS_EMPTY;
-			robbie.retrieveCar(carIds.peek(), eSize, iHeight, iDepth);
+			//robbie.retrieveCar(carIds.peek(), eSize, iHeight, iDepth);
 		}
-		robbie.retrieveCar(carID, eSize, iHeight, iDepth);
+		//robbie.retrieveCar(carID, eSize, iHeight, iDepth);
 		if (!insertCars(conn, lot, carIds, exitTimes)) {
 			return false;
 		}
