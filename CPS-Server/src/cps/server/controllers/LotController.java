@@ -311,19 +311,25 @@ public class LotController extends RequestController {
 
 		ParkingLot lot = ParkingLot.findByID(conn, lotId);
 		String[][][] content = lot.getContentAsArray();
-
+		// Get the robot in the parking lot
+		Robot robbie = robots.get(Integer.parseInt(lot.getRobotIP()));
+		if (robbie == null) {
+			return false;
+		}
 		int iSize, iHeight, iDepth, eSize = -1, eHeight = -1, eDepth = -1;
 
 		CarTransportation entry = null;
 		ParkingService a = null;
-
+		// Find a car in the lot by carId
 		for (iSize = 0; iSize < lot.getSize(); iSize++) {
 			for (iHeight = 0; iHeight < 3; iHeight++) {
 				for (iDepth = 0; iDepth < 3; iDepth++) {
 					if (content[iSize][iHeight][iDepth] == carID) {
+						// When found empty the spot and store the place
 						eSize = iSize;
 						eHeight = iHeight;
 						eDepth = iDepth;
+
 						content[iSize][iHeight][iDepth] = Constants.SPOT_IS_EMPTY;
 					}
 					if (eSize > 0) {
@@ -338,6 +344,10 @@ public class LotController extends RequestController {
 				break;
 			}
 		}
+		/*
+		 * We need to remove all the cars in the way before we will be able to
+		 * "retrieve the car"
+		 */
 		for (iHeight = 0; iHeight < eHeight; iHeight++) {
 			entry = CarTransportation.findByCarId(conn, content[eSize][iHeight][0], lotId);
 			a = null;
@@ -349,6 +359,7 @@ public class LotController extends RequestController {
 			carIds.push(content[eSize][iHeight][0]);
 			exitTimes.push(a.getExitTime());
 			content[eSize][iHeight][0] = Constants.SPOT_IS_EMPTY;
+			robbie.retrieveCar(carIds.peek(), eSize, iHeight, 0);
 		}
 		for (iDepth = 0; iDepth < eDepth; iDepth++) {
 			entry = CarTransportation.findByCarId(conn, content[eSize][iHeight][iDepth], lotId);
@@ -361,8 +372,9 @@ public class LotController extends RequestController {
 			carIds.push(content[eSize][iHeight][iDepth]);
 			exitTimes.push(a.getExitTime());
 			content[eSize][iHeight][iDepth] = Constants.SPOT_IS_EMPTY;
+			robbie.retrieveCar(carIds.peek(), eSize, iHeight, iDepth);
 		}
-
+		robbie.retrieveCar(carID, eSize, iHeight, iDepth);
 		if (!insertCars(conn, lot, carIds, exitTimes)) {
 			return false;
 		}
