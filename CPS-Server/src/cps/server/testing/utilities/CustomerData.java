@@ -11,6 +11,7 @@ public class CustomerData {
 	public CustomerData(int customerID, String email, String password, String carID, int lotID, int subsID) {
 		this.customerID = customerID;
 		this.email = email;
+		this.password = password;
 		this.carID = carID;
 		this.lotID = lotID;
 		this.subsID = subsID;
