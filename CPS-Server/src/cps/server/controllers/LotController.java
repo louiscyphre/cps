@@ -101,8 +101,13 @@ public class LotController extends RequestController {
 				 * divide difference between now and exit time by the time left today and round
 				 * down the calculations
 				 */
-				priority = (int) (5 * (exitTime.toSecondOfDay() - LocalTime.now().toSecondOfDay())
-						/ (LocalTime.MAX.toSecondOfDay() - LocalTime.now().toSecondOfDay()));
+				if (exitTime.toSecondOfDay() - LocalTime.now().toSecondOfDay() < 0) {
+					priority = (int) (5 * ((LocalTime.MAX.toSecondOfDay()+exitTime.toSecondOfDay()) - LocalTime.now().toSecondOfDay())
+							/ (LocalTime.MAX.toSecondOfDay()*2 - LocalTime.now().toSecondOfDay()));
+				} else {
+					priority = (int) (5 * (exitTime.toSecondOfDay() - LocalTime.now().toSecondOfDay())
+							/ (LocalTime.MAX.toSecondOfDay()*2 - LocalTime.now().toSecondOfDay()));
+				}
 				if (priority == 5) {
 					priority = 4;
 				}
