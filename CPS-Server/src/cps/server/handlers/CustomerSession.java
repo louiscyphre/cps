@@ -15,7 +15,6 @@ public class CustomerSession {
 	}
 
 	public boolean findCustomer(Connection conn, ServerResponse response, int customerID) throws SQLException {
-
 		customer = Customer.findByID(conn, customerID);
 
 		if (customer == null) {
