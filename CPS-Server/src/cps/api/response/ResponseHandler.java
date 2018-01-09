@@ -1,6 +1,10 @@
 package cps.api.response;
 
 public interface ResponseHandler {
+  
+  // Dispatch
+  public ServerResponse dispatch(Response response);
+  
   // Customer Responses
   public ServerResponse handle(CancelOnetimeParkingResponse response);
   public ServerResponse handle(ComplaintResponse response);

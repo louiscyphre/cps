@@ -7,10 +7,14 @@ import java.io.IOException;
 
 import org.apache.commons.cli.ParseException;
 
+import cps.api.request.Request;
+import cps.api.response.Response;
+import cps.api.response.ResponseHandler;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ResponseHandlerImpl;
 import cps.client.network.CPSNetworkClient;
 import cps.client.network.INetworkClient;
 import cps.client.utils.CmdParser;
@@ -29,6 +33,8 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private Stage primaryStage;
 
+  private ResponseHandler responseHandler = new ResponseHandlerImpl();
+  
   private int lotID; // required : -1 if web-client
   
   public int getLotID() {
@@ -146,6 +152,10 @@ public class ClientApplication extends Application implements INetworkClient {
 
   @Override
   public void receiveResponse(Object resp) {
+    
+    // TODO handling goes here
+    // ServerResponse response = responseHandler.dispatch((Response) resp);
+        
     if (resp instanceof ServerResponse) {
       ServerResponse srvrResp = (ServerResponse) resp;
       if (srvrResp.getStatus() == ServerResponse.STATUS_OK) {
