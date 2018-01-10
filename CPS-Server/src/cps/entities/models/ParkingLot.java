@@ -427,7 +427,7 @@ public class ParkingLot implements Serializable {
 		return free;
 	}
 
-	public void update(Connection conn) throws SQLException, DatabaseException {
+	public int update(Connection conn) throws SQLException, DatabaseException {
 		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
 		int index = 1;
 		int result = 0;
@@ -446,5 +446,7 @@ public class ParkingLot implements Serializable {
 		if (result <= 0) {
 			throw new DatabaseException("Failed to update ParkingLot");
 		}
+		
+		return result;
 	}
 }

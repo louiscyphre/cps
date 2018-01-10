@@ -1,6 +1,5 @@
 package cps.entities.models;
 
-import java.nio.channels.NonWritableChannelException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.Time;
