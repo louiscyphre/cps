@@ -73,4 +73,14 @@ public class CustomerMainMenuController implements ViewController {
     infoLabel.getStyleClass().add("errorLabel");    
   }
 
+  @Override
+  public void turnProcessingStateOn() {
+    throw new UnsupportedOperationException(); // TODO check if better throw exception or leave stub
+  }
+
+  @Override
+  public void turnProcessingStateOff() {
+    throw new UnsupportedOperationException(); // TODO check if better throw exception or leave stub
+  }
+
 }

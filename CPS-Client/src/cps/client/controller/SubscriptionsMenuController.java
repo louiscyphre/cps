@@ -44,4 +44,16 @@ public class SubscriptionsMenuController implements ViewController {
     
   }
 
+  @Override
+  public void turnProcessingStateOn() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void turnProcessingStateOff() {
+    // TODO Auto-generated method stub
+    
+  }
+
 }
