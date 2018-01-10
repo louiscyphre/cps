@@ -156,4 +156,10 @@ public class ServerController implements RequestHandler {
 		return lotController.handle(action);
 	}
 
+  @Override
+  public ServerResponse handle(LoginRequest request) {
+    // TODO: Customer Login Request
+    return null;
+  }
+
 }
