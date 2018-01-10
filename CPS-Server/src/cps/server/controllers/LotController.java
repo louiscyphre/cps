@@ -65,6 +65,7 @@ public class LotController extends RequestController {
 		String[][][] thisContent = lot.getContentAsArray();
 		String carId = null;
 		LocalDateTime exitTime = null;
+		LocalDateTime fullSubscriptionTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
 		int priority;
 		int iSize, iHeight, maxSize, maxHeight, maxDepth, path, minPath;
 
@@ -95,7 +96,7 @@ public class LotController extends RequestController {
 			 * Calculate exit priority if there is no exit time - it means we deal with FULL
 			 * SUBSCRIPTION which will perhaps stay for long hours or even more than one day
 			 */
-			if (exitTime == null || exitTime.equals(LocalTime.MIDNIGHT.atDate(LocalDate.now()))) {
+			if (exitTime == null || exitTime.equals(fullSubscriptionTime)) {
 				// assign worst priority
 				priority = 4;
 			} else {

@@ -66,12 +66,20 @@ public class ParkingEntryController extends RequestController {
 			// If the lot is full, or some other error occurs, LotController will return an
 			// appropriate error response, which we will send back to the user.
 			//The function will create table entry to record where the car was placed
+<<<<<<< HEAD
 //			LotController lotController = serverController.getLotController();
 
 			// TODO wait until this is fixed
 //			if (!lotController.insertCar(conn, lot, carID, service.getExitTime(), response)) { // Car insertion failed - lot full or some other error
 //				return response;
 //			}
+=======
+			LotController lotController = serverController.getLotController();
+			
+			if (!lotController.insertCar(conn, lot, carID, service.getExitTime(), response)) { // Car insertion failed - lot full or some other error
+				return response;
+			}
+>>>>>>> refs/remotes/origin/dev-server-Tegra
 
 			// All good - create a CarTransportation table entry to record the fact that a
 			// successful parking was made.

@@ -1,5 +1,6 @@
 package cps.entities.models;
 
+import java.nio.channels.NonWritableChannelException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.Time;
@@ -199,6 +200,9 @@ public class SubscriptionService implements ParkingService {
 
 	@Override
 	public LocalDateTime getExitTime() {
+		if (this.subscriptionType == Constants.SUBSCRIPTION_TYPE_FULL) {
+			return LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+		}
 		return this.dailyExitTime.atDate(LocalDate.now());
 	}
 
