@@ -38,6 +38,11 @@
     -fx-label-padding: 10 10 10 10;
 }
 
+.smallButton {
+	-fx-font-size: 12;
+    -fx-label-padding: 0 0 0 0;
+}
+
 .inputField, .passwordInputField {
     -fx-padding: 15px;
     -fx-border-radius: 8 8 8 8;

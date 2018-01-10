@@ -44,8 +44,16 @@
             </VBox>
             <HBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="20.0" style="-fx-padding:0 0 0 0;">
                <children>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="50.0" prefWidth="100.0" styleClass="cancelButton" text="Cancel" textAlignment="CENTER" />
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleOkButton" prefHeight="50.0" prefWidth="104.0" styleClass="regularButton" text="Ok" textAlignment="CENTER" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="50.0" prefWidth="100.0" text="Cancel" textAlignment="CENTER">
+                     <styleClass>
+                        <String fx:value="cancelButton" />
+                        <String fx:value="smallButton" />
+                     </styleClass></Button>
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleOkButton" prefHeight="50.0" prefWidth="104.0" text="Ok" textAlignment="CENTER">
+                     <styleClass>
+                        <String fx:value="regularButton" />
+                        <String fx:value="smallButton" />
+                     </styleClass></Button>
                </children>
             </HBox>
          </children>
