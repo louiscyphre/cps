@@ -121,4 +121,20 @@ public class AlphaGUIController2 implements ViewController {
     alert.showAndWait();
   }
 
+
+
+  @Override
+  public void turnProcessingStateOn() {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+
+  @Override
+  public void turnProcessingStateOff() {
+    // TODO Auto-generated method stub
+    
+  }
+
 }
