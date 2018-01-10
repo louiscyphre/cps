@@ -4,9 +4,6 @@ public interface Constants {
 	public final int DEFAULT_PORT = 5555;
 	public final String DEFAULT_HOST = "127.0.0.1";
 	public final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
-	public final String SQL_CREATE_ONETIME_SERVICE = "INSERT INTO onetime_service values(default, ?, ?, ?, ?, ?, ?, ?, ?)";
-	public final String SQL_CREATE_CAR_TRANSPORTATION = "INSERT INTO car_transportation values(?, ?, ?, ?, ?, default, default)";
-	public final String SQL_CREATE_PARKING_LOT = "INSERT INTO parking_lot values(default, ?, ?, ?, ?, ?, default, ?,default)";
 	public final int LICENSE_TYPE_ONETIME = 1;
 	public final int LICENSE_TYPE_SUBSCRIPTION = 2;
 	public final int PARKING_TYPE_INCIDENTAL = 1;
@@ -20,6 +17,9 @@ public interface Constants {
 	public final String SPOT_IS_EMPTY = "0"; 
 	
 	// SQL queries
+	public final String SQL_CREATE_ONETIME_SERVICE = "INSERT INTO onetime_service values(default, ?, ?, ?, ?, ?, ?, ?, ?)";
+	public final String SQL_CREATE_CAR_TRANSPORTATION = "INSERT INTO car_transportation values(?, ?, ?, ?, ?, default, default)";
+	public final String SQL_CREATE_PARKING_LOT = "INSERT INTO parking_lot values(default, ?, ?, ?, ?, ?, default, ?,default)";
 	public final String SQL_CREATE_NEW_DAY = "INSERT INTO daily_statistics values(? ,? ,default ,default ,default ,default)";
 	public final String SQL_CHECK_DATE = "SELECT * FROM daily_statistics DS WHERE day=?";
 	public final String SQL_INCREASE_REALIZED_ORDER = "UPDATE daily_statistics SET realized_orders=? WHERE day=? AND lot_id=?";
@@ -37,7 +37,7 @@ public interface Constants {
 	public final String SQL_UPDATE_ONETIME_BY_ID = "UPDATE onetime_service SET parking_type = ?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, canceled=? WHERE id=?";
 	public final String SQL_UPDATE_CUSTOMER = "UPDATE customer SET email=?, password=?, debit=?, credit=? WHERE id=?";
 	public final String SQL_CREATE_CUSTOMER = "INSERT INTO customer values(default, ?, ?, default, default)";
-	public final String SQL_CREATE_COMPLAINT = "INSERT INTO complaint values(default, ?, ?, ?, ?)";
+	public final String SQL_CREATE_COMPLAINT = "INSERT INTO complaint values(default, ?, default, ?, ?, ?, ?)";
 	public final String SQL_UPDATE_COMPLAINT_LIGHT = "UPDATE complaint SET customer_id = ?, employee_id = ?, status = ?";
 	public final String SQL_UPDATE_COMPLAINT = "UPDATE complaint SET customer_id = ?, employee_id = ?, status = ?, description = ?";
 	public final String SQL_CREATE_SUBSCRIPTION_SERVICE = "INSERT INTO subscription_service values(default, ?, ?, ?, ?, ?, ?, ?, ?)";

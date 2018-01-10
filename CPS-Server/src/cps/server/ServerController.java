@@ -14,6 +14,7 @@ public class ServerController implements RequestHandler {
   private final ParkingExitController exitController;
   private final SubscriptionController subscriptionController;
   private final CustomerController userController;
+  private final ComplaintController complaintController;
 
   /**
    * Constructs an instance of the server controller.
@@ -35,6 +36,7 @@ public class ServerController implements RequestHandler {
     exitController = new ParkingExitController(this);
     subscriptionController = new SubscriptionController(this);
     userController = new CustomerController(this);
+    complaintController = new ComplaintController(this);
   }
 
   public ServerConfig getConfig() {
@@ -74,8 +76,7 @@ public class ServerController implements RequestHandler {
 
   @Override
   public ServerResponse handle(ComplaintRequest request) {
-    // TODO : handle Complaint Request
-    return null;
+    return complaintController.handle(request);
   }
 
   @Override

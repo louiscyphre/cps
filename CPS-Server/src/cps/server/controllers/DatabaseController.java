@@ -41,6 +41,10 @@ public class DatabaseController {
 	public interface DatabaseQuery<T> {
 		T perform(Connection conn) throws SQLException;
 	}
+	
+	public interface EntityBuilder<T> {
+		T fromResultSet(ResultSet result) throws SQLException;
+	}
 
 	/**
 	 * Instantiates a new database controller.
@@ -182,5 +186,21 @@ public class DatabaseController {
 	
 	public int countEntities(String table) {		
 		return performQuery(conn -> countEntities(conn, table));
+	}
+	
+	public <T> Collection<T> findAll(Connection conn, String table, String orderBy, EntityBuilder<T> builder) throws SQLException {
+		LinkedList<T> results = new LinkedList<T>();
+
+		Statement stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(String.format("SELECT * FROM %s ORDER BY %s", table, orderBy));
+
+		while (rs.next()) {
+			results.add(builder.fromResultSet(rs));
+		}
+
+		rs.close();
+		stmt.close();
+
+		return results;
 	}
 }
