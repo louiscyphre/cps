@@ -7,18 +7,24 @@ import java.io.IOException;
 
 import org.apache.commons.cli.ParseException;
 
+import cps.api.request.Request;
+import cps.api.response.Response;
+import cps.api.response.ResponseHandler;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ResponseHandlerImpl;
 import cps.client.network.CPSNetworkClient;
 import cps.client.network.INetworkClient;
 import cps.client.utils.CmdParser;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class ClientApplication extends Application implements INetworkClient {
@@ -27,6 +33,8 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private Stage primaryStage;
 
+  private ResponseHandler responseHandler = new ResponseHandlerImpl();
+  
   private int lotID; // required : -1 if web-client
   
   public int getLotID() {
@@ -43,7 +51,7 @@ public class ClientApplication extends Application implements INetworkClient {
   public ClientApplication() {
   }
 
-  public void loadKiosk() throws IOException {
+  private void loadKiosk() throws IOException {
     try {
       Scene scene = ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
       primaryStage.setScene(scene);
@@ -59,7 +67,36 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.REQUEST_PARKING_ENTRY);
       ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.VIEW_MY_REQUESTS);
       ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.INIT_PARKING_LOT);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
+  private void loadService() {
+    try {
+      Scene scene = ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_MENU);
+      primaryStage.setScene(scene);
+      primaryStage.setMaximized(true);
+      Screen screen = Screen.getPrimary();
+      Rectangle2D bounds = screen.getVisualBounds();
+      primaryStage.setX(bounds.getMinX());
+      primaryStage.setY(bounds.getMinY());
+      primaryStage.setWidth(bounds.getWidth());
+      primaryStage.setHeight(bounds.getHeight());
+      primaryStage.setTitle("CPS:Service");
+      primaryStage.show();
+      primaryStage.setOnCloseRequest(e -> {
+        Platform.exit();
+        System.exit(0);
+      });
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_DISABLE_SLOT);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_INIT_LOT);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_LOGIN);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_LOT_IS_FULL);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_LOT_STATE);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_REFUND);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_RESERVE_SLOT);
+      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_UPDATE_PRICES);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -104,10 +141,6 @@ public class ClientApplication extends Application implements INetworkClient {
     }
   }
 
-  private void loadService() {
-
-  }
-
   public static void main(String[] args) {
     launch(args);
   }
@@ -119,6 +152,10 @@ public class ClientApplication extends Application implements INetworkClient {
 
   @Override
   public void receiveResponse(Object resp) {
+    
+    // TODO handling goes here
+    // ServerResponse response = responseHandler.dispatch((Response) resp);
+        
     if (resp instanceof ServerResponse) {
       ServerResponse srvrResp = (ServerResponse) resp;
       if (srvrResp.getStatus() == ServerResponse.STATUS_OK) {

@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.ServiceMainMenuSceneController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceMainMenuSceneController">
   <top>
     <Label text="Main Menu" BorderPane.alignment="CENTER" />
   </top>
@@ -18,29 +18,13 @@
       <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="296.0" spacing="10.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
          <children>
             <Label text="Login as:" />
-            <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Employee" textAlignment="CENTER">
-               <font>
-                  <Font size="16.0" fx:id="x1" />
-               </font>
-            </Button>
-            <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="106.0" layoutY="170.0" mnemonicParsing="false" onAction="#loginAsManager" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Manager" textAlignment="CENTER">
-               <font>
-                  <Font size="16.0" fx:id="x11" />
-               </font>
-            </Button>
-            <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="106.0" layoutY="145.0" mnemonicParsing="false" onAction="#loginAsGlobalManager" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Global Manager" textAlignment="CENTER">
-               <font>
-                  <Font size="16.0" fx:id="x12" />
-               </font>
-            </Button>
-            <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="106.0" layoutY="195.0" mnemonicParsing="false" onAction="#loginAsCustomerService" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Customer Service" textAlignment="CENTER">
-               <font>
-                  <Font size="16.0" fx:id="x111" />
-               </font>
-            </Button>
+            <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#loginAsEmployee" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Employee" textAlignment="CENTER" />
+            <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="106.0" layoutY="170.0" mnemonicParsing="false" onAction="#loginAsManager" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Manager" textAlignment="CENTER" />
+            <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="106.0" layoutY="145.0" mnemonicParsing="false" onAction="#loginAsGlobalManager" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Global Manager" textAlignment="CENTER" />
+            <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="106.0" layoutY="195.0" mnemonicParsing="false" onAction="#loginAsCustomerService" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Customer Service" textAlignment="CENTER" />
             <VBox fx:id="infoBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
-                  <ProgressIndicator fx:id="infoProgress" />
+                  <ProgressIndicator fx:id="infoProgress" visible="false" />
                   <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="50.0" style="-fx-background-color: #d9edf7; -fx-background-radius: 8 8 8 8; -fx-text-fill: #31708f; -fx-border-radius: 8 8 8 8;" text="Just some info goes here" textAlignment="CENTER" wrapText="true" />
                </children>
                <padding>

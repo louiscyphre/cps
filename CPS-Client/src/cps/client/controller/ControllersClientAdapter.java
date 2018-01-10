@@ -6,8 +6,10 @@ import java.util.HashMap;
 
 import cps.client.main.ClientApplication;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class ControllersClientAdapter {
@@ -29,7 +31,7 @@ public class ControllersClientAdapter {
     return instance;
   }
 
-  static ViewController registerCtrl(ViewController ctrl, ControllerConstants.SceneCode code) {
+  public static ViewController registerCtrl(ViewController ctrl, ControllerConstants.SceneCode code) {
     return getInstance().ctrlMapping.put(code.getCode(), ctrl);
   }
 
@@ -47,7 +49,7 @@ public class ControllersClientAdapter {
     return scene;
   }
 
-  static Scene fetchScene(ControllerConstants.SceneCode code) {
+  public static Scene fetchScene(ControllerConstants.SceneCode code) {
     return getInstance().sceneMapping.get(code.getCode());
   }
 
@@ -56,14 +58,20 @@ public class ControllersClientAdapter {
     return getInstance().cpsClient = cpsClient;
   }
 
-  static ClientApplication getClient() {
+  public static ClientApplication getClient() {
     return getInstance().cpsClient;
   }
 
-  static void setStage(ControllerConstants.SceneCode code) {
+  public static void setStage(ControllerConstants.SceneCode code) {
     Scene scene = ControllersClientAdapter.fetchScene(code);
     ClientApplication clientApp = ControllersClientAdapter.getClient();
     Stage stage = clientApp.getPrimaryStage();
     stage.setScene(scene);
+    Screen screen = Screen.getPrimary();
+    Rectangle2D bounds = screen.getVisualBounds();
+    stage.setX(bounds.getMinX());
+    stage.setY(bounds.getMinY());
+    stage.setWidth(bounds.getWidth());
+    stage.setHeight(bounds.getHeight());
   }
 }
