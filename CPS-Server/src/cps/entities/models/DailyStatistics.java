@@ -120,7 +120,7 @@ public class DailyStatistics implements Serializable {
 	public static ResultSet createIfNotExists(Connection conn, LocalDate _date, int lotId) throws SQLException {
 		int index = 1;
 		ResultSet rs;
-		PreparedStatement st = conn.prepareStatement(Constants.CHECK_DATE);
+		PreparedStatement st = conn.prepareStatement(Constants.SQL_CHECK_DATE);
 		st.setDate(index, Date.valueOf(_date));
 		rs = st.executeQuery();
 		if (rs.wasNull())
@@ -163,7 +163,7 @@ public class DailyStatistics implements Serializable {
 		ResultSet rs = createIfNotExists(conn, _date, lotId);
 		if (!rs.wasNull())
 			_order = rs.getInt("realized_orders") + 1; // get realized orders number and increase it
-		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_REALIZED_ORDER);
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_REALIZED_ORDER);
 		stmt.setInt(index++, _order);
 		stmt.setDate(index++, Date.valueOf(_date));
 		stmt.setInt(index++, lotId);
@@ -206,7 +206,7 @@ public class DailyStatistics implements Serializable {
 		ResultSet rs = createIfNotExists(conn, _date, lotId);
 		if (!rs.wasNull())
 			_order = rs.getInt("canceled_orders") + 1; // get canceled orders number and increase it
-		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_CANCELED_ORDER);
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_CANCELED_ORDER);
 		stmt.setInt(index++, _order);
 		stmt.setDate(index++, Date.valueOf(_date));
 		stmt.setInt(index++, lotId);
@@ -247,7 +247,7 @@ public class DailyStatistics implements Serializable {
 		ResultSet rs = createIfNotExists(conn, _date, lotId);
 		if (!rs.wasNull())
 			_lateArrivals = rs.getInt("late_arrivals") + 1; // get canceled orders number and increase it
-		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_LATE_ARRIVAL);
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_LATE_ARRIVAL);
 		stmt.setInt(index++, _lateArrivals);
 		stmt.setDate(index++, Date.valueOf(_date));
 		stmt.setInt(index++, lotId);
@@ -288,7 +288,7 @@ public class DailyStatistics implements Serializable {
 		ResultSet rs = createIfNotExists(conn, _date, lotId);
 		if (!rs.wasNull())
 			_lateArrivals = rs.getInt("inactive_slots") + 1; // get canceled orders number and increase it
-		PreparedStatement stmt = conn.prepareStatement(Constants.INCREASE_INACTIVE_SLOTS);
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_INACTIVE_SLOTS);
 		stmt.setInt(index++, _lateArrivals);
 		stmt.setDate(index++, Date.valueOf(_date));
 		stmt.setInt(index++, lotId);

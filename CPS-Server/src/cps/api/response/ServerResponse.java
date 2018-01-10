@@ -49,7 +49,7 @@ public class ServerResponse extends Response implements Serializable {
 	 */	
 	public ServerResponse(boolean success, String description) {
 		this.status = success ? STATUS_OK : STATUS_ERROR;
-		this.description = description + (success ? " completed successfully" : " failed");
+		this.description = description;
 	}
 	
 	/**
