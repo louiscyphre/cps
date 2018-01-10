@@ -1,8 +1,5 @@
 package cps.server.controllers;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import cps.api.request.LoginRequest;
 import cps.api.response.LoginResponse;
 import cps.api.response.ServerResponse;
@@ -32,16 +29,4 @@ public class CustomerController extends RequestController {
 			return response;
 		});
 	}
-	
-	public static boolean chargeCustomer(Connection conn, ServerResponse response, Customer customer, float sum) throws SQLException {
-		customer.addDebit(sum);
-
-		if (!customer.update(conn)) {
-			response.setError("Failed to update customer");
-			return false;
-		}
-		
-		return true;
-	}
-
 }

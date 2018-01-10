@@ -369,7 +369,7 @@ public class LotController extends RequestController {
 			entry = CarTransportation.findByCarId(conn, content[eSize][iHeight][0], lotId);
 			a = null;
 			if (entry.getAuthType() == cps.common.Constants.LICENSE_TYPE_ONETIME) {
-				a = OnetimeService.findById(conn, entry.getAuthID());
+				a = OnetimeService.findByID(conn, entry.getAuthID());
 			} else {
 				a = SubscriptionService.findByID(conn, entry.getAuthID());
 			}
@@ -382,7 +382,7 @@ public class LotController extends RequestController {
 			entry = CarTransportation.findByCarId(conn, content[eSize][iHeight][iDepth], lotId);
 			a = null;
 			if (entry.getAuthType() == cps.common.Constants.LICENSE_TYPE_ONETIME) {
-				a = OnetimeService.findById(conn, entry.getAuthID());
+				a = OnetimeService.findByID(conn, entry.getAuthID());
 			} else {
 				a = SubscriptionService.findByID(conn, entry.getAuthID());
 			}

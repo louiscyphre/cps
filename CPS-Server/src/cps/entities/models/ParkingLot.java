@@ -236,6 +236,15 @@ public class ParkingLot implements Serializable {
 		return price2;
 	}
 
+	public float getPriceForService(int serviceType) {
+		switch (serviceType) {
+		case Constants.PARKING_TYPE_INCIDENTAL:
+			return price1;
+		default:
+			return price2;
+		}
+	}
+
 	/**
 	 * Sets the price of one time parking.
 	 *
@@ -390,14 +399,14 @@ public class ParkingLot implements Serializable {
 
 		return result;
 	}
-	
-	public static ParkingLot findByIDNotNull(Connection conn, int id) throws SQLException {
+
+	public static ParkingLot findByIDNotNull(Connection conn, int id) throws SQLException, DatabaseException {
 		ParkingLot result = findByID(conn, id);
-		
+
 		if (result == null) {
-			throw new RuntimeException("ParkingLot with id " + id + " does not exist");
+			throw new DatabaseException("ParkingLot with id " + id + " does not exist");
 		}
-		
+
 		return result;
 	}
 
@@ -418,7 +427,7 @@ public class ParkingLot implements Serializable {
 		return free;
 	}
 
-	public int update(Connection conn) throws SQLException {
+	public void update(Connection conn) throws SQLException, DatabaseException {
 		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
 		int index = 1;
 		int result = 0;
@@ -433,6 +442,9 @@ public class ParkingLot implements Serializable {
 		st.setInt(index++, this.id);
 		result = st.executeUpdate();
 		st.close();
-		return result;
+		
+		if (result <= 0) {
+			throw new DatabaseException("Failed to update ParkingLot");
+		}
 	}
 }

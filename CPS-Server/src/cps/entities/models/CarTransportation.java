@@ -222,5 +222,19 @@ public class CarTransportation implements Serializable {
 
 		return items;
 	}
+	
+	public ParkingLot getParkingLot(Connection conn) throws SQLException, DatabaseException {
+		return ParkingLot.findByIDNotNull(conn, lotID);
+	}
+	
+	public ParkingService getParkingService(Connection conn) throws SQLException, DatabaseException {
+		if (authType == Constants.LICENSE_TYPE_ONETIME) {
+			return OnetimeService.findByIDNotNull(conn, authID);
+		} else if (authType == Constants.LICENSE_TYPE_SUBSCRIPTION) {
+			return SubscriptionService.findByIDNotNull(conn, authID);
+		} else {
+			throw new DatabaseException("Invalid license type " + authType);
+		}
+	}
 
 }

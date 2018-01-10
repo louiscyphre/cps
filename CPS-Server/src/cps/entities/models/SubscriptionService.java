@@ -202,8 +202,8 @@ public class SubscriptionService implements ParkingService {
 		return this.dailyExitTime.atDate(LocalDate.now());
 	}
 
-	public static ParkingService findByID(Connection conn, int authID) throws SQLException {
-		ParkingService item = null;
+	public static SubscriptionService findByID(Connection conn, int authID) throws SQLException {
+		SubscriptionService item = null;
 
 		PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_SERVICE_BY_ID);
 		statement.setInt(1, authID);
@@ -236,5 +236,15 @@ public class SubscriptionService implements ParkingService {
 		statement.close();
 		
 		return count;
+	}
+
+	public static SubscriptionService findByIDNotNull(Connection conn, int id) throws SQLException, RuntimeException {
+		SubscriptionService item = findByID(conn, id);
+		
+		if (item == null) {
+			throw new RuntimeException("SubscriptionService with id " + id + " does not exist");
+		}
+		
+		return item;
 	}
 }
