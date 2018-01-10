@@ -1,9 +1,13 @@
 package cps.server.controllers;
 
 import cps.api.response.*;
+import cps.common.Constants;
 import cps.entities.models.Customer;
+import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -13,7 +17,6 @@ import cps.api.request.SubscriptionRequest;
 import cps.server.ServerController;
 import cps.server.handlers.CustomerSession;
 
-// TODO: handle payment for subscription
 public class SubscriptionController extends RequestController {
 
 	public SubscriptionController(ServerController serverController) {
@@ -55,12 +58,48 @@ public class SubscriptionController extends RequestController {
 				response.setError("Failed to create SubscriptionService entry");
 				return response;
 			}
+			
+			// Calculate payment
+			float payment;
+			
+			try {
+				payment = paymentForSubscription(conn, customer, result);
+			} catch (RuntimeException ex) {
+				response.setError(ex.getMessage());
+				return response;
+			}
 
-			// success
+			// Write payment
+			if (!CustomerController.chargeCustomer(conn, response, customer, payment)) {
+				return response; // Fields already filled in by chargeCustomer
+			}
+
+			// Success
 			response.setCustomerID(customer.getId());
 			response.setServiceID(result.getId());
+			response.setPayment(payment);
 			response.setSuccess("SubscriptionRequest completed successfully");
 			return response;
 		});
+	}
+
+	private float paymentForSubscription(Connection conn, Customer customer, SubscriptionService service) throws SQLException {		
+		if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
+			// Regular monthly subscription
+			ParkingLot lot = ParkingLot.findByID(conn, service.getLotID());			
+			float pricePerHour = lot.getPrice2();
+			
+			int numCars = SubscriptionService.countForCustomer(conn, customer.getId(), service.getSubscriptionType());
+			
+			if (numCars > 1) {
+				return pricePerHour * 54f;
+			}
+			
+			return pricePerHour * 60f;
+		} else {
+			// Full monthly subscription
+			float pricePerHour = Constants.PRICE_PER_HOUR_RESERVED;
+			return pricePerHour * 72f;
+		}
 	}
 }

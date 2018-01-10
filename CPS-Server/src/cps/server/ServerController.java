@@ -13,7 +13,7 @@ public class ServerController implements RequestHandler {
   private final ParkingEntryController entryController;
   private final ParkingExitController exitController;
   private final SubscriptionController subscriptionController;
-  private final UserController userController;
+  private final CustomerController userController;
 
   /**
    * Constructs an instance of the server controller.
@@ -34,7 +34,7 @@ public class ServerController implements RequestHandler {
     entryController = new ParkingEntryController(this);
     exitController = new ParkingExitController(this);
     subscriptionController = new SubscriptionController(this);
-    userController = new UserController(this);
+    userController = new CustomerController(this);
   }
 
   public ServerConfig getConfig() {

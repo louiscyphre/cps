@@ -68,11 +68,8 @@ public class ParkingExitController extends RequestController {
 			}
 
 			// Write payment
-			customer.setDebit(sum + customer.getDebit());
-
-			if (!customer.update(conn)) {
-				response.setError("Failed to update customer");
-				return response;
+			if (!CustomerController.chargeCustomer(conn, response, customer, sum)) {
+				return response; // Fields already filled in by chargeCustomer
 			}
 			/*
 			 * Attempt to retrieve the car from the lot The function will shuffle the cars

@@ -40,6 +40,7 @@ public class LotController extends RequestController {
 	}
 
 	/** The robots. */
+	@SuppressWarnings("unused")
 	private Map<Integer, Robot> robots;
 
 	/**

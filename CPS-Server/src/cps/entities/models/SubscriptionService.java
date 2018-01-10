@@ -3,7 +3,6 @@ package cps.entities.models;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -129,21 +128,21 @@ public class SubscriptionService implements ParkingService {
 
 	public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID,
 			int lotID, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
-		PreparedStatement st = conn.prepareStatement(Constants.SQL_CREATE_SUBSCRIPTION_SERVICE,
+		PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_SUBSCRIPTION_SERVICE,
 				Statement.RETURN_GENERATED_KEYS);
 
 		int field = 1;
-		st.setInt(field++, type);
-		st.setInt(field++, customerID);
-		st.setString(field++, email);
-		st.setString(field++, carID);
-		st.setInt(field++, lotID);
-		st.setDate(field++, Date.valueOf(startDate));
-		st.setDate(field++, Date.valueOf(endDate));
-		st.setTime(field++, Time.valueOf(dailyExitTime));
-		st.executeUpdate();
+		statement.setInt(field++, type);
+		statement.setInt(field++, customerID);
+		statement.setString(field++, email);
+		statement.setString(field++, carID);
+		statement.setInt(field++, lotID);
+		statement.setDate(field++, Date.valueOf(startDate));
+		statement.setDate(field++, Date.valueOf(endDate));
+		statement.setTime(field++, Time.valueOf(dailyExitTime));
+		statement.executeUpdate();
 
-		ResultSet keys = st.getGeneratedKeys();
+		ResultSet keys = statement.getGeneratedKeys();
 		int newID = 0;
 
 		if (keys != null && keys.next()) {
@@ -151,50 +150,51 @@ public class SubscriptionService implements ParkingService {
 			keys.close();
 		}
 
-		st.close();
+		statement.close();
 
 		return new SubscriptionService(newID, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime);
 	}
 
 	public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID)
 			throws SQLException {
-		SubscriptionService result = null;
+		SubscriptionService item = null;
 
-		PreparedStatement st = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR);
+		PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR);
 
 		int index = 1;
 
-		st.setInt(index++, subsID);
-		st.setInt(index++, customerID);
-		st.setString(index++, carID);
+		statement.setInt(index++, subsID);
+		statement.setInt(index++, customerID);
+		statement.setString(index++, carID);
 
-		ResultSet rs = st.executeQuery();
+		ResultSet result = statement.executeQuery();
 
-		if (rs.next()) {
-			result = new SubscriptionService(rs);
+		if (result.next()) {
+			item = new SubscriptionService(result);
 		}
-		rs.close();
-		st.close();
 
-		return result;
+		result.close();
+		statement.close();
+
+		return item;
 	}
 
 	public static Collection<SubscriptionService> findByCustomerID(Connection conn, int customerID)
 			throws SQLException {
-		LinkedList<SubscriptionService> results = new LinkedList<SubscriptionService>();
+		LinkedList<SubscriptionService> items = new LinkedList<SubscriptionService>();
 
-		PreparedStatement stmt = conn.prepareStatement(Constants.GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID);
-		stmt.setInt(1, customerID);
-		ResultSet rs = stmt.executeQuery();
+		PreparedStatement statement = conn.prepareStatement(Constants.GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID);
+		statement.setInt(1, customerID);
+		ResultSet result = statement.executeQuery();
 
-		while (rs.next()) {
-			results.add(new SubscriptionService(rs));
+		while (result.next()) {
+			items.add(new SubscriptionService(result));
 		}
 
-		rs.close();
-		stmt.close();
+		result.close();
+		statement.close();
 
-		return results;
+		return items;
 	}
 
 	@Override
@@ -203,18 +203,38 @@ public class SubscriptionService implements ParkingService {
 	}
 
 	public static ParkingService findByID(Connection conn, int authID) throws SQLException {
-		ParkingService results = null;
+		ParkingService item = null;
 
-		PreparedStatement stmt = conn.prepareStatement(Constants.GET_SUBSCRIPTION_SERVICE_BY_ID);
-		stmt.setInt(1, authID);
-		ResultSet rs = stmt.executeQuery();
+		PreparedStatement statement = conn.prepareStatement(Constants.GET_SUBSCRIPTION_SERVICE_BY_ID);
+		statement.setInt(1, authID);
+		ResultSet result = statement.executeQuery();
 
-		results = new SubscriptionService(rs);
+		item = new SubscriptionService(result);
 
-		rs.close();
-		stmt.close();
+		result.close();
+		statement.close();
 
-		return results;
+		return item;
 
+	}
+
+	public static int countForCustomer(Connection conn, int customerID, int subscriptionType) throws SQLException {		
+		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM subscription_service WHERE customer_id = ? AND subs_type = ?");
+		
+		statement.setInt(1, customerID);
+		statement.setInt(2, subscriptionType);
+		
+		ResultSet result = statement.executeQuery();
+		
+		int count = 0;
+		
+		if (result.next()) {
+			count = result.getInt(1);
+		}
+		
+		result.close();
+		statement.close();
+		
+		return count;
 	}
 }
