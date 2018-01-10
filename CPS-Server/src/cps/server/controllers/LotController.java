@@ -2,6 +2,7 @@ package cps.server.controllers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Map;
@@ -93,7 +94,7 @@ public class LotController extends RequestController {
 			 * Calculate exit priority if there is no exit time - it means we deal with FULL
 			 * SUBSCRIPTION which will perhaps stay for long hours or even more than one day
 			 */
-			if (exitTime == null || exitTime.equals(LocalTime.MIDNIGHT)) {
+			if (exitTime == null || exitTime.equals(LocalTime.MIDNIGHT.atDate(LocalDate.now()))) {
 				// assign worst priority
 				priority = 4;
 			} else {
