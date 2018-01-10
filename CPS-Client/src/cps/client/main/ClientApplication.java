@@ -88,6 +88,11 @@ public class ClientApplication extends Application implements INetworkClient {
     }
   }
 
+  private void loadTest() throws IOException {
+    Scene scene = ControllersClientAdapter.registerScene(SceneCode.TEST_SCENE);
+    initializeStage(scene, "CPS Tests");
+  }
+  
   @Override
   public void start(Stage primaryStage) {
     try {
@@ -110,6 +115,12 @@ public class ClientApplication extends Application implements INetworkClient {
           break;
         case "service":
           loadService();
+          break;
+        case "test":
+          loadTest(); // TODO kill it with fire before release (useful now)
+          break;
+        case "kiosk":
+          loadKiosk();
           break;
         default:
           loadKiosk();
@@ -155,9 +166,7 @@ public class ClientApplication extends Application implements INetworkClient {
 
   @Override
   public void receiveResponse(Object resp) {
-
-     // TODO handling goes here
-     ServerResponse response = responseHandler.dispatch((Response) resp);
+     responseHandler.dispatch((Response) resp);
   }
 
   public Stage getPrimaryStage() {

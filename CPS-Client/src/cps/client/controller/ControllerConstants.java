@@ -3,6 +3,8 @@ package cps.client.controller;
 public class ControllerConstants {
 
   public enum SceneCode {
+    
+    TEST_SCENE("../view/testScene.fxml"),
   
     INCIDENTAL_PARKING("../view/AlphaGUI_2.fxml"),
     VIEW_MY_REQUESTS("../view/AlphaGUI_3.fxml"),

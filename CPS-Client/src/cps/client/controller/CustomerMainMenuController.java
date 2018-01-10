@@ -58,4 +58,19 @@ public class CustomerMainMenuController implements ViewController {
     ControllersClientAdapter.registerCtrl(this,ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
   }
 
+  // TODO @Michael check this idea out
+  @Override
+  public void displayInfo(String infoMsg) {
+    infoLabel.setText(infoMsg);
+    infoLabel.getStyleClass().clear();
+    infoLabel.getStyleClass().add("infoLabel");
+  }
+
+  @Override
+  public void displayError(String errorMsg) {
+    infoLabel.setText(errorMsg);
+    infoLabel.getStyleClass().clear();
+    infoLabel.getStyleClass().add("errorLabel");    
+  }
+
 }

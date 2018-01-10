@@ -62,4 +62,16 @@ public class ServiceMainMenuSceneController implements ViewController {
     assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ServiceMainMenuScene.fxml'.";
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_MAIN_MENU);
   }
+
+  @Override
+  public void displayInfo(String infoMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void displayError(String errorMsg) {
+    // TODO Auto-generated method stub
+    
+  }
 }

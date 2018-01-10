@@ -71,4 +71,16 @@ public class ServiceActionInitLotSceneController implements ViewController {
     assert robotIpTF != null : "fx:id=\"robotIpTF\" was not injected: check your FXML file 'ServiceActionInitLotScene.fxml'.";
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.SERVICE_ACTION_INIT_LOT);
   }
+
+  @Override
+  public void displayInfo(String infoMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void displayError(String errorMsg) {
+    // TODO Auto-generated method stub
+    
+  }
 }

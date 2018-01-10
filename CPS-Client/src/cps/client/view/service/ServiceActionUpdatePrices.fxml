@@ -21,7 +21,7 @@
             <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="100.0" spacing="10.0">
                <children>
                   <ProgressIndicator fx:id="infoProgress" visible="false" />
-                  <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="73.0" style="-fx-background-color: #d9edf7; -fx-background-radius: 8 8 8 8; -fx-text-fill: #31708f; -fx-border-radius: 8 8 8 8;" text="Just some info goes here" textAlignment="CENTER" wrapText="true" />
+                  <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="73.0" styleClass="infoLabel" text="Just some info goes here" textAlignment="CENTER" wrapText="true" />
                   <HBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="20.0" style="-fx-padding:0 0 0 0;">
                      <children>
                         <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="50.0" prefWidth="100.0" text="Cancel" textAlignment="CENTER">
