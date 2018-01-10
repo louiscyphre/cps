@@ -2,6 +2,9 @@
 
 .shadowedBox {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 40, 0, 0,0);
+    -fx-background-color: #D9D9D9;
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
 }
 
 .backButton, .cancelButton {
@@ -11,6 +14,7 @@
     -fx-background-radius: 8 8 8 8;
     -fx-font-size: 16;
     -fx-font-family: 'Sans-serif';
+    -fx-label-padding: 10 10 10 10;
 }
 
 .subscriptionDetailsSquare {
@@ -31,5 +35,17 @@
     -fx-background-radius: 8 8 8 8;
     -fx-font-size: 16;
     -fx-font-family: 'Sans-serif';
+    -fx-label-padding: 10 10 10 10;
+}
+
+.inputField, .passwordInputField {
+    -fx-padding: 15px;
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+}
+
+.datePicker {
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
 }
 

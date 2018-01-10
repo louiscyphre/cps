@@ -12,19 +12,22 @@
 
 <BorderPane minHeight="-Infinity" minWidth="-Infinity" padding="$x2" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cps.client.controller.CustomerMainMenuController">
   <center>
-    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="403.0" prefWidth="359.0" spacing="15.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="359.0" spacing="15.0" style="&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
-        <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Login" textAlignment="CENTER">
+        <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Login" textAlignment="CENTER">
           <font>
             <Font size="16.0" fx:id="x1" />
           </font>
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
         </Button>
-        <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" graphicTextGap="4.0" mnemonicParsing="false" onAction="#handleReserveParkingButton" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Reserve &#10;parking" textAlignment="CENTER" />
-        <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleBuySubscriptionButton" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Buy &#10;subscription" textAlignment="CENTER" />
-        <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleParkNowButton" prefHeight="50.0" prefWidth="150.0" style="-fx-color: #000000;&#10;-fx-background-color: #337AB7;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="Park now" textAlignment="CENTER" />
-        <VBox fx:id="infoBox" alignment="CENTER" prefHeight="74.0" prefWidth="319.0" spacing="0.0">
+        <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" graphicTextGap="4.0" mnemonicParsing="false" onAction="#handleReserveParkingButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Reserve parking" textAlignment="CENTER" />
+        <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleBuySubscriptionButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Buy subscription" textAlignment="CENTER" />
+        <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleParkNowButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Park now" textAlignment="CENTER" />
+        <VBox fx:id="infoBox" alignment="CENTER" prefHeight="60.0" prefWidth="190.0" spacing="0.0">
           <children>
-            <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="50.0" style="-fx-background-color: #d9edf7; -fx-background-radius: 8 8 8 8; -fx-text-fill: #31708f; -fx-border-radius: 8 8 8 8;" text="Just some info goes here" textAlignment="CENTER" wrapText="true">
+            <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="226.0" style="-fx-background-color: #d9edf7; -fx-background-radius: 8 8 8 8; -fx-text-fill: #31708f; -fx-border-radius: 8 8 8 8;" text="Just some info goes here" textAlignment="CENTER" wrapText="true">
               <VBox.margin>
                 <Insets bottom="-1.0" />
               </VBox.margin>
@@ -39,7 +42,7 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" fx:id="x2" />
       </padding>
       <stylesheets>
-        <URL value="@../../../../../CPS-GuiClient/src/application/view/application.css" />
+        <URL value="@application.css" />
       </stylesheets>
     </VBox>
   </center>

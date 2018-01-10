@@ -9,21 +9,25 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.LoginController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cps.client.controller.LoginController">
   <center>
     <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="296.0" spacing="0.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
-        <TextField id="emailTextField" fx:id="emailTextField" alignment="CENTER" prefHeight="50.0" prefWidth="242.0" promptText="Enter your E-mail here" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="">
+        <TextField fx:id="emailTextField" alignment="CENTER" prefHeight="60.0" prefWidth="200.0" promptText="Enter your E-mail here" style="" styleClass="inputField" text="">
           <VBox.margin>
-            <Insets bottom="20.0" left="5.0" right="5.0" fx:id="x2" />
+            <Insets bottom="20.0" fx:id="x2" />
           </VBox.margin>
         </TextField>
-        <TextField id="passwordTextField" fx:id="passwordTextField" alignment="CENTER" prefHeight="50.0" prefWidth="242.0" promptText="Enter your password here" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="" VBox.margin="$x2" />
-        <HBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="0.0" style="-fx-padding:0 0 0 0;">
+        <PasswordField prefHeight="60.0" prefWidth="200.0" promptText="Enter your password here" styleClass="passwordInputField">
+          <VBox.margin>
+            <Insets bottom="20.0" fx:id="x2" />
+          </VBox.margin>
+        </PasswordField>
+        <HBox alignment="CENTER" prefHeight="60.0" prefWidth="263.0" spacing="0.0" style="-fx-padding:0 0 0 0;">
           <children>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="0.0" style="&#10;">
               <children>
-                <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="50.0" prefWidth="100.0" style="" styleClass="cancelButton" text="Cancel" textAlignment="CENTER">
+                <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="cancelButton" text="Cancel" textAlignment="CENTER">
                   <font>
                     <Font size="16.0" fx:id="x1" />
                   </font>
@@ -38,7 +42,7 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0">
               <children>
-                <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="50.0" prefWidth="104.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
+                <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
                   <stylesheets>
                     <URL value="@application.css" />
                   </stylesheets>
