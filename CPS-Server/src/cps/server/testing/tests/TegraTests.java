@@ -26,6 +26,7 @@ import cps.entities.models.ParkingLot;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.controllers.DatabaseController;
+import cps.server.controllers.OnetimeParkingController;
 import cps.server.testing.utilities.CustomerData;
 
 @SuppressWarnings("unused")
@@ -53,19 +54,32 @@ public class TegraTests {
 		CustomerData data = new CustomerData((int) Math.random() * 1000,
 				Utilities.randomString("abcdefghijklmnopqrstuvwxyz", 8), Utilities.randomString("1234567890", 4),
 				Utilities.randomString("1234567890ABCDTRUOTSKL", 7), 1, 0);
+		IncidentalParkingResponse[] requests=new IncidentalParkingResponse[5];
 		
+		for(int i=0;i<5;i++) {
+			requests[i]=newIncidentalParking(lot.getId());
+		}
 
 	}
 
+	private IncidentalParkingResponse newIncidentalParking(int lotId) {
+		LocalDateTime endTime=LocalDateTime.now().plusHours((long)(Math.random()*12)+2).plusMinutes((long)Math.random()*55);
+		IncidentalParkingRequest request = new IncidentalParkingRequest((int)Math.random()*500, Utilities.randomString("angjurufjfjsl@", 10), Utilities.randomString("ILBTA1234567890-", 7), lotId, endTime);
+		IncidentalParkingResponse response = (IncidentalParkingResponse) server.dispatch(request);
+		assertNotNull(response);
+		return response;
+	}
+	
 	private ParkingLot initParkingLot() {
 		ParkingLot lt = null;
 		InitLotAction request = new InitLotAction(1, "Sesam 2", 4, 5, 3, "12.f.t43");
 		ServerResponse response = server.dispatch(request);
 		InitLotResponse re2 = (InitLotResponse) response;
 		lt = db.performQuery(conn -> ParkingLot.findByID(conn, re2.getLotID()));
+		assertNotNull(lt);
 		return lt;
 	}
-
+/*
 	@Test
 	public void testRetrieveCar() {
 		fail("Not yet implemented");
@@ -85,5 +99,5 @@ public class TegraTests {
 	public void testHandleSetFullLotAction() {
 		fail("Not yet implemented");
 	}
-
+*/
 }
