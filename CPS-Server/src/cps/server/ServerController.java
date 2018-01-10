@@ -13,10 +13,6 @@ public class ServerController implements RequestHandler {
 	private final ParkingEntryController entryController;
 	private final ParkingExitController exitController;
 	private final SubscriptionController subscriptionController;
-<<<<<<< HEAD
-	private final UserController userController;
-=======
->>>>>>> a0d151a7c1d6437ad673388fe3420b0fadb75f7e
 
 	/**
 	 * Constructs an instance of the server controller.
@@ -37,11 +33,6 @@ public class ServerController implements RequestHandler {
 		entryController = new ParkingEntryController(this);
 		exitController = new ParkingExitController(this);
 		subscriptionController = new SubscriptionController(this);
-<<<<<<< HEAD
-		userController = new UserController(this);
-
-=======
->>>>>>> a0d151a7c1d6437ad673388fe3420b0fadb75f7e
 	}
 
 	public ServerConfig getConfig() {
@@ -119,21 +110,10 @@ public class ServerController implements RequestHandler {
 	public ServerResponse handle(ReservedParkingRequest request) {
 		return onetimeParkingController.handle(request);
 	}
-<<<<<<< HEAD
-	
-	@Override
-	public ServerResponse handle(LoginRequest request) {
-		return userController.handle(request);
-	}
-
-	@Override
-	public ServerResponse handle(DisableParkingSlotsAction action) {
-=======
 
 	@Override
 	public ServerResponse handle(DisableParkingSlotsAction action) {
 		// TODO DisableParkingSlotsAction
->>>>>>> a0d151a7c1d6437ad673388fe3420b0fadb75f7e
 		return null;
 	}
 
@@ -144,10 +124,7 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(RefundAction action) {
-<<<<<<< HEAD
-=======
 		// TODO RefundAction
->>>>>>> a0d151a7c1d6437ad673388fe3420b0fadb75f7e
 		return null;
 	}
 
@@ -171,22 +148,12 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(SetFullLotAction action) {
-<<<<<<< HEAD
-		// TODO: Set Full Lot Action
-		return null;
-=======
 		return lotController.handle(action);
->>>>>>> a0d151a7c1d6437ad673388fe3420b0fadb75f7e
 	}
 
 	@Override
 	public ServerResponse handle(UpdatePricesAction action) {
-<<<<<<< HEAD
-		// TODO: Update Prices Action
-		return null;
-=======
 		return lotController.handle(action);
->>>>>>> a0d151a7c1d6437ad673388fe3420b0fadb75f7e
 	}
 
 }
