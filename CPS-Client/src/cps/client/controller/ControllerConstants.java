@@ -14,6 +14,7 @@ public class ControllerConstants {
     LOGIN("../view/LoginScene.fxml"),
     CUSTOMER_INITIAL_MENU("../view/CustomerInitialMenuScene.fxml"),
     CUSTOMER_LIST_SUBSCRIPTIONS("../view/CustomerListSubscriptionsScene.fxml"),
+    RESERVE_PARKING("../view/ReserveParkingScene.fxml"),
     
     // service views 
     SERVICE_ACTION_DISABLE_SLOT("../view/service/ServiceActionDisableSlot.fxml"),

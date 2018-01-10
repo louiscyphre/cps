@@ -10,9 +10,9 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" padding="$x2" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cps.client.controller.CustomerMainMenuController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" padding="$x2" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.CustomerMainMenuController">
   <center>
-    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="359.0" spacing="15.0" style="&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="360.0" spacing="15.0" style="&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
         <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Login" textAlignment="CENTER">
           <font>

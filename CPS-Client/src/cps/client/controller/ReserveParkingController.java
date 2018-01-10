@@ -56,7 +56,7 @@ public class ReserveParkingController implements ViewController {
   private TextField carIDTextField;
 
     @FXML
-    void handleBackButton(ActionEvent event) {
+    void handleCancelButton(ActionEvent event) {
 
     }
 
@@ -66,7 +66,12 @@ public class ReserveParkingController implements ViewController {
     }
     
     @FXML
-    void handlePickStartDateButton(ActionEvent event) {
+    void handlePickStartDate(ActionEvent event) {
+
+    }
+
+    @FXML
+    void handlePickEndDate(ActionEvent event) {
 
     }
     

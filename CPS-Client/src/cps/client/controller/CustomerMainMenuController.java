@@ -37,7 +37,7 @@ public class CustomerMainMenuController implements ViewController {
 
   @FXML
   void handleReserveParkingButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REQUEST_PARKING_ENTRY);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.RESERVE_PARKING);
   }
 
   @FXML

@@ -10,6 +10,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import cps.api.request.IncidentalParkingRequest;
+import cps.api.request.LoginRequest;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -92,8 +93,8 @@ public class LoginController implements ViewController {
     }
 
 
-    //LoginRequest request = new LoginRequest(email, password);
-    //ControllersClientAdapter.getClient().sendRequest(request);
+    LoginRequest request = new LoginRequest(email, password);
+    ControllersClientAdapter.getClient().sendRequest(request);
   }
 
   @FXML

@@ -34,9 +34,9 @@ public class ClientApplication extends Application implements INetworkClient {
   private Stage primaryStage;
 
   private ResponseHandler responseHandler = new ResponseHandlerImpl();
-  
+
   private int lotID; // required : -1 if web-client
-  
+
   public int getLotID() {
     return lotID;
   }
@@ -53,20 +53,25 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private void loadKiosk() throws IOException {
     try {
-      Scene scene = ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
-      primaryStage.setScene(scene);
-      primaryStage.setTitle("CPS Alpha Client");
-      primaryStage.show();
-      primaryStage.setOnCloseRequest(e -> {
-        Platform.exit();
-        System.exit(0);
-      });
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.LOGIN);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.INCIDENTAL_PARKING);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.REQUEST_PARKING_ENTRY);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.VIEW_MY_REQUESTS);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.INIT_PARKING_LOT);
+      Scene scene = ControllersClientAdapter
+          .registerScene(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
+      
+      initializeStage(scene, "CPS Alpha Client");
+      
+      ControllersClientAdapter
+          .registerScene(ControllerConstants.SceneCode.LOGIN);
+      ControllersClientAdapter
+          .registerScene(ControllerConstants.SceneCode.INCIDENTAL_PARKING);
+      ControllersClientAdapter.registerScene(
+          ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
+      ControllersClientAdapter
+          .registerScene(ControllerConstants.SceneCode.REQUEST_PARKING_ENTRY);
+      ControllersClientAdapter
+          .registerScene(ControllerConstants.SceneCode.VIEW_MY_REQUESTS);
+      ControllersClientAdapter
+          .registerScene(ControllerConstants.SceneCode.INIT_PARKING_LOT);
+      ControllersClientAdapter
+          .registerScene(ControllerConstants.SceneCode.RESERVE_PARKING);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -74,29 +79,27 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private void loadService() {
     try {
-      Scene scene = ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_MENU);
-      primaryStage.setScene(scene);
-      primaryStage.setMaximized(true);
-      Screen screen = Screen.getPrimary();
-      Rectangle2D bounds = screen.getVisualBounds();
-      primaryStage.setX(bounds.getMinX());
-      primaryStage.setY(bounds.getMinY());
-      primaryStage.setWidth(bounds.getWidth());
-      primaryStage.setHeight(bounds.getHeight());
-      primaryStage.setTitle("CPS:Service");
-      primaryStage.show();
-      primaryStage.setOnCloseRequest(e -> {
-        Platform.exit();
-        System.exit(0);
-      });
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_DISABLE_SLOT);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_INIT_LOT);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_LOGIN);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_LOT_IS_FULL);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_LOT_STATE);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_REFUND);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_RESERVE_SLOT);
-      ControllersClientAdapter.registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_UPDATE_PRICES);
+      Scene scene = ControllersClientAdapter
+          .registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_MENU);
+
+      initializeStage(scene, "CPS Service Client");
+      
+      ControllersClientAdapter.registerScene(
+          ControllerConstants.SceneCode.SERVICE_ACTION_DISABLE_SLOT);
+      ControllersClientAdapter
+          .registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_INIT_LOT);
+      ControllersClientAdapter
+          .registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_LOGIN);
+      ControllersClientAdapter.registerScene(
+          ControllerConstants.SceneCode.SERVICE_ACTION_LOT_IS_FULL);
+      ControllersClientAdapter.registerScene(
+          ControllerConstants.SceneCode.SERVICE_ACTION_LOT_STATE);
+      ControllersClientAdapter
+          .registerScene(ControllerConstants.SceneCode.SERVICE_ACTION_REFUND);
+      ControllersClientAdapter.registerScene(
+          ControllerConstants.SceneCode.SERVICE_ACTION_RESERVE_SLOT);
+      ControllersClientAdapter.registerScene(
+          ControllerConstants.SceneCode.SERVICE_ACTION_UPDATE_PRICES);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -114,8 +117,8 @@ public class ClientApplication extends Application implements INetworkClient {
         System.exit(1);
       }
 
-      this.client = new CPSNetworkClient(parser.getHost(),
-          parser.getPort(), this);
+      this.client = new CPSNetworkClient(parser.getHost(), parser.getPort(),
+          this);
 
       ControllersClientAdapter.registerClient(this);
 
@@ -129,7 +132,7 @@ public class ClientApplication extends Application implements INetworkClient {
         default:
           loadKiosk();
       }
-      
+
       setLotID(parser.getLotId());
 
     } catch (IOException e) {
@@ -139,6 +142,25 @@ public class ClientApplication extends Application implements INetworkClient {
       System.out.println("Error: Wrong port or parking lot id");
       System.exit(1);
     }
+  }
+
+  private void initializeStage(Scene scene, String title) {
+    primaryStage.setTitle(title);
+    primaryStage.setScene(scene);
+    primaryStage.setMaximized(true);
+    Screen screen = Screen.getPrimary();
+    Rectangle2D bounds = screen.getVisualBounds();
+    primaryStage.setX(bounds.getMinX());
+    primaryStage.setY(bounds.getMinY());
+    primaryStage.setWidth(bounds.getWidth());
+    primaryStage.setHeight(bounds.getHeight());
+    primaryStage.setTitle("CPS:Service");
+    primaryStage.show();
+    primaryStage.setOnCloseRequest(e -> {
+      Platform.exit();
+      System.exit(0);
+    });
+
   }
 
   public static void main(String[] args) {
@@ -152,10 +174,10 @@ public class ClientApplication extends Application implements INetworkClient {
 
   @Override
   public void receiveResponse(Object resp) {
-    
+
     // TODO handling goes here
     // ServerResponse response = responseHandler.dispatch((Response) resp);
-        
+
     if (resp instanceof ServerResponse) {
       ServerResponse srvrResp = (ServerResponse) resp;
       if (srvrResp.getStatus() == ServerResponse.STATUS_OK) {
@@ -166,7 +188,7 @@ public class ClientApplication extends Application implements INetworkClient {
           alert.setContentText(srvrResp.getDescription());
           alert.showAndWait();
         });
- }
+      }
     }
   }
 
