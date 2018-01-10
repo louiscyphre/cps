@@ -67,7 +67,7 @@ public class ParkingEntryController extends RequestController {
 			// appropriate error response, which we will send back to the user.
 			//The function will create table entry to record where the car was placed
 			LotController lotController = serverController.getLotController();
-
+			
 			if (!lotController.insertCar(conn, lot, carID, service.getExitTime(), response)) { // Car insertion failed - lot full or some other error
 				return response;
 			}
