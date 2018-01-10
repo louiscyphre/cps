@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -36,7 +37,7 @@
                <opaqueInsets>
                   <Insets />
                </opaqueInsets></DatePicker>
-            <TextField maxWidth="280.0" prefHeight="45.0" prefWidth="280.0" promptText="Enter planning start time (HH:MM)" styleClass="inputField">
+            <TextField fx:id="startTimeTF" maxWidth="280.0" prefHeight="45.0" prefWidth="280.0" promptText="Enter planning start time (HH:MM)" styleClass="inputField">
                <VBox.margin>
                   <Insets bottom="15.0" />
                </VBox.margin>
@@ -50,18 +51,31 @@
                   <Insets bottom="15.0" />
                </VBox.margin>
             </DatePicker>
-            <TextField maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter planning end time (HH:MM)" styleClass="inputField" />
+            <TextField fx:id="endTimeTF" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter planning end time (HH:MM)" styleClass="inputField">
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin></TextField>
+            <TextField fx:id="lotidTF" layoutX="50.0" layoutY="239.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter lotId here" styleClass="inputField">
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </TextField>
+            <TextField fx:id="emailTF" layoutX="50.0" layoutY="271.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter Email here" styleClass="inputField" />
         <HBox alignment="CENTER" maxWidth="280.0" prefHeight="60.0" prefWidth="280.0" spacing="0.0" style="-fx-padding:0 0 0 0;">
           <children>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="0.0" style="&#10;">
               <children>
-                <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="cancelButton" text="Cancel" textAlignment="CENTER">
+                <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="50.0" prefWidth="180.0" style="" text="Cancel" textAlignment="CENTER">
                   <font>
                     <Font size="16.0" fx:id="x1" />
                   </font>
                   <stylesheets>
                     <URL value="@application.css" />
                   </stylesheets>
+                           <styleClass>
+                              <String fx:value="cancelButton" />
+                              <String fx:value="smallButton" />
+                           </styleClass>
                 </Button>
               </children>
               <HBox.margin>
@@ -70,13 +84,17 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0">
               <children>
-                <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
+                <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="50.0" prefWidth="180.0" style="" text="Submit" textAlignment="CENTER">
                   <stylesheets>
                     <URL value="@application.css" />
                   </stylesheets>
                   <VBox.margin>
                     <Insets fx:id="x3" />
                   </VBox.margin>
+                           <styleClass>
+                              <String fx:value="regularButton" />
+                              <String fx:value="smallButton" />
+                           </styleClass>
                 </Button>
               </children>
               <HBox.margin>
@@ -90,12 +108,12 @@
         </HBox>
         <VBox fx:id="infoBox" alignment="CENTER" prefHeight="113.0" prefWidth="256.0" spacing="0.0">
           <children>
-            <ProgressIndicator fx:id="infoProgress">
+            <ProgressIndicator fx:id="infoProgress" visible="false">
               <VBox.margin>
                 <Insets bottom="15.0" />
               </VBox.margin>
             </ProgressIndicator>
-            <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="280.0" prefHeight="55.0" prefWidth="280.0" style="-fx-background-color: #d9edf7; -fx-background-radius: 8 8 8 8; -fx-text-fill: #31708f; -fx-border-radius: 8 8 8 8;" text="Just some info goes here" textAlignment="CENTER" wrapText="true">
+            <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="280.0" prefHeight="55.0" prefWidth="280.0" styleClass="infoLabel" text="Just some info goes here" textAlignment="CENTER" wrapText="true">
               <VBox.margin>
                 <Insets fx:id="x4" />
               </VBox.margin>

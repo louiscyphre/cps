@@ -11,6 +11,7 @@ import javax.mail.internet.InternetAddress;
 
 import cps.api.request.IncidentalParkingRequest;
 import cps.api.request.LoginRequest;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -130,6 +131,7 @@ public class LoginController implements ViewController {
       assert passwordTextField != null : "fx:id=\"passwordTextField\" was not injected: check your FXML file 'LoginScene.fxml'.";
       
       ControllersClientAdapter.registerCtrl(this,ControllerConstants.SceneCode.LOGIN);
+      Platform.runLater( () -> infoBox.requestFocus() ); // to unfocus the Text Field
   }
 
   @Override
@@ -140,6 +142,18 @@ public class LoginController implements ViewController {
 
   @Override
   public void displayError(String errorMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void turnProcessingStateOn() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void turnProcessingStateOff() {
     // TODO Auto-generated method stub
     
   }
