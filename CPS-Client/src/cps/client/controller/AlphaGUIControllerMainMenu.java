@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 
@@ -20,6 +21,13 @@ public class AlphaGUIControllerMainMenu implements ViewController {
   @FXML // URL location of the FXML file that was given to the FXMLLoader
   private URL location;
 
+  @FXML
+  private Label infoLabel; // test button
+  
+  private boolean infoToggled = true;
+  
+  private int count = 0;
+  
   @FXML // fx:id="quitBtn"
   private Button quitBtn; // Value injected by FXMLLoader
 
@@ -64,6 +72,18 @@ public class AlphaGUIControllerMainMenu implements ViewController {
   void handleInitParkingLot(ActionEvent event) {
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INIT_PARKING_LOT);
   }
+  
+
+  @FXML
+  void toggleLabelStyle(ActionEvent event) {
+    if(infoToggled) {
+      infoToggled = false;
+      displayError("infoToggled = " + infoToggled + " and count is " + ++count);
+    } else {
+      infoToggled = true;
+      displayInfo("infoToggled = " + infoToggled + " and count is " + ++count);
+    }
+  }
 
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
@@ -74,6 +94,21 @@ public class AlphaGUIControllerMainMenu implements ViewController {
     assert quitBtn != null : "fx:id=\"quitBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
     assert incidentalParkingBtn != null : "fx:id=\"incidentalParkingBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
     ControllersClientAdapter.registerCtrl(this,ControllerConstants.SceneCode.MAIN_MENU);
+  }
+
+  // TODO @Michael check this idea out
+  @Override
+  public void displayInfo(String infoMsg) {
+    infoLabel.setText(infoMsg);
+    infoLabel.getStyleClass().clear();
+    infoLabel.getStyleClass().add("infoLabel");
+  }
+
+  @Override
+  public void displayError(String errorMsg) {
+    infoLabel.setText(errorMsg);
+    infoLabel.getStyleClass().clear();
+    infoLabel.getStyleClass().add("errorLabel");    
   }
 
 }

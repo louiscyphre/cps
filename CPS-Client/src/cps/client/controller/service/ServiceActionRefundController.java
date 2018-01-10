@@ -59,4 +59,16 @@ public class ServiceActionRefundController implements ViewController {
     assert refundAmountTF != null : "fx:id=\"refundAmountTF\" was not injected: check your FXML file 'ServiceActionRefund.fxml'.";
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_REFUND);
   }
+
+  @Override
+  public void displayInfo(String infoMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void displayError(String errorMsg) {
+    // TODO Auto-generated method stub
+    
+  }
 }

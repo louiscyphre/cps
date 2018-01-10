@@ -90,11 +90,6 @@ public class AlphaGUIController2 implements ViewController {
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
-  private void displayError(String errorMsg) {
-    Alert alert = new Alert(AlertType.ERROR);
-    alert.setContentText(errorMsg);
-    alert.showAndWait();
-  }
 
 
   @FXML
@@ -112,6 +107,18 @@ public class AlphaGUIController2 implements ViewController {
     assert plannedEndTimeTF != null : "fx:id=\"plannedEndTimeTF\" was not injected: check your FXML file 'AlphaGUI_2.fxml'.";
     plannedEndTimeTF.setText(LocalDateTime.now().toString());
     ControllersClientAdapter.registerCtrl(this,ControllerConstants.SceneCode.INCIDENTAL_PARKING);
+  }
+
+  @Override
+  public void displayInfo(String infoMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  public void displayError(String errorMsg) {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setContentText(errorMsg);
+    alert.showAndWait();
   }
 
 }

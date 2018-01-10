@@ -21,7 +21,7 @@
             <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="100.0" spacing="10.0">
                <children>
                   <ProgressIndicator fx:id="infoProgress" visible="false" />
-                  <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="73.0" style="-fx-background-color: #d9edf7; -fx-background-radius: 8 8 8 8; -fx-text-fill: #31708f; -fx-border-radius: 8 8 8 8;" text="Just some info goes here" textAlignment="CENTER" wrapText="true" />
+                  <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="73.0" styleClass="infoLabel" text="Just some info goes here" textAlignment="CENTER" wrapText="true" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -29,8 +29,16 @@
             </VBox>
             <HBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="20.0" style="-fx-padding:0 0 0 0;">
                <children>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="50.0" prefWidth="100.0" styleClass="cancelButton" text="Cancel" textAlignment="CENTER" />
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleOkButton" prefHeight="50.0" prefWidth="104.0" styleClass="regularButton" text="Ok" textAlignment="CENTER" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="50.0" prefWidth="100.0" text="Cancel" textAlignment="CENTER">
+                     <styleClass>
+                        <String fx:value="cancelButton" />
+                        <String fx:value="smallButton" />
+                     </styleClass></Button>
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleOkButton" prefHeight="50.0" prefWidth="104.0" text="Ok" textAlignment="CENTER">
+                     <styleClass>
+                        <String fx:value="regularButton" />
+                        <String fx:value="smallButton" />
+                     </styleClass></Button>
                </children>
             </HBox>
          </children>
