@@ -21,7 +21,7 @@ public interface Constants {
 	
 	// SQL queries
 	public final String SQL_CREATE_NEW_DAY = "INSERT INTO daily_statistics values(? ,? ,default ,default ,default ,default)";
-	public final String SQL_CHECK_DATE = "SELECT * FROM daily_statistics DS WHERE ds.day=?";
+	public final String SQL_CHECK_DATE = "SELECT * FROM daily_statistics DS WHERE day=?";
 	public final String SQL_INCREASE_REALIZED_ORDER = "UPDATE daily_statistics SET realized_orders=? WHERE day=? AND lot_id=?";
 	public final String SQL_INCREASE_CANCELED_ORDER = "UPDATE daily_statistics SET canceled_orders=? WHERE day=? AND lot_id=?";
 	public final String SQL_INCREASE_LATE_ARRIVAL = "UPDATE daily_statistics SET late_arrivals=? WHERE day=? AND lot_id=?";

@@ -18,6 +18,7 @@ public class DailyStatistics implements Serializable {
 	// `canceled_orders` int(11) DEFAULT NULL,
 	// `late_arrivals` int(11) DEFAULT NULL,
 	// `complaints` int(11) DEFAULT NULL,
+	// `inactive_slots` int(10) DEFAULT '0',
 	// PRIMARY KEY (`day`)
 
 	/** The Constant serialVersionUID. */
@@ -26,17 +27,20 @@ public class DailyStatistics implements Serializable {
 	/** The day. */
 	private LocalDate day;
 
-	/** The realized orders. */
+	/** The number of realized orders. */
 	private int realizedOrders;
 
-	/** The canceled orders. */
+	/** The number of canceled orders. */
 	private int canceledOrders;
 
-	/** The late arrivals. */
+	/** The number of late arrivals. */
 	private int lateArrivals;
 
-	/** The complaints. */
+	/** The number of complaints. */
 	private int complaints;
+	
+	/** The number of inactive slots. */
+	private int inactiveSlots;
 
 	/**
 	 * Instantiates a new daily statistics.
@@ -52,13 +56,14 @@ public class DailyStatistics implements Serializable {
 	 * @param complaints
 	 *            the complaints
 	 */
-	public DailyStatistics(LocalDate day, int realizedOrders, int canceledOrders, int lateArrivals, int complaints) {
+	public DailyStatistics(LocalDate day, int realizedOrders, int canceledOrders, int lateArrivals, int complaints, int inactiveSlots) {
 		super();
 		this.day = day;
 		this.realizedOrders = realizedOrders;
 		this.canceledOrders = canceledOrders;
 		this.lateArrivals = lateArrivals;
 		this.complaints = complaints;
+		this.setInactiveSlots(inactiveSlots);
 	}
 
 	/**
@@ -70,231 +75,7 @@ public class DailyStatistics implements Serializable {
 	 *             the SQL exception
 	 */
 	public DailyStatistics(ResultSet rs) throws SQLException {
-		this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
-	}
-
-	/**
-	 * Creates an empty entry in the table for specific date and lotId. All other
-	 * parameters are zero by default
-	 *
-	 * @param conn
-	 *            the conn
-	 * @param today
-	 *            the today
-	 * @param lotId
-	 *            the lot id
-	 * @return the daily statistics
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public static DailyStatistics create(Connection conn, LocalDate today, int lotId) throws SQLException {
-		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_NEW_DAY);
-
-		int field = 1;
-		stmt.setDate(field++, Date.valueOf(today));
-		stmt.setInt(field++, lotId);
-		stmt.executeUpdate();
-
-		stmt.close();
-		return new DailyStatistics(today, lotId, 0, 0, 0);
-
-	}
-
-	/**
-	 * If statistics for set Date exists in database, the function returns the
-	 * corresponding line as ResultSet. Else creates an empty line in database and
-	 * returns null ResultSet
-	 *
-	 * @param conn
-	 *            the connection
-	 * @param _date
-	 *            the date
-	 * @param lotId
-	 *            Id of the parking lot
-	 * @return Result Set with given fields: Date day,int lot_id, int
-	 *         realized_orders, int canceled_orders,int late_arrivals,int
-	 *         inactive_slots.
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public static ResultSet createIfNotExists(Connection conn, LocalDate _date, int lotId) throws SQLException {
-		int index = 1;
-		ResultSet rs;
-		PreparedStatement st = conn.prepareStatement(Constants.SQL_CHECK_DATE);
-		st.setDate(index, Date.valueOf(_date));
-		rs = st.executeQuery();
-		if (rs.wasNull())
-			create(conn, _date, lotId);// if doesn't exists - create empty line with zeroes
-		st.close();
-		return rs;
-	}
-
-	/**
-	 * Increase realized order count by one for today in specific parking lot.
-	 *
-	 * @param conn
-	 *            the conn
-	 * @param lotId
-	 *            the lot id
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public static void increaseRealizedOrder(Connection conn, int lotId) throws SQLException {
-		increaseRealizedOrder(conn, LocalDate.now(), lotId);
-	}
-
-	/**
-	 * Increase realized order count by one in specific parking lot at specific
-	 * date.
-	 *
-	 * @param conn
-	 *            the conn
-	 * @param _date
-	 *            the date
-	 * @param lotId
-	 *            the lot id
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public static void increaseRealizedOrder(Connection conn, LocalDate _date, int lotId) throws SQLException {
-		// check if line exists in database
-		int index = 1;
-		int _order = 0;
-		ResultSet rs = createIfNotExists(conn, _date, lotId);
-		if (!rs.wasNull())
-			_order = rs.getInt("realized_orders") + 1; // get realized orders number and increase it
-		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_REALIZED_ORDER);
-		stmt.setInt(index++, _order);
-		stmt.setDate(index++, Date.valueOf(_date));
-		stmt.setInt(index++, lotId);
-		if (stmt.executeUpdate() == 0)
-			throw new SQLException("Failed to increase Realized Order Count");
-		stmt.close();
-	}
-
-	/**
-	 * Increase canceled order count by one for today in specific parking lot.
-	 *
-	 * @param conn
-	 *            the conn
-	 * @param lotId
-	 *            the lot id
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public static void increaseCanceledOrder(Connection conn, int lotId) throws SQLException {
-		increaseCanceledOrder(conn, LocalDate.now(), lotId);
-	}
-
-	/**
-	 * Increase canceled order count by one in specific parking lot at specific date.
-	 *
-	 * @param conn
-	 *            the conn
-	 * @param _date
-	 *            the date
-	 * @param lotId
-	 *            the lot id
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public static void increaseCanceledOrder(Connection conn, LocalDate _date, int lotId) throws SQLException {
-		// check if line exists in database
-
-		int index = 1;
-		int _order = 0;
-		ResultSet rs = createIfNotExists(conn, _date, lotId);
-		if (!rs.wasNull())
-			_order = rs.getInt("canceled_orders") + 1; // get canceled orders number and increase it
-		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_CANCELED_ORDER);
-		stmt.setInt(index++, _order);
-		stmt.setDate(index++, Date.valueOf(_date));
-		stmt.setInt(index++, lotId);
-		if (stmt.executeUpdate() == 0)
-			throw new SQLException("Failed to increase Canceled Order Count");
-		stmt.close();
-	}
-
-	/**
-	 * Increase Late Arrival count by one for today in specific parking lot.
-	 *
-	 * @param conn
-	 *            the conn
-	 * @param lotId
-	 *            the lot id
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public static void increaseLateArrival(Connection conn, int lotId) throws SQLException {
-		increaseLateArrival(conn, LocalDate.now(), lotId);
-	}
-
-	/**
-	 * Increase Late Arrival count by one in specific parking lot at specific date.
-	 *
-	 * @param conn
-	 *            the conn
-	 * @param _date
-	 *            the date
-	 * @param lotId
-	 *            the lot id
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public static void increaseLateArrival(Connection conn, LocalDate _date, int lotId) throws SQLException {
-		int index = 1;
-		int _lateArrivals = 0;
-		ResultSet rs = createIfNotExists(conn, _date, lotId);
-		if (!rs.wasNull())
-			_lateArrivals = rs.getInt("late_arrivals") + 1; // get canceled orders number and increase it
-		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_LATE_ARRIVAL);
-		stmt.setInt(index++, _lateArrivals);
-		stmt.setDate(index++, Date.valueOf(_date));
-		stmt.setInt(index++, lotId);
-		if (stmt.executeUpdate() == 0)
-			throw new SQLException("Failed to increase Late Arrival Count");
-		stmt.close();
-	}
-	
-	/**
-	 * Increase Inactive Slots count by one for today in specific parking lot.
-	 *
-	 * @param conn
-	 *            the conn
-	 * @param lotId
-	 *            the lot id
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public static void increaseIncactiveSlots(Connection conn, int lotId) throws SQLException {
-		IncreaseIncactiveSlots(conn, LocalDate.now(), lotId);
-	}
-
-	/**
-	 * Increase Inactive Slots count by one in specific parking lot at specific date.
-	 *
-	 * @param conn
-	 *            the conn
-	 * @param _date
-	 *            the date
-	 * @param lotId
-	 *            the lot id
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public static void IncreaseIncactiveSlots(Connection conn, LocalDate _date, int lotId) throws SQLException {
-		int index = 1;
-		int _lateArrivals = 0;
-		ResultSet rs = createIfNotExists(conn, _date, lotId);
-		if (!rs.wasNull())
-			_lateArrivals = rs.getInt("inactive_slots") + 1; // get canceled orders number and increase it
-		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_INACTIVE_SLOTS);
-		stmt.setInt(index++, _lateArrivals);
-		stmt.setDate(index++, Date.valueOf(_date));
-		stmt.setInt(index++, lotId);
-		if (stmt.executeUpdate() == 0)
-			throw new SQLException("Failed to increase Late Arrival Count");
-		stmt.close();
+		this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
 	}
 	
 	/**
@@ -390,5 +171,262 @@ public class DailyStatistics implements Serializable {
 	 */
 	public void setComplaints(int complaints) {
 		this.complaints = complaints;
+	}
+
+	public int getInactiveSlots() {
+		return inactiveSlots;
+	}
+
+	public void setInactiveSlots(int inactiveSlots) {
+		this.inactiveSlots = inactiveSlots;
+	}
+
+	/**
+	 * Creates an empty entry in the table for specific date and lotId. All other
+	 * parameters are zero by default
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param today
+	 *            the today
+	 * @param lotId
+	 *            the lot id
+	 * @return the daily statistics
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static DailyStatistics create(Connection conn, LocalDate today, int lotId) throws SQLException {
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_NEW_DAY);
+
+		int field = 1;
+		stmt.setDate(field++, Date.valueOf(today));
+		stmt.setInt(field++, lotId);
+		stmt.executeUpdate();
+
+		stmt.close();
+		return new DailyStatistics(today, lotId, 0, 0, 0, 0);
+
+	}
+
+	/**
+	 * If statistics for set Date exists in database, the function returns the
+	 * corresponding line as ResultSet. Else creates an empty line in database and
+	 * returns null ResultSet
+	 *
+	 * @param conn
+	 *            the connection
+	 * @param _date
+	 *            the date
+	 * @param lotId
+	 *            Id of the parking lot
+	 * @return Result Set with given fields: Date day,int lot_id, int
+	 *         realized_orders, int canceled_orders,int late_arrivals,int
+	 *         inactive_slots.
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static DailyStatistics createIfNotExists(Connection conn, LocalDate _date, int lotId) throws SQLException {
+		DailyStatistics item = null;
+		
+		PreparedStatement st = conn.prepareStatement(Constants.SQL_CHECK_DATE);
+		st.setDate(1, Date.valueOf(_date));
+		ResultSet rs = st.executeQuery();
+		
+		if (rs.wasNull()) {
+			item = create(conn, _date, lotId);// if doesn't exists - create empty line with zeroes
+		}
+
+		rs.close();
+		st.close();
+		return item;
+	}
+
+	/**
+	 * Increase realized order count by one for today in specific parking lot.
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws DatabaseException 
+	 */
+	public static void increaseRealizedOrder(Connection conn, int lotId) throws SQLException, DatabaseException {
+		increaseRealizedOrder(conn, LocalDate.now(), lotId);
+	}
+
+	/**
+	 * Increase realized order count by one in specific parking lot at specific
+	 * date.
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param _date
+	 *            the date
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws DatabaseException 
+	 */
+	public static void increaseRealizedOrder(Connection conn, LocalDate _date, int lotId) throws SQLException, DatabaseException {
+		// check if line exists in database
+		DailyStatistics entry = createIfNotExists(conn, _date, lotId);
+		
+		if (entry != null) {
+			int index = 1;
+			PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_REALIZED_ORDER);
+			stmt.setInt(index++, entry.getRealizedOrders() + 1); // get realized orders number and increase it
+			stmt.setDate(index++, Date.valueOf(_date));
+			stmt.setInt(index++, lotId);
+			
+			if (stmt.executeUpdate() == 0) {
+				throw new DatabaseException("Failed to increase Realized Order Count");
+			}
+			
+			stmt.close();
+		}
+	}
+
+	/**
+	 * Increase canceled order count by one for today in specific parking lot.
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws DatabaseException 
+	 */
+	public static void increaseCanceledOrder(Connection conn, int lotId) throws SQLException, DatabaseException {
+		increaseCanceledOrder(conn, LocalDate.now(), lotId);
+	}
+
+	/**
+	 * Increase canceled order count by one in specific parking lot at specific date.
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param _date
+	 *            the date
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws DatabaseException 
+	 */
+	public static void increaseCanceledOrder(Connection conn, LocalDate _date, int lotId) throws SQLException, DatabaseException {
+		// check if line exists in database
+		DailyStatistics entry = createIfNotExists(conn, _date, lotId);
+		
+		if (entry != null) {
+			int index = 1;
+			PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_CANCELED_ORDER);
+			stmt.setInt(index++, entry.getCanceledOrders() + 1); // get canceled orders number and increase it
+			stmt.setDate(index++, Date.valueOf(_date));
+			stmt.setInt(index++, lotId);
+			
+			if (stmt.executeUpdate() == 0) {
+				throw new DatabaseException("Failed to increase Canceled Order Count");
+			}
+			
+			stmt.close();
+		}
+	}
+
+	/**
+	 * Increase Late Arrival count by one for today in specific parking lot.
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws DatabaseException 
+	 */
+	public static void increaseLateArrival(Connection conn, int lotId) throws SQLException, DatabaseException {
+		increaseLateArrival(conn, LocalDate.now(), lotId);
+	}
+
+	/**
+	 * Increase Late Arrival count by one in specific parking lot at specific date.
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param _date
+	 *            the date
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws DatabaseException 
+	 */
+	public static void increaseLateArrival(Connection conn, LocalDate _date, int lotId) throws SQLException, DatabaseException {		
+		// check if line exists in database
+		DailyStatistics entry = createIfNotExists(conn, _date, lotId);
+		
+		if (entry != null) {
+			int index = 1;
+			PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_LATE_ARRIVAL);
+			stmt.setInt(index++, entry.getLateArrivals() + 1); // get late arrivals number and increase it
+			stmt.setDate(index++, Date.valueOf(_date));
+			stmt.setInt(index++, lotId);
+			
+			if (stmt.executeUpdate() == 0) {
+				throw new DatabaseException("Failed to increase Late Arrival Count");
+			}
+			
+			stmt.close();
+		}
+	}
+	
+	/**
+	 * Increase Inactive Slots count by one for today in specific parking lot.
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws DatabaseException 
+	 */
+	public static void increaseInactiveSlots(Connection conn, int lotId) throws SQLException, DatabaseException {
+		increaseInactiveSlots(conn, LocalDate.now(), lotId);
+	}
+
+	/**
+	 * Increase Inactive Slots count by one in specific parking lot at specific date.
+	 *
+	 * @param conn
+	 *            the conn
+	 * @param _date
+	 *            the date
+	 * @param lotId
+	 *            the lot id
+	 * @throws SQLException
+	 *             the SQL exception
+	 * @throws DatabaseException 
+	 */
+	public static void increaseInactiveSlots(Connection conn, LocalDate _date, int lotId) throws SQLException, DatabaseException {	
+		// check if line exists in database
+		DailyStatistics entry = createIfNotExists(conn, _date, lotId);
+		
+		if (entry != null) {
+			int index = 1;
+			PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_INACTIVE_SLOTS);
+			stmt.setInt(index++, entry.getInactiveSlots() + 1); // get number of inactive slots and increase it
+			stmt.setDate(index++, Date.valueOf(_date));
+			stmt.setInt(index++, lotId);
+			
+			if (stmt.executeUpdate() == 0) {
+				throw new DatabaseException("Failed to increase Inactive Slot Count");
+			}
+			
+			stmt.close();
+		}
 	}
 }

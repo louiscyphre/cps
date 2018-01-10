@@ -22,6 +22,7 @@ import cps.api.response.OnetimeParkingResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
 import cps.entities.models.DailyStatistics;
+import cps.entities.models.DatabaseException;
 import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
@@ -122,12 +123,6 @@ public class OnetimeParkingController extends RequestController {
 				return response;
 			}
 
-			service.setCanceled(true);
-			service.update(conn); // sync with database
-
-			// Increase daily counter of canceled orders
-			DailyStatistics.increaseCanceledOrder(conn, service.getLotID());
-
 			// Calculate refund amount based on how late the cancel request was submitted
 			// relative to the parking start time
 			Duration duration = Duration.between(LocalDateTime.now(), service.getPlannedStartTime().toLocalDateTime());
@@ -151,10 +146,17 @@ public class OnetimeParkingController extends RequestController {
 				float servicePrice = service.calculatePayment(pricePerHour);
 				refundAmount = servicePrice * refundValue;
 
+				// Cancel the order
+				service.setCanceled(true);
+				service.update(conn); // sync with database
+
+				// Increase daily counter of canceled orders
+				DailyStatistics.increaseCanceledOrder(conn, service.getLotID());
+
 				// Refund customer
 				Customer customer = service.getCustomer(conn);
 				customer.receiveRefund(conn, refundAmount);
-			} catch (Exception ex) {
+			} catch (DatabaseException ex) {
 				response.setError(ex.getMessage());
 				return response;
 			}

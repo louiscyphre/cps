@@ -1,6 +1,7 @@
 package cps.server.testing.tests;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -152,10 +153,36 @@ public class TestServerController extends TestCase {
 		
 	}
 	
+	@Test
+	public void testCancelOnetimeParking() {
+		/* Scenario:
+		 * 1. Create Parking Lot
+		 * 2. Send Reserved Parking request
+		 * 3. Send Cancel Onetime Parking request */
+		
+		System.out.println("=== testCancelOnetimeParking ===");
+		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+		
+		initParkingLot();
+		requestReservedParking(data, Duration.ofHours(3).plusMinutes(1));
+		
+		// Make request
+		CancelOnetimeParkingRequest request = new CancelOnetimeParkingRequest(data.customerID, data.onetimeServiceID);
+		
+		// Test response
+		ServerResponse response = server.handle(request);
+		printObject(response);
+		assertTrue(response.success());
+		assertThat(response, instanceOf(CancelOnetimeParkingResponse.class));
+		CancelOnetimeParkingResponse specificResponse = (CancelOnetimeParkingResponse) response;
+		assertEquals(request.getCustomerID(), specificResponse.getCustomerID());
+		assertEquals(request.getOnetimeServiceID(), specificResponse.getOnetimeServiceID());
+	}
+	
 	private void requestSubscription(CustomerData data, SubscriptionRequest request, Pair<SubscriptionService, SubscriptionResponse> holder) {		
 		// Test the response
 		ServerResponse response = server.dispatch(request);
-printObject(response);
+		printObject(response);
 		assertTrue(response.success());
 		
 		// Retrieve customer
@@ -234,6 +261,9 @@ printObject(response);
 		data.customerID = specificResponse.getCustomerID();
 		assertEquals(1, data.customerID);
 		
+		// Update service id
+		data.onetimeServiceID = specificResponse.getServiceID();
+		
 		// Test database result
 		assertEquals(1, db.countEntities("customer"));
 		assertEquals(1, db.countEntities("onetime_service"));
@@ -271,12 +301,12 @@ printObject(response);
 		assertThat(holder.getB(), instanceOf(IncidentalParkingResponse.class));
 	}
 
-	private void requestReservedParking(CustomerData data) {
+	private void requestReservedParking(CustomerData data, Duration delta) {
 		// Holder for data to be checked later with type-specific tests
 		Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 		
 		// Make the request
-		LocalDateTime plannedStartTime = LocalDateTime.now().withNano(0);
+		LocalDateTime plannedStartTime = LocalDateTime.now().plus(delta).withNano(0);
 		LocalDateTime plannedEndTime = plannedStartTime.plusHours(8);
 		ReservedParkingRequest request = new ReservedParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedStartTime, plannedEndTime);
 		
@@ -287,6 +317,10 @@ printObject(response);
 		OnetimeService entry = holder.getA();
 		assertEquals(entry.getPlannedStartTime().toLocalDateTime(), request.getPlannedStartTime());
 		assertThat(holder.getB(), instanceOf(ReservedParkingResponse.class));
+	}
+	
+	private void requestReservedParking(CustomerData data) {
+		requestReservedParking(data, Duration.ZERO);
 	}
 	
 	private void initParkingLot() {
