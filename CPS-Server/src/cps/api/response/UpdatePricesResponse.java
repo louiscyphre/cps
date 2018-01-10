@@ -7,4 +7,10 @@ public class UpdatePricesResponse extends ServerResponse {
   public ServerResponse handle(ResponseHandler handler) {
     return handler.handle(this);
   }
+  
+  public UpdatePricesResponse(boolean success, String description) {
+		super(success, description);
+		//DOTO: Cauchy - review Update Prices Response
+	}
+
 }

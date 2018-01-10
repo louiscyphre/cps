@@ -46,6 +46,8 @@ public class ParkingLot implements Serializable {
 	/** IP address of the robot. */
 	private String robotIP;
 
+	private boolean lotFull;
+
 	/**
 	 * Instantiates a new parking lot.
 	 *
@@ -68,7 +70,7 @@ public class ParkingLot implements Serializable {
 	 *            IP address of the robot
 	 */
 	public ParkingLot(int id, String streetAddress, int size, String content, float price1, float price2,
-			String alternativeLots, String robotIP) {
+			String alternativeLots, String robotIP, boolean lotfull) {
 		this.id = id;
 		this.streetAddress = streetAddress;
 		this.size = size;
@@ -77,6 +79,7 @@ public class ParkingLot implements Serializable {
 		this.price2 = price2;
 		this.alternativeLots = alternativeLots;
 		this.robotIP = robotIP;
+		this.lotFull = lotfull;
 	}
 
 	/**
@@ -88,8 +91,9 @@ public class ParkingLot implements Serializable {
 	 *             the SQL exception
 	 */
 	public ParkingLot(ResultSet rs) throws SQLException {
-		this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getFloat(5), rs.getFloat(6),
-				rs.getString(7), rs.getString(8));
+		this(rs.getInt("id"), rs.getString("street_address"), rs.getInt("size"), rs.getString("content"),
+				rs.getFloat("price1"), rs.getFloat("price2"), rs.getString("alternative_lots"),
+				rs.getString("robot_ip"), rs.getBoolean("lot_full"));
 	}
 
 	/**
@@ -200,6 +204,7 @@ public class ParkingLot implements Serializable {
 			}
 			result += "&";
 		}
+		result = result.substring(0, result.length() - 3);
 		this.content = result;
 	}
 
@@ -279,6 +284,14 @@ public class ParkingLot implements Serializable {
 		this.robotIP = robotIP;
 	}
 
+	public boolean isLotFull() {
+		return lotFull;
+	}
+
+	public void setLotFull(boolean lotFull) {
+		this.lotFull = lotFull;
+	}
+
 	/**
 	 * Insert new parking lot into the database and create a new parking lot object.
 	 *
@@ -303,10 +316,13 @@ public class ParkingLot implements Serializable {
 		// Create SQL statement and request table for table keys
 		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_PARKING_LOT,
 				Statement.RETURN_GENERATED_KEYS);
+		String lotContent = generateEmptyContent(size);
 		// Fill in the fields of SQL statement
 		int field = 1;
 		stmt.setString(field++, streetAddress);
 		stmt.setInt(field++, size);
+		// Parking lot content as a string
+		stmt.setString(field++, lotContent);
 		stmt.setFloat(field++, price1);
 		stmt.setFloat(field++, price2);
 		stmt.setString(field++, robotIP);
@@ -326,7 +342,25 @@ public class ParkingLot implements Serializable {
 
 		stmt.close();
 
-		return new ParkingLot(newID, streetAddress, size, "", price1, price2, "", robotIP);
+		return new ParkingLot(newID, streetAddress, size, lotContent, price1, price2, "", robotIP, false);
+	}
+
+	private static String generateEmptyContent(int size) {
+		String result = "";
+		int iSize, iHeight, iDepth;
+
+		for (iSize = 0; iSize < size; iSize++) {
+			for (iHeight = 0; iHeight < 3; iHeight++) {
+				for (iDepth = 0; iDepth < 3; iDepth++) {
+					result += Constants.SPOT_IS_EMPTY;
+					result += "&";
+				}
+				result += "&";
+			}
+			result += "&";
+		}
+		result = result.substring(0, result.length() - 3);
+		return result;
 	}
 
 	/**
@@ -374,9 +408,10 @@ public class ParkingLot implements Serializable {
 		return free;
 	}
 
-	public void update(Connection conn) throws SQLException {
-		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_ONETIME_BY_ID);
+	public int update(Connection conn) throws SQLException {
+		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
 		int index = 1;
+		int result = 0;
 		st.setString(index++, this.streetAddress);
 		st.setInt(index++, this.size);
 		st.setString(index++, this.content);
@@ -384,8 +419,10 @@ public class ParkingLot implements Serializable {
 		st.setFloat(index++, this.price2);
 		st.setString(index++, this.alternativeLots);
 		st.setString(index++, this.robotIP);
+		st.setBoolean(index++, this.lotFull);
 		st.setInt(index++, this.id);
-		st.executeUpdate();
+		result = st.executeUpdate();
 		st.close();
+		return result;
 	}
 }
