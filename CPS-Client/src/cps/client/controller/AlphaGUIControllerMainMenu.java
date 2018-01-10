@@ -111,4 +111,16 @@ public class AlphaGUIControllerMainMenu implements ViewController {
     infoLabel.getStyleClass().add("errorLabel");    
   }
 
+  @Override
+  public void turnProcessingStateOn() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void turnProcessingStateOff() {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

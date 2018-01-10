@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
+import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.main.ClientApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -14,19 +15,24 @@ import javafx.stage.Stage;
 
 public class ControllersClientAdapter {
 
-  ClientApplication cpsClient;
+  private ClientApplication cpsClient;
+
+  private CustomerContext customerContext = new CustomerContextImpl();
+  private EmployeeContext employeeContext = new EmployeeContextImpl();
 
   private static ControllersClientAdapter instance;
 
+  private SceneCode currentScene;
+
   private HashMap<String, ViewController> ctrlMapping;
-  private HashMap<String, Scene>             sceneMapping;
+  private HashMap<String, Scene>          sceneMapping;
 
   private ControllersClientAdapter() {
     this.ctrlMapping = new HashMap<String, ViewController>();
     this.sceneMapping = new HashMap<String, Scene>();
   }
 
-  public static ControllersClientAdapter getInstance() {
+  private static ControllersClientAdapter getInstance() {
     instance = instance == null ? new ControllersClientAdapter() : instance;
     return instance;
   }
@@ -63,6 +69,9 @@ public class ControllersClientAdapter {
   }
 
   public static void setStage(ControllerConstants.SceneCode code) {
+    getInstance().currentScene = code; // indicate that this scene is current
+                                       // for the future
+
     Scene scene = ControllersClientAdapter.fetchScene(code);
     ClientApplication clientApp = ControllersClientAdapter.getClient();
     Stage stage = clientApp.getPrimaryStage();
@@ -73,5 +82,29 @@ public class ControllersClientAdapter {
     stage.setY(bounds.getMinY());
     stage.setWidth(bounds.getWidth());
     stage.setHeight(bounds.getHeight());
+  }
+
+  public static CustomerContext getCustomerContext() {
+    return getInstance().customerContext;
+  }
+
+  public static void setCustomerContext(CustomerContext customerContext) {
+    getInstance().customerContext = customerContext;
+  }
+
+  public static EmployeeContext getEmployeeContext() {
+    return getInstance().employeeContext;
+  }
+
+  public static void setEmployeeContext(EmployeeContext employeeContext) {
+    getInstance().employeeContext = employeeContext;
+  }
+
+  public static SceneCode getCurrentScene() {
+    return getInstance().currentScene;
+  }
+
+  public static ViewController getCurrentCtrl() {
+    return fetchCtrl(getCurrentScene());
   }
 }

@@ -32,7 +32,9 @@ public class ClientApplication extends Application implements INetworkClient {
   private CPSNetworkClient client;
 
   private Stage primaryStage;
-
+  
+  // private Scene currentScene; TODO check whether necessary
+  
   private ResponseHandler responseHandler = new ResponseHandlerImpl();
 
   private int lotID; // required : -1 if web-client
@@ -175,5 +177,10 @@ public class ClientApplication extends Application implements INetworkClient {
 
   public void setPrimaryStage(Stage primaryStage) {
     this.primaryStage = primaryStage;
+  }
+  
+  enum NetworkState {
+    WAITING_FOR_RESPONSE,
+    RESPONSIVE
   }
 }

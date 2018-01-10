@@ -12,6 +12,32 @@ import cps.api.response.ServerResponse;
 
 class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
+  private int customerId;
+  private String email;
+  
+  @Override
+  public void setCustomerId(int id) {
+    this.customerId = id;
+  }
+
+  @Override
+  public int getCustomerId() {
+    return this.customerId;
+  }
+
+  @Override
+  public void setCustomerEmail(String email) {
+    this.email = email;
+  }
+
+  @Override
+  public String getCustomerEmail() {
+    return this.email;
+  }
+  
+  // // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ \\
+  // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\
+  
   @Override
   public ServerResponse handle(CancelOnetimeParkingResponse response) {
     // TODO Auto-generated method stub
@@ -59,5 +85,7 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
     // TODO Auto-generated method stub
     return null;
   }
+
+
 
 }
