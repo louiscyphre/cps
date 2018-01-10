@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Stack;
 
@@ -12,13 +13,16 @@ import cps.common.*;
 import cps.api.action.InitLotAction;
 import cps.api.action.SetFullLotAction;
 import cps.api.action.UpdatePricesAction;
+import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.InitLotResponse;
+import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.server.ServerController;
 import cps.server.devices.Robot;
 import cps.entities.models.CarTransportation;
+import cps.entities.models.DatabaseException;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
@@ -60,11 +64,12 @@ public class LotController extends RequestController {
 	 *             the SQL exception
 	 */
 	private boolean insertCars(Connection conn, ParkingLot lot, Stack<String> carIds, Stack<LocalDateTime> exitTimes)
-			throws SQLException {
+			throws SQLException, DatabaseException {
 		// Get the parking lot
 		String[][][] thisContent = lot.getContentAsArray();
 		String carId = null;
 		LocalDateTime exitTime = null;
+		LocalDateTime fullSubscriptionTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
 		int priority;
 		int iSize, iHeight, maxSize, maxHeight, maxDepth, path, minPath;
 
@@ -95,7 +100,7 @@ public class LotController extends RequestController {
 			 * Calculate exit priority if there is no exit time - it means we deal with FULL
 			 * SUBSCRIPTION which will perhaps stay for long hours or even more than one day
 			 */
-			if (exitTime == null || exitTime.equals(LocalTime.MIDNIGHT.atDate(LocalDate.now()))) {
+			if (exitTime == null || exitTime.equals(fullSubscriptionTime)) {
 				// assign worst priority
 				priority = 4;
 			} else {
@@ -254,7 +259,7 @@ public class LotController extends RequestController {
 	 *             the SQL exception
 	 */
 	public boolean insertCar(Connection conn, ParkingLot lot, String carId, LocalDateTime exitTime,
-			ServerResponse response) throws SQLException {
+			ServerResponse response) throws SQLException, DatabaseException {
 		boolean car_response;
 		Stack<String> carIds = new Stack<String>();
 		carIds.push(carId);
@@ -321,8 +326,9 @@ public class LotController extends RequestController {
 	 * @return the server response
 	 * @throws SQLException
 	 *             the SQL exception
+	 * @throws DatabaseException 
 	 */
-	public boolean retrieveCar(Connection conn, int lotId, String carID) throws SQLException {
+	public boolean retrieveCar(Connection conn, int lotId, String carID) throws SQLException, DatabaseException {
 		Stack<String> carIds = new Stack<String>();
 		Stack<LocalDateTime> exitTimes = new Stack<LocalDateTime>();
 
@@ -369,7 +375,7 @@ public class LotController extends RequestController {
 			entry = CarTransportation.findByCarId(conn, content[eSize][iHeight][0], lotId);
 			a = null;
 			if (entry.getAuthType() == cps.common.Constants.LICENSE_TYPE_ONETIME) {
-				a = OnetimeService.findById(conn, entry.getAuthID());
+				a = OnetimeService.findByID(conn, entry.getAuthID());
 			} else {
 				a = SubscriptionService.findByID(conn, entry.getAuthID());
 			}
@@ -382,7 +388,7 @@ public class LotController extends RequestController {
 			entry = CarTransportation.findByCarId(conn, content[eSize][iHeight][iDepth], lotId);
 			a = null;
 			if (entry.getAuthType() == cps.common.Constants.LICENSE_TYPE_ONETIME) {
-				a = OnetimeService.findById(conn, entry.getAuthID());
+				a = OnetimeService.findByID(conn, entry.getAuthID());
 			} else {
 				a = SubscriptionService.findByID(conn, entry.getAuthID());
 			}
@@ -431,12 +437,13 @@ public class LotController extends RequestController {
 			ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
 			lot.setPrice1(action.getPrice1());
 			lot.setPrice2(action.getPrice2());
-			if (lot.update(conn) == 1) {
+			
+			try {
+				lot.update(conn);
 				return new UpdatePricesResponse(true, "Prices updates succsessfully");
-			} else {
-				return new UpdatePricesResponse(false, "Failed to update prices");
+			} catch (DatabaseException ex) {
+				return new UpdatePricesResponse(false, ex.getMessage());
 			}
-
 		});
 	}
 
@@ -445,12 +452,20 @@ public class LotController extends RequestController {
 			ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
 			lot.setLotFull(action.getLotFull());
 			lot.setAlternativeLots(Integer.toString(action.getAlternativeLotID()));
-			if (lot.update(conn) == 1) {
+			
+			try {
+				lot.update(conn);
 				return new SetFullLotResponse(true, "Lot status set");
-			} else {
-				return new SetFullLotResponse(false, "Failed to update lot status");
+			} catch (DatabaseException ex) {
+				return new SetFullLotResponse(false, ex.getMessage());
 			}
+		});
+	}
 
+	public ServerResponse handle(ListParkingLotsRequest request) {
+		return databaseController.performQuery(conn -> {
+			Collection<ParkingLot> result = ParkingLot.findAll(conn);
+			return new ListParkingLotsResponse(result);
 		});
 	}
 

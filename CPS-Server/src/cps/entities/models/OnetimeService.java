@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -154,7 +155,7 @@ public class OnetimeService implements ParkingService {
 	public static Collection<OnetimeService> findByCustomerID(Connection conn, int userID) throws SQLException {
 		LinkedList<OnetimeService> results = new LinkedList<OnetimeService>();
 
-		PreparedStatement stmt = conn.prepareStatement(Constants.GET_ONETIME_SERVICE_BY_CUSTOMER_ID);
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_GET_ONETIME_SERVICE_BY_CUSTOMER_ID);
 		stmt.setInt(1, userID);
 		ResultSet rs = stmt.executeQuery();
 
@@ -172,7 +173,7 @@ public class OnetimeService implements ParkingService {
 			throws SQLException {
 		OnetimeService result = null;
 
-		PreparedStatement stmt = conn.prepareStatement(Constants.GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID);
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID);
 
 		stmt.setInt(1, customerID);
 		stmt.setString(2, carID);
@@ -190,10 +191,10 @@ public class OnetimeService implements ParkingService {
 		return result;
 	}
 
-	public static OnetimeService findById(Connection conn, int sId) throws SQLException {
+	public static OnetimeService findByID(Connection conn, int sId) throws SQLException {
 		OnetimeService result = null;
 
-		PreparedStatement stmt = conn.prepareStatement(Constants.GET_ONETIME_SERVICE_BY_ID);
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_GET_ONETIME_SERVICE_BY_ID);
 
 		stmt.setInt(1, sId);
 
@@ -237,5 +238,31 @@ public class OnetimeService implements ParkingService {
 	@Override
 	public LocalDateTime getExitTime() {
 		return this.plannedEndTime.toLocalDateTime();
+	}
+
+	public static OnetimeService findByIDNotNull(Connection conn, int id) throws SQLException, RuntimeException {
+		OnetimeService item = findByID(conn, id);
+		
+		if (item == null) {
+			throw new RuntimeException("OnetimeService with id " + id + " does not exist");
+		}
+		
+		return item;
+	}
+	
+	public ParkingLot getParkingLot(Connection conn) throws SQLException, DatabaseException {
+		return ParkingLot.findByIDNotNull(conn, lotID);
+	}
+
+	public Customer getCustomer(Connection conn) throws SQLException, DatabaseException {
+		return Customer.findByIDNotNull(conn, customerID);
+	}
+
+	public Duration getPlannedDuration() {
+		return Duration.between(plannedStartTime.toLocalDateTime(), plannedEndTime.toLocalDateTime());
+	}
+	
+	public float calculatePayment(float pricePerHour) {
+		return pricePerHour * getPlannedDuration().getSeconds() / 3600f;
 	}
 }

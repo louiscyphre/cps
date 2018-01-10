@@ -7,6 +7,7 @@ public class CustomerData {
 	public String carID;
 	public int lotID;
 	public int subsID;
+	public int onetimeServiceID;
 
 	public CustomerData(int customerID, String email, String password, String carID, int lotID, int subsID) {
 		this.customerID = customerID;
@@ -15,5 +16,6 @@ public class CustomerData {
 		this.carID = carID;
 		this.lotID = lotID;
 		this.subsID = subsID;
+		this.onetimeServiceID = 0;
 	}
 }

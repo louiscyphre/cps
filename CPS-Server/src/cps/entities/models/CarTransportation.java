@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import cps.common.Constants;
 
@@ -191,18 +193,48 @@ public class CarTransportation implements Serializable {
 		query.setString(index++, carID);
 		query.setInt(index++, lotID);
 
-		ResultSet insertionSet = query.executeQuery();
+		ResultSet resultSet = query.executeQuery();
 
 		// if exists - return the object
-		if (insertionSet.next()) {
-			result = new CarTransportation(insertionSet);
+		if (resultSet.next()) {
+			result = new CarTransportation(resultSet);
 		}
 		// else return null;
 
-		insertionSet.close();
+		resultSet.close();
 		query.close();
 		return result;
+	}
 
+	public static Collection<CarTransportation> findByLotID(Connection conn, int lotID) throws SQLException {
+		LinkedList<CarTransportation> items = new LinkedList<CarTransportation>();
+
+		PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_CAR_TRANSPORTATION_BY_LOT_ID);
+		statement.setInt(1, lotID);
+		ResultSet result = statement.executeQuery();
+
+		while (result.next()) {
+			items.add(new CarTransportation(result));
+		}
+
+		result.close();
+		statement.close();
+
+		return items;
+	}
+	
+	public ParkingLot getParkingLot(Connection conn) throws SQLException, DatabaseException {
+		return ParkingLot.findByIDNotNull(conn, lotID);
+	}
+	
+	public ParkingService getParkingService(Connection conn) throws SQLException, DatabaseException {
+		if (authType == Constants.LICENSE_TYPE_ONETIME) {
+			return OnetimeService.findByIDNotNull(conn, authID);
+		} else if (authType == Constants.LICENSE_TYPE_SUBSCRIPTION) {
+			return SubscriptionService.findByIDNotNull(conn, authID);
+		} else {
+			throw new DatabaseException("Invalid license type " + authType);
+		}
 	}
 
 }

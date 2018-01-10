@@ -183,7 +183,7 @@ public class SubscriptionService implements ParkingService {
 			throws SQLException {
 		LinkedList<SubscriptionService> items = new LinkedList<SubscriptionService>();
 
-		PreparedStatement statement = conn.prepareStatement(Constants.GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID);
+		PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID);
 		statement.setInt(1, customerID);
 		ResultSet result = statement.executeQuery();
 
@@ -199,13 +199,16 @@ public class SubscriptionService implements ParkingService {
 
 	@Override
 	public LocalDateTime getExitTime() {
+		if (this.subscriptionType == Constants.SUBSCRIPTION_TYPE_FULL) {
+			return LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+		}
 		return this.dailyExitTime.atDate(LocalDate.now());
 	}
 
-	public static ParkingService findByID(Connection conn, int authID) throws SQLException {
-		ParkingService item = null;
+	public static SubscriptionService findByID(Connection conn, int authID) throws SQLException {
+		SubscriptionService item = null;
 
-		PreparedStatement statement = conn.prepareStatement(Constants.GET_SUBSCRIPTION_SERVICE_BY_ID);
+		PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_SERVICE_BY_ID);
 		statement.setInt(1, authID);
 		ResultSet result = statement.executeQuery();
 
@@ -236,5 +239,15 @@ public class SubscriptionService implements ParkingService {
 		statement.close();
 		
 		return count;
+	}
+
+	public static SubscriptionService findByIDNotNull(Connection conn, int id) throws SQLException, RuntimeException {
+		SubscriptionService item = findByID(conn, id);
+		
+		if (item == null) {
+			throw new RuntimeException("SubscriptionService with id " + id + " does not exist");
+		}
+		
+		return item;
 	}
 }
