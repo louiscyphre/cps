@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Stack;
 
@@ -12,7 +13,9 @@ import cps.common.*;
 import cps.api.action.InitLotAction;
 import cps.api.action.SetFullLotAction;
 import cps.api.action.UpdatePricesAction;
+import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.InitLotResponse;
+import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
@@ -456,6 +459,13 @@ public class LotController extends RequestController {
 			} catch (DatabaseException ex) {
 				return new SetFullLotResponse(false, ex.getMessage());
 			}
+		});
+	}
+
+	public ServerResponse handle(ListParkingLotsRequest request) {
+		return databaseController.performQuery(conn -> {
+			Collection<ParkingLot> result = ParkingLot.findAll(conn);
+			return new ListParkingLotsResponse(result);
 		});
 	}
 

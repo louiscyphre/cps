@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import cps.common.Constants;
 
@@ -448,5 +450,21 @@ public class ParkingLot implements Serializable {
 		}
 		
 		return result;
+	}
+
+	public static Collection<ParkingLot> findAll(Connection conn) throws SQLException {
+		LinkedList<ParkingLot> results = new LinkedList<ParkingLot>();
+
+		Statement stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(Constants.SQL_FIND_ALL_PARKING_LOTS);
+
+		while (rs.next()) {
+			results.add(new ParkingLot(rs));
+		}
+
+		rs.close();
+		stmt.close();
+
+		return results;
 	}
 }

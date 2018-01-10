@@ -178,9 +178,9 @@ public class OnetimeParkingController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse handle(ListOnetimeEntriesRequest request) {
-		Collection<OnetimeService> result = databaseController
-				.performQuery(conn -> OnetimeService.findByCustomerID(conn, request.getCustomerID()));
-
-		return new ListOnetimeEntriesResponse(result, request.getCustomerID());
+		return databaseController.performQuery(conn -> {
+			Collection<OnetimeService> result = OnetimeService.findByCustomerID(conn, request.getCustomerID());
+			return new ListOnetimeEntriesResponse(result, request.getCustomerID());
+		});
 	}
 }

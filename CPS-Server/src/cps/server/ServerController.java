@@ -93,6 +93,11 @@ public class ServerController implements RequestHandler {
     return onetimeParkingController.handle(request);
   }
 
+	@Override
+	public ServerResponse handle(ListParkingLotsRequest request) {
+		return lotController.handle(request);
+	}
+
   @Override
   public ServerResponse handle(ParkingEntryRequest request) {
     return entryController.handle(request);
