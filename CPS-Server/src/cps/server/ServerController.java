@@ -13,6 +13,7 @@ public class ServerController implements RequestHandler {
 	private final ParkingEntryController entryController;
 	private final ParkingExitController exitController;
 	private final SubscriptionController subscriptionController;
+	private final UserController userController;
 
 	/**
 	 * Constructs an instance of the server controller.
@@ -109,6 +110,11 @@ public class ServerController implements RequestHandler {
 	@Override
 	public ServerResponse handle(ReservedParkingRequest request) {
 		return onetimeParkingController.handle(request);
+	}
+	
+	@Override
+	public ServerResponse handle(LoginRequest request) {
+		return userController.handle(request);
 	}
 
 	@Override

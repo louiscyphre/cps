@@ -44,6 +44,34 @@ public class TestServerController extends TestCase {
 	}
 	
 	@Test
+	public void testLogin() {
+		/* Scenario:
+		 * 1. Create user
+		 * 2. Attempt to login as user
+		 * 3. Attempt to login with a wrong password
+		 * 4. Attempt to login with a wrong email
+		 */
+
+		// Create user
+		CustomerData data = new CustomerData(0, "user@email", "1234", "IL11-222-33", 1, 0);
+		Customer customer = db.performQuery(conn -> Customer.create(conn, data.email, data.password));
+	 	assertNotNull(customer);
+		System.out.println(gson.toJson(customer));
+		
+		// Create login request
+		LoginRequest request = new LoginRequest(data.email, data.password);
+		
+		// Test the response
+		ServerResponse response = server.handle(request); 	
+		System.out.println(gson.toJson(response));
+		assertThat(response, instanceOf(LoginResponse.class));
+		assertTrue(response.success());
+		
+		LoginResponse loginResponse = (LoginResponse) response;
+		assertEquals(customer.getId(), loginResponse.getCustomerID());
+	}
+	
+	@Test
 	public void testIncidentalParking() {
 		/* Scenario:
 		 * 1. Create Parking Lot
@@ -111,7 +139,7 @@ public class TestServerController extends TestCase {
 	
 	private void requestSubscription(CustomerData data, SubscriptionRequest request, Pair<SubscriptionService, SubscriptionResponse> holder) {		
 		// Test the response
-		ServerResponse response = server.dispatch(request); 	
+		ServerResponse response = server.dispatch(request);
 //		System.out.println(gson.toJson(response));
 		assertTrue(response.success());
 		
