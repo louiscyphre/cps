@@ -154,7 +154,7 @@ public class OnetimeService implements ParkingService {
 	public static Collection<OnetimeService> findByCustomerID(Connection conn, int userID) throws SQLException {
 		LinkedList<OnetimeService> results = new LinkedList<OnetimeService>();
 
-		PreparedStatement stmt = conn.prepareStatement(Constants.GET_ONETIME_SERVICE_BY_CUSTOMER_ID);
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_GET_ONETIME_SERVICE_BY_CUSTOMER_ID);
 		stmt.setInt(1, userID);
 		ResultSet rs = stmt.executeQuery();
 
@@ -172,7 +172,7 @@ public class OnetimeService implements ParkingService {
 			throws SQLException {
 		OnetimeService result = null;
 
-		PreparedStatement stmt = conn.prepareStatement(Constants.GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID);
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID);
 
 		stmt.setInt(1, customerID);
 		stmt.setString(2, carID);
@@ -193,7 +193,7 @@ public class OnetimeService implements ParkingService {
 	public static OnetimeService findById(Connection conn, int sId) throws SQLException {
 		OnetimeService result = null;
 
-		PreparedStatement stmt = conn.prepareStatement(Constants.GET_ONETIME_SERVICE_BY_ID);
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_GET_ONETIME_SERVICE_BY_ID);
 
 		stmt.setInt(1, sId);
 

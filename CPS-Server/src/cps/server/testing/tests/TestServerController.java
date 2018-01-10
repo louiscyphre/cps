@@ -13,6 +13,7 @@ import cps.api.request.*;
 import cps.api.action.*;
 import cps.api.response.*;
 import cps.common.Utilities.Pair;
+import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
@@ -43,6 +44,14 @@ public class TestServerController extends TestCase {
 		db.truncateTables();
 	}
 	
+	private void printObject(String label, Object object) {
+		System.out.println(String.format("%s: %s", label, gson.toJson(object)));
+	}
+	
+	private void printObject(Object object) {
+		System.out.println(String.format("%s: %s", object.getClass().getSimpleName(), gson.toJson(object)));
+	}
+	
 	@Test
 	public void testLogin() {
 		/* Scenario:
@@ -51,19 +60,21 @@ public class TestServerController extends TestCase {
 		 * 3. Attempt to login with a wrong password
 		 * 4. Attempt to login with a wrong email
 		 */
+		
+		System.out.println("=== testLogin ===");
 
 		// Create user
 		CustomerData data = new CustomerData(0, "user@email", "1234", "IL11-222-33", 1, 0);
 		Customer customer = db.performQuery(conn -> Customer.create(conn, data.email, data.password));
 	 	assertNotNull(customer);
-//		System.out.println(gson.toJson(customer));
+		printObject(customer);
 		
 		// Create login request
 		LoginRequest request = new LoginRequest(data.email, data.password);
 		
 		// Test the response
 		ServerResponse response = server.handle(request); 	
-//		System.out.println(gson.toJson(response));
+		printObject(response);
 		assertThat(response, instanceOf(LoginResponse.class));
 		assertTrue(response.success());
 		
@@ -79,6 +90,7 @@ public class TestServerController extends TestCase {
 		 * 3. Send Parking Entry request - license: IncidentalParking
 		 * 4. Send Parking Exit request */
 		
+		System.out.println("=== testIncidentalParking ===");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
 		
 		initParkingLot();
@@ -95,6 +107,7 @@ public class TestServerController extends TestCase {
 		 * 3. Send Parking Entry request - license: ReservedParking
 		 * 4. Send Parking Exit request */
 		
+		System.out.println("=== testReservedParking ===");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
 		
 		initParkingLot();
@@ -111,6 +124,7 @@ public class TestServerController extends TestCase {
 		 * 3. Send Parking Entry request - license: FullSubscription
 		 * 4. Send Parking Exit request */
 		
+		System.out.println("=== testFullSubscription ===");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
 		
 		initParkingLot();
@@ -128,6 +142,7 @@ public class TestServerController extends TestCase {
 		 * 3. Send Parking Entry request - license: FullSubscription
 		 * 4. Send Parking Exit request */
 		
+		System.out.println("=== testRegularSubscription ===");		
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
 		
 		initParkingLot();
@@ -140,7 +155,7 @@ public class TestServerController extends TestCase {
 	private void requestSubscription(CustomerData data, SubscriptionRequest request, Pair<SubscriptionService, SubscriptionResponse> holder) {		
 		// Test the response
 		ServerResponse response = server.dispatch(request);
-//		System.out.println(gson.toJson(response));
+printObject(response);
 		assertTrue(response.success());
 		
 		// Retrieve customer
@@ -210,7 +225,7 @@ public class TestServerController extends TestCase {
 	private void requestOnetimeParking(CustomerData data, OnetimeParkingRequest request, Pair<OnetimeService, OnetimeParkingResponse> holder) {
 		// Test the response
 		ServerResponse response = server.dispatch(request); 	
-//		System.out.println(gson.toJson(response));
+		printObject(response);
 		assertTrue(response.success());
 		
 		// Retrieve customer
@@ -277,28 +292,40 @@ public class TestServerController extends TestCase {
 	private void initParkingLot() {
 		InitLotAction request = new InitLotAction(1000, "Lot Address", 3, 5, 4, "113.0.1.14");		
 		ServerResponse response = server.dispatch(request);
-//		System.out.println(gson.toJson(response));
+		printObject(response);
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("parking_lot"));
-		ParkingLot lot = db.performQuery(conn -> ParkingLot.findByID(conn, 1));
-//		System.out.println(gson.toJson(lot));
+//		ParkingLot lot = db.performQuery(conn -> ParkingLot.findByID(conn, 1));
+//		printObject(lot);
 	}
 	
 	private void requestParkingEntry(CustomerData data) {
 		ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, data.subsID, data.lotID, data.carID); // subscriptionID = 0 means entry by OnetimeParking license
+		
 		ServerResponse response = server.dispatch(request);
-//		System.out.println(gson.toJson(response));
+		printObject(response);
 		assertTrue(response.success());
+		
 		assertEquals(1, db.countEntities("car_transportation"));
-		// TODO: fetch the CarTransportation and check fields
+		
+		CarTransportation entry = db.performQuery(conn -> CarTransportation.findByCarId(conn, data.carID, data.lotID));
+		printObject(entry);
 	}
 	
 	private void requestParkingExit(CustomerData data) {
 		ParkingExitRequest request = new ParkingExitRequest(data.customerID, data.lotID, data.carID);
+		
 		ServerResponse response = server.dispatch(request);
-//		System.out.println(gson.toJson(response));
+		printObject(response);
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("car_transportation"));
-		// TODO: fetch the CarTransportation and check fields
+		
+		Collection<CarTransportation> entries = db.performQuery(conn -> CarTransportation.findByLotID(conn, data.lotID));
+		assertEquals(1, entries.size());		
+
+		CarTransportation entry = entries.iterator().next();
+		assertNotNull(entry);
+		assertNotNull(entry.getRemovedAt());		
+		printObject(entry);
 	}
 }

@@ -183,7 +183,7 @@ public class SubscriptionService implements ParkingService {
 			throws SQLException {
 		LinkedList<SubscriptionService> items = new LinkedList<SubscriptionService>();
 
-		PreparedStatement statement = conn.prepareStatement(Constants.GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID);
+		PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID);
 		statement.setInt(1, customerID);
 		ResultSet result = statement.executeQuery();
 
@@ -205,7 +205,7 @@ public class SubscriptionService implements ParkingService {
 	public static ParkingService findByID(Connection conn, int authID) throws SQLException {
 		ParkingService item = null;
 
-		PreparedStatement statement = conn.prepareStatement(Constants.GET_SUBSCRIPTION_SERVICE_BY_ID);
+		PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_SERVICE_BY_ID);
 		statement.setInt(1, authID);
 		ResultSet result = statement.executeQuery();
 
