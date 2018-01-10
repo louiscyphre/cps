@@ -222,7 +222,8 @@ public class LotController extends RequestController {
 			// insert the car
 			thisContent[maxSize][maxHeight][maxDepth] = carId;
 			// call a robot
-			//this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId, maxSize, maxHeight, maxDepth);
+			// this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId, maxSize,
+			// maxHeight, maxDepth);
 		}
 		lot.setContentFromArray(thisContent);
 		lot.update(conn);
@@ -251,8 +252,8 @@ public class LotController extends RequestController {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public boolean insertCar(Connection conn, ParkingLot lot, String carId, LocalDateTime exitTime, ServerResponse response)
-			throws SQLException {
+	public boolean insertCar(Connection conn, ParkingLot lot, String carId, LocalDateTime exitTime,
+			ServerResponse response) throws SQLException {
 		boolean car_response;
 		Stack<String> carIds = new Stack<String>();
 		carIds.push(carId);
@@ -294,13 +295,13 @@ public class LotController extends RequestController {
 		int h = iHeight, d = iDepth;
 		while (d != 0) {
 			d--;
-			if (_pl[iSize][h][d] != Constants.SPOT_IS_EMPTY) {
+			if (_pl[iSize][h][d].equals(Constants.SPOT_IS_EMPTY)) {
 				totalcars++;
 			}
 		}
 		while (h != 0) {
 			h--;
-			if (_pl[iSize][h][d] != Constants.SPOT_IS_EMPTY) {
+			if (_pl[iSize][h][d].equals(Constants.SPOT_IS_EMPTY)) {
 				totalcars++;
 			}
 		}
@@ -327,10 +328,10 @@ public class LotController extends RequestController {
 		ParkingLot lot = ParkingLot.findByID(conn, lotId);
 		String[][][] content = lot.getContentAsArray();
 		// Get the robot in the parking lot
-		/*Robot robbie = robots.get(Integer.parseInt(lot.getRobotIP()));
-		if (robbie == null) {
-			return false;
-		}*/
+		/*
+		 * Robot robbie = robots.get(Integer.parseInt(lot.getRobotIP())); if (robbie ==
+		 * null) { return false; }
+		 */
 		int iSize, iHeight, iDepth, eSize = -1, eHeight = -1, eDepth = -1;
 
 		CarTransportation entry = null;
@@ -374,7 +375,7 @@ public class LotController extends RequestController {
 			carIds.push(content[eSize][iHeight][0]);
 			exitTimes.push((a.getExitTime()));
 			content[eSize][iHeight][0] = Constants.SPOT_IS_EMPTY;
-			//robbie.retrieveCar(carIds.peek(), eSize, iHeight, 0);
+			// robbie.retrieveCar(carIds.peek(), eSize, iHeight, 0);
 		}
 		for (iDepth = 0; iDepth < eDepth; iDepth++) {
 			entry = CarTransportation.findByCarId(conn, content[eSize][iHeight][iDepth], lotId);
@@ -387,9 +388,9 @@ public class LotController extends RequestController {
 			carIds.push(content[eSize][iHeight][iDepth]);
 			exitTimes.push(a.getExitTime());
 			content[eSize][iHeight][iDepth] = Constants.SPOT_IS_EMPTY;
-			//robbie.retrieveCar(carIds.peek(), eSize, iHeight, iDepth);
+			// robbie.retrieveCar(carIds.peek(), eSize, iHeight, iDepth);
 		}
-		//robbie.retrieveCar(carID, eSize, iHeight, iDepth);
+		// robbie.retrieveCar(carID, eSize, iHeight, iDepth);
 		if (!insertCars(conn, lot, carIds, exitTimes)) {
 			return false;
 		}
