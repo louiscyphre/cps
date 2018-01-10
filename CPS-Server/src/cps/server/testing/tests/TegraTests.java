@@ -11,6 +11,7 @@ import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.controllers.DatabaseController;
 
+@SuppressWarnings("unused")
 public class TegraTests {
 
 	ServerController server;

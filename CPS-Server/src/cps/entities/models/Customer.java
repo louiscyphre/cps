@@ -63,12 +63,20 @@ public class Customer implements Serializable, User {
 		this.debit = debit;
 	}
 
+	public void addDebit(float debit) {
+		this.debit += debit;		
+	}
+
 	public float getCredit() {
 		return credit;
 	}
 
 	public void setCredit(float credit) {
 		this.credit = credit;
+	}
+
+	public void addCredit(float credit) {
+		this.credit += credit;		
 	}
 
 	public static Customer create(Connection conn, String email, String password) throws SQLException {

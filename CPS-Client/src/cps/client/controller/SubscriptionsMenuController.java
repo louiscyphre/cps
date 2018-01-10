@@ -32,4 +32,16 @@ public class SubscriptionsMenuController implements ViewController {
       ControllersClientAdapter.registerCtrl(this,ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
   }
 
+  @Override
+  public void displayInfo(String infoMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void displayError(String errorMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

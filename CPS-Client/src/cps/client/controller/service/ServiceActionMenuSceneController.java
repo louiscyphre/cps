@@ -88,4 +88,16 @@ public class ServiceActionMenuSceneController implements ViewController {
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_MENU);
     
   }
+
+  @Override
+  public void displayInfo(String infoMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void displayError(String errorMsg) {
+    // TODO Auto-generated method stub
+    
+  }
 }

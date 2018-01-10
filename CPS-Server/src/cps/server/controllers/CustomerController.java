@@ -1,14 +1,17 @@
 package cps.server.controllers;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import cps.api.request.LoginRequest;
 import cps.api.response.LoginResponse;
 import cps.api.response.ServerResponse;
 import cps.entities.models.Customer;
 import cps.server.ServerController;
 
-public class UserController extends RequestController {
+public class CustomerController extends RequestController {
 
-	public UserController(ServerController serverController) {
+	public CustomerController(ServerController serverController) {
 		super(serverController);
 	}
 	
@@ -28,6 +31,17 @@ public class UserController extends RequestController {
 			response.setSuccess("Login successful");
 			return response;
 		});
+	}
+	
+	public static boolean chargeCustomer(Connection conn, ServerResponse response, Customer customer, float sum) throws SQLException {
+		customer.addDebit(sum);
+
+		if (!customer.update(conn)) {
+			response.setError("Failed to update customer");
+			return false;
+		}
+		
+		return true;
 	}
 
 }

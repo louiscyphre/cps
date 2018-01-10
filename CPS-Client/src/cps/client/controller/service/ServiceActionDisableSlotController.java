@@ -62,4 +62,16 @@ public class ServiceActionDisableSlotController implements ViewController {
     assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ServiceActionDisableSlot.fxml'.";
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.SERVICE_ACTION_DISABLE_SLOT);
   }
+
+  @Override
+  public void displayInfo(String infoMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void displayError(String errorMsg) {
+    // TODO Auto-generated method stub
+    
+  }
 }

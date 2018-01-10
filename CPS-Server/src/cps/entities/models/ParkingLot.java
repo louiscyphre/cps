@@ -390,6 +390,16 @@ public class ParkingLot implements Serializable {
 
 		return result;
 	}
+	
+	public static ParkingLot findByIDNotNull(Connection conn, int id) throws SQLException {
+		ParkingLot result = findByID(conn, id);
+		
+		if (result == null) {
+			throw new RuntimeException("ParkingLot with id " + id + " does not exist");
+		}
+		
+		return result;
+	}
 
 	public int getFreeSpotsNumber() {
 		int iSize, iHeight, iDepth;

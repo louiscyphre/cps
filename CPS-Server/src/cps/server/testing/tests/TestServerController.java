@@ -56,14 +56,14 @@ public class TestServerController extends TestCase {
 		CustomerData data = new CustomerData(0, "user@email", "1234", "IL11-222-33", 1, 0);
 		Customer customer = db.performQuery(conn -> Customer.create(conn, data.email, data.password));
 	 	assertNotNull(customer);
-		System.out.println(gson.toJson(customer));
+//		System.out.println(gson.toJson(customer));
 		
 		// Create login request
 		LoginRequest request = new LoginRequest(data.email, data.password);
 		
 		// Test the response
 		ServerResponse response = server.handle(request); 	
-		System.out.println(gson.toJson(response));
+//		System.out.println(gson.toJson(response));
 		assertThat(response, instanceOf(LoginResponse.class));
 		assertTrue(response.success());
 		
@@ -229,13 +229,13 @@ public class TestServerController extends TestCase {
 		OnetimeService entry = entries.iterator().next();
 		assertNotNull(entry);		
 
-		assertEquals(entry.getParkingType(), request.getParkingType());
-		assertEquals(entry.getCustomerID(), specificResponse.getCustomerID());
-		assertEquals(entry.getEmail(), request.getEmail());
-		assertEquals(entry.getCarID(), request.getCarID());
-		assertEquals(entry.getLotID(), request.getLotID());
-		assertEquals(entry.getPlannedEndTime().toLocalDateTime(), request.getPlannedEndTime());
-		assertEquals(entry.isCanceled(), false);
+		assertEquals(request.getParkingType(), entry.getParkingType());
+		assertEquals(specificResponse.getCustomerID(), entry.getCustomerID());
+		assertEquals(request.getEmail(), entry.getEmail());
+		assertEquals(request.getCarID(), entry.getCarID());
+		assertEquals(request.getLotID(), entry.getLotID());
+		assertEquals(request.getPlannedEndTime(), entry.getPlannedEndTime().toLocalDateTime());
+		assertEquals(false, entry.isCanceled());
 		
 		holder.setA(entry);
 		holder.setB(specificResponse);
@@ -246,7 +246,7 @@ public class TestServerController extends TestCase {
 		Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 		
 		// Make the request
-		LocalDateTime plannedEndTime = LocalDateTime.parse("2018-01-21T17:00:00");
+		LocalDateTime plannedEndTime = LocalDateTime.now().plusHours(8).withNano(0);
 		IncidentalParkingRequest request = new IncidentalParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedEndTime);
 		
 		// Run general tests
@@ -261,8 +261,8 @@ public class TestServerController extends TestCase {
 		Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 		
 		// Make the request
-		LocalDateTime plannedStartTime = LocalDateTime.parse("2018-01-21T09:00:00");
-		LocalDateTime plannedEndTime = LocalDateTime.parse("2018-01-21T17:00:00");
+		LocalDateTime plannedStartTime = LocalDateTime.now().withNano(0);
+		LocalDateTime plannedEndTime = plannedStartTime.plusHours(8);
 		ReservedParkingRequest request = new ReservedParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedStartTime, plannedEndTime);
 		
 		// Run general tests

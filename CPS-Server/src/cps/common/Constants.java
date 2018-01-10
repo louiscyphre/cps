@@ -45,4 +45,5 @@ public interface Constants {
 	public final String SQL_UPDATE_PARKING_LOT= "UPDATE parking_lot SET street_address = ?, size=?, content=?, price1=?, price2=?, alternative_lots=?, robot_ip=?, lot_full=? WHERE id=?";
 	public final String SQL_FIND_CAR_TRANSPORTATION_BY_CAR_NUMBER = "SELECT * FROM car_transportation WHERE car_id=? AND lot_id=? AND removed_at IS NULL ORDER BY inserted_at DESC LIMIT 1";
 	public final String GET_SUBSCRIPTION_SERVICE_BY_ID = "SELECT * FROM subscription_service WHERE id=? ORDER BY id";
+	public final float PRICE_PER_HOUR_RESERVED = 4f;
 }
