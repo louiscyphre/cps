@@ -8,6 +8,7 @@ import cps.api.response.ComplaintResponse;
 import cps.api.response.ServerResponse;
 import cps.entities.models.Complaint;
 import cps.server.ServerController;
+import cps.server.session.UserSession;
 
 public class ComplaintController extends RequestController {
 
@@ -15,7 +16,7 @@ public class ComplaintController extends RequestController {
 		super(serverController);
 	}
 
-	public ServerResponse handle(ComplaintRequest request) {
+	public ServerResponse handle(ComplaintRequest request, UserSession session) {
 		return databaseController.performQuery(conn -> {
 			ComplaintResponse response = new ComplaintResponse();
 			Complaint complaint = Complaint.create(conn, request.getCustomerID(), request.getContent(),

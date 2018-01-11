@@ -2,6 +2,7 @@ package cps.api.action;
 
 import cps.api.request.RequestHandler;
 import cps.api.response.ServerResponse;
+import cps.server.session.UserSession;
 
 public class RefundAction extends ServiceAction {
 	private static final long serialVersionUID = 1L;
@@ -35,7 +36,7 @@ public class RefundAction extends ServiceAction {
 	}
 
 	@Override
-	public ServerResponse handle(RequestHandler handler) {
-		return handler.handle(this);
+	public ServerResponse handle(RequestHandler handler, UserSession session) {
+		return handler.handle(this, session);
 	}
 }

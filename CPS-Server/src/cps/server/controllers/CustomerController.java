@@ -5,6 +5,7 @@ import cps.api.response.LoginResponse;
 import cps.api.response.ServerResponse;
 import cps.entities.models.Customer;
 import cps.server.ServerController;
+import cps.server.session.UserSession;
 
 public class CustomerController extends RequestController {
 
@@ -12,7 +13,7 @@ public class CustomerController extends RequestController {
 		super(serverController);
 	}
 	
-	public ServerResponse handle(LoginRequest request) {
+	public ServerResponse handle(LoginRequest request, UserSession session) {
 		return databaseController.performQuery(conn -> {
 			LoginResponse response = new LoginResponse(false, "", 0);
 

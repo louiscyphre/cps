@@ -28,7 +28,8 @@ import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.server.ServerApplication;
 import cps.server.ServerController;
-import cps.server.handlers.CustomerSession;
+import cps.server.session.CustomerSession;
+import cps.server.session.UserSession;
 import cps.common.Utilities.Holder;
 import cps.common.Utilities.Pair;
 
@@ -83,9 +84,10 @@ public class OnetimeParkingController extends RequestController {
 	 *
 	 * @param request
 	 *            the request
+	 * @param session 
 	 * @return the server response
 	 */
-	public ServerResponse handle(IncidentalParkingRequest request) {
+	public ServerResponse handle(IncidentalParkingRequest request, UserSession session) {
 		Timestamp startTime = new Timestamp(System.currentTimeMillis());
 		Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
 		IncidentalParkingResponse response = new IncidentalParkingResponse(false, "");
@@ -99,7 +101,7 @@ public class OnetimeParkingController extends RequestController {
 	 *            the request
 	 * @return the server response
 	 */
-	public ServerResponse handle(ReservedParkingRequest request) {
+	public ServerResponse handle(ReservedParkingRequest request, UserSession session) {
 		Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
 		Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
 		ReservedParkingResponse response = new ReservedParkingResponse(false, "");
@@ -111,9 +113,10 @@ public class OnetimeParkingController extends RequestController {
 	 *
 	 * @param request
 	 *            the request
+	 * @param session 
 	 * @return the server response
 	 */
-	public ServerResponse handle(CancelOnetimeParkingRequest request) {
+	public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
 		return databaseController.performQuery(conn -> {
 			CancelOnetimeParkingResponse response = new CancelOnetimeParkingResponse(false, "");
 			// Mark Order as canceled
@@ -178,7 +181,7 @@ public class OnetimeParkingController extends RequestController {
 	 *            the request
 	 * @return the server response
 	 */
-	public ServerResponse handle(ListOnetimeEntriesRequest request) {
+	public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {
 		return databaseController.performQuery(conn -> {
 			Collection<OnetimeService> result = OnetimeService.findByCustomerID(conn, request.getCustomerID());
 			return new ListOnetimeEntriesResponse(result, request.getCustomerID());

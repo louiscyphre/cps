@@ -27,6 +27,7 @@ import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.controllers.DatabaseController;
 import cps.server.controllers.OnetimeParkingController;
+import cps.server.session.CustomerSession;
 import cps.server.testing.utilities.CustomerData;
 
 @SuppressWarnings("unused")
@@ -63,17 +64,19 @@ public class TegraTests {
 	}
 
 	private IncidentalParkingResponse newIncidentalParking(int lotId) {
+		CustomerSession session = new CustomerSession();
 		LocalDateTime endTime=LocalDateTime.now().plusHours((long)(Math.random()*12)+2).plusMinutes((long)Math.random()*55);
 		IncidentalParkingRequest request = new IncidentalParkingRequest((int)Math.random()*500, Utilities.randomString("angjurufjfjsl@", 10), Utilities.randomString("ILBTA1234567890-", 7), lotId, endTime);
-		IncidentalParkingResponse response = (IncidentalParkingResponse) server.dispatch(request);
+		IncidentalParkingResponse response = (IncidentalParkingResponse) server.dispatch(request, session);
 		assertNotNull(response);
 		return response;
 	}
 	
 	private ParkingLot initParkingLot() {
+		CustomerSession session = new CustomerSession();
 		ParkingLot lt = null;
 		InitLotAction request = new InitLotAction(1, "Sesam 2", 4, 5, 3, "12.f.t43");
-		ServerResponse response = server.dispatch(request);
+		ServerResponse response = server.dispatch(request, session);
 		InitLotResponse re2 = (InitLotResponse) response;
 		lt = db.performQuery(conn -> ParkingLot.findByID(conn, re2.getLotID()));
 		assertNotNull(lt);

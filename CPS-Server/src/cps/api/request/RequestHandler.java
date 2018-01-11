@@ -2,28 +2,29 @@ package cps.api.request;
 
 import cps.api.action.*;
 import cps.api.response.*;
+import cps.server.session.*;
 
 public interface RequestHandler {
 	// Customer requests
-	public ServerResponse handle(CancelOnetimeParkingRequest request);
-	public ServerResponse handle(ComplaintRequest request);
-	public ServerResponse handle(FullSubscriptionRequest request);
-	public ServerResponse handle(IncidentalParkingRequest request);
-	public ServerResponse handle(ListOnetimeEntriesRequest request);
-	public ServerResponse handle(ListParkingLotsRequest request);
-	public ServerResponse handle(ParkingEntryRequest request);
-	public ServerResponse handle(ParkingExitRequest request);
-	public ServerResponse handle(RegularSubscriptionRequest request);
-	public ServerResponse handle(ReservedParkingRequest request);
-	public ServerResponse handle(LoginRequest request);
+	public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session);
+	public ServerResponse handle(ComplaintRequest request, UserSession session);
+	public ServerResponse handle(FullSubscriptionRequest request, UserSession session);
+	public ServerResponse handle(IncidentalParkingRequest request, UserSession session);
+	public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session);
+	public ServerResponse handle(ListParkingLotsRequest request, UserSession session);
+	public ServerResponse handle(ParkingEntryRequest request, UserSession session);
+	public ServerResponse handle(ParkingExitRequest request, UserSession session);
+	public ServerResponse handle(RegularSubscriptionRequest request, UserSession session);
+	public ServerResponse handle(ReservedParkingRequest request, UserSession session);
+	public ServerResponse handle(LoginRequest request, UserSession session);
 
 	// CompanyPerson actions
-	public ServerResponse handle(DisableParkingSlotsAction action);
-	public ServerResponse handle(InitLotAction action);
-	public ServerResponse handle(RefundAction action);
-	public ServerResponse handle(RequestLotStateAction action);
-	public ServerResponse handle(RequestReportAction action);
-	public ServerResponse handle(ReserveParkingSlotsAction action);
-	public ServerResponse handle(SetFullLotAction action);
-	public ServerResponse handle(UpdatePricesAction action);
+	public ServerResponse handle(DisableParkingSlotsAction action, UserSession session);
+	public ServerResponse handle(InitLotAction action, UserSession session);
+	public ServerResponse handle(RefundAction action, UserSession session);
+	public ServerResponse handle(RequestLotStateAction action, UserSession session);
+	public ServerResponse handle(RequestReportAction action, UserSession session);
+	public ServerResponse handle(ReserveParkingSlotsAction action, UserSession session);
+	public ServerResponse handle(SetFullLotAction action, UserSession session);
+	public ServerResponse handle(UpdatePricesAction action, UserSession session);
 }

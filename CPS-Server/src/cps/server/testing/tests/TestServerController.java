@@ -9,6 +9,8 @@ import java.util.Collection;
 
 import cps.server.ServerController;
 import cps.server.controllers.DatabaseController;
+import cps.server.session.CustomerSession;
+import cps.server.session.UserSession;
 import cps.server.testing.utilities.CustomerData;
 import cps.api.request.*;
 import cps.api.action.*;
@@ -57,10 +59,11 @@ public class TestServerController extends TestCase {
 
 	@Test
 	public void testLogin() {
-		/*
-		 * Scenario: 1. Create user 2. Attempt to login as user 3. Attempt to login with
-		 * a wrong password 4. Attempt to login with a wrong email
-		 */
+		/* Scenario:
+		 * 1. Create user
+		 * 2. Attempt to login as user
+		 * 3. Attempt to login with a wrong password
+		 * 4. Attempt to login with a wrong email */
 
 		System.out.println("=== testLogin ===");
 
@@ -72,9 +75,10 @@ public class TestServerController extends TestCase {
 
 		// Create login request
 		LoginRequest request = new LoginRequest(data.email, data.password);
+		CustomerSession session = new CustomerSession();
 
 		// Test the response
-		ServerResponse response = server.handle(request);
+		ServerResponse response = server.dispatch(request, session);
 		printObject(response);
 		assertThat(response, instanceOf(LoginResponse.class));
 		assertTrue(response.success());
@@ -85,91 +89,98 @@ public class TestServerController extends TestCase {
 
 	@Test
 	public void testIncidentalParking() {
-		/*
-		 * Scenario: 1. Create Parking Lot 2. Send Incidental Parking request 3. Send
-		 * Parking Entry request - license: IncidentalParking 4. Send Parking Exit
-		 * request
-		 */
+		/* Scenario:
+		 * 1. Create Parking Lot
+		 * 2. Send Incidental Parking request
+		 * 3. Send Parking Entry request - license: IncidentalParking
+		 * 4. Send Parking Exit request */
 
 		System.out.println("=== testIncidentalParking ===");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+		CustomerSession session = new CustomerSession();
 
-		initParkingLot();
-		requestIncidentalParking(data);
-		requestParkingEntry(data);
-		requestParkingExit(data);
+		initParkingLot(session);
+		requestIncidentalParking(data, session);
+		requestParkingEntry(data, session);
+		requestParkingExit(data, session);
 	}
 
 	@Test
 	public void testReservedParking() {
-		/*
-		 * Scenario: 1. Create Parking Lot 2. Send Reserved Parking request 3. Send
-		 * Parking Entry request - license: ReservedParking 4. Send Parking Exit request
-		 */
+		/* Scenario:
+		 * 1. Create Parking Lot
+		 * 2. Send Reserved Parking request
+		 * 3. Send Parking Entry request - license: ReservedParking
+		 * 4. Send Parking Exit request */
 
 		System.out.println("=== testReservedParking ===");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+		CustomerSession session = new CustomerSession();
 
-		initParkingLot();
-		requestReservedParking(data);
-		requestParkingEntry(data);
-		requestParkingExit(data);
+		initParkingLot(session);
+		requestReservedParking(data, session);
+		requestParkingEntry(data, session);
+		requestParkingExit(data, session);
 	}
 
 	@Test
 	public void testFullSubscription() {
-		/*
-		 * Scenario: 1. Create Parking Lot 2. Send Full Subscription request 3. Send
-		 * Parking Entry request - license: FullSubscription 4. Send Parking Exit
-		 * request
-		 */
+		/* Scenario:
+		 * 1. Create Parking Lot
+		 * 2. Send Full Subscription request
+		 * 3. Send Parking Entry request - license: FullSubscription
+		 * 4. Send Parking Exit request */
 
 		System.out.println("=== testFullSubscription ===");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+		CustomerSession session = new CustomerSession();
 
-		initParkingLot();
-		requestFullSubscription(data);
-		requestParkingEntry(data);
-		requestParkingExit(data);
+		initParkingLot(session);
+		requestFullSubscription(data, session);
+		requestParkingEntry(data, session);
+		requestParkingExit(data, session);
 
 	}
 
 	@Test
 	public void testRegularSubscription() {
-		/*
-		 * Scenario: 1. Create Parking Lot 2. Send Full Subscription request 3. Send
-		 * Parking Entry request - license: FullSubscription 4. Send Parking Exit
-		 * request
-		 */
+		/* Scenario:
+		 * 1. Create Parking Lot
+		 * 2. Send Full Subscription request
+		 * 3. Send Parking Entry request - license: FullSubscription
+		 * 4. Send Parking Exit request */
 
 		System.out.println("=== testRegularSubscription ===");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+		CustomerSession session = new CustomerSession();
 
-		initParkingLot();
-		requestRegularSubscription(data);
-		requestParkingEntry(data);
-		requestParkingExit(data);
+
+		initParkingLot(session);
+		requestRegularSubscription(data, session);
+		requestParkingEntry(data, session);
+		requestParkingExit(data, session);
 
 	}
 
 	@Test
 	public void testCancelOnetimeParking() {
-		/*
-		 * Scenario: 1. Create Parking Lot 2. Send Reserved Parking request 3. Send
-		 * Cancel Onetime Parking request
-		 */
+		/* Scenario:
+		 * 1. Create Parking Lot
+		 * 2. Send Reserved Parking request
+		 * 3. Send Cancel Onetime Parking request */
 
 		System.out.println("=== testCancelOnetimeParking ===");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+		CustomerSession session = new CustomerSession();
 
-		initParkingLot();
-		requestReservedParking(data, Duration.ofHours(3).plusMinutes(1));
+
+		initParkingLot(session);
+		requestReservedParking(data, Duration.ofHours(3).plusMinutes(1), session);
 
 		// Make request
 		CancelOnetimeParkingRequest request = new CancelOnetimeParkingRequest(data.customerID, data.onetimeServiceID);
-
 		// Test response
-		ServerResponse response = server.handle(request);
+		ServerResponse response = server.dispatch(request, session);
 		printObject(response);
 		assertTrue(response.success());
 		assertThat(response, instanceOf(CancelOnetimeParkingResponse.class));
@@ -181,11 +192,12 @@ public class TestServerController extends TestCase {
 	@Test
 	public void testListParkingLots() {
 		System.out.println("=== testListParkingLots ===");
+		CustomerSession session = new CustomerSession();
 
 		// Create lots
 		for (int i = 1; i <= 3; i++) {
 			InitLotAction request = new InitLotAction(1000, "Lot " + i + " Address", 3, 5, 4, "113.0.1.1" + i);
-			ServerResponse response = server.dispatch(request);
+			ServerResponse response = server.dispatch(request, session);
 			assertTrue(response.success());
 		}
 
@@ -195,7 +207,7 @@ public class TestServerController extends TestCase {
 		ListParkingLotsRequest request = new ListParkingLotsRequest();
 
 		// Test response
-		ServerResponse response = server.handle(request);
+		ServerResponse response = server.dispatch(request, session);
 		assertNotNull(response);
 		printObject(response);
 		assertTrue(response.success());
@@ -219,13 +231,14 @@ public class TestServerController extends TestCase {
 
 		// Make request
 		ComplaintRequest request = new ComplaintRequest(data.customerID, "My car was damaged");
+		CustomerSession session = new CustomerSession();
 
 		// Test response
-		ServerResponse response = server.handle(request);
+		ServerResponse response = server.dispatch(request, session);
 		assertNotNull(response);
 		printObject(response);
 		assertThat(response, instanceOf(ComplaintResponse.class));
-		
+
 		ComplaintResponse specificResponse = (ComplaintResponse) response;
 
 		// Test database result
@@ -244,10 +257,10 @@ public class TestServerController extends TestCase {
 		assertEquals(0, entry.getEmployeeID());
 	}
 
-	private void requestSubscription(CustomerData data, SubscriptionRequest request,
+	private void requestSubscription(SubscriptionRequest request, UserSession session, CustomerData data,
 			Pair<SubscriptionService, SubscriptionResponse> holder) {
 		// Test the response
-		ServerResponse response = server.dispatch(request);
+		ServerResponse response = server.dispatch(request, session);
 		printObject(response);
 		assertTrue(response.success());
 
@@ -283,7 +296,7 @@ public class TestServerController extends TestCase {
 		holder.setB(specificResponse);
 	}
 
-	private void requestFullSubscription(CustomerData data) {
+	private void requestFullSubscription(CustomerData data, UserSession session) {
 		// Holder for data to be checked later with type-specific tests
 		Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
@@ -293,13 +306,13 @@ public class TestServerController extends TestCase {
 				startDate);
 
 		// Run general tests
-		requestSubscription(data, request, holder);
+		requestSubscription(request, session, data, holder);
 
 		// Run type-specific tests
 		assertThat(holder.getB(), instanceOf(FullSubscriptionResponse.class));
 	}
 
-	private void requestRegularSubscription(CustomerData data) {
+	private void requestRegularSubscription(CustomerData data, UserSession session) {
 		// Holder for data to be checked later with type-specific tests
 		Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
@@ -310,7 +323,7 @@ public class TestServerController extends TestCase {
 				startDate, data.lotID, dailyExitTime);
 
 		// Run general tests
-		requestSubscription(data, request, holder);
+		requestSubscription(request, session, data, holder);
 
 		// Run type-specific tests
 		SubscriptionService entry = holder.getA();
@@ -318,10 +331,10 @@ public class TestServerController extends TestCase {
 		assertThat(holder.getB(), instanceOf(RegularSubscriptionResponse.class));
 	}
 
-	private void requestOnetimeParking(CustomerData data, OnetimeParkingRequest request,
+	private void requestOnetimeParking(OnetimeParkingRequest request, UserSession session, CustomerData data,
 			Pair<OnetimeService, OnetimeParkingResponse> holder) {
 		// Test the response
-		ServerResponse response = server.dispatch(request);
+		ServerResponse response = server.dispatch(request, session);
 		printObject(response);
 		assertTrue(response.success());
 
@@ -357,7 +370,7 @@ public class TestServerController extends TestCase {
 		holder.setB(specificResponse);
 	}
 
-	private void requestIncidentalParking(CustomerData data) {
+	private void requestIncidentalParking(CustomerData data, UserSession session) {
 		// Holder for data to be checked later with type-specific tests
 		Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 
@@ -367,13 +380,13 @@ public class TestServerController extends TestCase {
 				data.lotID, plannedEndTime);
 
 		// Run general tests
-		requestOnetimeParking(data, request, holder);
+		requestOnetimeParking(request, session, data, holder);
 
 		// Run type-specific tests
 		assertThat(holder.getB(), instanceOf(IncidentalParkingResponse.class));
 	}
 
-	private void requestReservedParking(CustomerData data, Duration delta) {
+	private void requestReservedParking(CustomerData data, Duration delta, UserSession session) {
 		// Holder for data to be checked later with type-specific tests
 		Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 
@@ -384,7 +397,7 @@ public class TestServerController extends TestCase {
 				plannedStartTime, plannedEndTime);
 
 		// Run general tests
-		requestOnetimeParking(data, request, holder);
+		requestOnetimeParking(request, session, data, holder);
 
 		// Run type-specific tests
 		OnetimeService entry = holder.getA();
@@ -392,13 +405,13 @@ public class TestServerController extends TestCase {
 		assertThat(holder.getB(), instanceOf(ReservedParkingResponse.class));
 	}
 
-	private void requestReservedParking(CustomerData data) {
-		requestReservedParking(data, Duration.ZERO);
+	private void requestReservedParking(CustomerData data, UserSession session) {
+		requestReservedParking(data, Duration.ZERO, session);
 	}
 
-	private void initParkingLot() {
+	private void initParkingLot(UserSession session) {
 		InitLotAction request = new InitLotAction(1000, "Lot Address", 3, 5, 4, "113.0.1.14");
-		ServerResponse response = server.dispatch(request);
+		ServerResponse response = server.dispatch(request, session);
 		printObject(response);
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("parking_lot"));
@@ -406,17 +419,10 @@ public class TestServerController extends TestCase {
 		// printObject(lot);
 	}
 
-	private void requestParkingEntry(CustomerData data) {
-		ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, data.subsID, data.lotID, data.carID); // subscriptionID
-																														// =
-																														// 0
-																														// means
-																														// entry
-																														// by
-																														// OnetimeParking
-																														// license
-
-		ServerResponse response = server.dispatch(request);
+	private void requestParkingEntry(CustomerData data, UserSession session) {
+		// subscriptionID = 0 means entry by OnetimeParking license
+		ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, data.subsID, data.lotID, data.carID);
+		ServerResponse response = server.dispatch(request, session);
 		printObject(response);
 		assertTrue(response.success());
 
@@ -426,10 +432,10 @@ public class TestServerController extends TestCase {
 		printObject(entry);
 	}
 
-	private void requestParkingExit(CustomerData data) {
+	private void requestParkingExit(CustomerData data, UserSession session) {
 		ParkingExitRequest request = new ParkingExitRequest(data.customerID, data.lotID, data.carID);
 
-		ServerResponse response = server.dispatch(request);
+		ServerResponse response = server.dispatch(request, session);
 		printObject(response);
 		assertTrue(response.success());
 		assertEquals(1, db.countEntities("car_transportation"));
