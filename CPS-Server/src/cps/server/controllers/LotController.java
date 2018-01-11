@@ -11,7 +11,7 @@ import cps.api.action.UpdatePricesAction;
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ListParkingLotsResponse;
-import cps.api.response.LotStateResponse;
+import cps.api.response.RequestLotStateResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
@@ -114,9 +114,9 @@ public class LotController extends RequestController {
 	}
 
 
-	public LotStateResponse handle(RequestLotStateAction action, UserSession session) {
+	public RequestLotStateResponse handle(RequestLotStateAction action, UserSession session) {
 		return database.performQuery(conn -> {
-			LotStateResponse response = new LotStateResponse(false, "", null);
+			RequestLotStateResponse response = new RequestLotStateResponse(false, "", null);
 			
 			try {
 				ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());				

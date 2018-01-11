@@ -61,9 +61,9 @@ public class TestRequestLotState extends ServerControllerTest {
 		assertNotNull(response);
 		assertTrue(response.success());
 		printObject(response);
-		assertThat(response, instanceOf(LotStateResponse.class));
+		assertThat(response, instanceOf(RequestLotStateResponse.class));
 		
-		LotStateResponse specificResponse = (LotStateResponse) response;
+		RequestLotStateResponse specificResponse = (RequestLotStateResponse) response;
 		ParkingLot responseLot = specificResponse.getLot();
 		assertNotNull(responseLot);
 		assertEquals(lot.getId(), responseLot.getId());

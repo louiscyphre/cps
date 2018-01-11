@@ -2,11 +2,11 @@ package cps.api.response;
 
 import cps.entities.models.ParkingLot;
 
-public class LotStateResponse extends ServerResponse {
+public class RequestLotStateResponse extends ServerResponse {
 	private static final long serialVersionUID = 1L;
 	private ParkingLot lot;
 
-	public LotStateResponse(boolean success, String description, ParkingLot lot) {
+	public RequestLotStateResponse(boolean success, String description, ParkingLot lot) {
 		super(success, description);
 		this.lot = lot;
 	}
