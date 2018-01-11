@@ -15,6 +15,7 @@ import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
 import cps.entities.models.SubscriptionService;
 import cps.server.ServerController;
+import cps.server.session.UserSession;
 
 /**
  * The Class EntryExitController.
@@ -36,9 +37,10 @@ public class ParkingEntryController extends RequestController {
 	 *
 	 * @param request
 	 *            the request
+	 * @param session 
 	 * @return the server response
 	 */
-	public ServerResponse handle(ParkingEntryRequest request) {
+	public ServerResponse handle(ParkingEntryRequest request, UserSession session) {
 		return databaseController.performQuery(conn -> {
 			ParkingEntryResponse response = new ParkingEntryResponse(false, "", request);
 

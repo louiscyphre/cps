@@ -4,6 +4,7 @@ import cps.api.action.*;
 import cps.api.request.*;
 import cps.api.response.*;
 import cps.server.controllers.*;
+import cps.server.session.UserSession;
 
 public class ServerController implements RequestHandler {
 	private final ServerConfig config;
@@ -65,8 +66,8 @@ public class ServerController implements RequestHandler {
 		return transportationController;
 	}
 
-	public ServerResponse dispatch(Request message) {
-		ServerResponse response = message.handle(this);
+	public ServerResponse dispatch(Request message, UserSession session) {
+		ServerResponse response = message.handle(this, session);
 
 		if (response == null) {
 			return ServerResponse.error("Not implemented");
@@ -76,102 +77,101 @@ public class ServerController implements RequestHandler {
 	}
 
 	@Override
-	public ServerResponse handle(CancelOnetimeParkingRequest request) {
-		return onetimeParkingController.handle(request);
+	public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
+		return onetimeParkingController.handle(request, session);
 	}
 
 	@Override
-	public ServerResponse handle(ComplaintRequest request) {
-		return complaintController.handle(request);
+	public ServerResponse handle(ComplaintRequest request, UserSession session) {
+		return complaintController.handle(request, session);
 	}
 
 	@Override
-	public ServerResponse handle(FullSubscriptionRequest request) {
-		return subscriptionController.handle(request);
+	public ServerResponse handle(FullSubscriptionRequest request, UserSession session) {
+		return subscriptionController.handle(request, session);
 	}
 
 	@Override
-	public ServerResponse handle(IncidentalParkingRequest request) {
-		return onetimeParkingController.handle(request);
+	public ServerResponse handle(IncidentalParkingRequest request, UserSession session) {
+		return onetimeParkingController.handle(request, session);
 	}
 
 	@Override
-	public ServerResponse handle(ListOnetimeEntriesRequest request) {
-		return onetimeParkingController.handle(request);
+	public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {
+		return onetimeParkingController.handle(request, session);
 	}
 
 	@Override
-	public ServerResponse handle(ListParkingLotsRequest request) {
-		return lotController.handle(request);
+	public ServerResponse handle(ListParkingLotsRequest request, UserSession session) {
+		return lotController.handle(request, session);
 	}
 
 	@Override
-	public ServerResponse handle(ParkingEntryRequest request) {
-		return entryController.handle(request);
+	public ServerResponse handle(ParkingEntryRequest request, UserSession session) {
+		return entryController.handle(request, session);
 	}
 
 	@Override
-	public ServerResponse handle(ParkingExitRequest request) {
-		return exitController.handle(request);
+	public ServerResponse handle(ParkingExitRequest request, UserSession session) {
+		return exitController.handle(request, session);
 	}
 
 	@Override
-	public ServerResponse handle(RegularSubscriptionRequest request) {
-		return subscriptionController.handle(request);
+	public ServerResponse handle(RegularSubscriptionRequest request, UserSession session) {
+		return subscriptionController.handle(request, session);
 	}
 
 	@Override
-	public ServerResponse handle(ReservedParkingRequest request) {
-		return onetimeParkingController.handle(request);
+	public ServerResponse handle(ReservedParkingRequest request, UserSession session) {
+		return onetimeParkingController.handle(request, session);
 	}
 
 	@Override
-	public ServerResponse handle(LoginRequest request) {
-		return userController.handle(request);
+	public ServerResponse handle(LoginRequest request, UserSession session) {
+		return userController.handle(request, session);
 	}
 
 	@Override
-	public ServerResponse handle(DisableParkingSlotsAction action) {
+	public ServerResponse handle(DisableParkingSlotsAction action, UserSession session) {
 		// TODO DisableParkingSlotsAction
 		return null;
 	}
 
 	@Override
-	public ServerResponse handle(InitLotAction action) {
-		return lotController.handle(action);
+	public ServerResponse handle(InitLotAction action, UserSession session) {
+		return lotController.handle(action, session);
 	}
 
 	@Override
-	public ServerResponse handle(RefundAction action) {
+	public ServerResponse handle(RefundAction action, UserSession session) {
 		// TODO RefundAction
 		return null;
 	}
 
 	@Override
-	public ServerResponse handle(RequestLotStateAction action) {
-		// TODO: Request Lot State Action
-		return null;
+	public ServerResponse handle(RequestLotStateAction action, UserSession session) {
+		return lotController.handle(action, session);
 	}
 
 	@Override
-	public ServerResponse handle(RequestReportAction action) {
+	public ServerResponse handle(RequestReportAction action, UserSession session) {
 		// TODO: Request Report Action
 		return null;
 	}
 
 	@Override
-	public ServerResponse handle(ReserveParkingSlotsAction action) {
+	public ServerResponse handle(ReserveParkingSlotsAction action, UserSession session) {
 		// TODO: Reserve Parking Slots Action
 		return null;
 	}
 
 	@Override
-	public ServerResponse handle(SetFullLotAction action) {
-		return lotController.handle(action);
+	public ServerResponse handle(SetFullLotAction action, UserSession session) {
+		return lotController.handle(action, session);
 	}
 
 	@Override
-	public ServerResponse handle(UpdatePricesAction action) {
-		return lotController.handle(action);
+	public ServerResponse handle(UpdatePricesAction action, UserSession session) {
+		return lotController.handle(action, session);
 	}
 }

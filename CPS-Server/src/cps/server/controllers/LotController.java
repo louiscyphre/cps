@@ -3,15 +3,18 @@ package cps.server.controllers;
 import java.util.Collection;
 
 import cps.api.action.InitLotAction;
+import cps.api.action.RequestLotStateAction;
 import cps.api.action.SetFullLotAction;
 import cps.api.action.UpdatePricesAction;
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ListParkingLotsResponse;
+import cps.api.response.LotStateResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.server.ServerController;
+import cps.server.session.UserSession;
 import cps.entities.models.DatabaseException;
 import cps.entities.models.ParkingLot;
 
@@ -29,6 +32,26 @@ public class LotController extends RequestController {
 	public LotController(ServerController serverController) {
 		super(serverController);
 	}
+	
+	/**
+	 * Handle ListParkingLotsRequest
+	 * @param request
+	 * @param session 
+	 * @return Collection of ParkingLot objects
+	 */
+	public ServerResponse handle(ListParkingLotsRequest request, UserSession session) {
+		return databaseController.performQuery(conn -> {
+			Collection<ParkingLot> result = ParkingLot.findAll(conn);
+			
+			// Filter out information that customers shouldn't see
+			result.forEach(lot -> {
+				lot.setContent(null);
+				lot.setRobotIP(null);
+			});
+			
+			return new ListParkingLotsResponse(result);
+		});
+	}
 
 
 	/**
@@ -38,7 +61,7 @@ public class LotController extends RequestController {
 	 *            the request
 	 * @return the server response
 	 */
-	public InitLotResponse handle(InitLotAction request) {
+	public InitLotResponse handle(InitLotAction request, UserSession session) {
 		return databaseController.performQuery(conn -> {
 			ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(),
 					request.getPrice1(), request.getPrice2(), request.getRobotIP());
@@ -58,7 +81,7 @@ public class LotController extends RequestController {
 	 *            the action
 	 * @return the update prices response
 	 */
-	public UpdatePricesResponse handle(UpdatePricesAction action) {
+	public UpdatePricesResponse handle(UpdatePricesAction action, UserSession session) {
 		return databaseController.performQuery(conn -> {
 			ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
 			lot.setPrice1(action.getPrice1());
@@ -73,7 +96,7 @@ public class LotController extends RequestController {
 		});
 	}
 
-	public SetFullLotResponse handle(SetFullLotAction action) {
+	public SetFullLotResponse handle(SetFullLotAction action, UserSession session) {
 		return databaseController.performQuery(conn -> {
 			ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
 			lot.setLotFull(action.getLotFull());
@@ -88,10 +111,20 @@ public class LotController extends RequestController {
 		});
 	}
 
-	public ServerResponse handle(ListParkingLotsRequest request) {
+
+	public LotStateResponse handle(RequestLotStateAction action, UserSession session) {
 		return databaseController.performQuery(conn -> {
-			Collection<ParkingLot> result = ParkingLot.findAll(conn);
-			return new ListParkingLotsResponse(result);
+			LotStateResponse response = new LotStateResponse(false, "", null);
+			
+			try {
+				ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());				
+				response.setLot(lot);
+				response.setSuccess("RequestLotState request completed successfully");
+			} catch (DatabaseException e) {
+				response.setError(e.getMessage());
+			}
+			
+			return response;
 		});
 	}
 

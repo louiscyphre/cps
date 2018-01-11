@@ -31,6 +31,7 @@ import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.controllers.DatabaseController;
 import cps.server.controllers.OnetimeParkingController;
+import cps.server.session.CustomerSession;
 import cps.server.testing.utilities.CustomerData;
 
 @SuppressWarnings("unused")
@@ -50,7 +51,9 @@ public class TegraTests {
 	public void testInsertCars() {
 		int parkingRequestsNo = 5;
 		/*
-		 * Create parking lot Create incidental parking request Insert the car
+		 * Create parking lot 
+		 * Create incidental parking request 
+		 * Insert the car
 		 */
 
 		ParkingLot lot = initParkingLot();

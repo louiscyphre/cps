@@ -16,7 +16,8 @@ import cps.api.request.FullSubscriptionRequest;
 import cps.api.request.RegularSubscriptionRequest;
 import cps.api.request.SubscriptionRequest;
 import cps.server.ServerController;
-import cps.server.handlers.CustomerSession;
+import cps.server.session.CustomerSession;
+import cps.server.session.UserSession;
 
 public class SubscriptionController extends RequestController {
 
@@ -24,7 +25,7 @@ public class SubscriptionController extends RequestController {
 		super(serverController);
 	}
 	
-	public ServerResponse handle(FullSubscriptionRequest request) {
+	public ServerResponse handle(FullSubscriptionRequest request, UserSession session) {
 		LocalDate startDate = request.getStartDate();
 		LocalDate endDate = startDate.plusDays(28);
 		LocalTime dailyExitTime = LocalTime.of(0, 0, 0);
@@ -32,7 +33,7 @@ public class SubscriptionController extends RequestController {
 		return handle(request, response, startDate, endDate, dailyExitTime);
 	}
 	
-	public ServerResponse handle(RegularSubscriptionRequest request) {
+	public ServerResponse handle(RegularSubscriptionRequest request, UserSession session) {
 		LocalDate startDate = request.getStartDate();
 		LocalDate endDate = startDate.plusDays(28);
 		LocalTime dailyExitTime = request.getDailyExitTime();
