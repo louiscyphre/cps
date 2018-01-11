@@ -3,6 +3,8 @@ package cps.server.controllers;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import cps.api.request.ParkingExitRequest;
 import cps.api.response.ParkingExitResponse;
@@ -13,6 +15,7 @@ import cps.entities.models.Customer;
 import cps.entities.models.DatabaseException;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
+import cps.entities.models.SubscriptionService;
 import cps.server.ServerController;
 
 /**
@@ -88,7 +91,7 @@ public class ParkingExitController extends RequestController {
 	}
 
 	public static float calculatePayment(Connection conn, CarTransportation carTransportation,
-			ParkingExitRequest exitRequest) throws SQLException {
+			ParkingExitRequest exitRequest) throws SQLException, DatabaseException {
 		float tariffLow = 0, tariffHigh = 0;
 
 		long startedLate, inside, endedLate;
@@ -97,15 +100,15 @@ public class ParkingExitController extends RequestController {
 		if (carTransportation.getAuthType() == Constants.LICENSE_TYPE_ONETIME) {
 			// If customer did not park by subscription charge him according to park type
 			// Determine incidental or reserved parking
-			OnetimeService parkingService = OnetimeService.findByID(conn, carTransportation.getAuthID());
+			OnetimeService parkingService = OnetimeService.findByIDNotNull(conn, carTransportation.getAuthID());
 
 			// Determine prices at that parking lot
-			ParkingLot parkingLot = ParkingLot.findByID(conn, exitRequest.getLotID());
+			ParkingLot parkingLot = ParkingLot.findByIDNotNull(conn, exitRequest.getLotID());
 
 			if (parkingService.getParkingType() == Constants.PARKING_TYPE_INCIDENTAL) {
 				tariffLow = parkingLot.getPrice1() / 60; // get incidental price
 				tariffHigh = tariffLow / 60; // fine price equals regular price
-			} else {
+			} else { // PARKING_TYPE_RESERVED
 				tariffLow = parkingLot.getPrice2() / 60; // get reserved price
 				tariffHigh = parkingLot.getPrice1() / 60; // fine price is higher
 			}
@@ -122,10 +125,10 @@ public class ParkingExitController extends RequestController {
 			endedLate = carTransportation.getRemovedAt().getTime() - parkingService.getPlannedEndTime().getTime();
 			endedLate = endedLate / (60 * 1000);
 
-			// If the customer running late less that 30 minutes - discard being late and
+			// If the customer running late less than 30 minutes - discard being late and
 			// charge full ordered time
 			if (startedLate < 30) {
-				startedLate = (long) 0;
+				startedLate = 0;
 			} else {
 				// if the customer came in early simply add minutes to total time and charge
 				// normal
@@ -136,15 +139,24 @@ public class ParkingExitController extends RequestController {
 
 			// If the customer exits early - charge full time and discard early minutes
 			if (endedLate < 0) {
-				endedLate = (long) 0;
+				endedLate = 0;
 			}
 			// At last we calculate the sum
 			// The formula is according to the requirements
 			return startedLate * tariffLow * 1.2f + inside * tariffLow + endedLate * tariffHigh;
+		} else if (carTransportation.getAuthType() == Constants.LICENSE_TYPE_SUBSCRIPTION) {
+			SubscriptionService service = SubscriptionService.findByIDNotNull(conn, carTransportation.getAuthID());
+			
+			if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {			
+				Timestamp plannedExitTime = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(), service.getDailyExitTime()));
+				endedLate = carTransportation.getRemovedAt().getTime() - plannedExitTime.getTime();
+				endedLate = endedLate / (60 * 1000); // round down to minutes
+				if (endedLate > 0) {
+					ParkingLot parkingLot = ParkingLot.findByIDNotNull(conn, exitRequest.getLotID());	
+					return endedLate * parkingLot.getPrice1() / 60;
+				}
+			}
 		}
-
-		// TODO: if customer has subscription - charge him only for being late
-		// TODO: calculate subscription exit late fine
 
 		return 0f;
 	}

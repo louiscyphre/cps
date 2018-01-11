@@ -52,6 +52,7 @@ public class OnetimeParkingController extends RequestController {
 			Timestamp plannedEndTime) {
 		return databaseController.performQuery(conn -> {
 			// TODO: check request parameters
+			// End time can't be earlier than start time
 			CustomerSession session = new CustomerSession();
 			session.findOrRegisterCustomer(conn, response, request.getCustomerID(), request.getEmail());
 
