@@ -99,7 +99,7 @@ public class CarTransportationController extends RequestController {
 						priority = (int) (5 * (exitTime.toLocalTime().toSecondOfDay() - LocalTime.now().toSecondOfDay())
 								/ (LocalTime.MAX.toSecondOfDay() * 2 - LocalTime.now().toSecondOfDay()));
 					}
-					if (priority > 4) {
+					if (priority > 4 || priority<0) {
 						priority = 4;
 					}
 				}
