@@ -1,7 +1,5 @@
 package cps.server.session;
 
-import java.sql.Connection;
-
 import cps.entities.people.*;
 
 public class ServiceSession extends BasicSession {
@@ -12,7 +10,7 @@ public class ServiceSession extends BasicSession {
 		return user;
 	}
 	
-	public CompanyPerson login(Connection conn, String username, String password) {
+	public CompanyPerson login(String username, String password) {
 		user = CompanyPersonService.findWithLoginData(username, password);		
 		return user;
 	}

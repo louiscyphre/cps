@@ -59,6 +59,6 @@ public interface Constants {
 	// SQL queries - Complaint
 	public final String SQL_CREATE_COMPLAINT = "INSERT INTO complaint values(default, ?, default, ?, ?, ?, ?, default)";
 	public final String SQL_FIND_COMPLAINT_BY_ID = "SELECT * FROM complaint WHERE id=?";
-	public final String SQL_UPDATE_COMPLAINT_LIGHT = "UPDATE complaint SET customer_id = ?, employee_id = ?, status = ?";
-	public final String SQL_UPDATE_COMPLAINT = "UPDATE complaint SET customer_id = ?, employee_id = ?, status = ?, description = ?";
+	public final String SQL_UPDATE_COMPLAINT_LIGHT = "UPDATE complaint SET customer_id = ?, employee_id = ?, status = ?, resolved_at = ?, refund_amount = ?";
+	public final String SQL_UPDATE_COMPLAINT = "UPDATE complaint SET customer_id = ?, employee_id = ?, status = ?, resolved_at = ?, refund_amount = ?, description = ?";
 }

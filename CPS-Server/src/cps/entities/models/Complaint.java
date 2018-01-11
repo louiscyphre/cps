@@ -166,6 +166,8 @@ public class Complaint implements Serializable {
 		st.setInt(field++, customerID);
 		st.setInt(field++, employeeID);
 		st.setInt(field++, status);
+		st.setTimestamp(field++, resolvedAt);
+		st.setFloat(field++, refundAmount);
 
 		if (!light) {
 			st.setString(field++, description);

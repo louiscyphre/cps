@@ -28,6 +28,7 @@ import cps.api.response.ServerResponse;
 import cps.api.response.SubscriptionResponse;
 import cps.common.Utilities.Pair;
 import cps.entities.models.CarTransportation;
+import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
@@ -266,5 +267,12 @@ public abstract class ServerControllerTest extends TestCase {
 		assertNotNull(entry);
 		assertNotNull(entry.getRemovedAt());
 		printObject(entry);
+	}
+	
+	protected Customer makeCustomer(CustomerData data) {
+		Customer customer = db.performQuery(conn -> Customer.create(conn, data.email, data.password));
+		assertNotNull(customer);
+		printObject(customer);
+		return customer;
 	}
 }

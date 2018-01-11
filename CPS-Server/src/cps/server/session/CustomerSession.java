@@ -9,10 +9,22 @@ import cps.entities.models.Customer;
 import cps.entities.people.User;
 
 public class CustomerSession extends BasicSession {
-	protected Customer customer = null;
+	protected Customer customer;
+	
+	public CustomerSession() {
+		this.customer = null;
+	}
+	
+	public CustomerSession(Customer customer) {
+		this.customer = customer;
+	}
 
 	public Customer getCustomer() {
 		return customer;
+	}
+	
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 	public boolean findCustomer(Connection conn, ServerResponse response, int customerID) throws SQLException {

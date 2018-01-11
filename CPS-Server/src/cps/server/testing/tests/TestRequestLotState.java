@@ -48,7 +48,7 @@ public class TestRequestLotState extends ServerControllerTest {
 		
 		ServiceSession session = new ServiceSession();
 		
-		User user = db.performQuery(conn -> session.login(conn, "malki", "1234"));
+		User user = session.login("malki", "1234");
 		assertTrue(user == session.getUser());
 		assertNotNull(session.getUser());
 		

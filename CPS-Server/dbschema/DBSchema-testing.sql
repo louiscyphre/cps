@@ -49,6 +49,7 @@ CREATE TABLE `complaint` (
   `description` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `resolved_at` timestamp NULL DEFAULT NULL,
+  `refund_amount` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=Memory DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
