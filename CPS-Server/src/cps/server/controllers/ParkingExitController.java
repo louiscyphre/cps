@@ -72,19 +72,14 @@ public class ParkingExitController extends RequestController {
 				 * that get in the way in an attempt to locate them in accordance to the current
 				 * situation
 				 */
-				// TODO wait until this is fixed
-//				LotController lotController = serverController.getLotController();
-//
-//				if (!lotController.retrieveCar(conn, request.getLotID(), request.getCarID())) { // Car retrieval failed
-//					response.setError("Failed to retrieve the car from the parking lot");
-//					return response;
-//				}
+				CarTransportationController transportationController = serverController.getTransportationController();
+				transportationController.retrieveCar(conn, request.getLotID(), request.getCarID()); // TODO wait until this is fixed
 
 				// Success
 				response.setCustomerID(customer.getId());
 				response.setPayment(sum);
 				response.setSuccess("ParkingExit request completed successfully");
-			} catch (DatabaseException ex) {
+			} catch (DatabaseException | CarTransportationException ex) {
 				response.setError(ex.getMessage());
 			}
 			

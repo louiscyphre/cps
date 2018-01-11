@@ -205,6 +205,7 @@ public class CarTransportationController extends RequestController {
 				}
 			}
 			// insert the car
+			System.out.println(String.format("Inserting car %s into location %s, %s, %s", carId, maxSize, maxHeight, maxDepth));
 			thisContent[maxSize][maxHeight][maxDepth] = carId;
 			// call a robot
 			// this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId, maxSize,
@@ -272,16 +273,19 @@ public class CarTransportationController extends RequestController {
 	 * @return Number of cars that are in the way of the desired car insertion
 	 */
 	private int calculatePath(String[][][] content, int iSize, int iHeight, int iDepth) {
+//		System.out.println(String.format("calculatePath(content, %s, %s, %s)", iSize, iHeight, iDepth));
 		int totalcars = 0;
 		int h = iHeight, d = iDepth;
 		
-		while (d-- > 0) {
+		while (d > 0) {
+			d--;
 			if (!content[iSize][h][d].equals(Constants.SPOT_IS_EMPTY)) {
 				totalcars++;
 			}
 		}
 		
-		while (h-- > 0) {
+		while (h > 0) {
+			h--;
 			if (!content[iSize][h][d].equals(Constants.SPOT_IS_EMPTY)) {
 				totalcars++;
 			}
@@ -303,8 +307,9 @@ public class CarTransportationController extends RequestController {
 	 * @throws SQLException
 	 *             the SQL exception
 	 * @throws DatabaseException
+	 * @throws CarTransportationException 
 	 */
-	public boolean retrieveCar(Connection conn, int lotId, String carID) throws SQLException, DatabaseException {
+	public void retrieveCar(Connection conn, int lotId, String carID) throws SQLException, DatabaseException, CarTransportationException {
 		ParkingLot lot = ParkingLot.findByID(conn, lotId);
 		String[][][] content = lot.getContentAsArray();
 
@@ -321,7 +326,7 @@ public class CarTransportationController extends RequestController {
 		for (int iSize = 0; iSize < lot.getSize() && !found; iSize++) {
 			for (int iHeight = 0; iHeight < 3 && !found; iHeight++) {
 				for (int iDepth = 0; iDepth < 3 && !found; iDepth++) {
-					if (content[iSize][iHeight][iDepth] == carID) {
+					if (content[iSize][iHeight][iDepth].equals(carID)) {
 						// When found, mark the spot as empty and remember the location
 						eSize = iSize;
 						eHeight = iHeight;
@@ -334,6 +339,8 @@ public class CarTransportationController extends RequestController {
 				}
 			}
 		}
+		
+		System.out.println(String.format("Retrieving car %s from location %s, %s, %s", carID, eSize, eHeight, eDepth));
 
 		/*
 		 * We need to remove all the cars in the way before we will be able to
@@ -375,9 +382,7 @@ public class CarTransportationController extends RequestController {
 
 		// robbie.retrieveCar(carID, eSize, iHeight, iDepth);
 		if (!insertCars(conn, lot, carIds, exitTimes)) {
-			return false;
+			throw new CarTransportationException("Failed to retrieve car");
 		}
-
-		return true;
 	}
 }
