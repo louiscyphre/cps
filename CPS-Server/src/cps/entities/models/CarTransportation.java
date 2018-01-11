@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import cps.common.Constants;
+import cps.server.ServerException;
 
 public class CarTransportation implements Serializable {
 
@@ -99,7 +100,7 @@ public class CarTransportation implements Serializable {
 
 	// Creates a new CarTransportation entry in the SQL table
 	public static CarTransportation create(Connection conn, int customerID, String carID, int authType, int authID,
-			int lotID) throws SQLException, DatabaseException {
+			int lotID) throws SQLException, ServerException {
 		PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_CAR_TRANSPORTATION,
 				Statement.RETURN_GENERATED_KEYS);
 
@@ -111,7 +112,7 @@ public class CarTransportation implements Serializable {
 		statement.setInt(field++, lotID);
 		
 		if (statement.executeUpdate() <= 0) {
-			throw new DatabaseException("CarTransportation entry creation failed");
+			throw new ServerException("CarTransportation entry creation failed");
 		}
 
 		ResultSet keys = statement.getGeneratedKeys();
@@ -226,17 +227,17 @@ public class CarTransportation implements Serializable {
 		return items;
 	}
 	
-	public ParkingLot getParkingLot(Connection conn) throws SQLException, DatabaseException {
+	public ParkingLot getParkingLot(Connection conn) throws SQLException, ServerException {
 		return ParkingLot.findByIDNotNull(conn, lotID);
 	}
 	
-	public ParkingService getParkingService(Connection conn) throws SQLException, DatabaseException {
+	public ParkingService getParkingService(Connection conn) throws SQLException, ServerException {
 		if (authType == Constants.LICENSE_TYPE_ONETIME) {
 			return OnetimeService.findByIDNotNull(conn, authID);
 		} else if (authType == Constants.LICENSE_TYPE_SUBSCRIPTION) {
 			return SubscriptionService.findByIDNotNull(conn, authID);
 		} else {
-			throw new DatabaseException("Invalid license type " + authType);
+			throw new ServerException("Invalid license type " + authType);
 		}
 	}
 

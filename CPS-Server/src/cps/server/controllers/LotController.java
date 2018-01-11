@@ -2,8 +2,10 @@ package cps.server.controllers;
 
 import java.util.Collection;
 
+import cps.api.action.DisableParkingSlotsAction;
 import cps.api.action.InitLotAction;
 import cps.api.action.RequestLotStateAction;
+import cps.api.action.ReserveParkingSlotsAction;
 import cps.api.action.SetFullLotAction;
 import cps.api.action.UpdatePricesAction;
 import cps.api.request.ListParkingLotsRequest;
@@ -13,9 +15,9 @@ import cps.api.response.LotStateResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
+import cps.server.ServerException;
 import cps.server.ServerController;
 import cps.server.session.UserSession;
-import cps.entities.models.DatabaseException;
 import cps.entities.models.ParkingLot;
 
 /**
@@ -90,7 +92,7 @@ public class LotController extends RequestController {
 			try {
 				lot.update(conn);
 				return new UpdatePricesResponse(true, "Prices updates succsessfully");
-			} catch (DatabaseException ex) {
+			} catch (ServerException ex) {
 				return new UpdatePricesResponse(false, ex.getMessage());
 			}
 		});
@@ -105,7 +107,7 @@ public class LotController extends RequestController {
 			try {
 				lot.update(conn);
 				return new SetFullLotResponse(true, "Lot status set");
-			} catch (DatabaseException ex) {
+			} catch (ServerException ex) {
 				return new SetFullLotResponse(false, ex.getMessage());
 			}
 		});
@@ -113,6 +115,7 @@ public class LotController extends RequestController {
 
 
 	public LotStateResponse handle(RequestLotStateAction action, UserSession session) {
+		// TODO test RequestLotStateAction
 		return databaseController.performQuery(conn -> {
 			LotStateResponse response = new LotStateResponse(false, "", null);
 			
@@ -120,12 +123,22 @@ public class LotController extends RequestController {
 				ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());				
 				response.setLot(lot);
 				response.setSuccess("RequestLotState request completed successfully");
-			} catch (DatabaseException e) {
+			} catch (ServerException e) {
 				response.setError(e.getMessage());
 			}
 			
 			return response;
 		});
+	}
+
+	public ServerResponse handle(ReserveParkingSlotsAction action, UserSession session) {
+		// TODO implement ReserveParkingSlotsAction
+		return null;
+	}
+
+	public ServerResponse handle(DisableParkingSlotsAction action, UserSession session) {
+		// TODO implement DisableParkingSlotsAction
+		return null;
 	}
 
 }

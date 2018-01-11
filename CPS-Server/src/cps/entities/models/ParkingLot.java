@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import cps.common.Constants;
+import cps.server.ServerException;
 
 /**
  * The Class ParkingLot.
@@ -402,11 +403,11 @@ public class ParkingLot implements Serializable {
 		return result;
 	}
 
-	public static ParkingLot findByIDNotNull(Connection conn, int id) throws SQLException, DatabaseException {
+	public static ParkingLot findByIDNotNull(Connection conn, int id) throws SQLException, ServerException {
 		ParkingLot result = findByID(conn, id);
 
 		if (result == null) {
-			throw new DatabaseException("ParkingLot with id " + id + " does not exist");
+			throw new ServerException("ParkingLot with id " + id + " does not exist");
 		}
 
 		return result;
@@ -429,7 +430,7 @@ public class ParkingLot implements Serializable {
 		return free;
 	}
 
-	public int update(Connection conn) throws SQLException, DatabaseException {
+	public int update(Connection conn) throws SQLException, ServerException {
 		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
 		int index = 1;
 		int result = 0;
@@ -446,7 +447,7 @@ public class ParkingLot implements Serializable {
 		st.close();
 		
 		if (result <= 0) {
-			throw new DatabaseException("Failed to update ParkingLot");
+			throw new ServerException("Failed to update ParkingLot");
 		}
 		
 		return result;

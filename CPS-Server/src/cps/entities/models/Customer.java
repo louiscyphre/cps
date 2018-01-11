@@ -9,6 +9,7 @@ import java.sql.Statement;
 
 import cps.common.Constants;
 import cps.entities.people.User;
+import cps.server.ServerException;
 
 public class Customer implements Serializable, User {
 	private static final long serialVersionUID = 1L;
@@ -119,7 +120,7 @@ public class Customer implements Serializable, User {
 		return result;
 	}
 	
-	public void update(Connection conn) throws SQLException, DatabaseException {
+	public void update(Connection conn) throws SQLException, ServerException {
 		PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_CUSTOMER);
 
 		int index = 1;
@@ -135,7 +136,7 @@ public class Customer implements Serializable, User {
 		st.close();
 
 		if (updated <= 0) {
-			throw new DatabaseException("Failed to update customer");
+			throw new ServerException("Failed to update customer");
 		}
 	}
 
@@ -157,22 +158,22 @@ public class Customer implements Serializable, User {
 		return result;
 	}
 
-	public static Customer findByIDNotNull(Connection conn, int id) throws SQLException, DatabaseException {
+	public static Customer findByIDNotNull(Connection conn, int id) throws SQLException, ServerException {
 		Customer result = findByID(conn, id);
 
 		if (result == null) {
-			throw new DatabaseException("Customer with id " + id + " does not exist");
+			throw new ServerException("Customer with id " + id + " does not exist");
 		}
 
 		return result;
 	}
 	
-	public void pay(Connection conn, float sum) throws SQLException, DatabaseException {
+	public void pay(Connection conn, float sum) throws SQLException, ServerException {
 		addDebit(sum);
 		update(conn);
 	}
 	
-	public void receiveRefund(Connection conn, float sum) throws SQLException, DatabaseException {
+	public void receiveRefund(Connection conn, float sum) throws SQLException, ServerException {
 		addCredit(sum);
 		update(conn);
 	}

@@ -11,7 +11,6 @@ import java.util.Collection;
 
 import com.google.gson.Gson;
 
-import cps.api.action.InitLotAction;
 import cps.api.request.FullSubscriptionRequest;
 import cps.api.request.IncidentalParkingRequest;
 import cps.api.request.OnetimeParkingRequest;
@@ -30,6 +29,7 @@ import cps.api.response.SubscriptionResponse;
 import cps.common.Utilities.Pair;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.OnetimeService;
+import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
@@ -229,14 +229,12 @@ public abstract class ServerControllerTest extends TestCase {
 		requestReservedParking(data, Duration.ZERO, session);
 	}
 
-	protected void initParkingLot(UserSession session) {
-		InitLotAction request = new InitLotAction(1000, "Lot Address", 3, 5, 4, "113.0.1.14");
-		ServerResponse response = server.dispatch(request, session);
-		printObject(response);
-		assertTrue(response.success());
+	protected ParkingLot initParkingLot(UserSession session) {
+		ParkingLot lot = db.performQuery(conn -> ParkingLot.create(conn, "Lot Address", 3, 5, 4, "113.0.1.14"));
+		assertNotNull(lot);
+		printObject(lot);
 		assertEquals(1, db.countEntities("parking_lot"));
-		// ParkingLot lot = db.performQuery(conn -> ParkingLot.findByID(conn, 1));
-		// printObject(lot);
+		return lot;
 	}
 
 	protected void requestParkingEntry(CustomerData data, UserSession session) {

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedList;
 import cps.common.Constants;
+import cps.server.ServerException;
 
 // Database entity for one-time parking services - incidental parking or reserved parking both stored in the same table.
 
@@ -23,7 +24,7 @@ public class OnetimeService implements ParkingService {
 	private String email;
 	private String carID;
 	private int lotID;
-	private Timestamp plannedStartTime; // null for incidental TODO - Why not current time?
+	private Timestamp plannedStartTime; // Current time for incidental
 	private Timestamp plannedEndTime;
 	private boolean canceled;
 
@@ -250,11 +251,11 @@ public class OnetimeService implements ParkingService {
 		return item;
 	}
 	
-	public ParkingLot getParkingLot(Connection conn) throws SQLException, DatabaseException {
+	public ParkingLot getParkingLot(Connection conn) throws SQLException, ServerException {
 		return ParkingLot.findByIDNotNull(conn, lotID);
 	}
 
-	public Customer getCustomer(Connection conn) throws SQLException, DatabaseException {
+	public Customer getCustomer(Connection conn) throws SQLException, ServerException {
 		return Customer.findByIDNotNull(conn, customerID);
 	}
 

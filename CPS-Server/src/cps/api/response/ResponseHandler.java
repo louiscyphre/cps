@@ -22,7 +22,6 @@ public interface ResponseHandler {
   public ServerResponse handle(DisableParkingSlotsResponse response);
   public ServerResponse handle(InitLotResponse response);
   public ServerResponse handle(RefundResponse response);
-  public ServerResponse handle(RequestLotStateResponse response);
   public ServerResponse handle(RequestReportResponse response);
   public ServerResponse handle(ReserveParkingSlotsResponse response);
   public ServerResponse handle(SetFullLotResponse response);

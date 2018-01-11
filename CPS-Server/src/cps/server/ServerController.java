@@ -17,6 +17,7 @@ public class ServerController implements RequestHandler {
 	private final CustomerController userController;
 	private final ComplaintController complaintController;
 	private final CarTransportationController transportationController;
+	private ReportController reportController;
 
 	/**
 	 * Constructs an instance of the server controller.
@@ -40,6 +41,7 @@ public class ServerController implements RequestHandler {
 		userController = new CustomerController(this);
 		complaintController = new ComplaintController(this);
 		transportationController = new CarTransportationController(this);
+		reportController = new ReportController(this);
 	}
 
 	public ServerConfig getConfig() {
@@ -133,8 +135,7 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(DisableParkingSlotsAction action, UserSession session) {
-		// TODO DisableParkingSlotsAction
-		return null;
+		return lotController.handle(action, session);
 	}
 
 	@Override
@@ -144,8 +145,7 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(RefundAction action, UserSession session) {
-		// TODO RefundAction
-		return null;
+		return complaintController.handle(action, session);
 	}
 
 	@Override
@@ -155,14 +155,12 @@ public class ServerController implements RequestHandler {
 
 	@Override
 	public ServerResponse handle(RequestReportAction action, UserSession session) {
-		// TODO: Request Report Action
-		return null;
+		return reportController.handle(action, session);
 	}
 
 	@Override
 	public ServerResponse handle(ReserveParkingSlotsAction action, UserSession session) {
-		// TODO: Reserve Parking Slots Action
-		return null;
+		return lotController.handle(action, session);
 	}
 
 	@Override

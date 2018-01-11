@@ -17,7 +17,6 @@ public class CustomerController extends RequestController {
 		return databaseController.performQuery(conn -> {
 			LoginResponse response = new LoginResponse(false, "", 0);
 
-
 			Customer customer = Customer.findByEmailAndPassword(conn, request.getEmail(), request.getPassword());
 
 			if (customer == null) {

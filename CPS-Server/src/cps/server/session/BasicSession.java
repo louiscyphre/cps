@@ -2,7 +2,7 @@ package cps.server.session;
 
 import cps.entities.people.User;
 
-public class EmptySession implements UserSession {
+public class BasicSession implements UserSession {
 	private UserSession newSession;
 
 	@Override

@@ -9,11 +9,11 @@ import cps.api.request.ParkingEntryRequest;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ServerResponse;
 import cps.entities.models.CarTransportation;
-import cps.entities.models.DatabaseException;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
 import cps.entities.models.SubscriptionService;
+import cps.server.ServerException;
 import cps.server.ServerController;
 import cps.server.session.UserSession;
 
@@ -72,7 +72,7 @@ public class ParkingEntryController extends RequestController {
 				// successful parking was made.
 				CarTransportation.create(conn, request.getCustomerID(), request.getCarID(), service.getLicenseType(),
 						service.getId(), request.getLotID());
-			} catch (DatabaseException | CarTransportationException e) {
+			} catch (ServerException | CarTransportationException e) {
 				response.setError(e.getMessage());
 				return response;
 			}

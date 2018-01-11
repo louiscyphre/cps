@@ -22,10 +22,10 @@ import cps.api.response.OnetimeParkingResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
 import cps.entities.models.DailyStatistics;
-import cps.entities.models.DatabaseException;
 import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
+import cps.server.ServerException;
 import cps.server.ServerApplication;
 import cps.server.ServerController;
 import cps.server.session.CustomerSession;
@@ -52,7 +52,7 @@ public class OnetimeParkingController extends RequestController {
 	public ServerResponse handle(OnetimeParkingRequest request, OnetimeParkingResponse response, Timestamp startTime,
 			Timestamp plannedEndTime) {
 		return databaseController.performQuery(conn -> {
-			// TODO: check request parameters
+			// TODO check request parameters
 			// End time can't be earlier than start time
 			CustomerSession session = new CustomerSession();
 			session.findOrRegisterCustomer(conn, response, request.getCustomerID(), request.getEmail());
@@ -160,7 +160,7 @@ public class OnetimeParkingController extends RequestController {
 				// Refund customer
 				Customer customer = service.getCustomer(conn);
 				customer.receiveRefund(conn, refundAmount);
-			} catch (DatabaseException ex) {
+			} catch (ServerException ex) {
 				response.setError(ex.getMessage());
 				return response;
 			}

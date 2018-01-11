@@ -10,9 +10,9 @@ import java.util.Stack;
 
 import cps.common.Constants;
 import cps.entities.models.CarTransportation;
-import cps.entities.models.DatabaseException;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
+import cps.server.ServerException;
 import cps.server.ServerController;
 import cps.server.devices.Robot;
 
@@ -42,7 +42,7 @@ public class CarTransportationController extends RequestController {
 	 *             the SQL exception
 	 */
 	private boolean insertCars(Connection conn, ParkingLot lot, Stack<String> carIds, Stack<LocalDateTime> exitTimes)
-			throws SQLException, DatabaseException {
+			throws SQLException, ServerException {
 		// Get the parking lot
 		String[][][] thisContent = lot.getContentAsArray();
 		String carId = null;
@@ -242,7 +242,7 @@ public class CarTransportationController extends RequestController {
 	 * @throws CarTransportationException
 	 */
 	public void insertCar(Connection conn, ParkingLot lot, String carId, LocalDateTime exitTime)
-			throws SQLException, DatabaseException, CarTransportationException {
+			throws SQLException, ServerException, CarTransportationException {
 		Stack<String> carIds = new Stack<String>();
 		carIds.push(carId);
 
@@ -308,11 +308,11 @@ public class CarTransportationController extends RequestController {
 	 * @return the server response
 	 * @throws SQLException
 	 *             the SQL exception
-	 * @throws DatabaseException
+	 * @throws ServerException
 	 * @throws CarTransportationException
 	 */
 	public void retrieveCar(Connection conn, int lotId, String carID)
-			throws SQLException, DatabaseException, CarTransportationException {
+			throws SQLException, ServerException, CarTransportationException {
 		ParkingLot lot = ParkingLot.findByID(conn, lotId);
 		String[][][] content = lot.getContentAsArray();
 

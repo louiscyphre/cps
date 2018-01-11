@@ -85,7 +85,7 @@ public class ServerApplication extends AbstractServer {
 		UserSession session = (UserSession) client.getInfo("UserSession");
 		
 		if (session == null) { // Session doesn't exist -> create new
-			session = new EmptySession();
+			session = new BasicSession();
 		}
 		
 		// Dispatch request and get a response object

@@ -3,6 +3,7 @@ package cps.server.controllers;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import cps.api.action.RefundAction;
 import cps.api.request.ComplaintRequest;
 import cps.api.response.ComplaintResponse;
 import cps.api.response.ServerResponse;
@@ -31,6 +32,11 @@ public class ComplaintController extends RequestController {
 			response.setSuccess("Complaint created successfully");
 			return response;
 		});
+	}
+
+	public ServerResponse handle(RefundAction action, UserSession session) {
+		// TODO implement RefundAction
+		return null;
 	}
 
 }

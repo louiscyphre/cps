@@ -8,9 +8,8 @@ import cps.common.Utilities;
 import cps.entities.models.Customer;
 import cps.entities.people.User;
 
-public class CustomerSession implements UserSession {
+public class CustomerSession extends BasicSession {
 	protected Customer customer = null;
-	protected UserSession newSession = null;
 
 	public Customer getCustomer() {
 		return customer;
@@ -47,15 +46,5 @@ public class CustomerSession implements UserSession {
 	@Override
 	public User getUser() {
 		return getCustomer();
-	}
-
-	@Override
-	public void setNewSession(UserSession session) {
-		newSession = session;
-	}
-
-	@Override
-	public UserSession getNewSession() {
-		return newSession;
 	}
 }

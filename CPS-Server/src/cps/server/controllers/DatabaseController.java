@@ -39,6 +39,13 @@ public class DatabaseController {
 	}
 	
 	public interface DatabaseQuery<T> {
+		
+		/**
+		 * Perform.
+		 *
+		 * @param conn the SQL connection
+		 * @throws SQLException the SQL exception
+		 */
 		T perform(Connection conn) throws SQLException;
 	}
 	

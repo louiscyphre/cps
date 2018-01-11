@@ -12,10 +12,10 @@ import cps.api.response.ParkingExitResponse;
 import cps.api.response.ServerResponse;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
-import cps.entities.models.DatabaseException;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
+import cps.server.ServerException;
 import cps.server.ServerController;
 import cps.server.session.UserSession;
 
@@ -84,7 +84,7 @@ public class ParkingExitController extends RequestController {
 				response.setCustomerID(customer.getId());
 				response.setPayment(sum);
 				response.setSuccess("ParkingExit request completed successfully");
-			} catch (DatabaseException | CarTransportationException ex) {
+			} catch (ServerException | CarTransportationException ex) {
 				response.setError(ex.getMessage());
 			}
 
@@ -93,7 +93,7 @@ public class ParkingExitController extends RequestController {
 	}
 
 	public static float calculatePayment(Connection conn, CarTransportation carTransportation,
-			ParkingExitRequest exitRequest) throws SQLException, DatabaseException {
+			ParkingExitRequest exitRequest) throws SQLException, ServerException {
 
 		// Determine if this is a subscription or one time
 		switch (carTransportation.getAuthType()) {
@@ -106,13 +106,13 @@ public class ParkingExitController extends RequestController {
 			return calculatePayment(conn, carTransportation, exitRequest,
 					SubscriptionService.findByIDNotNull(conn, carTransportation.getAuthID()));
 		default:
-			throw new DatabaseException("Unknown service type");
+			throw new ServerException("Unknown service type");
 		}
 
 	}
 
 	public static float calculatePayment(Connection conn, CarTransportation carTransportation,
-			ParkingExitRequest exitRequest, OnetimeService service) throws SQLException, DatabaseException {
+			ParkingExitRequest exitRequest, OnetimeService service) throws SQLException, ServerException {
 		// Determine prices at that parking lot
 		ParkingLot parkingLot = ParkingLot.findByIDNotNull(conn, exitRequest.getLotID());
 		float tariffLow = parkingLot.getPriceForService(service.getParkingType()) / 60;
@@ -153,7 +153,7 @@ public class ParkingExitController extends RequestController {
 	}
 
 	public static float calculatePayment(Connection conn, CarTransportation carTransportation,
-			ParkingExitRequest exitRequest, SubscriptionService service) throws SQLException, DatabaseException {
+			ParkingExitRequest exitRequest, SubscriptionService service) throws SQLException, ServerException {
 		if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
 			Timestamp plannedExitTime = Timestamp
 					.valueOf(LocalDateTime.of(LocalDate.now(), service.getDailyExitTime()));
@@ -178,7 +178,7 @@ public class ParkingExitController extends RequestController {
 				return lateMinutes * parkingLot.getPrice1() / 60;
 			}
 		} else {
-			throw new DatabaseException("Unknown subscription type");
+			throw new ServerException("Unknown subscription type");
 		}
 
 		return 0f;
