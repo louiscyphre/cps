@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" padding="$x2" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.CustomerMainMenuController">
+<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" padding="$x2" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.CustomerMainMenuController">
   <center>
     <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="360.0" spacing="15.0" style="&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
@@ -27,7 +27,7 @@
         <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleParkNowButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Park now" textAlignment="CENTER" />
         <VBox fx:id="infoBox" alignment="CENTER" prefHeight="60.0" prefWidth="190.0" spacing="0.0">
           <children>
-            <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="226.0" style="-fx-background-color: #d9edf7; -fx-background-radius: 8 8 8 8; -fx-text-fill: #31708f; -fx-border-radius: 8 8 8 8;" text="Just some info goes here" textAlignment="CENTER" wrapText="true">
+            <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="226.0" styleClass="infoLabel" text="Just some info goes here" textAlignment="CENTER" wrapText="true">
               <VBox.margin>
                 <Insets bottom="-1.0" />
               </VBox.margin>

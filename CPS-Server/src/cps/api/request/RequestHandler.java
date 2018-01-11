@@ -1,6 +1,5 @@
-package cps.server;
+package cps.api.request;
 
-import cps.api.request.*;
 import cps.api.action.*;
 import cps.api.response.*;
 
@@ -11,6 +10,7 @@ public interface RequestHandler {
 	public ServerResponse handle(FullSubscriptionRequest request);
 	public ServerResponse handle(IncidentalParkingRequest request);
 	public ServerResponse handle(ListOnetimeEntriesRequest request);
+	public ServerResponse handle(ListParkingLotsRequest request);
 	public ServerResponse handle(ParkingEntryRequest request);
 	public ServerResponse handle(ParkingExitRequest request);
 	public ServerResponse handle(RegularSubscriptionRequest request);

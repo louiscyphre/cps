@@ -3,6 +3,7 @@ package cps.server.controllers;
 import cps.api.response.*;
 import cps.common.Constants;
 import cps.entities.models.Customer;
+import cps.entities.models.DatabaseException;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
 
@@ -59,26 +60,22 @@ public class SubscriptionController extends RequestController {
 				return response;
 			}
 			
-			// Calculate payment
-			float payment;
-			
-			try {
-				payment = paymentForSubscription(conn, customer, result);
-			} catch (RuntimeException ex) {
+			try {				
+				// Calculate payment
+				float payment = paymentForSubscription(conn, customer, result);
+
+				// Write payment
+				customer.pay(conn,  payment);
+
+				// Success
+				response.setCustomerID(customer.getId());
+				response.setServiceID(result.getId());
+				response.setPayment(payment);
+				response.setSuccess("SubscriptionRequest completed successfully");
+			} catch (DatabaseException ex) {
 				response.setError(ex.getMessage());
-				return response;
 			}
-
-			// Write payment
-			if (!CustomerController.chargeCustomer(conn, response, customer, payment)) {
-				return response; // Fields already filled in by chargeCustomer
-			}
-
-			// Success
-			response.setCustomerID(customer.getId());
-			response.setServiceID(result.getId());
-			response.setPayment(payment);
-			response.setSuccess("SubscriptionRequest completed successfully");
+			
 			return response;
 		});
 	}

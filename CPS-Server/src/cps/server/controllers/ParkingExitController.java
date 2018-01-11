@@ -10,6 +10,7 @@ import cps.api.response.ServerResponse;
 import cps.common.*;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
+import cps.entities.models.DatabaseException;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.server.ServerController;
@@ -55,38 +56,33 @@ public class ParkingExitController extends RequestController {
 				response.setError("Failed to update car transportation");
 				return response;
 			}
+			
+			try {
+				// Calculate the amount of money that the customer has to pay
+				float sum = calculatePayment(conn, entry, request);
 
-			// Calculate the amount of money that the customer has to pay
-			float sum = calculatePayment(conn, entry, request);
+				// Find customer
+				Customer customer = Customer.findByIDNotNull(conn, request.getCustomerID());
 
-			// Find customer
-			Customer customer = Customer.findByID(conn, request.getCustomerID());
+				// Write payment
+				customer.pay(conn, sum);
+				
+				/*
+				 * Attempt to retrieve the car from the lot The function will shuffle the cars
+				 * that get in the way in an attempt to locate them in accordance to the current
+				 * situation
+				 */
+				CarTransportationController transportationController = serverController.getTransportationController();
+				transportationController.retrieveCar(conn, request.getLotID(), request.getCarID());
 
-			if (customer == null) {
-				response.setError("Failed to find customer with id " + request.getCustomerID());
-				return response;
+				// Success
+				response.setCustomerID(customer.getId());
+				response.setPayment(sum);
+				response.setSuccess("ParkingExit request completed successfully");
+			} catch (DatabaseException | CarTransportationException ex) {
+				response.setError(ex.getMessage());
 			}
-
-			// Write payment
-			if (!CustomerController.chargeCustomer(conn, response, customer, sum)) {
-				return response; // Fields already filled in by chargeCustomer
-			}
-			/*
-			 * Attempt to retrieve the car from the lot The function will shuffle the cars
-			 * that get in the way in an attempt to locate them in accordance to the current
-			 * situation
-			 */
-			LotController lotController = serverController.getLotController();
-
-			if (!lotController.retrieveCar(conn, request.getLotID(), request.getCarID())) { // Car retrieval failed
-				response.setError("Failed to retrieve the car from the parking lot");
-				return response;
-			}
-
-			// Success
-			response.setCustomerID(customer.getId());
-			response.setPayment(sum);
-			response.setSuccess("ParkingExit request completed successfully");
+			
 			return response;
 		});
 	}
@@ -101,7 +97,7 @@ public class ParkingExitController extends RequestController {
 		if (carTransportation.getAuthType() == Constants.LICENSE_TYPE_ONETIME) {
 			// If customer did not park by subscription charge him according to park type
 			// Determine incidental or reserved parking
-			OnetimeService parkingService = OnetimeService.findById(conn, carTransportation.getAuthID());
+			OnetimeService parkingService = OnetimeService.findByID(conn, carTransportation.getAuthID());
 
 			// Determine prices at that parking lot
 			ParkingLot parkingLot = ParkingLot.findByID(conn, exitRequest.getLotID());

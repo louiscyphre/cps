@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import cps.common.Constants;
 
@@ -236,6 +238,15 @@ public class ParkingLot implements Serializable {
 		return price2;
 	}
 
+	public float getPriceForService(int serviceType) {
+		switch (serviceType) {
+		case Constants.PARKING_TYPE_INCIDENTAL:
+			return price1;
+		default:
+			return price2;
+		}
+	}
+
 	/**
 	 * Sets the price of one time parking.
 	 *
@@ -390,14 +401,14 @@ public class ParkingLot implements Serializable {
 
 		return result;
 	}
-	
-	public static ParkingLot findByIDNotNull(Connection conn, int id) throws SQLException {
+
+	public static ParkingLot findByIDNotNull(Connection conn, int id) throws SQLException, DatabaseException {
 		ParkingLot result = findByID(conn, id);
-		
+
 		if (result == null) {
-			throw new RuntimeException("ParkingLot with id " + id + " does not exist");
+			throw new DatabaseException("ParkingLot with id " + id + " does not exist");
 		}
-		
+
 		return result;
 	}
 
@@ -418,7 +429,7 @@ public class ParkingLot implements Serializable {
 		return free;
 	}
 
-	public int update(Connection conn) throws SQLException {
+	public int update(Connection conn) throws SQLException, DatabaseException {
 		java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
 		int index = 1;
 		int result = 0;
@@ -433,6 +444,27 @@ public class ParkingLot implements Serializable {
 		st.setInt(index++, this.id);
 		result = st.executeUpdate();
 		st.close();
+		
+		if (result <= 0) {
+			throw new DatabaseException("Failed to update ParkingLot");
+		}
+		
 		return result;
+	}
+
+	public static Collection<ParkingLot> findAll(Connection conn) throws SQLException {
+		LinkedList<ParkingLot> results = new LinkedList<ParkingLot>();
+
+		Statement stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(Constants.SQL_FIND_ALL_PARKING_LOTS);
+
+		while (rs.next()) {
+			results.add(new ParkingLot(rs));
+		}
+
+		rs.close();
+		stmt.close();
+
+		return results;
 	}
 }

@@ -2,12 +2,8 @@ package cps.api.request;
 
 import cps.api.response.ServerResponse;
 
-public class ListOnetimeEntriesRequest extends CustomerRequest {
+public class ListParkingLotsRequest extends Request {
 	private static final long serialVersionUID = 1L;
-	
-	public ListOnetimeEntriesRequest(int customerID) {
-		super(customerID);
-	}
 
 	@Override
 	public ServerResponse handle(RequestHandler handler) {

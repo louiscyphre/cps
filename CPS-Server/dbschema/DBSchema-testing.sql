@@ -45,8 +45,10 @@ CREATE TABLE `complaint` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `customer_id` int(10) NOT NULL,
   `employee_id` int(10) DEFAULT NULL,
-  `status` int(10) NOT NULL DEFAULT '0',
+  `status` int(10) NOT NULL DEFAULT '1',
   `description` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `resolved_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=Memory DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

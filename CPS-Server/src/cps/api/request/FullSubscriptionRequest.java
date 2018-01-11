@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
-import cps.server.RequestHandler;
 
 public class FullSubscriptionRequest extends SubscriptionRequest {
 	private static final long serialVersionUID = 1L;

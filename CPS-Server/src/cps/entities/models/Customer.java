@@ -119,7 +119,7 @@ public class Customer implements Serializable, User {
 		return result;
 	}
 	
-	public boolean update(Connection conn) throws SQLException {
+	public void update(Connection conn) throws SQLException, DatabaseException {
 		PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_CUSTOMER);
 
 		int index = 1;
@@ -134,7 +134,9 @@ public class Customer implements Serializable, User {
 
 		st.close();
 
-		return updated > 0;	
+		if (updated <= 0) {
+			throw new DatabaseException("Failed to update customer");
+		}
 	}
 
 	public static Customer findByEmailAndPassword(Connection conn, String email, String password) throws SQLException {
@@ -153,5 +155,25 @@ public class Customer implements Serializable, User {
 		rs.close();
 		
 		return result;
+	}
+
+	public static Customer findByIDNotNull(Connection conn, int id) throws SQLException, DatabaseException {
+		Customer result = findByID(conn, id);
+
+		if (result == null) {
+			throw new DatabaseException("Customer with id " + id + " does not exist");
+		}
+
+		return result;
+	}
+	
+	public void pay(Connection conn, float sum) throws SQLException, DatabaseException {
+		addDebit(sum);
+		update(conn);
+	}
+	
+	public void receiveRefund(Connection conn, float sum) throws SQLException, DatabaseException {
+		addCredit(sum);
+		update(conn);
 	}
 }

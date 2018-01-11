@@ -1,7 +1,6 @@
 package cps.api.request;
 
 import cps.api.response.ServerResponse;
-import cps.server.RequestHandler;
 
 public class CancelOnetimeParkingRequest extends CustomerRequest {
 	public CancelOnetimeParkingRequest(int customerID, int onetimeServiceID) {
