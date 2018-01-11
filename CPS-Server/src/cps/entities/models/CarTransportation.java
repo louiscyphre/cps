@@ -99,7 +99,7 @@ public class CarTransportation implements Serializable {
 
 	// Creates a new CarTransportation entry in the SQL table
 	public static CarTransportation create(Connection conn, int customerID, String carID, int authType, int authID,
-			int lotID) throws SQLException {
+			int lotID) throws SQLException, DatabaseException {
 		PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_CAR_TRANSPORTATION,
 				Statement.RETURN_GENERATED_KEYS);
 
@@ -109,7 +109,10 @@ public class CarTransportation implements Serializable {
 		statement.setInt(field++, authType);
 		statement.setInt(field++, authID);
 		statement.setInt(field++, lotID);
-		statement.executeUpdate();
+		
+		if (statement.executeUpdate() <= 0) {
+			throw new DatabaseException("CarTransportation entry creation failed");
+		}
 
 		ResultSet keys = statement.getGeneratedKeys();
 		Timestamp insertedAt = null;
