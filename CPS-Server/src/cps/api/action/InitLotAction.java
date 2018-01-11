@@ -1,7 +1,7 @@
 package cps.api.action;
 
+import cps.api.request.RequestHandler;
 import cps.api.response.ServerResponse;
-import cps.server.RequestHandler;
 
 public class InitLotAction extends ServiceAction {
 	private static final long serialVersionUID = 1L;

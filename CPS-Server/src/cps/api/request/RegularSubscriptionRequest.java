@@ -5,7 +5,6 @@ import java.time.LocalTime;
 
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
-import cps.server.RequestHandler;
 
 public class RegularSubscriptionRequest extends SubscriptionRequest {
 	private static final long serialVersionUID = 1L;

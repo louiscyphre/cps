@@ -73,7 +73,7 @@ public class ParkingExitController extends RequestController {
 				 * situation
 				 */
 				CarTransportationController transportationController = serverController.getTransportationController();
-				transportationController.retrieveCar(conn, request.getLotID(), request.getCarID()); // TODO wait until this is fixed
+				transportationController.retrieveCar(conn, request.getLotID(), request.getCarID());
 
 				// Success
 				response.setCustomerID(customer.getId());

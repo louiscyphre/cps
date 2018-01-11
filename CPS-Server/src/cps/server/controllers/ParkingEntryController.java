@@ -64,7 +64,7 @@ public class ParkingEntryController extends RequestController {
 				// appropriate error response, which we will send back to the user.
 				// The function will create table entry to record where the car was placed
 				CarTransportationController transportationController = serverController.getTransportationController();
-				transportationController.insertCar(conn, lot, carID, service.getExitTime()); // TODO wait until this is fixed
+				transportationController.insertCar(conn, lot, carID, service.getExitTime());
 
 				// All good - create a CarTransportation table entry to record the fact that a
 				// successful parking was made.

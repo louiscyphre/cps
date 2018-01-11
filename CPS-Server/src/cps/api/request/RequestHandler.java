@@ -1,6 +1,5 @@
-package cps.server;
+package cps.api.request;
 
-import cps.api.request.*;
 import cps.api.action.*;
 import cps.api.response.*;
 
