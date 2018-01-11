@@ -99,7 +99,7 @@ public class CarTransportationController extends RequestController {
 						priority = (int) (5 * (exitTime.toLocalTime().toSecondOfDay() - LocalTime.now().toSecondOfDay())
 								/ (LocalTime.MAX.toSecondOfDay() * 2 - LocalTime.now().toSecondOfDay()));
 					}
-					if (priority == 5) {
+					if (priority > 4) {
 						priority = 4;
 					}
 				}
@@ -205,7 +205,8 @@ public class CarTransportationController extends RequestController {
 				}
 			}
 			// insert the car
-			System.out.println(String.format("Inserting car %s into location %s, %s, %s", carId, maxSize, maxHeight, maxDepth));
+			System.out.println(
+					String.format("Inserting car %s into location %s, %s, %s", carId, maxSize, maxHeight, maxDepth));
 			thisContent[maxSize][maxHeight][maxDepth] = carId;
 			// call a robot
 			// this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId, maxSize,
@@ -273,24 +274,25 @@ public class CarTransportationController extends RequestController {
 	 * @return Number of cars that are in the way of the desired car insertion
 	 */
 	private int calculatePath(String[][][] content, int iSize, int iHeight, int iDepth) {
-//		System.out.println(String.format("calculatePath(content, %s, %s, %s)", iSize, iHeight, iDepth));
+		// System.out.println(String.format("calculatePath(content, %s, %s, %s)", iSize,
+		// iHeight, iDepth));
 		int totalcars = 0;
 		int h = iHeight, d = iDepth;
-		
+
 		while (d > 0) {
 			d--;
 			if (!content[iSize][h][d].equals(Constants.SPOT_IS_EMPTY)) {
 				totalcars++;
 			}
 		}
-		
+
 		while (h > 0) {
 			h--;
 			if (!content[iSize][h][d].equals(Constants.SPOT_IS_EMPTY)) {
 				totalcars++;
 			}
 		}
-		
+
 		return totalcars;
 	}
 
@@ -307,9 +309,10 @@ public class CarTransportationController extends RequestController {
 	 * @throws SQLException
 	 *             the SQL exception
 	 * @throws DatabaseException
-	 * @throws CarTransportationException 
+	 * @throws CarTransportationException
 	 */
-	public void retrieveCar(Connection conn, int lotId, String carID) throws SQLException, DatabaseException, CarTransportationException {
+	public void retrieveCar(Connection conn, int lotId, String carID)
+			throws SQLException, DatabaseException, CarTransportationException {
 		ParkingLot lot = ParkingLot.findByID(conn, lotId);
 		String[][][] content = lot.getContentAsArray();
 
@@ -331,15 +334,15 @@ public class CarTransportationController extends RequestController {
 						eSize = iSize;
 						eHeight = iHeight;
 						eDepth = iDepth;
-						
+
 						content[iSize][iHeight][iDepth] = Constants.SPOT_IS_EMPTY;
-						
+
 						found = true;
 					}
 				}
 			}
 		}
-		
+
 		System.out.println(String.format("Retrieving car %s from location %s, %s, %s", carID, eSize, eHeight, eDepth));
 
 		/*
@@ -355,11 +358,11 @@ public class CarTransportationController extends RequestController {
 
 			if (!currentSlot.equals(Constants.SPOT_IS_EMPTY)) {
 				carIds.push(currentSlot);
-				
+
 				CarTransportation transportation = CarTransportation.findByCarId(conn, currentSlot, lotId);
 				ParkingService service = transportation.getParkingService(conn);
 				exitTimes.push(service.getExitTime());
-				
+
 				content[eSize][iHeight][0] = Constants.SPOT_IS_EMPTY;
 				// robbie.retrieveCar(carIds.peek(), eSize, iHeight, 0);
 			}
@@ -367,14 +370,14 @@ public class CarTransportationController extends RequestController {
 
 		for (int iDepth = 0; iDepth < eDepth; iDepth++) {
 			String currentSlot = content[eSize][eHeight][iDepth];
-			
+
 			if (!currentSlot.equals(Constants.SPOT_IS_EMPTY)) {
 				carIds.push(currentSlot);
-				
+
 				CarTransportation transportation = CarTransportation.findByCarId(conn, currentSlot, lotId);
 				ParkingService service = transportation.getParkingService(conn);
 				exitTimes.push(service.getExitTime());
-				
+
 				content[eSize][eHeight][iDepth] = Constants.SPOT_IS_EMPTY;
 				// robbie.retrieveCar(carIds.peek(), eSize, iHeight, iDepth);
 			}

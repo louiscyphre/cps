@@ -23,7 +23,7 @@ public class OnetimeService implements ParkingService {
 	private String email;
 	private String carID;
 	private int lotID;
-	private Timestamp plannedStartTime; // null for incidental
+	private Timestamp plannedStartTime; // null for incidental TODO - Why not current time?
 	private Timestamp plannedEndTime;
 	private boolean canceled;
 
