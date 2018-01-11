@@ -43,7 +43,7 @@ public class ParkingExitController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse handle(ParkingExitRequest request, UserSession session) {
-		return databaseController.performQuery(conn -> {
+		return database.performQuery(conn -> {
 			ParkingExitResponse response = new ParkingExitResponse(false, "");
 
 			CarTransportation entry = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),

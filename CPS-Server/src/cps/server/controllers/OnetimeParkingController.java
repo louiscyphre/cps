@@ -51,7 +51,7 @@ public class OnetimeParkingController extends RequestController {
 
 	public ServerResponse handle(OnetimeParkingRequest request, OnetimeParkingResponse response, Timestamp startTime,
 			Timestamp plannedEndTime) {
-		return databaseController.performQuery(conn -> {
+		return database.performQuery(conn -> {
 			// TODO check request parameters
 			// End time can't be earlier than start time
 			CustomerSession session = new CustomerSession();
@@ -117,7 +117,7 @@ public class OnetimeParkingController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
-		return databaseController.performQuery(conn -> {
+		return database.performQuery(conn -> {
 			CancelOnetimeParkingResponse response = new CancelOnetimeParkingResponse(false, "");
 			// Mark Order as canceled
 			OnetimeService service = OnetimeService.findByID(conn, request.getOnetimeServiceID());
@@ -182,7 +182,7 @@ public class OnetimeParkingController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {
-		return databaseController.performQuery(conn -> {
+		return database.performQuery(conn -> {
 			Collection<OnetimeService> result = OnetimeService.findByCustomerID(conn, request.getCustomerID());
 			return new ListOnetimeEntriesResponse(result, request.getCustomerID());
 		});

@@ -105,7 +105,7 @@ public class Customer implements Serializable, User {
 
 	public static Customer findByID(Connection conn, int id) throws SQLException {
 		Customer result = null;
-		PreparedStatement st = conn.prepareStatement("SELECT * FROM customer WHERE id=?");
+		PreparedStatement st = conn.prepareStatement(Constants.SQL_FIND_CUSTOMER_BY_ID);
 		
 		st.setInt(1, id);
 		ResultSet rs = st.executeQuery();

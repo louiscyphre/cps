@@ -6,21 +6,29 @@ import cps.server.session.UserSession;
 
 public class RefundAction extends ServiceAction {
 	private static final long serialVersionUID = 1L;
-	private double amount;
+	private float amount;
 	private int complaintID;
 
-	public RefundAction(int userID, double amount, int complaintID) {
+	public RefundAction(int userID, float amount, int complaintID) {
 		super(userID);
 		this.amount = amount;
 		this.complaintID = complaintID;
 	}
 
-	public double getAmount() {
+	public RefundAction(int userID, double amount, int complaintID) {
+		this(userID, (float) amount, complaintID);
+	}
+
+	public float getAmount() {
 		return amount;
 	}
 
-	public void setAmount(double amount) {
+	public void setAmount(float amount) {
 		this.amount = amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = (float) amount;
 	}
 
 	public int getComplaintID() {

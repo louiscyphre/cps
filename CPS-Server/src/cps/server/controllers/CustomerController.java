@@ -14,7 +14,7 @@ public class CustomerController extends RequestController {
 	}
 	
 	public ServerResponse handle(LoginRequest request, UserSession session) {
-		return databaseController.performQuery(conn -> {
+		return database.performQuery(conn -> {
 			LoginResponse response = new LoginResponse(false, "", 0);
 
 			Customer customer = Customer.findByEmailAndPassword(conn, request.getEmail(), request.getPassword());

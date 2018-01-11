@@ -42,7 +42,7 @@ public class SubscriptionController extends RequestController {
 	}
 	
 	public ServerResponse handle(SubscriptionRequest request, SubscriptionResponse response, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
-		return databaseController.performQuery(conn -> {			
+		return database.performQuery(conn -> {			
 			// TODO check request parameters
 			CustomerSession session = new CustomerSession();
 			session.findOrRegisterCustomer(conn, response, request.getCustomerID(), request.getEmail());

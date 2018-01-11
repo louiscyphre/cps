@@ -7,6 +7,9 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import cps.api.response.ServerResponse;
+import cps.server.ServerException;
+
 /**
  * The Class DatabaseController.
  */
@@ -47,6 +50,17 @@ public class DatabaseController {
 		 * @throws SQLException the SQL exception
 		 */
 		T perform(Connection conn) throws SQLException;
+	}
+	
+	public interface DatabaseQueryWithException<T> {
+		
+		/**
+		 * Perform.
+		 *
+		 * @param conn the SQL connection
+		 * @throws SQLException the SQL exception
+		 */
+		T perform(Connection conn, T response) throws SQLException, ServerException;
 	}
 	
 	public interface EntityBuilder<T> {
@@ -135,6 +149,26 @@ public class DatabaseController {
 		} catch (SQLException ex) {
 			handleSQLException(ex);
 		} finally {
+			closeConnection(conn);
+		}
+		
+		return result;
+	}
+	
+	public <T extends ServerResponse> T performQuery(T response, DatabaseQueryWithException<T> query) {
+		Connection conn = null;
+		T result = null;
+		
+		try {
+			conn = getConnection();
+			result = query.perform(conn, response);
+		} catch (SQLException ex) {
+			handleSQLException(ex);
+		} catch (ServerException ex) {
+			response.setError(ex.getMessage());
+			return response;
+		} finally {
+			// This still gets called even if the previous block returns
 			closeConnection(conn);
 		}
 		

@@ -42,7 +42,7 @@ public class LotController extends RequestController {
 	 * @return Collection of ParkingLot objects
 	 */
 	public ServerResponse handle(ListParkingLotsRequest request, UserSession session) {
-		return databaseController.performQuery(conn -> {
+		return database.performQuery(conn -> {
 			Collection<ParkingLot> result = ParkingLot.findAll(conn);
 			
 			// Filter out information that customers shouldn't see
@@ -64,7 +64,7 @@ public class LotController extends RequestController {
 	 * @return the server response
 	 */
 	public InitLotResponse handle(InitLotAction request, UserSession session) {
-		return databaseController.performQuery(conn -> {
+		return database.performQuery(conn -> {
 			ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(),
 					request.getPrice1(), request.getPrice2(), request.getRobotIP());
 
@@ -84,7 +84,7 @@ public class LotController extends RequestController {
 	 * @return the update prices response
 	 */
 	public UpdatePricesResponse handle(UpdatePricesAction action, UserSession session) {
-		return databaseController.performQuery(conn -> {
+		return database.performQuery(conn -> {
 			ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
 			lot.setPrice1(action.getPrice1());
 			lot.setPrice2(action.getPrice2());
@@ -99,7 +99,7 @@ public class LotController extends RequestController {
 	}
 
 	public SetFullLotResponse handle(SetFullLotAction action, UserSession session) {
-		return databaseController.performQuery(conn -> {
+		return database.performQuery(conn -> {
 			ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
 			lot.setLotFull(action.getLotFull());
 			lot.setAlternativeLots(Integer.toString(action.getAlternativeLotID()));
@@ -115,8 +115,7 @@ public class LotController extends RequestController {
 
 
 	public LotStateResponse handle(RequestLotStateAction action, UserSession session) {
-		// TODO test RequestLotStateAction
-		return databaseController.performQuery(conn -> {
+		return database.performQuery(conn -> {
 			LotStateResponse response = new LotStateResponse(false, "", null);
 			
 			try {

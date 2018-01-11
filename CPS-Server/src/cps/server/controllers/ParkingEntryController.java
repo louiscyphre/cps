@@ -41,7 +41,7 @@ public class ParkingEntryController extends RequestController {
 	 * @return the server response
 	 */
 	public ServerResponse handle(ParkingEntryRequest request, UserSession session) {
-		return databaseController.performQuery(conn -> {
+		return database.performQuery(conn -> {
 			ParkingEntryResponse response = new ParkingEntryResponse(false, "", request);
 
 			// Shortcuts for commonly used properties
