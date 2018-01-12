@@ -212,7 +212,9 @@ public class SubscriptionService implements ParkingService {
 		statement.setInt(1, authID);
 		ResultSet result = statement.executeQuery();
 
-		item = new SubscriptionService(result);
+		if (result.next()) {
+			item = new SubscriptionService(result);
+		}
 
 		result.close();
 		statement.close();

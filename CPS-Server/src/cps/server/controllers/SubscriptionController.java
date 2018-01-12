@@ -3,7 +3,6 @@ package cps.server.controllers;
 import cps.api.response.*;
 import cps.common.Constants;
 import cps.entities.models.Customer;
-import cps.entities.models.DatabaseException;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
 
@@ -15,8 +14,10 @@ import java.time.LocalTime;
 import cps.api.request.FullSubscriptionRequest;
 import cps.api.request.RegularSubscriptionRequest;
 import cps.api.request.SubscriptionRequest;
+import cps.server.ServerException;
 import cps.server.ServerController;
-import cps.server.handlers.CustomerSession;
+import cps.server.session.CustomerSession;
+import cps.server.session.UserSession;
 
 public class SubscriptionController extends RequestController {
 
@@ -24,7 +25,7 @@ public class SubscriptionController extends RequestController {
 		super(serverController);
 	}
 	
-	public ServerResponse handle(FullSubscriptionRequest request) {
+	public ServerResponse handle(FullSubscriptionRequest request, UserSession session) {
 		LocalDate startDate = request.getStartDate();
 		LocalDate endDate = startDate.plusDays(28);
 		LocalTime dailyExitTime = LocalTime.of(0, 0, 0);
@@ -32,7 +33,7 @@ public class SubscriptionController extends RequestController {
 		return handle(request, response, startDate, endDate, dailyExitTime);
 	}
 	
-	public ServerResponse handle(RegularSubscriptionRequest request) {
+	public ServerResponse handle(RegularSubscriptionRequest request, UserSession session) {
 		LocalDate startDate = request.getStartDate();
 		LocalDate endDate = startDate.plusDays(28);
 		LocalTime dailyExitTime = request.getDailyExitTime();
@@ -41,8 +42,8 @@ public class SubscriptionController extends RequestController {
 	}
 	
 	public ServerResponse handle(SubscriptionRequest request, SubscriptionResponse response, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
-		return databaseController.performQuery(conn -> {			
-			// TODO: check request parameters
+		return database.performQuery(conn -> {			
+			// TODO check request parameters
 			CustomerSession session = new CustomerSession();
 			session.findOrRegisterCustomer(conn, response, request.getCustomerID(), request.getEmail());
 			
@@ -72,7 +73,7 @@ public class SubscriptionController extends RequestController {
 				response.setServiceID(result.getId());
 				response.setPayment(payment);
 				response.setSuccess("SubscriptionRequest completed successfully");
-			} catch (DatabaseException ex) {
+			} catch (ServerException ex) {
 				response.setError(ex.getMessage());
 			}
 			

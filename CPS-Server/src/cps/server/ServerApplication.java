@@ -12,6 +12,7 @@ import cps.common.*;
 import cps.api.request.Request;
 import cps.api.response.*;
 import cps.server.controllers.*;
+import cps.server.session.*;
 
 /**
  * The Class ServerApplication.
@@ -67,16 +68,37 @@ public class ServerApplication extends AbstractServer {
 	 */
 	@Override
 	protected void handleMessageFromClient(Object message, ConnectionToClient client) {
+		// Message object should be of type Request and not null
 		if (message == null || !(message instanceof Request)) {
 			sendToClient(client, ServerResponse.error("Unknown request type"));
 			return;
 		}
 		
-		System.out.println("Message from: " + client + ", type: " + message.getClass().getSimpleName() + ", content: "
-				+ gson.toJson(message));
+		Request request = (Request) message; // type cast was checked with instanceof
 		
-		ServerResponse response = serverController.dispatch((Request) message);
+		// Print the request to console
+		System.out.println("Message from: " + client + ", type: " + request.getClass().getSimpleName() + ", content: "
+				+ gson.toJson(request));
 		
+		// Get the session object associated with this client connection, if exists
+		// A session object stores data about the current user
+		UserSession session = (UserSession) client.getInfo("UserSession");
+		
+		if (session == null) { // Session doesn't exist -> create new
+			session = new BasicSession();
+		}
+		
+		// Dispatch request and get a response object
+		ServerResponse response = serverController.dispatch(request, session);
+		
+		// Update session object, if needed
+		UserSession newSession = session.getNewSession();
+		
+		if (newSession != null) {
+			client.setInfo("UserSession", newSession);
+		}
+		
+		// Send response to client
 		if (response != null) {
 			sendToClient(client, response);
 		}

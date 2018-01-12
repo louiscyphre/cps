@@ -1,6 +1,7 @@
 package cps.server.controllers;
 
 import cps.server.ServerController;
+import cps.server.ServerException;
 
 /**
  * The Class RequestController.
@@ -8,7 +9,7 @@ import cps.server.ServerController;
 public abstract class RequestController {
 	
 	/** The database controller. */
-	protected final DatabaseController databaseController;
+	protected final DatabaseController database;
 	
 	/** The server application. */
 	protected final ServerController serverController;
@@ -19,7 +20,7 @@ public abstract class RequestController {
 	 * @param serverController the server application
 	 */
 	public RequestController(ServerController serverController) {
-		this.databaseController = serverController.getDatabaseController();
+		this.database = serverController.getDatabaseController();
 		this.serverController = serverController;
 	}
 	
@@ -29,7 +30,7 @@ public abstract class RequestController {
 	 * @return the database controller
 	 */
 	public DatabaseController getDatabaseController() {
-		return databaseController;
+		return database;
 	}
 
 	/**
@@ -40,5 +41,10 @@ public abstract class RequestController {
 	public ServerController getServerController() {
 		return serverController;
 	}
-
+	
+	public void errorIfNull(Object object, String message) throws ServerException {
+		if (object == null) {
+			throw new ServerException(message);
+		}
+	}
 }

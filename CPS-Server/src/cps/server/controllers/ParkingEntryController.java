@@ -13,7 +13,9 @@ import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
 import cps.entities.models.SubscriptionService;
+import cps.server.ServerException;
 import cps.server.ServerController;
+import cps.server.session.UserSession;
 
 /**
  * The Class EntryExitController.
@@ -35,51 +37,43 @@ public class ParkingEntryController extends RequestController {
 	 *
 	 * @param request
 	 *            the request
+	 * @param session 
 	 * @return the server response
 	 */
-	public ServerResponse handle(ParkingEntryRequest request) {
-		return databaseController.performQuery(conn -> {
+	public ServerResponse handle(ParkingEntryRequest request, UserSession session) {
+		return database.performQuery(conn -> {
 			ParkingEntryResponse response = new ParkingEntryResponse(false, "", request);
-			
+
 			// Shortcuts for commonly used properties
 			int customerID = request.getCustomerID();
-//			String carID = request.getCarID();
+			String carID = request.getCarID();
 			int lotID = request.getLotID();
 
 			ParkingService service = findEntryLicense(conn, response, request);
-			
+
 			if (service == null) {
 				return response; // Fields filled by findEntryLicense
 			}
 
 			// Entry license exists - continue
-			// Find the parking lot that the customer wants to enter
-			ParkingLot lot = ParkingLot.findByID(conn, lotID);
+			try {
+				// Find the parking lot that the customer wants to enter
+				ParkingLot lot = ParkingLot.findByIDNotNull(conn, lotID);
 
-			if (lot == null) { // Lot does not exist
-				response.setError("Parking Lot with ID " + lotID + " does not exist");
-				return response;
-			}
+				// Attempt to insert the car into the lot.
+				// Optimal coordinates are calculated before insertion.
+				// If the lot is full, or some other error occurs, LotController will return an
+				// appropriate error response, which we will send back to the user.
+				// The function will create table entry to record where the car was placed
+				CarTransportationController transportationController = serverController.getTransportationController();
+				transportationController.insertCar(conn, lot, carID, service.getExitTime());
 
-			// Attempt to insert the car into the lot.
-			// Optimal coordinates are calculated before insertion.
-			// If the lot is full, or some other error occurs, LotController will return an
-			// appropriate error response, which we will send back to the user.
-			//The function will create table entry to record where the car was placed
-//			LotController lotController = serverController.getLotController();
-			
-			// TODO wait until this is fixed
-//			if (!lotController.insertCar(conn, lot, carID, service.getExitTime(), response)) { // Car insertion failed - lot full or some other error
-//				return response;
-//			}
-
-			// All good - create a CarTransportation table entry to record the fact that a
-			// successful parking was made.
-			CarTransportation transportation = CarTransportation.create(conn, request.getCustomerID(),
-					request.getCarID(), service.getLicenseType(), service.getId(), request.getLotID());
-
-			if (transportation == null) { // Failed to create a CarTransportation entry - this normally shouldn't happen
-				response.setError("CarTransportation entry creation failed");
+				// All good - create a CarTransportation table entry to record the fact that a
+				// successful parking was made.
+				CarTransportation.create(conn, request.getCustomerID(), request.getCarID(), service.getLicenseType(),
+						service.getId(), request.getLotID());
+			} catch (ServerException | CarTransportationException e) {
+				response.setError(e.getMessage());
 				return response;
 			}
 
@@ -88,8 +82,9 @@ public class ParkingEntryController extends RequestController {
 			return response;
 		});
 	}
-	
-	private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request) throws SQLException {
+
+	private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request)
+			throws SQLException {
 		int customerID = request.getCustomerID();
 		String carID = request.getCarID();
 		int lotID = request.getLotID();
@@ -102,10 +97,11 @@ public class ParkingEntryController extends RequestController {
 			OnetimeService service = OnetimeService.findForEntry(conn, customerID, carID, lotID);
 
 			if (service == null) { // Entry license does not exist
-				response.setError("OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
+				response.setError("OnetimeService entry license not found for customer ID " + customerID
+						+ " with car ID " + carID);
 				return null;
 			}
-			
+
 			return service;
 		} else {
 			// The customer wants to enter based on car ID and subscription ID
@@ -114,7 +110,8 @@ public class ParkingEntryController extends RequestController {
 			SubscriptionService service = SubscriptionService.findForEntry(conn, customerID, carID, subsID);
 
 			if (service == null) { // Entry license does not exist
-				response.setError("SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
+				response.setError("SubscriptionService entry license not found for customer ID " + customerID
+						+ " with car ID " + carID);
 				return null;
 			}
 
@@ -123,8 +120,8 @@ public class ParkingEntryController extends RequestController {
 						lotID, service.getLotID()));
 				return null;
 			}
-			
+
 			return service;
-		}		
+		}
 	}
 }

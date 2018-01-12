@@ -1,7 +1,7 @@
 package cps.api.request;
 
 import cps.api.response.ServerResponse;
-import cps.server.RequestHandler;
+import cps.server.session.UserSession;
 
 public class LoginRequest extends Request {
 	private static final long serialVersionUID = 1L;
@@ -15,8 +15,8 @@ public class LoginRequest extends Request {
 	}
 
 	@Override
-	public ServerResponse handle(RequestHandler handler) {
-		return null;
+	public ServerResponse handle(RequestHandler handler, UserSession session) {
+		return handler.handle(this, session);
 	}
 
 	public String getEmail() {

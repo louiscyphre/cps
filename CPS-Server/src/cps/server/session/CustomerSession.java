@@ -1,4 +1,4 @@
-package cps.server.handlers;
+package cps.server.session;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -6,12 +6,25 @@ import java.sql.SQLException;
 import cps.api.response.ServerResponse;
 import cps.common.Utilities;
 import cps.entities.models.Customer;
+import cps.entities.people.User;
 
-public class CustomerSession {
-	protected Customer customer = null;
+public class CustomerSession extends BasicSession {
+	protected Customer customer;
+	
+	public CustomerSession() {
+		this.customer = null;
+	}
+	
+	public CustomerSession(Customer customer) {
+		this.customer = customer;
+	}
 
 	public Customer getCustomer() {
 		return customer;
+	}
+	
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 	public boolean findCustomer(Connection conn, ServerResponse response, int customerID) throws SQLException {
@@ -40,5 +53,10 @@ public class CustomerSession {
 		}
 
 		return registerCustomer(conn, response, customerID, email);
+	}
+
+	@Override
+	public User getUser() {
+		return getCustomer();
 	}
 }
