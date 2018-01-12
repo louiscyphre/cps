@@ -19,6 +19,7 @@ import cps.api.response.ListOnetimeEntriesResponse;
 import cps.api.response.OnetimeParkingResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
+import cps.common.Constants;
 import cps.entities.models.Customer;
 import cps.entities.models.DailyStatistics;
 import cps.entities.models.OnetimeService;
@@ -53,17 +54,24 @@ public class OnetimeParkingController extends RequestController {
       // TODO check request parameters
       // End time can't be earlier than start time
 
-      OnetimeService result = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
+      OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
           request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);
-
-      if (result == null) { // error
-        response.setError("Failed to create OnetimeService entry");
-        return response;
+      errorIfNull(service, "Failed to create OnetimeService entry");
+      
+      if (service.getParkingType() == Constants.PARKING_TYPE_RESERVED) {
+        // Customer needs to pay in advance
+        ParkingLot lot = service.getParkingLot(conn);
+        float price = lot.getPriceForService(service.getParkingType());
+        float payment = service.calculatePayment(price);
+        response.setPayment(payment);
+        
+        // Charge customer
+        customer.pay(conn, payment);
       }
 
       // success
       response.setCustomerData(customer);
-      response.setServiceID(result.getId());
+      response.setServiceID(service.getId());
       response.setSuccess("OnetimeParkingRequest completed successfully");
       return response;
     });

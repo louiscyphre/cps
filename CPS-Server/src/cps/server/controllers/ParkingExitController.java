@@ -153,7 +153,14 @@ public class ParkingExitController extends RequestController {
 
     // At last we calculate the sum
     // The formula is according to the requirements
-    return startedLate * tariffLow * 1.2f + inside * tariffLow + endedLate * tariffHigh;
+    float sum = startedLate * tariffLow * 1.2f + inside * tariffLow + endedLate * tariffHigh;
+    
+    if (service.getParkingType() == Constants.PARKING_TYPE_RESERVED) {
+      // If this was a Reserved Parking, subtract the amount that the user had to pay in advance
+      sum -= service.calculatePayment(parkingLot.getPriceForService(service.getParkingType()));
+    }
+    
+    return sum;
   }
 
   public static float calculatePayment(Connection conn, CarTransportation carTransportation,

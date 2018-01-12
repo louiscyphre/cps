@@ -17,6 +17,7 @@ public class ReservedParkingResponse extends OnetimeParkingResponse {
     return payment;
   }
 
+  @Override
   public void setPayment(float payment) {
     this.payment = payment;
   }

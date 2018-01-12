@@ -22,4 +22,8 @@ public abstract class OnetimeParkingResponse extends CustomerPasswordResponse {
   public ServerResponse handle(ResponseHandler handler) {
     return handler.handle(this);
   }
+  
+  public void setPayment(float payment) {
+    
+  }
 }
