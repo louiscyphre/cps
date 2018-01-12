@@ -77,10 +77,12 @@ public class AlphaGUIControllerMainMenu implements ViewController {
   void toggleLabelStyle(ActionEvent event) {
     if (infoToggled) {
       infoToggled = false;
-//      displayError("infoToggled = " + infoToggled + " and count is " + ++count);
+      // displayError("infoToggled = " + infoToggled + " and count is " +
+      // ++count);
     } else {
       infoToggled = true;
-//      displayInfo("infoToggled = " + infoToggled + " and count is " + ++count);
+      // displayInfo("infoToggled = " + infoToggled + " and count is " +
+      // ++count);
     }
   }
 
@@ -98,14 +100,14 @@ public class AlphaGUIControllerMainMenu implements ViewController {
   // TODO @Michael check this idea out
   @Override
   public void displayInfo(List<Text> formattedText) {
-//    infoLabel.setText(formattedText);
+    // infoLabel.setText(formattedText);
     infoLabel.getStyleClass().clear();
     infoLabel.getStyleClass().add("infoLabel");
   }
 
   @Override
   public void displayError(List<Text> formettedErrorMsg) {
-//    infoLabel.setText(formettedErrorMsg);
+    // infoLabel.setText(formettedErrorMsg);
     infoLabel.getStyleClass().clear();
     infoLabel.getStyleClass().add("errorLabel");
   }
@@ -125,13 +127,13 @@ public class AlphaGUIControllerMainMenu implements ViewController {
   @Override
   public void displayInfo(String simpleInfoMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void displayError(String simpleErrorMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

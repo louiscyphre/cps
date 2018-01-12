@@ -129,13 +129,13 @@ public class LoginController implements ViewController {
   @Override
   public void displayInfo(String simpleInfoMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void displayError(String simpleErrorMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

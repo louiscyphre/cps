@@ -62,42 +62,42 @@ public class ServiceActionReserveSlotController implements ViewController {
     assert rowKTF != null : "fx:id=\"rowKTF\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
     assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_RESERVE_SLOT);
-    
+
   }
 
   @Override
   public void displayInfo(List<Text> formattedText) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void displayError(List<Text> formettedErrorMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnProcessingStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnProcessingStateOff() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void displayInfo(String simpleInfoMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void displayError(String simpleErrorMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 }

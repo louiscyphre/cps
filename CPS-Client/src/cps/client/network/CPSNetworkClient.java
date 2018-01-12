@@ -5,26 +5,26 @@ import java.io.IOException;
 import ocsf.client.AbstractClient;
 
 public class CPSNetworkClient extends AbstractClient {
-	INetworkClient clientUI;
+  INetworkClient clientUI;
 
-	public CPSNetworkClient(String host, int port, INetworkClient clientUI) throws IOException {
-		super(host, port);
-		this.clientUI = clientUI;
-		openConnection();
-	}
+  public CPSNetworkClient(String host, int port, INetworkClient clientUI) throws IOException {
+    super(host, port);
+    this.clientUI = clientUI;
+    openConnection();
+  }
 
-	/**
-	 * This method handles all data that comes in from the server.
-	 *
-	 * @param msg
-	 *          The message from the server.
-	 */
-	@Override
-	protected void handleMessageFromServer(Object msg) {
-		clientUI.receiveResponse(msg);
-	}
+  /**
+   * This method handles all data that comes in from the server.
+   *
+   * @param msg
+   *          The message from the server.
+   */
+  @Override
+  protected void handleMessageFromServer(Object msg) {
+    clientUI.receiveResponse(msg);
+  }
 
-	/**
+  /**
    * This method handles all data coming from the UI
    *
    * @param message
@@ -38,18 +38,18 @@ public class CPSNetworkClient extends AbstractClient {
       // FIXME some business logic comes here
     }
   }
-	
-	/**
-	 * This method terminates the client.
-	 */
-	public void quit() {
-		try {
-			closeConnection();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			System.exit(0);
-		}
-	}
+
+  /**
+   * This method terminates the client.
+   */
+  public void quit() {
+    try {
+      closeConnection();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      System.exit(0);
+    }
+  }
 
 }

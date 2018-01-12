@@ -27,9 +27,9 @@ public class ClientApplication extends Application implements INetworkClient {
   private CPSNetworkClient client;
 
   private Stage primaryStage;
-  
+
   // private Scene currentScene; TODO check whether necessary
-  
+
   private ResponseHandler responseHandler = new ResponseHandlerImpl();
 
   private int lotID; // required : -1 if web-client
@@ -85,7 +85,7 @@ public class ClientApplication extends Application implements INetworkClient {
     Scene scene = ControllersClientAdapter.registerScene(SceneCode.TEST_SCENE);
     initializeStage(scene, "CPS Tests");
   }
-  
+
   @Override
   public void start(Stage primaryStage) {
     try {
@@ -159,7 +159,7 @@ public class ClientApplication extends Application implements INetworkClient {
 
   @Override
   public void receiveResponse(Object resp) {
-     responseHandler.dispatch((Response) resp);
+    responseHandler.dispatch((Response) resp);
   }
 
   public Stage getPrimaryStage() {
@@ -169,9 +169,8 @@ public class ClientApplication extends Application implements INetworkClient {
   public void setPrimaryStage(Stage primaryStage) {
     this.primaryStage = primaryStage;
   }
-  
+
   enum NetworkState {
-    WAITING_FOR_RESPONSE,
-    RESPONSIVE
+    WAITING_FOR_RESPONSE, RESPONSIVE
   }
 }
