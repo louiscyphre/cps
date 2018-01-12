@@ -69,7 +69,7 @@ public class OnetimeParkingController extends RequestController {
 			}
 
 			// success
-			response.setCustomerID(customer.getId());
+			response.setCustomerData(customer);
 			response.setServiceID(result.getId());
 			response.setSuccess("OnetimeParkingRequest completed successfully");
 			return response;
@@ -98,7 +98,8 @@ public class OnetimeParkingController extends RequestController {
 	 *            the request
 	 * @return the server response
 	 */
-	public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {
+	public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {		
+		// TODO pay in advance for ReservedParking
 		Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
 		Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
 		ReservedParkingResponse response = new ReservedParkingResponse(false, "");

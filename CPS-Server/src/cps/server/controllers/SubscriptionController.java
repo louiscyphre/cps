@@ -57,7 +57,7 @@ public class SubscriptionController extends RequestController {
 			customer.pay(conn,  payment);
 
 			// Success
-			response.setCustomerID(customer.getId());
+			response.setCustomerData(customer);
 			response.setServiceID(service.getId());
 			response.setPayment(payment);
 			response.setSuccess("SubscriptionRequest completed successfully");
