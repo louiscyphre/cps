@@ -40,29 +40,29 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @SuppressWarnings("unused")
 public class TestCancelOnetimeParking extends ServerControllerTest {
-	@Test
-	public void testCancelOnetimeParking() {
-		/*
-		 * Scenario: 1. Create Parking Lot 2. Send Reserved Parking request 3. Send
-		 * Cancel Onetime Parking request
-		 */
+  @Test
+  public void testCancelOnetimeParking() {
+    /*
+     * Scenario: 1. Create Parking Lot 2. Send Reserved Parking request 3. Send
+     * Cancel Onetime Parking request
+     */
 
-		header("testCancelOnetimeParking");
-		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
-		SessionHolder context = new SessionHolder(new CustomerSession());
+    header("testCancelOnetimeParking");
+    CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+    SessionHolder context = new SessionHolder(new CustomerSession());
 
-		initParkingLot();
-		requestReservedParking(data, Duration.ofHours(3).plusMinutes(1), context);
+    initParkingLot();
+    requestReservedParking(data, Duration.ofHours(3).plusMinutes(1), context);
 
-		// Make request
-		CancelOnetimeParkingRequest request = new CancelOnetimeParkingRequest(data.customerID, data.onetimeServiceID);
-		// Test response
-		ServerResponse response = server.dispatch(request, context);
-		printObject(response);
-		assertTrue(response.success());
-		assertThat(response, instanceOf(CancelOnetimeParkingResponse.class));
-		CancelOnetimeParkingResponse specificResponse = (CancelOnetimeParkingResponse) response;
-		assertEquals(request.getCustomerID(), specificResponse.getCustomerID());
-		assertEquals(request.getOnetimeServiceID(), specificResponse.getOnetimeServiceID());
-	}
+    // Make request
+    CancelOnetimeParkingRequest request = new CancelOnetimeParkingRequest(data.customerID, data.onetimeServiceID);
+    // Test response
+    ServerResponse response = server.dispatch(request, context);
+    printObject(response);
+    assertTrue(response.success());
+    assertThat(response, instanceOf(CancelOnetimeParkingResponse.class));
+    CancelOnetimeParkingResponse specificResponse = (CancelOnetimeParkingResponse) response;
+    assertEquals(request.getCustomerID(), specificResponse.getCustomerID());
+    assertEquals(request.getOnetimeServiceID(), specificResponse.getOnetimeServiceID());
+  }
 }

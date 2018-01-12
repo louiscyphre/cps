@@ -34,148 +34,149 @@ import cps.server.session.UserSession;
 @SuppressWarnings("unused")
 public class OnetimeParkingController extends RequestController {
 
-	/**
-	 * Instantiates a new one-time parking controller.
-	 *
-	 * @param serverController
-	 *            the server application
-	 */
-	public OnetimeParkingController(ServerController serverController) {
-		super(serverController);
-	}
+  /**
+   * Instantiates a new one-time parking controller.
+   *
+   * @param serverController
+   *          the server application
+   */
+  public OnetimeParkingController(ServerController serverController) {
+    super(serverController);
+  }
 
-	public ServerResponse handle(OnetimeParkingRequest request, CustomerSession session,
-			OnetimeParkingResponse serverResponse, Timestamp startTime, Timestamp plannedEndTime) {
-		return database.performQuery(serverResponse, (conn, response) -> {
-			// Handle login
-			Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
+  public ServerResponse handle(OnetimeParkingRequest request, CustomerSession session,
+      OnetimeParkingResponse serverResponse, Timestamp startTime, Timestamp plannedEndTime) {
+    return database.performQuery(serverResponse, (conn, response) -> {
+      // Handle login
+      Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
-			// TODO check request parameters
-			// End time can't be earlier than start time
+      // TODO check request parameters
+      // End time can't be earlier than start time
 
-			OnetimeService result = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
-					request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);
+      OnetimeService result = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
+          request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);
 
-			if (result == null) { // error
-				response.setError("Failed to create OnetimeService entry");
-				return response;
-			}
+      if (result == null) { // error
+        response.setError("Failed to create OnetimeService entry");
+        return response;
+      }
 
-			// success
-			response.setCustomerData(customer);
-			response.setServiceID(result.getId());
-			response.setSuccess("OnetimeParkingRequest completed successfully");
-			return response;
-		});
-	}
+      // success
+      response.setCustomerData(customer);
+      response.setServiceID(result.getId());
+      response.setSuccess("OnetimeParkingRequest completed successfully");
+      return response;
+    });
+  }
 
-	/**
-	 * Handle IncidentalParkingRequest.
-	 *
-	 * @param request
-	 *            the request
-	 * @param session
-	 * @return the server response
-	 */
-	public ServerResponse handle(IncidentalParkingRequest request, CustomerSession session) {
-		Timestamp startTime = new Timestamp(System.currentTimeMillis());
-		Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
-		IncidentalParkingResponse response = new IncidentalParkingResponse(false, "");
-		return handle(request, session, response, startTime, plannedEndTime);
-	}
+  /**
+   * Handle IncidentalParkingRequest.
+   *
+   * @param request
+   *          the request
+   * @param session
+   * @return the server response
+   */
+  public ServerResponse handle(IncidentalParkingRequest request, CustomerSession session) {
+    Timestamp startTime = new Timestamp(System.currentTimeMillis());
+    Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
+    IncidentalParkingResponse response = new IncidentalParkingResponse(false, "");
+    return handle(request, session, response, startTime, plannedEndTime);
+  }
 
-	/**
-	 * Handle ReservedParkingRequest.
-	 *
-	 * @param request
-	 *            the request
-	 * @return the server response
-	 */
-	public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {
-		// TODO pay in advance for ReservedParking
-		Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
-		Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
-		ReservedParkingResponse response = new ReservedParkingResponse(false, "");
-		return handle(request, session, response, startTime, plannedEndTime);
-	}
+  /**
+   * Handle ReservedParkingRequest.
+   *
+   * @param request
+   *          the request
+   * @return the server response
+   */
+  public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {
+    // TODO pay in advance for ReservedParking
+    Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
+    Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
+    ReservedParkingResponse response = new ReservedParkingResponse(false, "");
+    return handle(request, session, response, startTime, plannedEndTime);
+  }
 
-	/**
-	 * Handle CancelOnetimeParkingRequest.
-	 *
-	 * @param request
-	 *            the request
-	 * @param session
-	 * @return the server response
-	 */
-	public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
-		return database.performQuery(conn -> {
-			CancelOnetimeParkingResponse response = new CancelOnetimeParkingResponse(false, "");
-			// Mark Order as canceled
-			OnetimeService service = OnetimeService.findByID(conn, request.getOnetimeServiceID());
+  /**
+   * Handle CancelOnetimeParkingRequest.
+   *
+   * @param request
+   *          the request
+   * @param session
+   * @return the server response
+   */
+  public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
+    return database.performQuery(conn -> {
+      CancelOnetimeParkingResponse response = new CancelOnetimeParkingResponse(false, "");
+      // Mark Order as canceled
+      OnetimeService service = OnetimeService.findByID(conn, request.getOnetimeServiceID());
 
-			if (service == null) {
-				response.setError(String.format("OnetimeService with id %s not found", request.getOnetimeServiceID()));
-				return response;
-			}
+      if (service == null) {
+        response.setError(String.format("OnetimeService with id %s not found", request.getOnetimeServiceID()));
+        return response;
+      }
 
-			// Calculate refund amount based on how late the cancel request was submitted
-			// relative to the parking start time
-			Duration duration = Duration.between(LocalDateTime.now(), service.getPlannedStartTime().toLocalDateTime());
+      // Calculate refund amount based on how late the cancel request was
+      // submitted
+      // relative to the parking start time
+      Duration duration = Duration.between(LocalDateTime.now(), service.getPlannedStartTime().toLocalDateTime());
 
-			float refundValue = 1.0f;
+      float refundValue = 1.0f;
 
-			if (duration.compareTo(Duration.ofHours(3)) >= 0) {
-				refundValue = 0.9f;
-			} else if (duration.compareTo(Duration.ofHours(1)) >= 0) {
-				refundValue = 0.5f;
-			} else {
-				response.setError("The service order cannot be canceled at this time.");
-				return response;
-			}
+      if (duration.compareTo(Duration.ofHours(3)) >= 0) {
+        refundValue = 0.9f;
+      } else if (duration.compareTo(Duration.ofHours(1)) >= 0) {
+        refundValue = 0.5f;
+      } else {
+        response.setError("The service order cannot be canceled at this time.");
+        return response;
+      }
 
-			float refundAmount = 0f;
+      float refundAmount = 0f;
 
-			try {
-				ParkingLot lot = service.getParkingLot(conn);
-				float pricePerHour = lot.getPriceForService(service.getParkingType());
-				float servicePrice = service.calculatePayment(pricePerHour);
-				refundAmount = servicePrice * refundValue;
+      try {
+        ParkingLot lot = service.getParkingLot(conn);
+        float pricePerHour = lot.getPriceForService(service.getParkingType());
+        float servicePrice = service.calculatePayment(pricePerHour);
+        refundAmount = servicePrice * refundValue;
 
-				// Cancel the order
-				service.setCanceled(true);
-				service.update(conn); // sync with database
+        // Cancel the order
+        service.setCanceled(true);
+        service.update(conn); // sync with database
 
-				// Increase daily counter of canceled orders
-				DailyStatistics.increaseCanceledOrder(conn, service.getLotID());
+        // Increase daily counter of canceled orders
+        DailyStatistics.increaseCanceledOrder(conn, service.getLotID());
 
-				// Refund customer
-				Customer customer = service.getCustomer(conn);
-				customer.receiveRefund(conn, refundAmount);
-			} catch (ServerException ex) {
-				response.setError(ex.getMessage());
-				return response;
-			}
+        // Refund customer
+        Customer customer = service.getCustomer(conn);
+        customer.receiveRefund(conn, refundAmount);
+      } catch (ServerException ex) {
+        response.setError(ex.getMessage());
+        return response;
+      }
 
-			// Return Server Response
-			response.setCustomerID(request.getCustomerID());
-			response.setOnetimeServiceID(request.getOnetimeServiceID());
-			response.setRefundAmount(refundAmount);
-			response.setSuccess("OnetimeService order canceled successfully");
-			return response;
-		});
-	}
+      // Return Server Response
+      response.setCustomerID(request.getCustomerID());
+      response.setOnetimeServiceID(request.getOnetimeServiceID());
+      response.setRefundAmount(refundAmount);
+      response.setSuccess("OnetimeService order canceled successfully");
+      return response;
+    });
+  }
 
-	/**
-	 * Handle List One Time Entries Request.
-	 *
-	 * @param request
-	 *            the request
-	 * @return the server response
-	 */
-	public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {
-		return database.performQuery(conn -> {
-			Collection<OnetimeService> result = OnetimeService.findByCustomerID(conn, request.getCustomerID());
-			return new ListOnetimeEntriesResponse(result, request.getCustomerID());
-		});
-	}
+  /**
+   * Handle List One Time Entries Request.
+   *
+   * @param request
+   *          the request
+   * @return the server response
+   */
+  public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {
+    return database.performQuery(conn -> {
+      Collection<OnetimeService> result = OnetimeService.findByCustomerID(conn, request.getCustomerID());
+      return new ListOnetimeEntriesResponse(result, request.getCustomerID());
+    });
+  }
 }

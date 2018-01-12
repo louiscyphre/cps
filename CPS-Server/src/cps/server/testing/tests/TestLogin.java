@@ -39,31 +39,31 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @SuppressWarnings("unused")
 public class TestLogin extends ServerControllerTest {
-	@Test
-	public void testLogin() {
-		/*
-		 * Scenario: 1. Create user 2. Attempt to login as user 3. Attempt to login with
-		 * a wrong password 4. Attempt to login with a wrong email
-		 */
+  @Test
+  public void testLogin() {
+    /*
+     * Scenario: 1. Create user 2. Attempt to login as user 3. Attempt to login
+     * with a wrong password 4. Attempt to login with a wrong email
+     */
 
-		header("testLogin");
+    header("testLogin");
 
-		// Create user
-		CustomerData data = new CustomerData(0, "user@email", "1234", "IL11-222-33", 1, 0);
-		Customer customer = db.performQuery(conn -> Customer.create(conn, data.email, data.password));
-		assertNotNull(customer);
-		printObject(customer);
+    // Create user
+    CustomerData data = new CustomerData(0, "user@email", "1234", "IL11-222-33", 1, 0);
+    Customer customer = db.performQuery(conn -> Customer.create(conn, data.email, data.password));
+    assertNotNull(customer);
+    printObject(customer);
 
-		// Create login request
-		LoginRequest request = new LoginRequest(data.email, data.password);
+    // Create login request
+    LoginRequest request = new LoginRequest(data.email, data.password);
 
-		// Test the response
-		ServerResponse response = server.dispatch(request, getContext());
-		printObject(response);
-		assertThat(response, instanceOf(LoginResponse.class));
-		assertTrue(response.success());
+    // Test the response
+    ServerResponse response = server.dispatch(request, getContext());
+    printObject(response);
+    assertThat(response, instanceOf(LoginResponse.class));
+    assertTrue(response.success());
 
-		LoginResponse loginResponse = (LoginResponse) response;
-		assertEquals(customer.getId(), loginResponse.getCustomerID());
-	}
+    LoginResponse loginResponse = (LoginResponse) response;
+    assertEquals(customer.getId(), loginResponse.getCustomerID());
+  }
 }

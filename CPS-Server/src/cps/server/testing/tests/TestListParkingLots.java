@@ -39,32 +39,32 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @SuppressWarnings("unused")
 public class TestListParkingLots extends ServerControllerTest {
-	@Test
-	public void testListParkingLots() {
-		header("testListParkingLots");
+  @Test
+  public void testListParkingLots() {
+    header("testListParkingLots");
 
-		// Create lots
-		for (int i = 1; i <= 3; i++) {
-			InitLotAction request = new InitLotAction(1000, "Lot " + i + " Address", 3, 5, 4, "113.0.1.1" + i);
-			ServerResponse response = server.dispatch(request, getContext());
-			assertTrue(response.success());
-		}
+    // Create lots
+    for (int i = 1; i <= 3; i++) {
+      InitLotAction request = new InitLotAction(1000, "Lot " + i + " Address", 3, 5, 4, "113.0.1.1" + i);
+      ServerResponse response = server.dispatch(request, getContext());
+      assertTrue(response.success());
+    }
 
-		assertEquals(3, db.countEntities("parking_lot"));
+    assertEquals(3, db.countEntities("parking_lot"));
 
-		// Make request
-		ListParkingLotsRequest request = new ListParkingLotsRequest();
+    // Make request
+    ListParkingLotsRequest request = new ListParkingLotsRequest();
 
-		// Test response
-		ServerResponse response = server.dispatch(request, getContext());
-		assertNotNull(response);
-		printObject(response);
-		assertTrue(response.success());
-		assertThat(response, instanceOf(ListParkingLotsResponse.class));
+    // Test response
+    ServerResponse response = server.dispatch(request, getContext());
+    assertNotNull(response);
+    printObject(response);
+    assertTrue(response.success());
+    assertThat(response, instanceOf(ListParkingLotsResponse.class));
 
-		ListParkingLotsResponse specificResponse = (ListParkingLotsResponse) response;
-		Collection<ParkingLot> parkingLots = specificResponse.getData();
-		assertNotNull(parkingLots);
-		assertEquals(3, parkingLots.size());
-	}
+    ListParkingLotsResponse specificResponse = (ListParkingLotsResponse) response;
+    Collection<ParkingLot> parkingLots = specificResponse.getData();
+    assertNotNull(parkingLots);
+    assertEquals(3, parkingLots.size());
+  }
 }

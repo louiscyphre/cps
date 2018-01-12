@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public interface ParkingService extends Serializable {
-	public int getId();
+  public int getId();
 
-	public int getLicenseType();
+  public int getLicenseType();
 
-	public LocalDateTime getExitTime();
+  public LocalDateTime getExitTime();
 }

@@ -9,24 +9,24 @@ import cps.server.session.UserSession;
 
 public class CustomerController extends RequestController {
 
-	public CustomerController(ServerController serverController) {
-		super(serverController);
-	}
+  public CustomerController(ServerController serverController) {
+    super(serverController);
+  }
 
-	public ServerResponse handle(LoginRequest request, UserSession session) {
-		return database.performQuery(conn -> {
-			LoginResponse response = new LoginResponse(false, "", 0);
+  public ServerResponse handle(LoginRequest request, UserSession session) {
+    return database.performQuery(conn -> {
+      LoginResponse response = new LoginResponse(false, "", 0);
 
-			Customer customer = Customer.findByEmailAndPassword(conn, request.getEmail(), request.getPassword());
+      Customer customer = Customer.findByEmailAndPassword(conn, request.getEmail(), request.getPassword());
 
-			if (customer == null) {
-				response.setError("Login failed, invalid email or password.");
-				return response;
-			}
+      if (customer == null) {
+        response.setError("Login failed, invalid email or password.");
+        return response;
+      }
 
-			response.setCustomerID(customer.getId());
-			response.setSuccess("Login successful");
-			return response;
-		});
-	}
+      response.setCustomerID(customer.getId());
+      response.setSuccess("Login successful");
+      return response;
+    });
+  }
 }
