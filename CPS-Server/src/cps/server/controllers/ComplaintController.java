@@ -36,7 +36,10 @@ public class ComplaintController extends RequestController {
 
   public ServerResponse handle(RefundAction action, UserSession session) {
     return database.performQuery(new RefundResponse(), (conn, response) -> {
-      User employee = session.requireUser(); // TODO check access level
+      User employee = session.requireUser();
+      
+      errorIf(!employee.canAccessDomain(Constants.ACCESS_DOMAIN_CUSTOMER_SERVICE), "You cannot perform this action");
+      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER, "You cannot perform this action");
 
       Complaint complaint = Complaint.findByIDNotNull(conn, action.getComplaintID());
 
