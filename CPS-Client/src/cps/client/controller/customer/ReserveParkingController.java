@@ -344,8 +344,6 @@ public class ReserveParkingController implements ViewController {
   public void turnProcessingStateOn() {
     infoProgress.visibleProperty().set(true);
     Text text = new Text("Processing...");
-    text.setStyle("-fx-font-weight: regular");
-    text.setStyle("-fx-font-weight: regular");
     infoLabel.getChildren().clear();
     infoLabel.getChildren().add(text);
     infoBox.getStyleClass().clear();
