@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.Collection;
 
 import cps.server.ServerController;
+import cps.server.ServerException;
 import cps.server.controllers.DatabaseController;
 import cps.server.session.CustomerSession;
 import cps.server.session.ServiceSession;
@@ -43,7 +44,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @SuppressWarnings("unused")
 public class TestComplaint extends ServerControllerTest {
   @Test
-  public void testComplaintAndRefund() {
+  public void testComplaintAndRefund() throws ServerException {
     header("testComplaint");
 
     // Create user
@@ -57,7 +58,7 @@ public class TestComplaint extends ServerControllerTest {
     makeRefund(complaint, getContext());
   }
 
-  protected Complaint makeComplaint(Customer customer, SessionHolder context) {
+  protected Complaint makeComplaint(Customer customer, SessionHolder context) throws ServerException {
     // Create new customer session
     CustomerSession session = context.acquireCustomerSession();
     session.setCustomer(customer);
@@ -90,7 +91,7 @@ public class TestComplaint extends ServerControllerTest {
     return entry;
   }
 
-  private void makeRefund(Complaint complaint, SessionHolder context) {
+  private void makeRefund(Complaint complaint, SessionHolder context) throws ServerException {
     // Create new customer service employee session
     ServiceSession session = context.acquireServiceSession();
     User user = session.login("eli", "9012");

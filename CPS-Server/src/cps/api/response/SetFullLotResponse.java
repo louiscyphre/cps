@@ -7,8 +7,4 @@ public class SetFullLotResponse extends ServerResponse {
   public ServerResponse handle(ResponseHandler handler) {
     return handler.handle(this);
   }
-
-  public SetFullLotResponse(boolean success, String description) {
-    super(success, description);
-  }
 }

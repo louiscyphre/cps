@@ -130,6 +130,26 @@ CREATE TABLE `onetime_service` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `parking_cell`
+--
+
+DROP TABLE IF EXISTS `parking_cell`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `parking_cell` (
+  `lot_id` int(10) NOT NULL,
+  `i` int(10) NOT NULL,
+  `j` int(10) NOT NULL,
+  `k` int(10) NOT NULL,
+  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci NULL,
+  `planned_end_time` datetime NULL,
+  `reserved` bit(1) DEFAULT b'0',
+  `disabled` bit(1) DEFAULT b'0',
+  PRIMARY KEY (`lot_id`, `i`, `j`, `k`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `parking_lot`
 --
 
@@ -147,7 +167,7 @@ CREATE TABLE `parking_lot` (
   `robot_ip` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `lot_full` bit(1) DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci DELAY_KEY_WRITE=1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

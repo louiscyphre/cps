@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.Collection;
 
 import cps.server.ServerController;
+import cps.server.ServerException;
 import cps.server.controllers.DatabaseController;
 import cps.server.session.CustomerSession;
 import cps.server.session.SessionHolder;
@@ -41,7 +42,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @SuppressWarnings("unused")
 public class TestFullSubscription extends ServerControllerTest {
   @Test
-  public void testFullSubscription() {
+  public void testFullSubscription() throws ServerException {
     /*
      * Scenario: 1. Create Parking Lot 2. Send Full Subscription request 3. Send
      * Parking Entry request - license: FullSubscription 4. Send Parking Exit

@@ -35,11 +35,11 @@ public interface Constants {
   public final String SQL_GET_ONETIME_SERVICE_BY_CUSTOMER_ID        = "SELECT * FROM onetime_service WHERE customer_id=? ORDER BY id";
   public final String SQL_GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID = "SELECT * FROM onetime_service WHERE customer_id=? AND car_id=? AND lot_id=? ORDER BY id DESC LIMIT 1";
   public final String SQL_GET_ONETIME_SERVICE_BY_ID                 = "SELECT * FROM onetime_service WHERE id=?";
-  public final String SQL_UPDATE_ONETIME_BY_ID                      = "UPDATE onetime_service SET parking_type = ?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, canceled=? WHERE id=?";
+  public final String SQL_UPDATE_ONETIME_BY_ID                      = "UPDATE onetime_service SET parking_type=?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, canceled=? WHERE id=?";
 
   // SQL queries - CarTransportation
   public final String SQL_CREATE_CAR_TRANSPORTATION             = "INSERT INTO car_transportation values(?, ?, ?, ?, ?, default, default)";
-  public final String SQL_FIND_CAR_TRANSPORTATION_BY_LOT_ID     = "SELECT * FROM car_transportation WHERE lot_id = ?";
+  public final String SQL_FIND_CAR_TRANSPORTATION_BY_LOT_ID     = "SELECT * FROM car_transportation WHERE lot_id=?";
   public final String SQL_UPDATE_REMOVED_AT                     = "UPDATE car_transportation SET removed_at=? WHERE customer_id=? AND car_id=? AND lot_id=? AND inserted_at=?";
   public final String SQL_FIND_CAR_TRANSPORTATION               = "SELECT * FROM car_transportation WHERE customer_id=? AND car_id=? AND lot_id=? AND removed_at IS NULL ORDER BY inserted_at DESC LIMIT 1";
   public final String SQL_FIND_CAR_TRANSPORTATION_BY_CAR_NUMBER = "SELECT * FROM car_transportation WHERE car_id=? AND lot_id=? AND removed_at IS NULL ORDER BY inserted_at DESC LIMIT 1";
@@ -62,7 +62,13 @@ public interface Constants {
   public final String SQL_CREATE_PARKING_LOT    = "INSERT INTO parking_lot values(default, ?, ?, ?, ?, ?, default, ?,default)";
   public final String SQL_GET_LOT_BY_ID         = "SELECT * FROM parking_lot WHERE id=?";
   public final String SQL_FIND_ALL_PARKING_LOTS = "SELECT * FROM parking_lot ORDER BY id";
-  public final String SQL_UPDATE_PARKING_LOT    = "UPDATE parking_lot SET street_address = ?, size=?, content=?, price1=?, price2=?, alternative_lots=?, robot_ip=?, lot_full=? WHERE id=?";
+  public final String SQL_UPDATE_PARKING_LOT    = "UPDATE parking_lot SET street_address=?, size=?, content=?, price1=?, price2=?, alternative_lots=?, robot_ip=?, lot_full=? WHERE id=?";
+  
+  // SQL queries - ParkingCell
+  public final String SQL_CREATE_PARKING_CELL = "INSERT INTO parking_cell values(?, ?, ?, ?, ?, ?, ?, ?)";
+  public final String SQL_FIND_PARKING_CELL = "SELECT * FROM parking_cell WHERE lot_id=? and i=? and j=? and k=?";
+  public final String SQL_UPDATE_PARKING_CELL = "UPDATE parking_cell SET lot_id=?, i=?, j=?, k=?, car_id=?, planned_end_time=?, reserved=?, disabled=?";
+  public final String SQL_FIND_PARKING_CELL_BY_LOT_ID = "SELECT * FROM parking_cell WHERE lot_id=?";
 
   // SQL queries - Customer
   public final String SQL_UPDATE_CUSTOMER                     = "UPDATE customer SET email=?, password=?, debit=?, credit=? WHERE id=?";
@@ -74,6 +80,6 @@ public interface Constants {
   // SQL queries - Complaint
   public final String SQL_CREATE_COMPLAINT       = "INSERT INTO complaint values(default, ?, default, ?, ?, ?, ?, default)";
   public final String SQL_FIND_COMPLAINT_BY_ID   = "SELECT * FROM complaint WHERE id=?";
-  public final String SQL_UPDATE_COMPLAINT_LIGHT = "UPDATE complaint SET customer_id = ?, employee_id = ?, status = ?, resolved_at = ?, refund_amount = ?";
-  public final String SQL_UPDATE_COMPLAINT       = "UPDATE complaint SET customer_id = ?, employee_id = ?, status = ?, resolved_at = ?, refund_amount = ?, description = ?";
+  public final String SQL_UPDATE_COMPLAINT_LIGHT = "UPDATE complaint SET customer_id=?, employee_id=?, status=?, resolved_at=?, refund_amount=?";
+  public final String SQL_UPDATE_COMPLAINT       = "UPDATE complaint SET customer_id=?, employee_id=?, status=?, resolved_at=?, refund_amount=?, description=?";
 }
