@@ -179,7 +179,10 @@ public class CarTransportationController2 extends RequestController {
              * If this one can be demoted, try to find a place for him in higher
              * priorities
              */
-            // if(otherPriority>)
+            if(otherPriority>iSize+3 && otherPriority > priority)
+            {
+              
+            }
             // isize +1 --> maxsize
           }
         }
