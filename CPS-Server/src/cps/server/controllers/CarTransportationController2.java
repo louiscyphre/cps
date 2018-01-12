@@ -135,11 +135,12 @@ public class CarTransportationController2 extends RequestController {
              * If this one can be promoted, try to find a place for him in
              * higher priorities
              */
-            if (otherPriority < iSize) {
-              for (int i = iSize - 1; (i < 2) && (maxSize == -1); i--) {
-                // If there is a spot for him - mark his current spot as a spot
-                // for our
-                // insertion
+            if (otherPriority < iSize + 3 && otherPriority < priority) {
+              for (int i = iSize - 1; (i < otherPriority - 1) && (maxSize == -1); i--) {
+                /*
+                 * If there is a spot for him - mark his current spot as a spot
+                 * for our insertion
+                 */
                 if (freeSpotsCount[i] != 0) {
                   maxSize = iSize;
                   maxHeight = Math.floorMod(iHeight, 3);
@@ -175,9 +176,11 @@ public class CarTransportationController2 extends RequestController {
             // Calculate the priority
             otherPriority = calculatePriority(LocalDateTime.parse(carInfo[1]), worstPriority, lotSize);
             /*
-             * If this one can be demoted, try to find a place for him in
-             * higher priorities
+             * If this one can be demoted, try to find a place for him in higher
+             * priorities
              */
+            // if(otherPriority>)
+            // isize +1 --> maxsize
           }
         }
       }
