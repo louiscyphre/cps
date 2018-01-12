@@ -97,18 +97,11 @@ public class CarTransportationController2 extends RequestController {
 
       priority = worstPriority;
       /*
-       * Optimal coordinates for insertion These are selected based on the
-       * lowest "cars in the way" number
+       * Optimal coordinates for insertion
        */
       maxSize = -1;
       maxHeight = -1;
       maxDepth = -1;
-
-      // How much cars are in the way in this spot
-      path = 100;
-      // What is the lowest number of "cars in the way" that we encountered so
-      // far
-      minPath = 100;
 
       priority = calculatePriority(exitTime, worstPriority, lotSize);
 
@@ -132,7 +125,7 @@ public class CarTransportationController2 extends RequestController {
           // if there are no free spaces here, try to promote someone
           int otherPriority;
           String[] carInfo = null;
-          // For every car in "priority" block
+          // For every car in "priority block"
           for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
             // Parse the car info
             carInfo = thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1].split(";");
@@ -142,11 +135,12 @@ public class CarTransportationController2 extends RequestController {
              * If this one can be promoted, try to find a place for him in
              * higher priorities
              */
-            if (otherPriority < iSize) {
-              for (int i = iSize - 1; (i < 2) && (maxSize == -1); i--) {
-                // If there is a spot for him - mark his current spot as a spot
-                // for our
-                // insertion
+            if (otherPriority < iSize + 3 && otherPriority < priority) {
+              for (int i = iSize - 1; (i < otherPriority - 1) && (maxSize == -1); i--) {
+                /*
+                 * If there is a spot for him - mark his current spot as a spot
+                 * for our insertion
+                 */
                 if (freeSpotsCount[i] != 0) {
                   maxSize = iSize;
                   maxHeight = Math.floorMod(iHeight, 3);
@@ -171,9 +165,29 @@ public class CarTransportationController2 extends RequestController {
               maxDepth = Math.floorDiv(iHeight, 3) + 1;
             }
           }
+        } else {
+          // if there are no free spaces here, try to demote someone
+          int otherPriority;
+          String[] carInfo = null;
+          // For every car in "priority block"
+          for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+            // Parse the car info
+            carInfo = thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1].split(";");
+            // Calculate the priority
+            otherPriority = calculatePriority(LocalDateTime.parse(carInfo[1]), worstPriority, lotSize);
+            /*
+             * If this one can be demoted, try to find a place for him in higher
+             * priorities
+             */
+            // if(otherPriority>)
+            // isize +1 --> maxsize
+          }
         }
       }
 
+      /*
+       * If all fails find a spot among emergency priorities
+       */
       for (iHeight = 2; (iHeight >= 0) && (maxHeight == -1); iHeight--) {
         for (iSize = lotSize - 1; ((iSize >= 0) && (maxSize == -1)); iSize--) {
           if (thisContent[iSize][iHeight][0].compareTo(Constants.SPOT_IS_EMPTY) == 0) {
