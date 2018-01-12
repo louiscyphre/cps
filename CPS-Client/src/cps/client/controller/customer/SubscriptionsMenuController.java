@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
- * Created on: 2018-01-09 1:04:02 AM 
+ * Created on: 2018-01-09 1:04:02 AM
  */
 public class SubscriptionsMenuController implements ViewController {
 
@@ -32,46 +32,46 @@ public class SubscriptionsMenuController implements ViewController {
 
   @FXML
   void initialize() {
-      assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
-      assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
+    assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
+    assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
 
-      ControllersClientAdapter.registerCtrl(this,ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
+    ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
   }
 
   @Override
   public void displayInfo(List<Text> formattedText) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void displayError(List<Text> formettedErrorMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnProcessingStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnProcessingStateOff() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void displayInfo(String simpleInfoMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void displayError(String simpleErrorMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

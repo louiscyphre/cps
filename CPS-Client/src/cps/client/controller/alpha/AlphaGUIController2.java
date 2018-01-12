@@ -19,7 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 public class AlphaGUIController2 implements ViewController {
-  
+
   Scene myScene;
 
   @FXML // ResourceBundle that was given to the FXMLLoader
@@ -51,10 +51,10 @@ public class AlphaGUIController2 implements ViewController {
     try {
       userID = Integer.parseInt(strUserID);
     } catch (NumberFormatException e) {
-//      displayError(ControllerConstants.InputVerification.MISSING_USERID.getMsg());
+      // displayError(ControllerConstants.InputVerification.MISSING_USERID.getMsg());
       return;
     } catch (NullPointerException e) {
-//      displayError(ControllerConstants.InputVerification.MISSING_USERID.getMsg());
+      // displayError(ControllerConstants.InputVerification.MISSING_USERID.getMsg());
       return;
     }
 
@@ -62,7 +62,7 @@ public class AlphaGUIController2 implements ViewController {
 
     String carID = carIDTF.getText();
     if (carID == null || carID.length() < 1) {
-//      displayError(ControllerConstants.InputVerification.MISSING_CARID.getMsg());
+      // displayError(ControllerConstants.InputVerification.MISSING_CARID.getMsg());
       return;
     }
 
@@ -71,10 +71,10 @@ public class AlphaGUIController2 implements ViewController {
     try {
       lotID = Integer.parseInt(strLotID);
     } catch (NumberFormatException e) {
-//      displayError(ControllerConstants.InputVerification.MISSING_LOTID.getMsg());
+      // displayError(ControllerConstants.InputVerification.MISSING_LOTID.getMsg());
       return;
     } catch (NullPointerException e) {
-//      displayError(ControllerConstants.InputVerification.MISSING_LOTID.getMsg());
+      // displayError(ControllerConstants.InputVerification.MISSING_LOTID.getMsg());
       return;
     }
 
@@ -83,18 +83,16 @@ public class AlphaGUIController2 implements ViewController {
       String dateStr = plannedEndTimeTF.getText();
       date = LocalDateTime.parse(dateStr);
     } catch (DateTimeParseException e) {
-//      displayError(ControllerConstants.InputVerification.MISSING_PLANNEDENDTIME.getMsg());
+      // displayError(ControllerConstants.InputVerification.MISSING_PLANNEDENDTIME.getMsg());
       return;
     } catch (NullPointerException e) {
-//      displayError(ControllerConstants.InputVerification.MISSING_PLANNEDENDTIME.getMsg());
+      // displayError(ControllerConstants.InputVerification.MISSING_PLANNEDENDTIME.getMsg());
       return;
     }
 
     IncidentalParkingRequest request = new IncidentalParkingRequest(userID, email, carID, lotID, date);
     ControllersClientAdapter.getClient().sendRequest(request);
   }
-
-
 
   @FXML
   void backHandler(ActionEvent event) {
@@ -110,51 +108,43 @@ public class AlphaGUIController2 implements ViewController {
     assert carIDTF != null : "fx:id=\"carIDTF\" was not injected: check your FXML file 'AlphaGUI_2.fxml'.";
     assert plannedEndTimeTF != null : "fx:id=\"plannedEndTimeTF\" was not injected: check your FXML file 'AlphaGUI_2.fxml'.";
     plannedEndTimeTF.setText(LocalDateTime.now().toString());
-    ControllersClientAdapter.registerCtrl(this,ControllerConstants.SceneCode.ALPHA_INCIDENTAL_PARKING);
+    ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.ALPHA_INCIDENTAL_PARKING);
   }
 
   @Override
   public void displayInfo(List<Text> formattedText) {
     // TODO Auto-generated method stub
-    
+
   }
 
   public void displayError(List<Text> formettedErrorMsg) {
     Alert alert = new Alert(AlertType.ERROR);
-//    alert.setContentText(formettedErrorMsg);
+    // alert.setContentText(formettedErrorMsg);
     alert.showAndWait();
   }
-
-
 
   @Override
   public void turnProcessingStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
-
-
 
   @Override
   public void turnProcessingStateOff() {
     // TODO Auto-generated method stub
-    
+
   }
-
-
 
   @Override
   public void displayInfo(String simpleInfoMsg) {
     // TODO Auto-generated method stub
-    
+
   }
-
-
 
   @Override
   public void displayError(String simpleErrorMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

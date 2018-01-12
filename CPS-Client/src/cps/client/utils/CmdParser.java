@@ -17,6 +17,7 @@ import org.apache.commons.cli.ParseException;
 public class CmdParser {
 
   private CommandLine cmd;
+
   public void extract(String[] args) throws ParseException {
 
     Options options = new Options();
@@ -29,8 +30,7 @@ public class CmdParser {
     port.setRequired(true);
     options.addOption(port);
 
-    Option mode = new Option("m", "mode", true,
-        "Mode of work: kiosk, web, or service");
+    Option mode = new Option("m", "mode", true, "Mode of work: kiosk, web, or service");
     mode.setRequired(false);
     options.addOption(mode);
 
@@ -62,12 +62,12 @@ public class CmdParser {
     }
     return Integer.parseInt(option);
   }
-  
+
   public int getLotId() throws NumberFormatException {
     String option = cmd.getOptionValue("lot-id");
     return Integer.parseInt(option);
   }
-  
+
   public String getMode() {
     String option = cmd.getOptionValue("mode");
     return (option == null) ? "kiosk" : option;

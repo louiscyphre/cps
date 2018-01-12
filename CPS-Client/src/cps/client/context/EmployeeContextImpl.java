@@ -2,10 +2,10 @@ package cps.client.context;
 
 public class EmployeeContextImpl implements EmployeeContext {
 
-  private int id;
+  private int    id;
   private String username;
-  private int accessLevel;
-  
+  private int    accessLevel;
+
   @Override
   public int getEmployeeId() {
     return this.id;

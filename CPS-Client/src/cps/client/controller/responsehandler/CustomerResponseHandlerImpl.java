@@ -87,14 +87,14 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(customerIdText);
       formattedMessage.add(new Text("\n"));
-      
+
       formattedMessage.add(new Text("Your Password:"));
       Text password = new Text(response.getPassword());
       defaultFont = password.getFont();
       customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(password);
       formattedMessage.add(new Text("\n"));
-      
+
       context.acceptPendingEmail();
     }
 
@@ -103,7 +103,7 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       formattedMessage.add(new Text(response.getDescription()));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
-      
+
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       formattedMessage.add(new Text("Could not reserve parking!\n"));
       formattedMessage.add(new Text(response.getDescription()));

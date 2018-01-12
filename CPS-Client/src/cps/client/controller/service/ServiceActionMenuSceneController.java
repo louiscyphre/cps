@@ -88,42 +88,42 @@ public class ServiceActionMenuSceneController implements ViewController {
     assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
     assert usernameLabel != null : "fx:id=\"usernameLabel\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_MENU);
-    
+
   }
 
   @Override
   public void displayInfo(List<Text> formattedText) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void displayError(List<Text> formettedErrorMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnProcessingStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnProcessingStateOff() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void displayInfo(String simpleInfoMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void displayError(String simpleErrorMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 }
