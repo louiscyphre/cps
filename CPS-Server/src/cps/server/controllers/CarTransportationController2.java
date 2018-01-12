@@ -176,14 +176,19 @@ public class CarTransportationController2 extends RequestController {
             // Calculate the priority
             otherPriority = calculatePriority(LocalDateTime.parse(carInfo[1]), worstPriority, lotSize);
             /*
-             * If this one can be demoted, try to find a place for him in higher
+             * If this one can be demoted, try to find a place for him in lower
              * priorities
              */
-            if(otherPriority>iSize+3 && otherPriority > priority)
-            {
-              
+            if (otherPriority > iSize + 3 && otherPriority > priority) {
+              //otherPriority - 3 is a row (in iSize) where this car should have been standing
+              for (int i = otherPriority - 3 + 1; (i < lotSize) && (maxSize == -1); i++) {
+                if(freeSpotsCount[i]!=0) {
+                  maxSize = iSize;
+                  maxHeight = Math.floorMod(iHeight, 3);
+                  maxDepth = Math.floorDiv(iHeight, 3) + 1;
+                }
+              }
             }
-            // isize +1 --> maxsize
           }
         }
       }
