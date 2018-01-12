@@ -65,9 +65,11 @@ public interface Constants {
   public final String SQL_UPDATE_PARKING_LOT    = "UPDATE parking_lot SET street_address = ?, size=?, content=?, price1=?, price2=?, alternative_lots=?, robot_ip=?, lot_full=? WHERE id=?";
 
   // SQL queries - Customer
-  public final String SQL_UPDATE_CUSTOMER     = "UPDATE customer SET email=?, password=?, debit=?, credit=? WHERE id=?";
-  public final String SQL_CREATE_CUSTOMER     = "INSERT INTO customer values(default, ?, ?, default, default)";
-  public final String SQL_FIND_CUSTOMER_BY_ID = "SELECT * FROM customer WHERE id=?";
+  public final String SQL_UPDATE_CUSTOMER                     = "UPDATE customer SET email=?, password=?, debit=?, credit=? WHERE id=?";
+  public final String SQL_CREATE_CUSTOMER                     = "INSERT INTO customer values(default, ?, ?, default, default)";
+  public final String SQL_FIND_CUSTOMER_BY_ID                 = "SELECT * FROM customer WHERE id=?";
+  public final String SQL_FIND_CUSTOMER_BY_EMAIL              = "SELECT * FROM customer WHERE email=?";
+  public final String SQL_FIND_CUSTOMER_BY_EMAIL_AND_PASSWORD = "SELECT * FROM customer WHERE email=? AND password=?";
 
   // SQL queries - Complaint
   public final String SQL_CREATE_COMPLAINT       = "INSERT INTO complaint values(default, ?, default, ?, ?, ?, ?, default)";

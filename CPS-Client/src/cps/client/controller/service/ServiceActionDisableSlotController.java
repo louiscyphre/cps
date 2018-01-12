@@ -100,4 +100,16 @@ public class ServiceActionDisableSlotController implements ViewController {
     // TODO Auto-generated method stub
 
   }
+
+  @Override
+  public void turnLoggedInStateOn() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void turnLoggedInStateOff() {
+    // TODO Auto-generated method stub
+    
+  }
 }

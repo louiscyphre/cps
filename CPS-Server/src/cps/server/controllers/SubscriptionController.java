@@ -27,7 +27,7 @@ public class SubscriptionController extends RequestController {
     LocalDate startDate = request.getStartDate();
     LocalDate endDate = startDate.plusDays(28);
     LocalTime dailyExitTime = LocalTime.of(0, 0, 0);
-    FullSubscriptionResponse response = new FullSubscriptionResponse(false, "");
+    FullSubscriptionResponse response = new FullSubscriptionResponse();
     return handle(request, session, response, startDate, endDate, dailyExitTime);
   }
 
@@ -35,7 +35,7 @@ public class SubscriptionController extends RequestController {
     LocalDate startDate = request.getStartDate();
     LocalDate endDate = startDate.plusDays(28);
     LocalTime dailyExitTime = request.getDailyExitTime();
-    RegularSubscriptionResponse response = new RegularSubscriptionResponse(false, "");
+    RegularSubscriptionResponse response = new RegularSubscriptionResponse();
     return handle(request, session, response, startDate, endDate, dailyExitTime);
   }
 
@@ -45,7 +45,18 @@ public class SubscriptionController extends RequestController {
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
-      // TODO check request parameters
+      // TODO check overlapping subscriptions with the same car ID?
+      
+      // Check that the start date is not in the past
+      errorIf(request.getStartDate().isBefore(LocalDate.now()), "The specified starting date is in the past");
+      
+      if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
+        // Check that lot exists
+        ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
+        
+        // Check that lot is not full
+        errorIf(lot.getFreeSpotsNumber() < 1, "Parking Lot is full");
+      }
 
       SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(),
           request.getEmail(), request.getCarID(), request.getLotID(), startDate, endDate, dailyExitTime);
