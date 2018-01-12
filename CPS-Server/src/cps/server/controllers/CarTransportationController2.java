@@ -55,7 +55,7 @@ public class CarTransportationController2 extends RequestController {
 		String[][][] thisContent = lot.getContentAsArray();
 		String carId = null;
 		LocalDateTime exitTime = null;
-		LocalDateTime fullSubscriptionTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+		int lotSize = lot.getSize();
 
 		/*
 		 * Lower number represents higher priority - the car will be closer to exit 0
@@ -63,7 +63,7 @@ public class CarTransportationController2 extends RequestController {
 		 * the time when all the lot is full except the front lines of three Then we
 		 * will start to fill them one by one
 		 */
-		int priority, worstPriority = lot.getSize() + 3;
+		int priority, worstPriority = lotSize + 3;
 		int iSize, iHeight, maxSize, maxHeight, maxDepth, path, minPath;
 		// Easy count of free spots in each priority
 		int[] freeSpotsCount = new int[worstPriority];
@@ -73,7 +73,7 @@ public class CarTransportationController2 extends RequestController {
 		/*
 		 * Count priorities from 3 to worst
 		 */
-		for (iSize = 0; iSize < lot.getSize(); iSize++) {
+		for (iSize = 0; iSize < lotSize; iSize++) {
 			for (iHeight = 0; iHeight < 5; iHeight++)
 				if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
 						.equals(Constants.SPOT_IS_EMPTY)) {
@@ -84,16 +84,21 @@ public class CarTransportationController2 extends RequestController {
 		 * count priorities 0,1,2
 		 */
 		for (iHeight = 0; iHeight < 3; iHeight++) {
-			for (iSize = lot.getSize(); iSize >= 0; iSize++) {
+			for (iSize = lotSize; iSize >= 0; iSize++) {
 				if (thisContent[iSize][iHeight][0].equals(Constants.SPOT_IS_EMPTY)) {
 					freeSpotsCount[iHeight]++;
 				}
 			}
 		}
 
+		/*
+		 * This algorithm will find parking spots for the cars
+		 */
+
 		while (!carIds.isEmpty()) {
 			carId = carIds.pop();
 			exitTime = exitTimes.pop();
+
 			priority = worstPriority;
 			/*
 			 * Optimal coordinates for insertion These are selected based on the lowest
@@ -108,49 +113,55 @@ public class CarTransportationController2 extends RequestController {
 			// What is the lowest number of "cars in the way" that we encountered so far
 			minPath = 100;
 
-			/*
-			 * Calculate exit priority if there is no exit time - it means we deal with FULL
-			 * SUBSCRIPTION which will perhaps stay for long hours or even more than one day
-			 */
-			if (exitTime == null || exitTime.equals(fullSubscriptionTime)) {
-				// assign worst priority
-				priority = worstPriority;
-			} else {
-				// if more than two days - worst priority
-				if (exitTime.isAfter(LocalDateTime.now().plusDays(2))) {
-					priority = worstPriority;
-				} else {
-					/*
-					 * if less that two days divide minutes until exit by minutes in two days it
-					 * will give us a number between 0 and 1 multiply by size and add 3 this means
-					 * that we will attempt to inserts the car further back before trying to put it
-					 * somewhere in the way of transportation
-					 */
-					priority = (int) (3 + (lot.getSize()) * (LocalDateTime.now().until(exitTime, ChronoUnit.MINUTES))
-							/ (LocalTime.MAX.toSecondOfDay() * 2 / 60));
-					// if there was an error in calculations we want to know for debug
-					if (priority > worstPriority || priority < 0) {
-						System.out.printf("Error in calculations!!! Priority = %d", priority);
-					}
-				}
+			priority = calculatePriority(exitTime, worstPriority, lotSize);
 
-			}
 			// Find spot for the car, based on priority
 			iSize = priority;
 			/*
 			 * Seek a place among this and worse priorities
 			 */
 			for (iSize = priority; (iSize >= worstPriority) && (maxSize == -1); iSize++) {
-				for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
-					if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
-							.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
-						maxSize = iSize;
-						maxHeight = Math.floorMod(iHeight, 3);
-						maxDepth = Math.floorDiv(iHeight, 3) + 1;
+				if (freeSpotsCount[iSize] != 0) {
+					// If there is at least one free space here find it
+					for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+						if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
+								.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
+							maxSize = iSize;
+							maxHeight = Math.floorMod(iHeight, 3);
+							maxDepth = Math.floorDiv(iHeight, 3) + 1;
+						}
+					}
+				} else {
+					// if there are no free spaces here, try to promote someone
+					int otherPriority;
+					String[] carInfo = null;
+					// For every car in "priority" block
+					for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+						// Parse the car info
+						carInfo = thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
+								.split(";");
+						// Calculate the priority
+						otherPriority = calculatePriority(LocalDateTime.parse(carInfo[1]), worstPriority, lotSize);
+						/*
+						 * If this one can be promoted, try to find a place for him in higher priorities
+						 */
+						if (otherPriority < iSize) {
+							for (int i = iSize - 1; (i < 2) && (maxSize == -1); i--) {
+								// If there is a spot for him - mark his current spot as a spot for our
+								// insertion
+								if (freeSpotsCount[i] != 0) {
+									maxSize = iSize;
+									maxHeight = Math.floorMod(iHeight, 3);
+									maxDepth = Math.floorDiv(iHeight, 3) + 1;
+								}
+							}
+						}
 					}
 				}
 			}
-
+			/*
+			 * if no spot was found among worse priorities, start rising up
+			 */
 			for (iSize = priority - 1; (iSize < 2) && (maxSize == -1); iSize--) {
 				for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
 					if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
@@ -163,7 +174,7 @@ public class CarTransportationController2 extends RequestController {
 			}
 
 			for (iHeight = 2; (iHeight >= 0) && (maxHeight == -1); iHeight--) {
-				for (iSize = lot.getSize() - 1; ((iSize >= 0) && (maxSize == -1)); iSize--) {
+				for (iSize = lotSize - 1; ((iSize >= 0) && (maxSize == -1)); iSize--) {
 					if (thisContent[iSize][iHeight][0].compareTo(Constants.SPOT_IS_EMPTY) == 0) {
 						maxSize = iSize;
 						maxHeight = iHeight;
@@ -172,7 +183,7 @@ public class CarTransportationController2 extends RequestController {
 				}
 			}
 			/*
-			 * for (iSize = 0; iSize < lot.getSize(); iSize++) { for (iHeight = 0; iHeight <
+			 * for (iSize = 0; iSize < lotSize; iSize++) { for (iHeight = 0; iHeight <
 			 * priority + 1; iHeight++) { if ((thisContent[iSize][iHeight][priority -
 			 * iHeight]) .compareTo(Constants.SPOT_IS_EMPTY) == 0) { path =
 			 * calculatePath(thisContent, iSize, iHeight, priority - iHeight); if (path <
@@ -363,6 +374,41 @@ public class CarTransportationController2 extends RequestController {
 		if (!insertCars(conn, lot, carIds, exitTimes)) {
 			throw new CarTransportationException("Failed to retrieve car");
 		}
+	}
+
+	private int calculatePriority(LocalDateTime exitTime, int worstPriority, int lotSize) {
+		int priority = 0;
+		LocalDateTime fullSubscriptionTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+		/*
+		 * Calculate exit priority if there is no exit time - it means we deal with FULL
+		 * SUBSCRIPTION which will perhaps stay for long hours or even more than one day
+		 */
+		if (exitTime == null || exitTime.equals(fullSubscriptionTime)) {
+			// assign worst priority
+			priority = worstPriority;
+		} else {
+			// if more than two days - worst priority
+			if (exitTime.isAfter(LocalDateTime.now().plusDays(2))) {
+				priority = worstPriority;
+			} else {
+				/*
+				 * if less that two days divide minutes until exit by minutes in two days it
+				 * will give us a number between 0 and 1 multiply by size and add 3 this means
+				 * that we will attempt to inserts the car further back before trying to put it
+				 * somewhere in the way of transportation
+				 */
+				priority = (int) (3 + (lotSize) * (LocalDateTime.now().until(exitTime, ChronoUnit.MINUTES))
+						/ (LocalTime.MAX.toSecondOfDay() * 2 / 60));
+				// if there was an error in calculations we want to know for debug
+				if (priority > worstPriority || priority < 0) {
+					System.out.printf("Error in calculations!!! Priority = %d", priority);
+					// fix infinite loop
+					priority = worstPriority;
+				}
+			}
+		}
+
+		return priority;
 	}
 
 }
