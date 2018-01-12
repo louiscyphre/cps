@@ -5,7 +5,7 @@ import cps.api.response.LoginResponse;
 import cps.api.response.ServerResponse;
 import cps.entities.models.Customer;
 import cps.server.ServerController;
-import cps.server.session.UserSession;
+import cps.server.session.CustomerSession;
 
 public class CustomerController extends RequestController {
 
@@ -13,17 +13,10 @@ public class CustomerController extends RequestController {
     super(serverController);
   }
 
-  public ServerResponse handle(LoginRequest request, UserSession session) {
-    return database.performQuery(conn -> {
-      LoginResponse response = new LoginResponse(false, "", 0);
-
+  public ServerResponse handle(LoginRequest request, CustomerSession session) {
+    return database.performQuery(new LoginResponse(), (conn, response) -> {
       Customer customer = Customer.findByEmailAndPassword(conn, request.getEmail(), request.getPassword());
-
-      if (customer == null) {
-        response.setError("Login failed, invalid email or password.");
-        return response;
-      }
-
+      errorIfNull(customer, "Login failed, invalid email or password.");
       response.setCustomerID(customer.getId());
       response.setSuccess("Login successful");
       return response;

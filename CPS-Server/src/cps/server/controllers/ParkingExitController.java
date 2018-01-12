@@ -6,18 +6,18 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import cps.common.*;
 import cps.api.request.ParkingExitRequest;
 import cps.api.response.ParkingExitResponse;
 import cps.api.response.ServerResponse;
+import cps.common.Constants;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
-import cps.server.ServerException;
 import cps.server.ServerController;
-import cps.server.session.UserSession;
+import cps.server.ServerException;
+import cps.server.session.CustomerSession;
 
 /**
  * The Class EntryExitController.
@@ -42,51 +42,38 @@ public class ParkingExitController extends RequestController {
    * @param session
    * @return the server response
    */
-  public ServerResponse handle(ParkingExitRequest request, UserSession session) {
-    return database.performQuery(conn -> {
-      ParkingExitResponse response = new ParkingExitResponse(false, "");
-
-      CarTransportation entry = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
+  public ServerResponse handle(ParkingExitRequest request, CustomerSession session) {
+    return database.performQuery(new ParkingExitResponse(), (conn, response) -> {
+      CarTransportation transportation = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
           request.getLotID());
 
-      if (entry == null) { // CarTransportation does not exist
-        response.setError("CarTransportation with the requested parameters does not exist");
-        return response;
-      }
+      errorIfNull(transportation, "CarTransportation with the requested parameters does not exist");
 
       // Update the removedAt field
       Timestamp removedAt = new Timestamp(System.currentTimeMillis());
+      errorIf(!transportation.updateRemovedAt(conn, removedAt), "Failed to update car transportation");
 
-      if (!entry.updateRemovedAt(conn, removedAt)) {
-        response.setError("Failed to update car transportation");
-        return response;
-      }
+      // Calculate the amount of money that the customer has to pay
+      float sum = calculatePayment(conn, transportation, request);
 
-      try {
-        // Calculate the amount of money that the customer has to pay
-        float sum = calculatePayment(conn, entry, request);
+      // Find customer
+      Customer customer = Customer.findByIDNotNull(conn, request.getCustomerID());
 
-        // Find customer
-        Customer customer = Customer.findByIDNotNull(conn, request.getCustomerID());
+      // Write payment
+      customer.pay(conn, sum);
 
-        // Write payment
-        customer.pay(conn, sum);
+      /*
+       * Attempt to retrieve the car from the lot The function will shuffle
+       * the cars that get in the way in an attempt to locate them in
+       * accordance to the current situation
+       */
+      CarTransportationController transportationController = serverController.getTransportationController();
+      transportationController.retrieveCar(conn, request.getLotID(), request.getCarID());
 
-        /*
-         * Attempt to retrieve the car from the lot The function will shuffle
-         * the cars that get in the way in an attempt to locate them in
-         * accordance to the current situation
-         */
-        CarTransportationController transportationController = serverController.getTransportationController();
-        transportationController.retrieveCar(conn, request.getLotID(), request.getCarID());
-
-        // Success
-        response.setCustomerID(customer.getId());
-        response.setPayment(sum);
-        response.setSuccess("ParkingExit request completed successfully");
-      } catch (ServerException | CarTransportationException ex) {
-        response.setError(ex.getMessage());
-      }
+      // Success
+      response.setCustomerID(customer.getId());
+      response.setPayment(sum);
+      response.setSuccess("ParkingExit request completed successfully");
 
       return response;
     });

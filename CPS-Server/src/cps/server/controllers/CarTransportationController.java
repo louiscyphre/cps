@@ -12,8 +12,8 @@ import cps.common.Constants;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
-import cps.server.ServerException;
 import cps.server.ServerController;
+import cps.server.ServerException;
 import cps.server.devices.Robot;
 
 public class CarTransportationController extends RequestController {
@@ -243,7 +243,7 @@ public class CarTransportationController extends RequestController {
    * @throws CarTransportationException
    */
   public void insertCar(Connection conn, ParkingLot lot, String carId, LocalDateTime exitTime)
-      throws SQLException, ServerException, CarTransportationException {
+      throws SQLException, ServerException {
     Stack<String> carIds = new Stack<String>();
     carIds.push(carId);
 
@@ -252,11 +252,11 @@ public class CarTransportationController extends RequestController {
 
     // check if there is free space at all
     if (lot.getFreeSpotsNumber() <= 0) {
-      throw new CarTransportationException("No free space in the parking lot!");
+      throw new ServerException("No free space in the parking lot!");
     }
 
     if (!insertCars(conn, lot, carIds, exitTimes)) {
-      throw new CarTransportationException("Car Insertion failed");
+      throw new ServerException("Car Insertion failed");
     }
   }
 
@@ -313,8 +313,7 @@ public class CarTransportationController extends RequestController {
    * @throws ServerException
    * @throws CarTransportationException
    */
-  public void retrieveCar(Connection conn, int lotId, String carID)
-      throws SQLException, ServerException, CarTransportationException {
+  public void retrieveCar(Connection conn, int lotId, String carID) throws SQLException, ServerException {
     ParkingLot lot = ParkingLot.findByID(conn, lotId);
     String[][][] content = lot.getContentAsArray();
 
@@ -387,7 +386,7 @@ public class CarTransportationController extends RequestController {
 
     // robbie.retrieveCar(carID, eSize, iHeight, iDepth);
     if (!insertCars(conn, lot, carIds, exitTimes)) {
-      throw new CarTransportationException("Failed to retrieve car");
+      throw new ServerException("Failed to retrieve car");
     }
   }
 }

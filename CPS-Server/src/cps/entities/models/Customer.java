@@ -119,6 +119,51 @@ public class Customer implements Serializable, User {
     return result;
   }
 
+  public static Customer findByIDNotNull(Connection conn, int id) throws SQLException, ServerException {
+    Customer result = findByID(conn, id);
+
+    if (result == null) {
+      throw new ServerException("Customer with id " + id + " does not exist");
+    }
+
+    return result;
+  }
+
+  public static Customer findByEmail(Connection conn, String email) throws SQLException {
+    Customer result = null;
+    PreparedStatement st = conn.prepareStatement(Constants.SQL_FIND_CUSTOMER_BY_EMAIL);
+
+    st.setString(1, email);
+    ResultSet rs = st.executeQuery();
+
+    if (rs.next()) {
+      result = new Customer(rs);
+    }
+
+    st.close();
+    rs.close();
+
+    return result;
+  }
+
+  public static Customer findByEmailAndPassword(Connection conn, String email, String password) throws SQLException {
+    Customer result = null;
+    PreparedStatement st = conn.prepareStatement(Constants.SQL_FIND_CUSTOMER_BY_EMAIL_AND_PASSWORD);
+
+    st.setString(1, email);
+    st.setString(2, password);
+    ResultSet rs = st.executeQuery();
+
+    if (rs.next()) {
+      result = new Customer(rs);
+    }
+
+    st.close();
+    rs.close();
+
+    return result;
+  }
+
   public void update(Connection conn) throws SQLException, ServerException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_CUSTOMER);
 
@@ -137,34 +182,6 @@ public class Customer implements Serializable, User {
     if (updated <= 0) {
       throw new ServerException("Failed to update customer");
     }
-  }
-
-  public static Customer findByEmailAndPassword(Connection conn, String email, String password) throws SQLException {
-    Customer result = null;
-    PreparedStatement st = conn.prepareStatement("SELECT * FROM customer WHERE email=? AND password=?");
-
-    st.setString(1, email);
-    st.setString(2, password);
-    ResultSet rs = st.executeQuery();
-
-    if (rs.next()) {
-      result = new Customer(rs);
-    }
-
-    st.close();
-    rs.close();
-
-    return result;
-  }
-
-  public static Customer findByIDNotNull(Connection conn, int id) throws SQLException, ServerException {
-    Customer result = findByID(conn, id);
-
-    if (result == null) {
-      throw new ServerException("Customer with id " + id + " does not exist");
-    }
-
-    return result;
   }
 
   public void pay(Connection conn, float sum) throws SQLException, ServerException {
