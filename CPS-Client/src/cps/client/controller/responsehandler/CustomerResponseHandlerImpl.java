@@ -18,7 +18,6 @@ import cps.client.context.CustomerContext;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
