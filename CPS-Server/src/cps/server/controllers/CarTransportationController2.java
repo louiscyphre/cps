@@ -160,12 +160,15 @@ public class CarTransportationController2 extends RequestController {
 			 * if no spot was found among worse priorities, start rising up
 			 */
 			for (iSize = priority - 1; (iSize < 2) && (maxSize == -1); iSize--) {
-				for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
-					if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
-							.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
-						maxSize = iSize;
-						maxHeight = Math.floorMod(iHeight, 3);
-						maxDepth = Math.floorDiv(iHeight, 3) + 1;
+				if (freeSpotsCount[iSize] != 0) {
+					// If there is at least one free space here find it
+					for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+						if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
+								.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
+							maxSize = iSize;
+							maxHeight = Math.floorMod(iHeight, 3);
+							maxDepth = Math.floorDiv(iHeight, 3) + 1;
+						}
 					}
 				}
 			}
