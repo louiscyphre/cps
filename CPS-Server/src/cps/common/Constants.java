@@ -4,12 +4,26 @@ public interface Constants {
 	public final int DEFAULT_PORT = 5555;
 	public final String DEFAULT_HOST = "127.0.0.1";
 	public final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+	
 	public final int LICENSE_TYPE_ONETIME = 1;
 	public final int LICENSE_TYPE_SUBSCRIPTION = 2;
 	public final int PARKING_TYPE_INCIDENTAL = 1;
 	public final int PARKING_TYPE_RESERVED = 2;
 	public final int SUBSCRIPTION_TYPE_REGULAR = 1;
 	public final int SUBSCRIPTION_TYPE_FULL = 2;
+	
+	public final int USER_TYPE_CUSTOMER = 1;
+	public final int USER_TYPE_COMPANY_PERSON = 2;
+	public final int ACCESS_LEVEL_LOCAL_WORKER = 10;
+	public final int ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER = 20;
+	public final int ACCESS_LEVEL_LOCAL_MANAGER = 50;
+	public final int ACCESS_LEVEL_GLOBAL_MANAGER = 1000;
+	
+	// Bit flags
+	public final int ACCESS_DOMAIN_PARKING_LOT = 1;
+	public final int ACCESS_DOMAIN_CUSTOMER_SERVICE = 2;
+	public final int ACCESS_DOMAIN_GLOBAL = 255;
+	
 	public final float PRICE_PER_HOUR_RESERVED = 4f;
 	public final int COMPLAINT_STATUS_PROCESSING = 1;
 	public final int COMPLAINT_STATUS_ACCEPTED = 2;

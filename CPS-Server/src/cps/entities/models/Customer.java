@@ -177,4 +177,19 @@ public class Customer implements Serializable, User {
 		addCredit(sum);
 		update(conn);
 	}
+
+	@Override
+	public int getUserType() {
+		return Constants.USER_TYPE_CUSTOMER;
+	}
+
+	@Override
+	public int getAccessLevel() {
+		return 0;
+	}
+
+	@Override
+	public boolean canAccessDomain(int domain) {
+		return false;
+	}
 }

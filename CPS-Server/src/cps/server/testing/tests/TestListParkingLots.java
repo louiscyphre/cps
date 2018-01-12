@@ -42,12 +42,11 @@ public class TestListParkingLots extends ServerControllerTest {
 	@Test
 	public void testListParkingLots() {
 		header("testListParkingLots");
-		CustomerSession session = new CustomerSession();
 
 		// Create lots
 		for (int i = 1; i <= 3; i++) {
 			InitLotAction request = new InitLotAction(1000, "Lot " + i + " Address", 3, 5, 4, "113.0.1.1" + i);
-			ServerResponse response = server.dispatch(request, session);
+			ServerResponse response = server.dispatch(request, getContext());
 			assertTrue(response.success());
 		}
 
@@ -57,7 +56,7 @@ public class TestListParkingLots extends ServerControllerTest {
 		ListParkingLotsRequest request = new ListParkingLotsRequest();
 
 		// Test response
-		ServerResponse response = server.dispatch(request, session);
+		ServerResponse response = server.dispatch(request, getContext());
 		assertNotNull(response);
 		printObject(response);
 		assertTrue(response.success());

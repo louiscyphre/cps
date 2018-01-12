@@ -14,10 +14,8 @@ import java.time.LocalTime;
 import cps.api.request.FullSubscriptionRequest;
 import cps.api.request.RegularSubscriptionRequest;
 import cps.api.request.SubscriptionRequest;
-import cps.server.ServerException;
 import cps.server.ServerController;
 import cps.server.session.CustomerSession;
-import cps.server.session.UserSession;
 
 public class SubscriptionController extends RequestController {
 
@@ -25,57 +23,44 @@ public class SubscriptionController extends RequestController {
 		super(serverController);
 	}
 	
-	public ServerResponse handle(FullSubscriptionRequest request, UserSession session) {
+	public ServerResponse handle(FullSubscriptionRequest request, CustomerSession session) {
 		LocalDate startDate = request.getStartDate();
 		LocalDate endDate = startDate.plusDays(28);
 		LocalTime dailyExitTime = LocalTime.of(0, 0, 0);
 		FullSubscriptionResponse response = new FullSubscriptionResponse(false, "");
-		return handle(request, response, startDate, endDate, dailyExitTime);
+		return handle(request, session, response, startDate, endDate, dailyExitTime);
 	}
 	
-	public ServerResponse handle(RegularSubscriptionRequest request, UserSession session) {
+	public ServerResponse handle(RegularSubscriptionRequest request, CustomerSession session) {
 		LocalDate startDate = request.getStartDate();
 		LocalDate endDate = startDate.plusDays(28);
 		LocalTime dailyExitTime = request.getDailyExitTime();
 		RegularSubscriptionResponse response = new RegularSubscriptionResponse(false, "");
-		return handle(request, response, startDate, endDate, dailyExitTime);
+		return handle(request, session, response, startDate, endDate, dailyExitTime);
 	}
 	
-	public ServerResponse handle(SubscriptionRequest request, SubscriptionResponse response, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
-		return database.performQuery(conn -> {			
+	public ServerResponse handle(SubscriptionRequest request, CustomerSession session, SubscriptionResponse serverResponse, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
+		return database.performQuery(serverResponse, (conn, response) -> {
+			// Handle login
+			Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
+			
 			// TODO check request parameters
-			CustomerSession session = new CustomerSession();
-			session.findOrRegisterCustomer(conn, response, request.getCustomerID(), request.getEmail());
-			
-			Customer customer = session.getCustomer(); // By this time customer has to exist
-			
-			if (customer == null) {
-			 	return response; // the response was modified by the customer session
-			}
 
-			SubscriptionService result = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(),
+			SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(),
 					request.getEmail(), request.getCarID(), request.getLotID(), startDate, endDate, dailyExitTime);
-
-			if (result == null) { // error
-				response.setError("Failed to create SubscriptionService entry");
-				return response;
-			}
+			errorIfNull(service, "Failed to create SubscriptionService entry");		
 			
-			try {				
-				// Calculate payment
-				float payment = paymentForSubscription(conn, customer, result);
+			// Calculate payment
+			float payment = paymentForSubscription(conn, customer, service);
 
-				// Write payment
-				customer.pay(conn,  payment);
+			// Write payment
+			customer.pay(conn,  payment);
 
-				// Success
-				response.setCustomerID(customer.getId());
-				response.setServiceID(result.getId());
-				response.setPayment(payment);
-				response.setSuccess("SubscriptionRequest completed successfully");
-			} catch (ServerException ex) {
-				response.setError(ex.getMessage());
-			}
+			// Success
+			response.setCustomerID(customer.getId());
+			response.setServiceID(service.getId());
+			response.setPayment(payment);
+			response.setSuccess("SubscriptionRequest completed successfully");
 			
 			return response;
 		});

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
-import cps.server.session.UserSession;
 
 public class ReservedParkingRequest extends OnetimeParkingRequest {
 	private static final long serialVersionUID = 1L;
@@ -25,7 +24,7 @@ public class ReservedParkingRequest extends OnetimeParkingRequest {
 	}
 
 	@Override
-	public ServerResponse handle(RequestHandler handler, UserSession session) {
+	public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
 		return handler.handle(this, session);
 	}
 

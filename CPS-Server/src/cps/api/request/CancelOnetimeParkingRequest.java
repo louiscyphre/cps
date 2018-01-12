@@ -1,7 +1,6 @@
 package cps.api.request;
 
 import cps.api.response.ServerResponse;
-import cps.server.session.UserSession;
 
 public class CancelOnetimeParkingRequest extends CustomerRequest {
 	public CancelOnetimeParkingRequest(int customerID, int onetimeServiceID) {
@@ -21,7 +20,7 @@ public class CancelOnetimeParkingRequest extends CustomerRequest {
 	}
 
 	@Override
-	public ServerResponse handle(RequestHandler handler, UserSession session) {
+	public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
 		return handler.handle(this, session);
 	}
 }

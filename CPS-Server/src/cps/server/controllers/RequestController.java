@@ -42,9 +42,13 @@ public abstract class RequestController {
 		return serverController;
 	}
 	
-	public void errorIfNull(Object object, String message) throws ServerException {
-		if (object == null) {
+	public void errorIf(boolean condition, String message) throws ServerException {
+		if (condition) {
 			throw new ServerException(message);
 		}
+	}
+	
+	public void errorIfNull(Object object, String message) throws ServerException {
+		errorIf(object == null, message);
 	}
 }

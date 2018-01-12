@@ -80,23 +80,17 @@ public class ServerApplication extends AbstractServer {
 		System.out.println("Message from: " + client + ", type: " + request.getClass().getSimpleName() + ", content: "
 				+ gson.toJson(request));
 		
-		// Get the session object associated with this client connection, if exists
-		// A session object stores data about the current user
-		UserSession session = (UserSession) client.getInfo("UserSession");
+		// Get the context object associated with this client connection, if exists
+		// A context object stores data about the current client session
+		SessionHolder context = (SessionHolder) client.getInfo("Context");
 		
-		if (session == null) { // Session doesn't exist -> create new
-			session = new BasicSession();
+		if (context == null) { // Session doesn't exist -> create new
+			context = new SessionHolder();
+			client.setInfo("Context", context);
 		}
 		
 		// Dispatch request and get a response object
-		ServerResponse response = serverController.dispatch(request, session);
-		
-		// Update session object, if needed
-		UserSession newSession = session.getNewSession();
-		
-		if (newSession != null) {
-			client.setInfo("UserSession", newSession);
-		}
+		ServerResponse response = serverController.dispatch(request, context);
 		
 		// Send response to client
 		if (response != null) {

@@ -4,9 +4,9 @@ import cps.api.action.*;
 import cps.api.request.*;
 import cps.api.response.*;
 import cps.server.controllers.*;
-import cps.server.session.UserSession;
+import cps.server.session.*;
 
-public class ServerController implements RequestHandler {
+public class ServerController implements RequestHandler<SessionHolder> {
 	private final ServerConfig config;
 	private final DatabaseController databaseController;
 	private final LotController lotController;
@@ -68,8 +68,8 @@ public class ServerController implements RequestHandler {
 		return transportationController;
 	}
 
-	public ServerResponse dispatch(Request message, UserSession session) {
-		ServerResponse response = message.handle(this, session);
+	public ServerResponse dispatch(Request message, SessionHolder context) {
+		ServerResponse response = message.handle(this, context);
 
 		if (response == null) {
 			return ServerResponse.error("Not implemented");
@@ -79,97 +79,97 @@ public class ServerController implements RequestHandler {
 	}
 
 	@Override
-	public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
-		return onetimeParkingController.handle(request, session);
+	public ServerResponse handle(CancelOnetimeParkingRequest request, SessionHolder context) {
+		return onetimeParkingController.handle(request, context.acquireCustomerSession());
 	}
 
 	@Override
-	public ServerResponse handle(ComplaintRequest request, UserSession session) {
-		return complaintController.handle(request, session);
+	public ServerResponse handle(ComplaintRequest request, SessionHolder context) {
+		return complaintController.handle(request, context.acquireCustomerSession());
 	}
 
 	@Override
-	public ServerResponse handle(FullSubscriptionRequest request, UserSession session) {
-		return subscriptionController.handle(request, session);
+	public ServerResponse handle(FullSubscriptionRequest request, SessionHolder context) {
+		return subscriptionController.handle(request, context.acquireCustomerSession());
 	}
 
 	@Override
-	public ServerResponse handle(IncidentalParkingRequest request, UserSession session) {
-		return onetimeParkingController.handle(request, session);
+	public ServerResponse handle(IncidentalParkingRequest request, SessionHolder context) {
+		return onetimeParkingController.handle(request, context.acquireCustomerSession());
 	}
 
 	@Override
-	public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {
-		return onetimeParkingController.handle(request, session);
+	public ServerResponse handle(ListOnetimeEntriesRequest request, SessionHolder context) {
+		return onetimeParkingController.handle(request, context.acquireCustomerSession());
 	}
 
 	@Override
-	public ServerResponse handle(ListParkingLotsRequest request, UserSession session) {
-		return lotController.handle(request, session);
+	public ServerResponse handle(ListParkingLotsRequest request, SessionHolder context) {
+		return lotController.handle(request, context.acquireCustomerSession());
 	}
 
 	@Override
-	public ServerResponse handle(ParkingEntryRequest request, UserSession session) {
-		return entryController.handle(request, session);
+	public ServerResponse handle(ParkingEntryRequest request, SessionHolder context) {
+		return entryController.handle(request, context.acquireCustomerSession());
 	}
 
 	@Override
-	public ServerResponse handle(ParkingExitRequest request, UserSession session) {
-		return exitController.handle(request, session);
+	public ServerResponse handle(ParkingExitRequest request, SessionHolder context) {
+		return exitController.handle(request, context.acquireCustomerSession());
 	}
 
 	@Override
-	public ServerResponse handle(RegularSubscriptionRequest request, UserSession session) {
-		return subscriptionController.handle(request, session);
+	public ServerResponse handle(RegularSubscriptionRequest request, SessionHolder context) {
+		return subscriptionController.handle(request, context.acquireCustomerSession());
 	}
 
 	@Override
-	public ServerResponse handle(ReservedParkingRequest request, UserSession session) {
-		return onetimeParkingController.handle(request, session);
+	public ServerResponse handle(ReservedParkingRequest request, SessionHolder context) {
+		return onetimeParkingController.handle(request, context.acquireCustomerSession());
 	}
 
 	@Override
-	public ServerResponse handle(LoginRequest request, UserSession session) {
-		return userController.handle(request, session);
+	public ServerResponse handle(LoginRequest request, SessionHolder context) {
+		return userController.handle(request, context.acquireCustomerSession());
 	}
 
 	@Override
-	public ServerResponse handle(DisableParkingSlotsAction action, UserSession session) {
-		return lotController.handle(action, session);
+	public ServerResponse handle(DisableParkingSlotsAction action, SessionHolder context) {
+		return lotController.handle(action, context.acquireServiceSession());
 	}
 
 	@Override
-	public ServerResponse handle(InitLotAction action, UserSession session) {
-		return lotController.handle(action, session);
+	public ServerResponse handle(InitLotAction action, SessionHolder context) {
+		return lotController.handle(action, context.acquireServiceSession());
 	}
 
 	@Override
-	public ServerResponse handle(RefundAction action, UserSession session) {
-		return complaintController.handle(action, session);
+	public ServerResponse handle(RefundAction action, SessionHolder context) {
+		return complaintController.handle(action, context.acquireServiceSession());
 	}
 
 	@Override
-	public ServerResponse handle(RequestLotStateAction action, UserSession session) {
-		return lotController.handle(action, session);
+	public ServerResponse handle(RequestLotStateAction action, SessionHolder context) {
+		return lotController.handle(action, context.acquireServiceSession());
 	}
 
 	@Override
-	public ServerResponse handle(RequestReportAction action, UserSession session) {
-		return reportController.handle(action, session);
+	public ServerResponse handle(RequestReportAction action, SessionHolder context) {
+		return reportController.handle(action, context.acquireServiceSession());
 	}
 
 	@Override
-	public ServerResponse handle(ReserveParkingSlotsAction action, UserSession session) {
-		return lotController.handle(action, session);
+	public ServerResponse handle(ReserveParkingSlotsAction action, SessionHolder context) {
+		return lotController.handle(action, context.acquireServiceSession());
 	}
 
 	@Override
-	public ServerResponse handle(SetFullLotAction action, UserSession session) {
-		return lotController.handle(action, session);
+	public ServerResponse handle(SetFullLotAction action, SessionHolder context) {
+		return lotController.handle(action, context.acquireServiceSession());
 	}
 
 	@Override
-	public ServerResponse handle(UpdatePricesAction action, UserSession session) {
-		return lotController.handle(action, session);
+	public ServerResponse handle(UpdatePricesAction action, SessionHolder context) {
+		return lotController.handle(action, context.acquireServiceSession());
 	}
 }
