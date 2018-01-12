@@ -40,7 +40,7 @@ public class DatabaseController {
      * @throws SQLException
      *           the SQL exception
      */
-    void perform(Connection conn) throws SQLException;
+    void perform(Connection conn) throws SQLException, ServerException;
   }
 
   public interface DatabaseQuery<T> {
@@ -53,7 +53,7 @@ public class DatabaseController {
      * @throws SQLException
      *           the SQL exception
      */
-    T perform(Connection conn) throws SQLException;
+    T perform(Connection conn) throws SQLException, ServerException;
   }
 
   public interface DatabaseQueryWithException<T> {
@@ -140,8 +140,9 @@ public class DatabaseController {
    *
    * @param action
    *          the action
+   * @throws ServerException 
    */
-  public void performAction(DatabaseAction action) {
+  public void performAction(DatabaseAction action) throws ServerException {
     Connection conn = null;
 
     try {
@@ -154,7 +155,7 @@ public class DatabaseController {
     }
   }
 
-  public <T> T performQuery(DatabaseQuery<T> query) {
+  public <T> T performQuery(DatabaseQuery<T> query) throws ServerException {
     Connection conn = null;
     T result = null;
 
@@ -190,7 +191,7 @@ public class DatabaseController {
     return result;
   }
 
-  public void truncateTables() {
+  public void truncateTables() throws ServerException {
     performAction(conn -> {
       Collection<String> tables = getTables(conn);
 
@@ -219,7 +220,7 @@ public class DatabaseController {
     return results;
   }
 
-  public Collection<String> getTables() {
+  public Collection<String> getTables() throws ServerException {
     return performQuery(conn -> getTables(conn));
   }
 
@@ -240,7 +241,7 @@ public class DatabaseController {
 
   }
 
-  public int countEntities(String table) {
+  public int countEntities(String table) throws ServerException {
     return performQuery(conn -> countEntities(conn, table));
   }
 

@@ -26,8 +26,8 @@ public class ServerResponse extends Response implements Serializable {
    * Instantiates a new server response.
    */
   public ServerResponse() {
-    this.status = STATUS_OK;
-    this.description = "";
+    this.status = STATUS_ERROR;
+    this.description = "Request not completed";
   }
 
   /**

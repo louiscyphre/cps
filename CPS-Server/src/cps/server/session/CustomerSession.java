@@ -40,52 +40,45 @@ public class CustomerSession extends BasicSession {
     return customer;
   }
 
-  public boolean findCustomer(Connection conn, int customerID) throws SQLException {
+  public Customer findCustomer(Connection conn, int customerID) throws SQLException, ServerException {
     customer = Customer.findByID(conn, customerID);
-    return customer != null;
-  }
-
-  public Customer findCustomerEx(Connection conn, int customerID) throws SQLException, ServerException {
-    if (!findCustomer(conn, customerID)) {
+    
+    if (customer == null) {
       throw new ServerException("Failed to find customer with id " + customerID);
     }
 
     return customer;
   }
 
-  public boolean registerCustomer(Connection conn, String email) throws SQLException {
+  public Customer registerCustomer(Connection conn, String email) throws SQLException, ServerException {
     String password = Utilities.randomString("0123456789", 4);
+    
     // System.out.println(String.format("Sending password '%s' to email %s",
     // password, email));
+    
+    // Don't allow duplicate email addresses
+    if (Customer.findByEmail(conn, email) != null) {
+      throw new ServerException("Someone is already using that email address");
+    }
+    
     customer = Customer.create(conn, email, password);
-    return customer != null;
-  }
-
-  public Customer registerCustomerEx(Connection conn, String email) throws SQLException, ServerException {
-    if (!registerCustomer(conn, email)) {
+    
+    if (customer == null) {
       throw new ServerException("Failed to register customer with email " + email);
     }
 
     return customer;
   }
 
-  public boolean findOrRegisterCustomer(Connection conn, int customerID, String email) throws SQLException {
+  public Customer requireRegisteredCustomer(Connection conn, int customerID, String email)
+      throws SQLException, ServerException {
     // If customerID != 0 -> we try to find an existing customer
     // If customerID == 0 -> we create a new customer
-
+    
     if (customerID != 0) {
       return findCustomer(conn, customerID);
     }
 
     return registerCustomer(conn, email);
-  }
-
-  public Customer requireRegisteredCustomer(Connection conn, int customerID, String email)
-      throws SQLException, ServerException {
-    if (customerID != 0) {
-      return findCustomerEx(conn, customerID);
-    }
-
-    return registerCustomerEx(conn, email);
   }
 }

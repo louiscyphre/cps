@@ -34,6 +34,7 @@ import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
+import cps.server.ServerException;
 import cps.server.controllers.DatabaseController;
 import cps.server.session.SessionHolder;
 import junit.framework.TestCase;
@@ -85,7 +86,7 @@ public abstract class ServerControllerTest extends TestCase {
   }
 
   protected void requestSubscription(SubscriptionRequest request, SessionHolder context, CustomerData data,
-      Pair<SubscriptionService, SubscriptionResponse> holder) {
+      Pair<SubscriptionService, SubscriptionResponse> holder) throws ServerException {
     // Test the response
     ServerResponse response = server.dispatch(request, context);
     printObject(response);
@@ -123,7 +124,7 @@ public abstract class ServerControllerTest extends TestCase {
     holder.setB(specificResponse);
   }
 
-  protected void requestFullSubscription(CustomerData data, SessionHolder context) {
+  protected void requestFullSubscription(CustomerData data, SessionHolder context) throws ServerException {
     // Holder for data to be checked later with type-specific tests
     Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
@@ -138,7 +139,7 @@ public abstract class ServerControllerTest extends TestCase {
     assertThat(holder.getB(), instanceOf(FullSubscriptionResponse.class));
   }
 
-  protected void requestRegularSubscription(CustomerData data, SessionHolder context) {
+  protected void requestRegularSubscription(CustomerData data, SessionHolder context) throws ServerException {
     // Holder for data to be checked later with type-specific tests
     Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
@@ -158,7 +159,7 @@ public abstract class ServerControllerTest extends TestCase {
   }
 
   protected void requestOnetimeParking(OnetimeParkingRequest request, SessionHolder context, CustomerData data,
-      Pair<OnetimeService, OnetimeParkingResponse> holder) {
+      Pair<OnetimeService, OnetimeParkingResponse> holder) throws ServerException {
     // Test the response
     ServerResponse response = server.dispatch(request, context);
     printObject(response);
@@ -196,7 +197,7 @@ public abstract class ServerControllerTest extends TestCase {
     holder.setB(specificResponse);
   }
 
-  protected void requestIncidentalParking(CustomerData data, SessionHolder context) {
+  protected void requestIncidentalParking(CustomerData data, SessionHolder context) throws ServerException {
     // Holder for data to be checked later with type-specific tests
     Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 
@@ -212,7 +213,7 @@ public abstract class ServerControllerTest extends TestCase {
     assertThat(holder.getB(), instanceOf(IncidentalParkingResponse.class));
   }
 
-  protected void requestReservedParking(CustomerData data, Duration delta, SessionHolder context) {
+  protected void requestReservedParking(CustomerData data, Duration delta, SessionHolder context) throws ServerException {
     // Holder for data to be checked later with type-specific tests
     Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 
@@ -231,11 +232,11 @@ public abstract class ServerControllerTest extends TestCase {
     assertThat(holder.getB(), instanceOf(ReservedParkingResponse.class));
   }
 
-  protected void requestReservedParking(CustomerData data, SessionHolder context) {
-    requestReservedParking(data, Duration.ZERO, context);
+  protected void requestReservedParking(CustomerData data, SessionHolder context) throws ServerException {
+    requestReservedParking(data, Duration.ofHours(1), context);
   }
 
-  protected ParkingLot initParkingLot() {
+  protected ParkingLot initParkingLot() throws ServerException {
     ParkingLot lot = db.performQuery(conn -> ParkingLot.create(conn, "Lot Address", 3, 5, 4, "113.0.1.14"));
     assertNotNull(lot);
     printObject(lot);
@@ -243,7 +244,7 @@ public abstract class ServerControllerTest extends TestCase {
     return lot;
   }
 
-  protected void requestParkingEntry(CustomerData data, SessionHolder context) {
+  protected void requestParkingEntry(CustomerData data, SessionHolder context) throws ServerException {
     // subscriptionID = 0 means entry by OnetimeParking license
     ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, data.subsID, data.lotID, data.carID);
     ServerResponse response = server.dispatch(request, context);
@@ -256,7 +257,7 @@ public abstract class ServerControllerTest extends TestCase {
     printObject(entry);
   }
 
-  protected void requestParkingExit(CustomerData data, SessionHolder context) {
+  protected void requestParkingExit(CustomerData data, SessionHolder context) throws ServerException {
     ParkingExitRequest request = new ParkingExitRequest(data.customerID, data.lotID, data.carID);
 
     ServerResponse response = server.dispatch(request, context);
@@ -273,7 +274,7 @@ public abstract class ServerControllerTest extends TestCase {
     printObject(entry);
   }
 
-  protected Customer makeCustomer(CustomerData data) {
+  protected Customer makeCustomer(CustomerData data) throws ServerException {
     Customer customer = db.performQuery(conn -> Customer.create(conn, data.email, data.password));
     assertNotNull(customer);
     printObject(customer);
