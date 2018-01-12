@@ -103,4 +103,15 @@ public class ControllersClientAdapter {
   public static ViewController getCurrentCtrl() {
     return fetchCtrl(getCurrentScene());
   }
+
+  public static void turnLoggedInStateOn() {
+    getInstance().ctrlMapping.forEach((k, v) -> v.turnLoggedInStateOn());
+  }
+
+  public static void turnLoggedInStateOff() {
+    getInstance().ctrlMapping.forEach((k, v) -> v.turnLoggedInStateOff());
+    getCustomerContext().logContextOut();
+    getEmployeeContext().logContextOut();
+  }
+
 }

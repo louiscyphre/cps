@@ -12,4 +12,10 @@ public interface CustomerContext {
   public void setPendingEmail(String pendingEmail);
 
   public void acceptPendingEmail();
+  
+  public boolean isLoggedIn();
+  
+  public void setLoggedIn(boolean loggedIn);
+
+  public void logContextOut();
 }

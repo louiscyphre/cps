@@ -2,13 +2,17 @@ package cps.client.context;
 
 public class CustomerContextImpl implements CustomerContext {
 
-  private int    customerId;
-  private String customerEmail;
-  private String pendingEmail;
+  private int     customerId;
+  private String  customerEmail;
+  private String  pendingEmail;
+  private boolean loggedIn;
 
   @Override
   public int getCustomerId() {
-    return customerId;
+    if(isLoggedIn()) {
+      return customerId;
+    }
+    return 0;
   }
 
   @Override
@@ -18,7 +22,10 @@ public class CustomerContextImpl implements CustomerContext {
 
   @Override
   public String getCustomerEmail() {
-    return customerEmail;
+    if (isLoggedIn()) {
+      return customerEmail;
+    }
+    return null;
   }
 
   @Override
@@ -37,4 +44,21 @@ public class CustomerContextImpl implements CustomerContext {
     this.pendingEmail = null;
   }
 
+  @Override
+  public boolean isLoggedIn() {
+    return this.loggedIn;
+  }
+
+  @Override
+  public void setLoggedIn(boolean loggedIn) {
+    this.loggedIn = loggedIn;
+  }
+
+  @Override
+  public void logContextOut() {
+    customerId = 0;
+    customerEmail = null;
+    pendingEmail = null;
+    loggedIn = false;
+  }
 }

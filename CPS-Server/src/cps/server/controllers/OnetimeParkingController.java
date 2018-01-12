@@ -31,7 +31,6 @@ import cps.server.session.UserSession;
 /**
  * The Class OnetimeParkingController.
  */
-@SuppressWarnings("unused")
 public class OnetimeParkingController extends RequestController {
 
   /**

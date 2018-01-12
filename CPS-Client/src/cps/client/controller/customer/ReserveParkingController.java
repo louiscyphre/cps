@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 import cps.api.request.ReservedParkingRequest;
+import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
@@ -237,12 +238,13 @@ public class ReserveParkingController implements ViewController {
 
   // returns email if logged in from customer context,
   private String getEmail() {
-    String email = ControllersClientAdapter.getCustomerContext().getCustomerEmail();
-
-    if (email == null) {
-      email = emailTF.getText();
+    CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
+    if(cntx.isLoggedIn()) {
+      return cntx.getCustomerEmail(); 
     }
-    return email;
+    else {
+      return emailTF.getText();
+    }
   }
 
   // return car id or null if empty
@@ -360,13 +362,11 @@ public class ReserveParkingController implements ViewController {
 
   @Override
   public void turnLoggedInStateOn() {
-    // TODO Auto-generated method stub
-    
+    emailTF.setVisible(false);
   }
 
   @Override
   public void turnLoggedInStateOff() {
-    // TODO Auto-generated method stub
-    
+    emailTF.setVisible(true);
   }
 }

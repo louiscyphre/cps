@@ -50,13 +50,14 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private void loadKiosk() throws IOException {
     try {
-      Scene scene = ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
+//      Scene scene = ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
 
-      initializeStage(scene, "CPS Kiosk Client");
-
+      Scene scene = ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU_MK2);
       ControllersClientAdapter.registerScene(SceneCode.LOGIN);
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
       ControllersClientAdapter.registerScene(SceneCode.RESERVE_PARKING);
+      ControllersClientAdapter.turnLoggedInStateOff();
+      initializeStage(scene, "CPS Kiosk Client");
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -65,9 +66,6 @@ public class ClientApplication extends Application implements INetworkClient {
   private void loadService() {
     try {
       Scene scene = ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MENU);
-
-      initializeStage(scene, "CPS Service Client");
-
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_DISABLE_SLOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_INIT_LOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOGIN);
@@ -76,6 +74,9 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_REFUND);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_RESERVE_SLOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
+      ControllersClientAdapter.turnLoggedInStateOff();
+      initializeStage(scene, "CPS Service Client");
+
     } catch (IOException e) {
       e.printStackTrace();
     }
