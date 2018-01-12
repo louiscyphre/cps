@@ -357,4 +357,16 @@ public class ReserveParkingController implements ViewController {
     processing = false;
     displayInfo(DEFAULT_INFO_LABEL);
   }
+
+  @Override
+  public void turnLoggedInStateOn() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void turnLoggedInStateOff() {
+    // TODO Auto-generated method stub
+    
+  }
 }
