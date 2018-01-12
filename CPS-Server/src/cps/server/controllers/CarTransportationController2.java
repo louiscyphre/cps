@@ -16,6 +16,7 @@ import cps.entities.models.ParkingService;
 import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.devices.Robot;
+import jdk.internal.dynalink.beans.CallerSensitiveDetector;
 
 @SuppressWarnings("unused")
 public class CarTransportationController2 extends RequestController {
@@ -206,13 +207,13 @@ public class CarTransportationController2 extends RequestController {
         }
       }
       /*
-       * for (iSize = 0; iSize < lotSize; iSize++) { for (iHeight = 0; iHeight <
-       * priority + 1; iHeight++) { if ((thisContent[iSize][iHeight][priority -
-       * iHeight]) .compareTo(Constants.SPOT_IS_EMPTY) == 0) { path =
-       * calculatePath(thisContent, iSize, iHeight, priority - iHeight); if
-       * (path < minPath) { minPath = path; maxSize = iSize; maxHeight =
-       * iHeight; maxDepth = priority - iHeight; } } } }
+       * By this time there should be a spot for us to insert a car
+       * Now we have to pave the way to the spot because there may be other cars in the way
        */
+      if (maxSize==-1) {
+        System.out.printf("Could not find a spot for the car %s at %s", carId,exitTime);
+      }
+      Pave(carIds,exitTimes,maxSize,maxHeight,maxDepth,thisContent);
 
       // insert the car
       System.out
@@ -435,5 +436,13 @@ public class CarTransportationController2 extends RequestController {
 
     return priority;
   }
-
+  private void Pave(Stack<String> carIds, Stack<LocalDateTime> exitTimes, int maxSize, int maxHeight, int maxDepth,String[][][] content) {
+    int i;
+    for (i=0;i<maxSize;i++) {
+      
+    }
+    // TODO Auto-generated method stub
+    
+  }
+  
 }
