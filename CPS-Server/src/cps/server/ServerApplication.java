@@ -24,9 +24,12 @@ public class ServerApplication extends AbstractServer {
 	/**
 	 * Constructs an instance of the server application.
 	 *
-	 * @param port The port number to connect on.
-	 * @param config the config
-	 * @throws Exception the exception
+	 * @param port
+	 *            The port number to connect on.
+	 * @param config
+	 *            the config
+	 * @throws Exception
+	 *             the exception
 	 */
 	public ServerApplication(int port, ServerConfig config) throws Exception {
 		super(port);
@@ -37,7 +40,7 @@ public class ServerApplication extends AbstractServer {
 	public ServerController getServerController() {
 		return serverController;
 	}
-	
+
 	public DatabaseController getDatabaseController() {
 		return serverController.getDatabaseController();
 	}
@@ -45,8 +48,10 @@ public class ServerApplication extends AbstractServer {
 	/**
 	 * Send object to client.
 	 *
-	 * @param client The client object
-	 * @param msg The Object to be serialized and sent
+	 * @param client
+	 *            The client object
+	 * @param msg
+	 *            The Object to be serialized and sent
 	 */
 	private void sendToClient(ConnectionToClient client, Object msg) {
 		try {
@@ -73,25 +78,25 @@ public class ServerApplication extends AbstractServer {
 			sendToClient(client, ServerResponse.error("Unknown request type"));
 			return;
 		}
-		
+
 		Request request = (Request) message; // type cast was checked with instanceof
-		
+
 		// Print the request to console
 		System.out.println("Message from: " + client + ", type: " + request.getClass().getSimpleName() + ", content: "
 				+ gson.toJson(request));
-		
+
 		// Get the context object associated with this client connection, if exists
 		// A context object stores data about the current client session
 		SessionHolder context = (SessionHolder) client.getInfo("Context");
-		
+
 		if (context == null) { // Session doesn't exist -> create new
 			context = new SessionHolder();
 			client.setInfo("Context", context);
 		}
-		
+
 		// Dispatch request and get a response object
 		ServerResponse response = serverController.dispatch(request, context);
-		
+
 		// Send response to client
 		if (response != null) {
 			sendToClient(client, response);

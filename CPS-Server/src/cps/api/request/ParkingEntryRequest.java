@@ -4,7 +4,7 @@ import cps.api.response.ServerResponse;
 
 public class ParkingEntryRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
-	
+
 	private int subscriptionID;
 	private int lotID;
 	private String carID;

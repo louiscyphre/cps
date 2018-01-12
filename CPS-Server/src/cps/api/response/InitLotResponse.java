@@ -16,9 +16,9 @@ public class InitLotResponse extends ServerResponse {
 	public void setLotID(int lotID) {
 		this.lotID = lotID;
 	}
-	
-  @Override
-  public ServerResponse handle(ResponseHandler handler) {
-    return handler.handle(this);
-  }
+
+	@Override
+	public ServerResponse handle(ResponseHandler handler) {
+		return handler.handle(this);
+	}
 }

@@ -14,55 +14,61 @@ import cps.server.ServerException;
  * The Class DatabaseController.
  */
 public class DatabaseController {
-	
+
 	/** The host address. */
 	String host;
-	
+
 	/** Database name. */
 	String dbName;
-	
+
 	/** Username. */
 	String username;
-	
+
 	/** Password. */
 	String password;
-	
+
 	/**
 	 * The Interface DatabaseAction.
 	 */
 	public interface DatabaseAction {
-		
+
 		/**
 		 * Perform.
 		 *
-		 * @param conn the SQL connection
-		 * @throws SQLException the SQL exception
+		 * @param conn
+		 *            the SQL connection
+		 * @throws SQLException
+		 *             the SQL exception
 		 */
 		void perform(Connection conn) throws SQLException;
 	}
-	
+
 	public interface DatabaseQuery<T> {
-		
+
 		/**
 		 * Perform.
 		 *
-		 * @param conn the SQL connection
-		 * @throws SQLException the SQL exception
+		 * @param conn
+		 *            the SQL connection
+		 * @throws SQLException
+		 *             the SQL exception
 		 */
 		T perform(Connection conn) throws SQLException;
 	}
-	
+
 	public interface DatabaseQueryWithException<T> {
-		
+
 		/**
 		 * Perform.
 		 *
-		 * @param conn the SQL connection
-		 * @throws SQLException the SQL exception
+		 * @param conn
+		 *            the SQL connection
+		 * @throws SQLException
+		 *             the SQL exception
 		 */
 		T perform(Connection conn, T response) throws SQLException, ServerException;
 	}
-	
+
 	public interface EntityBuilder<T> {
 		T fromResultSet(ResultSet result) throws SQLException;
 	}
@@ -70,11 +76,16 @@ public class DatabaseController {
 	/**
 	 * Instantiates a new database controller.
 	 *
-	 * @param host the database host address
-	 * @param dbName the database name
-	 * @param username the user name
-	 * @param password the password
-	 * @throws Exception the exception
+	 * @param host
+	 *            the database host address
+	 * @param dbName
+	 *            the database name
+	 * @param username
+	 *            the user name
+	 * @param password
+	 *            the password
+	 * @throws Exception
+	 *             the exception
 	 */
 	public DatabaseController(String host, String dbName, String username, String password) throws Exception {
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -88,7 +99,8 @@ public class DatabaseController {
 	 * Gets the connection.
 	 *
 	 * @return the connection
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public Connection getConnection() throws SQLException {
 		return DriverManager.getConnection("jdbc:mysql://" + host + "/" + dbName, username, password);
@@ -97,7 +109,8 @@ public class DatabaseController {
 	/**
 	 * Handle SQL exception.
 	 *
-	 * @param ex the exception
+	 * @param ex
+	 *            the exception
 	 */
 	public void handleSQLException(SQLException ex) {
 		System.out.println("SQLException: " + ex.getMessage());
@@ -109,7 +122,8 @@ public class DatabaseController {
 	/**
 	 * Close connection.
 	 *
-	 * @param conn the SQL connection
+	 * @param conn
+	 *            the SQL connection
 	 */
 	public void closeConnection(Connection conn) {
 		if (conn != null) {
@@ -124,11 +138,12 @@ public class DatabaseController {
 	/**
 	 * Perform action.
 	 *
-	 * @param action the action
+	 * @param action
+	 *            the action
 	 */
 	public void performAction(DatabaseAction action) {
 		Connection conn = null;
-		
+
 		try {
 			conn = getConnection();
 			action.perform(conn);
@@ -138,11 +153,11 @@ public class DatabaseController {
 			closeConnection(conn);
 		}
 	}
-	
+
 	public <T> T performQuery(DatabaseQuery<T> query) {
 		Connection conn = null;
 		T result = null;
-		
+
 		try {
 			conn = getConnection();
 			result = query.perform(conn);
@@ -151,14 +166,14 @@ public class DatabaseController {
 		} finally {
 			closeConnection(conn);
 		}
-		
+
 		return result;
 	}
-	
+
 	public <T extends ServerResponse> T performQuery(T response, DatabaseQueryWithException<T> query) {
 		Connection conn = null;
 		T result = null;
-		
+
 		try {
 			conn = getConnection();
 			result = query.perform(conn, response);
@@ -171,65 +186,66 @@ public class DatabaseController {
 			// This still gets called even if the previous block returns
 			closeConnection(conn);
 		}
-		
+
 		return result;
 	}
 
-	public void truncateTables() {		
+	public void truncateTables() {
 		performAction(conn -> {
 			Collection<String> tables = getTables(conn);
-			
+
 			for (String table : tables) {
-//			    System.out.println("TRUNCATE " + table);
-			    Statement stmt = conn.createStatement();
-			    stmt.executeUpdate("TRUNCATE " + table);
-			    stmt.close();
+				// System.out.println("TRUNCATE " + table);
+				Statement stmt = conn.createStatement();
+				stmt.executeUpdate("TRUNCATE " + table);
+				stmt.close();
 			}
 		});
 	}
-	
+
 	public Collection<String> getTables(Connection conn) throws SQLException {
 		LinkedList<String> results = new LinkedList<>();
-		
+
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery("SHOW TABLES");
-		
+
 		while (rs.next()) {
 			results.add(rs.getString(1));
 		}
-		
+
 		rs.close();
 		stmt.close();
-		
+
 		return results;
 	}
-	
-	public Collection<String> getTables() {		
+
+	public Collection<String> getTables() {
 		return performQuery(conn -> getTables(conn));
 	}
-	
-	public int countEntities(Connection conn, String table) throws SQLException {		
+
+	public int countEntities(Connection conn, String table) throws SQLException {
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT count(*) FROM " + table);
-		
+
 		int count = 0;
-		
+
 		if (rs.next()) {
 			count = rs.getInt(1);
 		}
-		
+
 		rs.close();
 		stmt.close();
-		
+
 		return count;
-		
+
 	}
-	
-	public int countEntities(String table) {		
+
+	public int countEntities(String table) {
 		return performQuery(conn -> countEntities(conn, table));
 	}
-	
-	public <T> Collection<T> findAll(Connection conn, String table, String orderBy, EntityBuilder<T> builder) throws SQLException {
+
+	public <T> Collection<T> findAll(Connection conn, String table, String orderBy, EntityBuilder<T> builder)
+			throws SQLException {
 		LinkedList<T> results = new LinkedList<T>();
 
 		Statement stmt = conn.createStatement();

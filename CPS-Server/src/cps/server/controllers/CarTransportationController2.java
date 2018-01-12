@@ -9,7 +9,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Stack;
 
-
 import cps.common.Constants;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.ParkingLot;

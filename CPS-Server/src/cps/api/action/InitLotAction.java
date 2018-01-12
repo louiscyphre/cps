@@ -5,7 +5,7 @@ import cps.api.response.ServerResponse;
 
 public class InitLotAction extends ServiceAction {
 	private static final long serialVersionUID = 1L;
-	
+
 	private String streetAddress;
 	private int size;
 	private float price1;

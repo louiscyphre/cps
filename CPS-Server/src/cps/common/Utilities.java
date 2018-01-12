@@ -33,16 +33,16 @@ public abstract class Utilities {
 			this.value = value;
 		}
 	}
-	
+
 	public static class Pair<A, B> {
 
-	    private A a;
-	    private B b;
+		private A a;
+		private B b;
 
-	    public Pair(A a, B b) {
-	        this.a = a;
-	        this.b = b;
-	    }
+		public Pair(A a, B b) {
+			this.a = a;
+			this.b = b;
+		}
 
 		public A getA() {
 			return a;
@@ -61,15 +61,15 @@ public abstract class Utilities {
 		}
 	}
 
-	public static String randomString(String characterSet, int length) {		
+	public static String randomString(String characterSet, int length) {
 		StringBuilder builder = new StringBuilder();
 		int setLength = characterSet.length();
-		
-		while (length-- != 0) {		
-			int character = (int)(Math.random() * setLength);
+
+		while (length-- != 0) {
+			int character = (int) (Math.random() * setLength);
 			builder.append(characterSet.charAt(character));
 		}
-		
+
 		return builder.toString();
 	}
 }

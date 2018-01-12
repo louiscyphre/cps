@@ -65,7 +65,7 @@ public class Customer implements Serializable, User {
 	}
 
 	public void addDebit(float debit) {
-		this.debit += debit;		
+		this.debit += debit;
 	}
 
 	public float getCredit() {
@@ -77,12 +77,11 @@ public class Customer implements Serializable, User {
 	}
 
 	public void addCredit(float credit) {
-		this.credit += credit;		
+		this.credit += credit;
 	}
 
 	public static Customer create(Connection conn, String email, String password) throws SQLException {
-		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_CUSTOMER,
-				Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_CUSTOMER, Statement.RETURN_GENERATED_KEYS);
 
 		int field = 1;
 		stmt.setString(field++, email);
@@ -106,7 +105,7 @@ public class Customer implements Serializable, User {
 	public static Customer findByID(Connection conn, int id) throws SQLException {
 		Customer result = null;
 		PreparedStatement st = conn.prepareStatement(Constants.SQL_FIND_CUSTOMER_BY_ID);
-		
+
 		st.setInt(1, id);
 		ResultSet rs = st.executeQuery();
 
@@ -116,10 +115,10 @@ public class Customer implements Serializable, User {
 
 		st.close();
 		rs.close();
-		
+
 		return result;
 	}
-	
+
 	public void update(Connection conn) throws SQLException, ServerException {
 		PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_CUSTOMER);
 
@@ -143,7 +142,7 @@ public class Customer implements Serializable, User {
 	public static Customer findByEmailAndPassword(Connection conn, String email, String password) throws SQLException {
 		Customer result = null;
 		PreparedStatement st = conn.prepareStatement("SELECT * FROM customer WHERE email=? AND password=?");
-		
+
 		st.setString(1, email);
 		st.setString(2, password);
 		ResultSet rs = st.executeQuery();
@@ -154,7 +153,7 @@ public class Customer implements Serializable, User {
 
 		st.close();
 		rs.close();
-		
+
 		return result;
 	}
 
@@ -167,12 +166,12 @@ public class Customer implements Serializable, User {
 
 		return result;
 	}
-	
+
 	public void pay(Connection conn, float sum) throws SQLException, ServerException {
 		addDebit(sum);
 		update(conn);
 	}
-	
+
 	public void receiveRefund(Connection conn, float sum) throws SQLException, ServerException {
 		addCredit(sum);
 		update(conn);

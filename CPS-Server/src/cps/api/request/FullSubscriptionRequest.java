@@ -21,7 +21,7 @@ public class FullSubscriptionRequest extends SubscriptionRequest {
 	public int getSubscriptionType() {
 		return Constants.SUBSCRIPTION_TYPE_FULL;
 	}
-	
+
 	@Override
 	public int getLotID() {
 		return 0;

@@ -8,7 +8,8 @@ import cps.common.Constants;
 public class IncidentalParkingRequest extends OnetimeParkingRequest {
 	private static final long serialVersionUID = 1L;
 
-	public IncidentalParkingRequest(int customerID, String email, String carID, int lotID, LocalDateTime plannedEndTime) {
+	public IncidentalParkingRequest(int customerID, String email, String carID, int lotID,
+			LocalDateTime plannedEndTime) {
 		super(customerID, email, carID, lotID, plannedEndTime);
 	}
 

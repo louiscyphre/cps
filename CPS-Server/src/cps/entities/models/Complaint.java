@@ -35,8 +35,8 @@ public class Complaint implements Serializable {
 	}
 
 	public Complaint(ResultSet rs) throws SQLException {
-		this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5),
-				rs.getTimestamp(6), rs.getTimestamp(7), rs.getFloat(8));
+		this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5), rs.getTimestamp(6),
+				rs.getTimestamp(7), rs.getFloat(8));
 	}
 
 	public int getId() {
@@ -103,7 +103,8 @@ public class Complaint implements Serializable {
 		this.refundAmount = refundAmount;
 	}
 
-	public static Complaint create(Connection conn, int customerID, String description, Timestamp createdAt, Timestamp resolvedAt) throws SQLException {
+	public static Complaint create(Connection conn, int customerID, String description, Timestamp createdAt,
+			Timestamp resolvedAt) throws SQLException {
 		PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_COMPLAINT,
 				Statement.RETURN_GENERATED_KEYS);
 
@@ -132,7 +133,7 @@ public class Complaint implements Serializable {
 	public static Complaint findByID(Connection conn, int id) throws SQLException {
 		Complaint item = null;
 		PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_COMPLAINT_BY_ID);
-		
+
 		statement.setInt(1, id);
 		ResultSet result = statement.executeQuery();
 
@@ -142,17 +143,17 @@ public class Complaint implements Serializable {
 
 		statement.close();
 		result.close();
-		
+
 		return item;
 	}
-	
+
 	public static Complaint findByIDNotNull(Connection conn, int id) throws SQLException, ServerException {
 		Complaint result = findByID(conn, id);
-		
+
 		if (result == null) {
 			throw new ServerException("Complaint with id " + id + " does not exist");
 		}
-		
+
 		return result;
 	}
 

@@ -6,9 +6,9 @@ public class LoginResponse extends CustomerResponse {
 	public LoginResponse(boolean success, String description, int customerID) {
 		super(success, description, customerID);
 	}
-	
-  @Override
-  public ServerResponse handle(ResponseHandler handler) {
-    return handler.handle(this);
-  }
+
+	@Override
+	public ServerResponse handle(ResponseHandler handler) {
+		return handler.handle(this);
+	}
 }

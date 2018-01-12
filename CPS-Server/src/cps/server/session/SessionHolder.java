@@ -32,7 +32,7 @@ public class SessionHolder {
 		if (customerSession == null) {
 			customerSession = new CustomerSession();
 		}
-		
+
 		return customerSession;
 	}
 
@@ -43,12 +43,12 @@ public class SessionHolder {
 	public ServiceSession getServiceSession() {
 		return serviceSession;
 	}
-	
+
 	public ServiceSession acquireServiceSession() {
 		if (serviceSession == null) {
 			serviceSession = new ServiceSession();
 		}
-		
+
 		return serviceSession;
 	}
 

@@ -42,15 +42,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class TestCancelOnetimeParking extends ServerControllerTest {
 	@Test
 	public void testCancelOnetimeParking() {
-		/* Scenario:
-		 * 1. Create Parking Lot
-		 * 2. Send Reserved Parking request
-		 * 3. Send Cancel Onetime Parking request */
+		/*
+		 * Scenario: 1. Create Parking Lot 2. Send Reserved Parking request 3. Send
+		 * Cancel Onetime Parking request
+		 */
 
 		header("testCancelOnetimeParking");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
 		SessionHolder context = new SessionHolder(new CustomerSession());
-
 
 		initParkingLot();
 		requestReservedParking(data, Duration.ofHours(3).plusMinutes(1), context);

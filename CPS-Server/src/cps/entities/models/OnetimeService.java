@@ -243,14 +243,14 @@ public class OnetimeService implements ParkingService {
 
 	public static OnetimeService findByIDNotNull(Connection conn, int id) throws SQLException, RuntimeException {
 		OnetimeService item = findByID(conn, id);
-		
+
 		if (item == null) {
 			throw new RuntimeException("OnetimeService with id " + id + " does not exist");
 		}
-		
+
 		return item;
 	}
-	
+
 	public ParkingLot getParkingLot(Connection conn) throws SQLException, ServerException {
 		return ParkingLot.findByIDNotNull(conn, lotID);
 	}
@@ -262,7 +262,7 @@ public class OnetimeService implements ParkingService {
 	public Duration getPlannedDuration() {
 		return Duration.between(plannedStartTime.toLocalDateTime(), plannedEndTime.toLocalDateTime());
 	}
-	
+
 	public float calculatePayment(float pricePerHour) {
 		return pricePerHour * getPlannedDuration().getSeconds() / 3600f;
 	}

@@ -445,11 +445,11 @@ public class ParkingLot implements Serializable {
 		st.setInt(index++, this.id);
 		result = st.executeUpdate();
 		st.close();
-		
+
 		if (result <= 0) {
 			throw new ServerException("Failed to update ParkingLot");
 		}
-		
+
 		return result;
 	}
 

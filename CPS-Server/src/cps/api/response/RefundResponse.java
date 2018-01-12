@@ -2,7 +2,7 @@ package cps.api.response;
 
 public class RefundResponse extends ServerResponse {
 	private static final long serialVersionUID = 1L;
-	
+
 	private int complaintID;
 	private int customerID;
 	private float amount;
@@ -13,7 +13,7 @@ public class RefundResponse extends ServerResponse {
 		this.customerID = customerID;
 		this.amount = amount;
 	}
-	
+
 	public RefundResponse() {
 		this(false, "", 0, 0, 0f);
 	}

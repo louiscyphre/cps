@@ -45,24 +45,24 @@ public class TestRequestLotState extends ServerControllerTest {
 	@Test
 	public void testRequestLotState() throws ServerException {
 		header("testRequestLotState");
-		
+
 		ServiceSession session = getContext().acquireServiceSession();
-		
+
 		User user = session.login("malki", "1234");
 		assertTrue(user == session.getUser());
 		assertNotNull(session.getUser());
-		
+
 		ParkingLot lot = initParkingLot();
-		
+
 		RequestLotStateAction action = new RequestLotStateAction(user.getId(), lot.getId());
 		printObject(action);
-		
+
 		ServerResponse response = server.dispatch(action, getContext());
 		assertNotNull(response);
 		assertTrue(response.success());
 		printObject(response);
 		assertThat(response, instanceOf(RequestLotStateResponse.class));
-		
+
 		RequestLotStateResponse specificResponse = (RequestLotStateResponse) response;
 		ParkingLot responseLot = specificResponse.getLot();
 		assertNotNull(responseLot);

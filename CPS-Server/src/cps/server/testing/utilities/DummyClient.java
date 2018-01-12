@@ -10,7 +10,7 @@ import ocsf.client.AbstractClient;
 
 public class DummyClient extends AbstractClient {
 	LinkedList<ServerResponse> responses;
-	
+
 	public DummyClient(String host, int port) {
 		super(host, port);
 		try {
@@ -26,7 +26,7 @@ public class DummyClient extends AbstractClient {
 		assertThat(message, instanceOf(ServerResponse.class));
 		responses.add((ServerResponse) message);
 	}
-	
+
 	public ServerResponse getLastResponse() {
 		return responses.getLast();
 	}

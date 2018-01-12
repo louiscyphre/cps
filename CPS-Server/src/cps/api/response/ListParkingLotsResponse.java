@@ -7,12 +7,12 @@ import cps.entities.models.ParkingLot;
 public class ListParkingLotsResponse extends ServerResponse {
 	private static final long serialVersionUID = 1L;
 	private Collection<ParkingLot> data;
-	
+
 	public ListParkingLotsResponse(boolean success, String description, Collection<ParkingLot> data) {
 		super(success, description);
 		this.data = data;
 	}
-	
+
 	public ListParkingLotsResponse(Collection<ParkingLot> data) {
 		super(true, "ListParkingLotsRequest completed successfully");
 		this.data = data;

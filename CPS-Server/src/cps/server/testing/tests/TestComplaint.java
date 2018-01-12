@@ -52,7 +52,7 @@ public class TestComplaint extends ServerControllerTest {
 
 		// Test complaint request
 		Complaint complaint = makeComplaint(customer, getContext());
-		
+
 		// Test refund request
 		makeRefund(complaint, getContext());
 	}
@@ -61,7 +61,7 @@ public class TestComplaint extends ServerControllerTest {
 		// Create new customer session
 		CustomerSession session = context.acquireCustomerSession();
 		session.setCustomer(customer);
-		
+
 		// Make request
 		ComplaintRequest request = new ComplaintRequest(customer.getId(), "My car was damaged");
 
@@ -89,16 +89,16 @@ public class TestComplaint extends ServerControllerTest {
 		assertEquals(0, entry.getEmployeeID());
 		return entry;
 	}
-	
+
 	private void makeRefund(Complaint complaint, SessionHolder context) {
 		// Create new customer service employee session
 		ServiceSession session = context.acquireServiceSession();
 		User user = session.login("eli", "9012");
-		
+
 		// Make request
 		float refundAmount = 1000000f;
 		RefundAction request = new RefundAction(user.getId(), refundAmount, complaint.getId());
-		
+
 		// Test response
 		ServerResponse response = server.dispatch(request, context);
 		assertNotNull(response);
@@ -107,9 +107,10 @@ public class TestComplaint extends ServerControllerTest {
 
 		RefundResponse specificResponse = (RefundResponse) response;
 		assertEquals(request.getComplaintID(), specificResponse.getComplaintID());
-		
+
 		// Test database result
-		Complaint updatedComplaint = db.performQuery(conn -> Complaint.findByID(conn, specificResponse.getComplaintID()));
+		Complaint updatedComplaint = db
+				.performQuery(conn -> Complaint.findByID(conn, specificResponse.getComplaintID()));
 		assertNotNull(updatedComplaint);
 		printObject(updatedComplaint);
 		assertEquals(complaint.getId(), updatedComplaint.getId());

@@ -37,7 +37,7 @@ public class ParkingEntryController extends RequestController {
 	 *
 	 * @param request
 	 *            the request
-	 * @param session 
+	 * @param session
 	 * @return the server response
 	 */
 	public ServerResponse handle(ParkingEntryRequest request, UserSession session) {

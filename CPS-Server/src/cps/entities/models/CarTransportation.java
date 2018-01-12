@@ -110,7 +110,7 @@ public class CarTransportation implements Serializable {
 		statement.setInt(field++, authType);
 		statement.setInt(field++, authID);
 		statement.setInt(field++, lotID);
-		
+
 		if (statement.executeUpdate() <= 0) {
 			throw new ServerException("CarTransportation entry creation failed");
 		}
@@ -226,11 +226,11 @@ public class CarTransportation implements Serializable {
 
 		return items;
 	}
-	
+
 	public ParkingLot getParkingLot(Connection conn) throws SQLException, ServerException {
 		return ParkingLot.findByIDNotNull(conn, lotID);
 	}
-	
+
 	public ParkingService getParkingService(Connection conn) throws SQLException, ServerException {
 		if (authType == Constants.LICENSE_TYPE_ONETIME) {
 			return OnetimeService.findByIDNotNull(conn, authID);

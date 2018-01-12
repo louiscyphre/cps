@@ -9,9 +9,9 @@ public class ServiceSession extends BasicSession {
 	public User getUser() {
 		return user;
 	}
-	
+
 	public CompanyPerson login(String username, String password) {
-		user = CompanyPersonService.findWithLoginData(username, password);		
+		user = CompanyPersonService.findWithLoginData(username, password);
 		return user;
 	}
 }

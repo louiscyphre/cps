@@ -5,7 +5,7 @@ public abstract class Employee extends CompanyPerson {
 
 	private int managerID;
 	private int departmentID;
-	
+
 	public Employee(int id, String email, String username, String password, String firstName, String lastName,
 			String jobTitle, int managerID, int departmentID) {
 		super(id, email, username, password, firstName, lastName, jobTitle);
@@ -28,5 +28,5 @@ public abstract class Employee extends CompanyPerson {
 	public void setDepartmentID(int departmentID) {
 		this.departmentID = departmentID;
 	}
-	
+
 }

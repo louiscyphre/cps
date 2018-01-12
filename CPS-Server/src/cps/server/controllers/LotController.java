@@ -34,27 +34,27 @@ public class LotController extends RequestController {
 	public LotController(ServerController serverController) {
 		super(serverController);
 	}
-	
+
 	/**
 	 * Handle ListParkingLotsRequest
+	 * 
 	 * @param request
-	 * @param session 
+	 * @param session
 	 * @return Collection of ParkingLot objects
 	 */
 	public ServerResponse handle(ListParkingLotsRequest request, UserSession session) {
 		return database.performQuery(conn -> {
 			Collection<ParkingLot> result = ParkingLot.findAll(conn);
-			
+
 			// Filter out information that customers shouldn't see
 			result.forEach(lot -> {
 				lot.setContent(null);
 				lot.setRobotIP(null);
 			});
-			
+
 			return new ListParkingLotsResponse(result);
 		});
 	}
-
 
 	/**
 	 * Handle InitLotAction.
@@ -88,7 +88,7 @@ public class LotController extends RequestController {
 			ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
 			lot.setPrice1(action.getPrice1());
 			lot.setPrice2(action.getPrice2());
-			
+
 			try {
 				lot.update(conn);
 				return new UpdatePricesResponse(true, "Prices updates succsessfully");
@@ -103,7 +103,7 @@ public class LotController extends RequestController {
 			ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
 			lot.setLotFull(action.getLotFull());
 			lot.setAlternativeLots(Integer.toString(action.getAlternativeLotID()));
-			
+
 			try {
 				lot.update(conn);
 				return new SetFullLotResponse(true, "Lot status set");
@@ -113,19 +113,18 @@ public class LotController extends RequestController {
 		});
 	}
 
-
 	public RequestLotStateResponse handle(RequestLotStateAction action, UserSession session) {
 		return database.performQuery(conn -> {
 			RequestLotStateResponse response = new RequestLotStateResponse(false, "", null);
-			
+
 			try {
-				ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());				
+				ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());
 				response.setLot(lot);
 				response.setSuccess("RequestLotState request completed successfully");
 			} catch (ServerException e) {
 				response.setError(e.getMessage());
 			}
-			
+
 			return response;
 		});
 	}

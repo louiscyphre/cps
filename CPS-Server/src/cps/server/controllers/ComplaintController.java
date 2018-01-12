@@ -25,9 +25,9 @@ public class ComplaintController extends RequestController {
 		return database.performQuery(new ComplaintResponse(), (conn, response) -> {
 			Complaint complaint = Complaint.create(conn, request.getCustomerID(), request.getContent(),
 					Timestamp.valueOf(LocalDateTime.now()), null);
-			
+
 			errorIfNull(complaint, "Failed to create complaint");
-			
+
 			response.setComplaintID(complaint.getId());
 			response.setSuccess("Complaint created successfully");
 			return response;
@@ -37,12 +37,12 @@ public class ComplaintController extends RequestController {
 	public ServerResponse handle(RefundAction action, UserSession session) {
 		return database.performQuery(new RefundResponse(), (conn, response) -> {
 			User employee = session.requireUser(); // TODO check access level
-			
+
 			Complaint complaint = Complaint.findByIDNotNull(conn, action.getComplaintID());
-			
+
 			Customer customer = Customer.findByIDNotNull(conn, complaint.getCustomerID());
 			customer.receiveRefund(conn, action.getAmount());
-			
+
 			complaint.setEmployeeID(employee.getId());
 			complaint.setRefundAmount(action.getAmount());
 			complaint.setResolvedAt(Timestamp.valueOf(LocalDateTime.now()));
@@ -52,7 +52,7 @@ public class ComplaintController extends RequestController {
 			response.setComplaintID(complaint.getId());
 			response.setCustomerID(customer.getId());
 			response.setAmount(action.getAmount());
-			response.setSuccess("Refund completed successfully");			
+			response.setSuccess("Refund completed successfully");
 			return response;
 		});
 	}

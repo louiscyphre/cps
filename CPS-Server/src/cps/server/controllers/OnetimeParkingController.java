@@ -3,8 +3,6 @@
  */
 package cps.server.controllers;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -21,19 +19,14 @@ import cps.api.response.ListOnetimeEntriesResponse;
 import cps.api.response.OnetimeParkingResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
-import cps.entities.models.DailyStatistics;
 import cps.entities.models.Customer;
+import cps.entities.models.DailyStatistics;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
-import cps.entities.people.User;
-import cps.server.ServerException;
-import cps.server.ServerApplication;
 import cps.server.ServerController;
+import cps.server.ServerException;
 import cps.server.session.CustomerSession;
 import cps.server.session.UserSession;
-import cps.common.Constants;
-import cps.common.Utilities.Holder;
-import cps.common.Utilities.Pair;
 
 /**
  * The Class OnetimeParkingController.
@@ -51,12 +44,12 @@ public class OnetimeParkingController extends RequestController {
 		super(serverController);
 	}
 
-	public ServerResponse handle(OnetimeParkingRequest request, CustomerSession session, OnetimeParkingResponse serverResponse, Timestamp startTime,
-			Timestamp plannedEndTime) {
+	public ServerResponse handle(OnetimeParkingRequest request, CustomerSession session,
+			OnetimeParkingResponse serverResponse, Timestamp startTime, Timestamp plannedEndTime) {
 		return database.performQuery(serverResponse, (conn, response) -> {
 			// Handle login
 			Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
-			
+
 			// TODO check request parameters
 			// End time can't be earlier than start time
 
@@ -81,7 +74,7 @@ public class OnetimeParkingController extends RequestController {
 	 *
 	 * @param request
 	 *            the request
-	 * @param session 
+	 * @param session
 	 * @return the server response
 	 */
 	public ServerResponse handle(IncidentalParkingRequest request, CustomerSession session) {
@@ -98,7 +91,7 @@ public class OnetimeParkingController extends RequestController {
 	 *            the request
 	 * @return the server response
 	 */
-	public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {		
+	public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {
 		// TODO pay in advance for ReservedParking
 		Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
 		Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
@@ -111,7 +104,7 @@ public class OnetimeParkingController extends RequestController {
 	 *
 	 * @param request
 	 *            the request
-	 * @param session 
+	 * @param session
 	 * @return the server response
 	 */
 	public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {

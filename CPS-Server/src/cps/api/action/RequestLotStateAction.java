@@ -5,7 +5,7 @@ import cps.api.response.ServerResponse;
 
 public class RequestLotStateAction extends LotAction {
 	private static final long serialVersionUID = 1L;
-	
+
 	public RequestLotStateAction(int userID, int lotID) {
 		super(userID, lotID);
 	}

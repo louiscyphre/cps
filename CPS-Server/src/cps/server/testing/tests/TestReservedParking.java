@@ -41,11 +41,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class TestReservedParking extends ServerControllerTest {
 	@Test
 	public void testReservedParking() {
-		/* Scenario:
-		 * 1. Create Parking Lot
-		 * 2. Send Reserved Parking request
-		 * 3. Send Parking Entry request - license: ReservedParking
-		 * 4. Send Parking Exit request */
+		/*
+		 * Scenario: 1. Create Parking Lot 2. Send Reserved Parking request 3. Send
+		 * Parking Entry request - license: ReservedParking 4. Send Parking Exit request
+		 */
 
 		header("testReservedParking");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);

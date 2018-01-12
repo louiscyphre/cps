@@ -83,7 +83,7 @@ public abstract class CompanyPerson implements User, Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	@Override
 	public int getUserType() {
 		return Constants.USER_TYPE_COMPANY_PERSON;
@@ -93,7 +93,7 @@ public abstract class CompanyPerson implements User, Serializable {
 	public int getAccessLevel() {
 		return accessLevel;
 	}
-	
+
 	protected void setAccessLevel(int accessLevel) {
 		this.accessLevel = accessLevel;
 	}
@@ -105,7 +105,7 @@ public abstract class CompanyPerson implements User, Serializable {
 	protected void setAccessDomain(int accessDomain) {
 		this.accessDomain = accessDomain;
 	}
-	
+
 	@Override
 	public boolean canAccessDomain(int domain) {
 		return (accessDomain & domain) != 0;

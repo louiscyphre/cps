@@ -41,11 +41,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class TestLogin extends ServerControllerTest {
 	@Test
 	public void testLogin() {
-		/* Scenario:
-		 * 1. Create user
-		 * 2. Attempt to login as user
-		 * 3. Attempt to login with a wrong password
-		 * 4. Attempt to login with a wrong email */
+		/*
+		 * Scenario: 1. Create user 2. Attempt to login as user 3. Attempt to login with
+		 * a wrong password 4. Attempt to login with a wrong email
+		 */
 
 		header("testLogin");
 

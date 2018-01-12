@@ -14,11 +14,11 @@ public class BasicSession implements UserSession {
 	@Override
 	public User requireUser() throws ServerException {
 		User user = getUser();
-		
+
 		if (user == null) {
 			throw new ServerException("This action requires login");
 		}
-		
+
 		return user;
 	}
 

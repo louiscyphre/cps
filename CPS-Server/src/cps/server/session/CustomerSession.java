@@ -10,11 +10,11 @@ import cps.server.ServerException;
 
 public class CustomerSession extends BasicSession {
 	protected Customer customer;
-	
+
 	public CustomerSession() {
 		this.customer = null;
 	}
-	
+
 	public CustomerSession(Customer customer) {
 		this.customer = customer;
 	}
@@ -22,7 +22,7 @@ public class CustomerSession extends BasicSession {
 	public Customer getCustomer() {
 		return customer;
 	}
-	
+
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
@@ -31,12 +31,12 @@ public class CustomerSession extends BasicSession {
 	public User getUser() {
 		return getCustomer();
 	}
-	
+
 	public Customer requireCustomer() throws ServerException {
 		if (customer == null) {
 			throw new ServerException("This action requires a logged in customer");
 		}
-		
+
 		return customer;
 	}
 
@@ -44,18 +44,19 @@ public class CustomerSession extends BasicSession {
 		customer = Customer.findByID(conn, customerID);
 		return customer != null;
 	}
-	
+
 	public Customer findCustomerEx(Connection conn, int customerID) throws SQLException, ServerException {
 		if (!findCustomer(conn, customerID)) {
 			throw new ServerException("Failed to find customer with id " + customerID);
 		}
-		
+
 		return customer;
 	}
 
 	public boolean registerCustomer(Connection conn, String email) throws SQLException {
 		String password = Utilities.randomString("0123456789", 4);
-//		System.out.println(String.format("Sending password '%s' to email %s", password, email));
+		// System.out.println(String.format("Sending password '%s' to email %s",
+		// password, email));
 		customer = Customer.create(conn, email, password);
 		return customer != null;
 	}
@@ -64,7 +65,7 @@ public class CustomerSession extends BasicSession {
 		if (!registerCustomer(conn, email)) {
 			throw new ServerException("Failed to register customer with email " + email);
 		}
-		
+
 		return customer;
 	}
 
@@ -78,8 +79,9 @@ public class CustomerSession extends BasicSession {
 
 		return registerCustomer(conn, email);
 	}
-	
-	public Customer requireRegisteredCustomer(Connection conn, int customerID, String email) throws SQLException, ServerException {
+
+	public Customer requireRegisteredCustomer(Connection conn, int customerID, String email)
+			throws SQLException, ServerException {
 		if (customerID != 0) {
 			return findCustomerEx(conn, customerID);
 		}

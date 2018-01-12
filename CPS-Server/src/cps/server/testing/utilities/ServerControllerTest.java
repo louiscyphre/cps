@@ -77,13 +77,13 @@ public abstract class ServerControllerTest extends TestCase {
 			System.out.println(String.format("%s: %s", object.getClass().getSimpleName(), gson.toJson(object)));
 		}
 	}
-	
+
 	protected void header(String title) {
 		if (!silent) {
 			System.out.println("=== " + title + " ===");
 		}
 	}
-	
+
 	protected void requestSubscription(SubscriptionRequest request, SessionHolder context, CustomerData data,
 			Pair<SubscriptionService, SubscriptionResponse> holder) {
 		// Test the response
@@ -274,7 +274,7 @@ public abstract class ServerControllerTest extends TestCase {
 		assertNotNull(entry.getRemovedAt());
 		printObject(entry);
 	}
-	
+
 	protected Customer makeCustomer(CustomerData data) {
 		Customer customer = db.performQuery(conn -> Customer.create(conn, data.email, data.password));
 		assertNotNull(customer);

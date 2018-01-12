@@ -12,7 +12,7 @@ public class CustomerController extends RequestController {
 	public CustomerController(ServerController serverController) {
 		super(serverController);
 	}
-	
+
 	public ServerResponse handle(LoginRequest request, UserSession session) {
 		return database.performQuery(conn -> {
 			LoginResponse response = new LoginResponse(false, "", 0);
@@ -23,7 +23,7 @@ public class CustomerController extends RequestController {
 				response.setError("Login failed, invalid email or password.");
 				return response;
 			}
-			
+
 			response.setCustomerID(customer.getId());
 			response.setSuccess("Login successful");
 			return response;

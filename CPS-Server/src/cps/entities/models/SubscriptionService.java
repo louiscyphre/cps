@@ -223,33 +223,34 @@ public class SubscriptionService implements ParkingService {
 
 	}
 
-	public static int countForCustomer(Connection conn, int customerID, int subscriptionType) throws SQLException {		
-		PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM subscription_service WHERE customer_id = ? AND subs_type = ?");
-		
+	public static int countForCustomer(Connection conn, int customerID, int subscriptionType) throws SQLException {
+		PreparedStatement statement = conn
+				.prepareStatement("SELECT count(id) FROM subscription_service WHERE customer_id = ? AND subs_type = ?");
+
 		statement.setInt(1, customerID);
 		statement.setInt(2, subscriptionType);
-		
+
 		ResultSet result = statement.executeQuery();
-		
+
 		int count = 0;
-		
+
 		if (result.next()) {
 			count = result.getInt(1);
 		}
-		
+
 		result.close();
 		statement.close();
-		
+
 		return count;
 	}
 
 	public static SubscriptionService findByIDNotNull(Connection conn, int id) throws SQLException, RuntimeException {
 		SubscriptionService item = findByID(conn, id);
-		
+
 		if (item == null) {
 			throw new RuntimeException("SubscriptionService with id " + id + " does not exist");
 		}
-		
+
 		return item;
 	}
 }
