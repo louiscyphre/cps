@@ -6,12 +6,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
 import java.util.Map;
 import java.util.Stack;
 
-import com.sun.media.sound.MidiInDeviceProvider;
 
 import cps.common.Constants;
 import cps.entities.models.CarTransportation;
@@ -21,6 +18,7 @@ import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.devices.Robot;
 
+@SuppressWarnings("unused")
 public class CarTransportationController2 extends RequestController {
 
 	public CarTransportationController2(ServerController serverController) {
@@ -28,7 +26,6 @@ public class CarTransportationController2 extends RequestController {
 	}
 
 	/** The robots. */
-	@SuppressWarnings("unused")
 	private Map<Integer, Robot> robots;
 
 	/**

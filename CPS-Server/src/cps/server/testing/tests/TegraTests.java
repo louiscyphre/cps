@@ -32,6 +32,7 @@ import cps.server.ServerController;
 import cps.server.controllers.DatabaseController;
 import cps.server.controllers.OnetimeParkingController;
 import cps.server.session.CustomerSession;
+import cps.server.session.SessionHolder;
 import cps.server.testing.utilities.CustomerData;
 
 @SuppressWarnings("unused")
@@ -39,7 +40,8 @@ public class TegraTests {
 
 	ServerController server;
 	DatabaseController db;
-	CustomerSession session = new CustomerSession();
+	SessionHolder context = new SessionHolder();
+	
 	@Before
 	public void setUp() throws Exception {
 		this.server = new ServerController(ServerConfig.testing());
@@ -75,7 +77,7 @@ public class TegraTests {
 	private CarTransportation newParkingEntry(OnetimeService _cdata) {
 		ParkingEntryRequest request = new ParkingEntryRequest(_cdata.getCustomerID(), 0, _cdata.getLotID(),
 				_cdata.getCarID());
-		ParkingEntryResponse respo = (ParkingEntryResponse) server.dispatch(request,session);
+		ParkingEntryResponse respo = (ParkingEntryResponse) server.dispatch(request,context);
 		assertNotNull(respo);
 		assertTrue(ServerResponse.STATUS_OK == respo.getStatus());
 		return new CarTransportation(respo.getCustomerID(), _cdata.getCarID(),
@@ -89,7 +91,7 @@ public class TegraTests {
 		IncidentalParkingRequest request = new IncidentalParkingRequest((int) Math.random() * 500,
 				Utilities.randomString("angjurufjfjsl@", 10), Utilities.randomString("ILBTA1234567890-", 7), lotId,
 				endTime);
-		IncidentalParkingResponse response = (IncidentalParkingResponse) server.dispatch(request,session);
+		IncidentalParkingResponse response = (IncidentalParkingResponse) server.dispatch(request,context);
 		assertNotNull(response);
 		assertTrue(response.getStatus() == ServerResponse.STATUS_OK);
 		return new OnetimeService(response.getServiceID(), 1, response.getCustomerID(), request.getEmail(),
@@ -100,7 +102,7 @@ public class TegraTests {
 	private ParkingLot initParkingLot() {
 		ParkingLot lt = null;
 		InitLotAction request = new InitLotAction(1, "Sesam 2", 4, 5, 3, "12.f.t43");
-		ServerResponse response = server.dispatch(request,session);
+		ServerResponse response = server.dispatch(request,context);
 		InitLotResponse re2 = (InitLotResponse) response;
 		lt = db.performQuery(conn -> ParkingLot.findByID(conn, re2.getLotID()));
 		assertNotNull(lt);
