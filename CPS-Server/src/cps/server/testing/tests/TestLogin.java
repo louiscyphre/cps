@@ -57,10 +57,9 @@ public class TestLogin extends ServerControllerTest {
 
 		// Create login request
 		LoginRequest request = new LoginRequest(data.email, data.password);
-		CustomerSession session = new CustomerSession();
 
 		// Test the response
-		ServerResponse response = server.dispatch(request, session);
+		ServerResponse response = server.dispatch(request, getContext());
 		printObject(response);
 		assertThat(response, instanceOf(LoginResponse.class));
 		assertTrue(response.success());

@@ -10,6 +10,7 @@ import java.util.Collection;
 import cps.server.ServerController;
 import cps.server.controllers.DatabaseController;
 import cps.server.session.CustomerSession;
+import cps.server.session.SessionHolder;
 import cps.server.session.UserSession;
 import cps.server.testing.utilities.CustomerData;
 import cps.server.testing.utilities.ServerControllerTest;
@@ -48,16 +49,16 @@ public class TestCancelOnetimeParking extends ServerControllerTest {
 
 		header("testCancelOnetimeParking");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
-		CustomerSession session = new CustomerSession();
+		SessionHolder context = new SessionHolder(new CustomerSession());
 
 
-		initParkingLot(session);
-		requestReservedParking(data, Duration.ofHours(3).plusMinutes(1), session);
+		initParkingLot();
+		requestReservedParking(data, Duration.ofHours(3).plusMinutes(1), context);
 
 		// Make request
 		CancelOnetimeParkingRequest request = new CancelOnetimeParkingRequest(data.customerID, data.onetimeServiceID);
 		// Test response
-		ServerResponse response = server.dispatch(request, session);
+		ServerResponse response = server.dispatch(request, context);
 		printObject(response);
 		assertTrue(response.success());
 		assertThat(response, instanceOf(CancelOnetimeParkingResponse.class));

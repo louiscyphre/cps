@@ -10,6 +10,7 @@ import java.util.Collection;
 import cps.server.ServerController;
 import cps.server.controllers.DatabaseController;
 import cps.server.session.CustomerSession;
+import cps.server.session.SessionHolder;
 import cps.server.session.UserSession;
 import cps.server.testing.utilities.CustomerData;
 import cps.server.testing.utilities.ServerControllerTest;
@@ -49,12 +50,11 @@ public class TestFullSubscription extends ServerControllerTest {
 
 		header("testFullSubscription");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
-		CustomerSession session = new CustomerSession();
 
-		initParkingLot(session);
-		requestFullSubscription(data, session);
-		requestParkingEntry(data, session);
-		requestParkingExit(data, session);
+		initParkingLot();
+		requestFullSubscription(data, getContext());
+		requestParkingEntry(data, getContext());
+		requestParkingExit(data, getContext());
 
 	}
 }

@@ -11,6 +11,7 @@ import cps.server.ServerController;
 import cps.server.controllers.DatabaseController;
 import cps.server.session.CustomerSession;
 import cps.server.session.ServiceSession;
+import cps.server.session.SessionHolder;
 import cps.server.session.UserSession;
 import cps.server.testing.utilities.CustomerData;
 import cps.server.testing.utilities.ServerControllerTest;
@@ -50,21 +51,22 @@ public class TestComplaint extends ServerControllerTest {
 		Customer customer = makeCustomer(data);
 
 		// Test complaint request
-		Complaint complaint = makeComplaint(customer);
+		Complaint complaint = makeComplaint(customer, getContext());
 		
 		// Test refund request
-		makeRefund(complaint);
+		makeRefund(complaint, getContext());
 	}
 
-	protected Complaint makeComplaint(Customer customer) {
+	protected Complaint makeComplaint(Customer customer, SessionHolder context) {
 		// Create new customer session
-		CustomerSession session = new CustomerSession(customer);
+		CustomerSession session = context.acquireCustomerSession();
+		session.setCustomer(customer);
 		
 		// Make request
 		ComplaintRequest request = new ComplaintRequest(customer.getId(), "My car was damaged");
 
 		// Test response
-		ServerResponse response = server.dispatch(request, session);
+		ServerResponse response = server.dispatch(request, context);
 		assertNotNull(response);
 		printObject(response);
 		assertThat(response, instanceOf(ComplaintResponse.class));
@@ -88,9 +90,9 @@ public class TestComplaint extends ServerControllerTest {
 		return entry;
 	}
 	
-	private void makeRefund(Complaint complaint) {
+	private void makeRefund(Complaint complaint, SessionHolder context) {
 		// Create new customer service employee session
-		ServiceSession session = new ServiceSession();
+		ServiceSession session = context.acquireServiceSession();
 		User user = session.login("eli", "9012");
 		
 		// Make request
@@ -98,7 +100,7 @@ public class TestComplaint extends ServerControllerTest {
 		RefundAction request = new RefundAction(user.getId(), refundAmount, complaint.getId());
 		
 		// Test response
-		ServerResponse response = server.dispatch(request, session);
+		ServerResponse response = server.dispatch(request, context);
 		assertNotNull(response);
 		printObject(response);
 		assertThat(response, instanceOf(RefundResponse.class));

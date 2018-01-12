@@ -49,13 +49,11 @@ public class TestRegularSubscription extends ServerControllerTest {
 
 		header("testRegularSubscription");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
-		CustomerSession session = new CustomerSession();
 
-
-		initParkingLot(session);
-		requestRegularSubscription(data, session);
-		requestParkingEntry(data, session);
-		requestParkingExit(data, session);
+		initParkingLot();
+		requestRegularSubscription(data, getContext());
+		requestParkingEntry(data, getContext());
+		requestParkingExit(data, getContext());
 
 	}
 }

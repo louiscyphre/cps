@@ -2,7 +2,6 @@ package cps.api.action;
 
 import cps.api.request.RequestHandler;
 import cps.api.response.ServerResponse;
-import cps.server.session.UserSession;
 
 public class InitLotAction extends ServiceAction {
 	private static final long serialVersionUID = 1L;
@@ -63,7 +62,7 @@ public class InitLotAction extends ServiceAction {
 	}
 
 	@Override
-	public ServerResponse handle(RequestHandler handler, UserSession session) {
+	public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
 		return handler.handle(this, session);
 	}
 }

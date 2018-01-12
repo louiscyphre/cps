@@ -49,11 +49,10 @@ public class TestReservedParking extends ServerControllerTest {
 
 		header("testReservedParking");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
-		CustomerSession session = new CustomerSession();
 
-		initParkingLot(session);
-		requestReservedParking(data, session);
-		requestParkingEntry(data, session);
-		requestParkingExit(data, session);
+		initParkingLot();
+		requestReservedParking(data, getContext());
+		requestParkingEntry(data, getContext());
+		requestParkingExit(data, getContext());
 	}
 }

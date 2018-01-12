@@ -49,11 +49,10 @@ public class TestIncidentalParking extends ServerControllerTest {
 
 		header("testIncidentalParking");
 		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
-		CustomerSession session = new CustomerSession();
 
-		initParkingLot(session);
-		requestIncidentalParking(data, session);
-		requestParkingEntry(data, session);
-		requestParkingExit(data, session);
+		initParkingLot();
+		requestIncidentalParking(data, getContext());
+		requestParkingEntry(data, getContext());
+		requestParkingExit(data, getContext());
 	}
 }

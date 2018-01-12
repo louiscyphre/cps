@@ -1,7 +1,6 @@
 package cps.api.request;
 
 import cps.api.response.ServerResponse;
-import cps.server.session.UserSession;
 
 public class ParkingEntryRequest extends CustomerRequest {
 	private static final long serialVersionUID = 1L;
@@ -42,7 +41,7 @@ public class ParkingEntryRequest extends CustomerRequest {
 	}
 
 	@Override
-	public ServerResponse handle(RequestHandler handler, UserSession session) {
+	public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
 		return handler.handle(this, session);
 	}
 }
