@@ -18,6 +18,7 @@ import cps.entities.models.CarTransportation;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
 import cps.server.ServerController;
+import cps.server.ServerException;
 import cps.server.devices.Robot;
 
 public class CarTransportationController2 extends RequestController {
@@ -47,7 +48,7 @@ public class CarTransportationController2 extends RequestController {
 	 *             the SQL exception
 	 */
 	private boolean insertCars(Connection conn, ParkingLot lot, Stack<String> carIds, Stack<LocalDateTime> exitTimes)
-			throws SQLException {
+			throws SQLException,ServerException {
 		// Get the parking lot
 		String[][][] thisContent = lot.getContentAsArray();
 		String carId = null;
@@ -109,11 +110,30 @@ public class CarTransportationController2 extends RequestController {
 			// Find spot for the car, based on priority
 			iSize=priority;
 			while (maxSize == -1) {
-
-				for (iSize = priority; (iSize <= worstPriority) && (maxSize == -1); iSize++)
+				/*
+				 * Seek a place among this and worse priorities
+				 */
+				for (iSize = priority; (iSize >= worstPriority) && (maxSize == -1); iSize++)
 				{
-					for(int abc=0;abc<6;abc++) {
-						
+					for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+						if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3)]
+								.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
+							maxSize = iSize;
+							maxHeight = Math.floorMod(iHeight, 3);
+							maxDepth = Math.floorDiv(iHeight, 3);
+						}
+					}
+				}
+				
+				for (iSize = priority-1; (iSize < 2 ) && (maxSize == -1); iSize--)
+				{
+					for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+						if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3)]
+								.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
+							maxSize = iSize;
+							maxHeight = Math.floorMod(iHeight, 3);
+							maxDepth = Math.floorDiv(iHeight, 3);
+						}
 					}
 				}
 				
@@ -252,7 +272,7 @@ public class CarTransportationController2 extends RequestController {
 	 * @throws CarTransportationException
 	 */
 	public void insertCar(Connection conn, ParkingLot lot, String carId, LocalDateTime exitTime)
-			throws SQLException, DatabaseException, CarTransportationException {
+			throws SQLException, ServerException, CarTransportationException {
 		Stack<String> carIds = new Stack<String>();
 		carIds.push(carId);
 
@@ -318,11 +338,10 @@ public class CarTransportationController2 extends RequestController {
 	 * @return the server response
 	 * @throws SQLException
 	 *             the SQL exception
-	 * @throws DatabaseException
 	 * @throws CarTransportationException
 	 */
 	public void retrieveCar(Connection conn, int lotId, String carID)
-			throws SQLException, DatabaseException, CarTransportationException {
+			throws SQLException, CarTransportationException,ServerException {
 		ParkingLot lot = ParkingLot.findByID(conn, lotId);
 		String[][][] content = lot.getContentAsArray();
 
