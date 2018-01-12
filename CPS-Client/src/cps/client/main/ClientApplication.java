@@ -7,13 +7,10 @@ import java.io.IOException;
 
 import org.apache.commons.cli.ParseException;
 
-import cps.api.request.Request;
 import cps.api.response.Response;
 import cps.api.response.ResponseHandler;
-import cps.api.response.ServerResponse;
-import cps.client.controller.ControllerConstants;
-import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ControllerConstants.SceneCode;
+import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.responsehandler.ResponseHandlerImpl;
 import cps.client.network.CPSNetworkClient;
 import cps.client.network.INetworkClient;
@@ -22,8 +19,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 

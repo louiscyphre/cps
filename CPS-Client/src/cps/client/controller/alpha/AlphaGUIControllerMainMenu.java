@@ -1,20 +1,19 @@
 package cps.client.controller.alpha;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
-import cps.client.controller.ControllerConstants.SceneCode;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
 import javafx.scene.text.Text;
-import java.util.List;
+import javafx.stage.Stage;
 
 public class AlphaGUIControllerMainMenu implements ViewController {
 
@@ -28,8 +27,6 @@ public class AlphaGUIControllerMainMenu implements ViewController {
   private Label infoLabel; // test button
 
   private boolean infoToggled = true;
-
-  private int count = 0;
 
   @FXML // fx:id="quitBtn"
   private Button quitBtn; // Value injected by FXMLLoader
