@@ -15,18 +15,6 @@ import cps.api.response.UpdatePricesResponse;
 class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 
   @Override
-  public ServerResponse handle(RegularSubscriptionResponse response) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public ServerResponse handle(ReservedParkingResponse response) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public ServerResponse handle(DisableParkingSlotsResponse response) {
     // TODO Auto-generated method stub
     return null;

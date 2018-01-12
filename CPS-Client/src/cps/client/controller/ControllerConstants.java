@@ -6,17 +6,17 @@ public class ControllerConstants {
     
     TEST_SCENE("../view/testScene.fxml"),
   
-    INCIDENTAL_PARKING("../view/AlphaGUI_2.fxml"),
-    VIEW_MY_REQUESTS("../view/AlphaGUI_3.fxml"),
-    REQUEST_PARKING_ENTRY("../view/AlphaGUI_4.fxml"),
-    INIT_PARKING_LOT("../view/AlphaGUI_5.fxml"),
-    MAIN_MENU("../view/AlphaGUI_mainMenu.fxml"),
+    ALPHA_INCIDENTAL_PARKING("../view/AlphaGUI_2.fxml"),
+    ALPHA_VIEW_MY_REQUESTS("../view/AlphaGUI_3.fxml"),
+    ALPHA_REQUEST_PARKING_ENTRY("../view/AlphaGUI_4.fxml"),
+    ALPHA_INIT_PARKING_LOT("../view/AlphaGUI_5.fxml"),
+    ALPHA_MAIN_MENU("../view/AlphaGUI_mainMenu.fxml"),
     
-    
-    LOGIN("../view/LoginScene.fxml"),
-    CUSTOMER_INITIAL_MENU("../view/CustomerInitialMenuScene.fxml"),
-    CUSTOMER_LIST_SUBSCRIPTIONS("../view/CustomerListSubscriptionsScene.fxml"),
-    RESERVE_PARKING("../view/ReserveParkingScene.fxml"),
+    // customer views
+    LOGIN("../view/customer/LoginScene.fxml"),
+    CUSTOMER_INITIAL_MENU("../view/customer/CustomerInitialMenuScene.fxml"),
+    CUSTOMER_LIST_SUBSCRIPTIONS("../view/customer/CustomerListSubscriptionsScene.fxml"),
+    RESERVE_PARKING("../view/customer/ReserveParkingScene.fxml"),
     
     // service views 
     SERVICE_ACTION_DISABLE_SLOT("../view/service/ServiceActionDisableSlot.fxml"),

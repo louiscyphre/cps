@@ -2,8 +2,10 @@ package cps.client.controller.responsehandler;
 
 import cps.api.response.*;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+//import cps.client.controller.ControllersClientAdapter;
+//import javafx.application.Platform;
+//import javafx.scene.control.Alert;
+//import javafx.scene.control.Alert.AlertType;
 
 // TODO implement the response handling at this class
 public class ResponseHandlerImpl implements ResponseHandler {
@@ -19,26 +21,25 @@ public class ResponseHandlerImpl implements ResponseHandler {
 
   @Override
   public ServerResponse dispatch(Response resp) {
-    ServerResponse response = resp.handle(this);
+    Platform.runLater(() -> {
+      resp.handle(this);
+    });
 
-    if (resp instanceof ServerResponse) {
-      ServerResponse srvrResp = (ServerResponse) resp;
-      if (srvrResp.getStatus() == ServerResponse.STATUS_OK) {
-        Platform.runLater(() -> {
-          Alert alert = new Alert(AlertType.INFORMATION);
-          alert.setTitle("Success");
-          alert.setHeaderText("The operation was successful");
-          alert.setContentText(srvrResp.getDescription());
-          alert.showAndWait();
-        });
-      }
-    }
+    // TODO time to get rid of stupid alerts
+//    if (resp instanceof ServerResponse) {
+//      ServerResponse srvrResp = (ServerResponse) resp;
+//      if (srvrResp.getStatus() == ServerResponse.STATUS_OK) {
+//        Platform.runLater(() -> {
+//          Alert alert = new Alert(AlertType.INFORMATION);
+//          alert.setTitle("Success");
+//          alert.setHeaderText("The operation was successful");
+//          alert.setContentText(srvrResp.getDescription());
+//          alert.showAndWait();
+//        });
+//      }
+//    }
 
-    if (response == null) {
-      return ServerResponse.error("Not implemented");
-    }
-
-    return response;
+    return null;
   }
 
   @Override
@@ -49,16 +50,6 @@ public class ResponseHandlerImpl implements ResponseHandler {
 
   // // // // // // // // // // // // // // // // // // // // // // // //
   // ----- Service -----
-  @Override
-  public ServerResponse handle(RegularSubscriptionResponse response) {
-    return this.serviceResponseHandler.handle(response);
-  }
-
-  @Override
-  public ServerResponse handle(ReservedParkingResponse response) {
-    return this.serviceResponseHandler.handle(response);
-  }
-
   @Override
   public ServerResponse handle(DisableParkingSlotsResponse response) {
     return this.serviceResponseHandler.handle(response);
@@ -138,6 +129,16 @@ public class ResponseHandlerImpl implements ResponseHandler {
 
   @Override
   public ServerResponse handle(ParkingExitResponse response) {
+    return this.customerResponseHandler.handle(response);
+  }
+
+  @Override
+  public ServerResponse handle(RegularSubscriptionResponse response) {
+    return this.customerResponseHandler.handle(response);
+  }
+
+  @Override
+  public ServerResponse handle(ReservedParkingResponse response) {
     return this.customerResponseHandler.handle(response);
   }
 

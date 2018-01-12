@@ -1,15 +1,19 @@
-package cps.client.controller;
+package cps.client.controller.alpha;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import cps.client.controller.ControllerConstants;
+import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ViewController;
 import cps.client.controller.ControllerConstants.SceneCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
+import java.util.List;
 
 public class AlphaGUIController4 implements ViewController {
-  
 
   @FXML // ResourceBundle that was given to the FXMLLoader
   private ResourceBundle resources;
@@ -36,40 +40,53 @@ public class AlphaGUIController4 implements ViewController {
 
   @FXML
   void backHandler(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.MAIN_MENU);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ALPHA_MAIN_MENU);
   }
 
-  @FXML // This method is called by the FXMLLoader when initialization is complete
+  @FXML // This method is called by the FXMLLoader when initialization is
+        // complete
   void initialize() {
-      assert userIDTF != null : "fx:id=\"userIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
-      assert lotIDTF != null : "fx:id=\"lotIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
-      assert carIDTF != null : "fx:id=\"carIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
-      assert subIDTF != null : "fx:id=\"subIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
-      ControllersClientAdapter.registerCtrl(this,ControllerConstants.SceneCode.REQUEST_PARKING_ENTRY);
+    assert userIDTF != null : "fx:id=\"userIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
+    assert lotIDTF != null : "fx:id=\"lotIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
+    assert carIDTF != null : "fx:id=\"carIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
+    assert subIDTF != null : "fx:id=\"subIDTF\" was not injected: check your FXML file 'AlphaGUI_4.fxml'.";
+    ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.ALPHA_REQUEST_PARKING_ENTRY);
   }
 
   @Override
-  public void displayInfo(String infoMsg) {
+  public void displayInfo(List<Text> formattedText) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
-  public void displayError(String errorMsg) {
+  public void displayError(List<Text> formettedErrorMsg) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnProcessingStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnProcessingStateOff() {
     // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void displayInfo(String simpleInfoMsg) {
+    // TODO Auto-generated method stub
     
   }
-  
+
+  @Override
+  public void displayError(String simpleErrorMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

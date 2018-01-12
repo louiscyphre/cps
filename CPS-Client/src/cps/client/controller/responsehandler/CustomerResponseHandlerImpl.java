@@ -1,5 +1,8 @@
 package cps.client.controller.responsehandler;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import cps.api.response.CancelOnetimeParkingResponse;
 import cps.api.response.ComplaintResponse;
 import cps.api.response.FullSubscriptionResponse;
@@ -8,36 +11,20 @@ import cps.api.response.ListOnetimeEntriesResponse;
 import cps.api.response.LoginResponse;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
+import cps.api.response.RegularSubscriptionResponse;
+import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
+import cps.client.context.CustomerContext;
+import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ViewController;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
-  private int customerId;
-  private String email;
-  
-  @Override
-  public void setCustomerId(int id) {
-    this.customerId = id;
-  }
-
-  @Override
-  public int getCustomerId() {
-    return this.customerId;
-  }
-
-  @Override
-  public void setCustomerEmail(String email) {
-    this.email = email;
-  }
-
-  @Override
-  public String getCustomerEmail() {
-    return this.email;
-  }
-  
-  // // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ \\
-  // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\ // \\
-  
+  // handlers
   @Override
   public ServerResponse handle(CancelOnetimeParkingResponse response) {
     // TODO Auto-generated method stub
@@ -86,6 +73,57 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
     return null;
   }
 
+  @Override
+  public ServerResponse handle(ReservedParkingResponse response) {
+    CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
 
+    int responseCustomerId = response.getCustomerID();
+    List<Text> formattedMessage = new LinkedList<Text>();
+    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId()) {
+      context.setCustomerId(responseCustomerId);
+      formattedMessage.add(new Text("Your Customer ID:"));
+      Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      Font defaultFont = customerIdText.getFont();
+      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(customerIdText);
+      formattedMessage.add(new Text("\n"));
+      
+      formattedMessage.add(new Text("Your Password:"));
+      Text password = new Text(response.getPassword());
+      defaultFont = password.getFont();
+      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(password);
+      formattedMessage.add(new Text("\n"));
+      
+      context.acceptPendingEmail();
+    }
 
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("Succesfully reserved parking per request!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+      
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("Could not reserve parking!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(RegularSubscriptionResponse response) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(ServerResponse response) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

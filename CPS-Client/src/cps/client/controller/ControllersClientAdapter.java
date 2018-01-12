@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
+import cps.client.context.CustomerContext;
+import cps.client.context.CustomerContextImpl;
+import cps.client.context.EmployeeContext;
+import cps.client.context.EmployeeContextImpl;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.main.ClientApplication;
 import javafx.fxml.FXMLLoader;
@@ -88,16 +92,8 @@ public class ControllersClientAdapter {
     return getInstance().customerContext;
   }
 
-  public static void setCustomerContext(CustomerContext customerContext) {
-    getInstance().customerContext = customerContext;
-  }
-
   public static EmployeeContext getEmployeeContext() {
     return getInstance().employeeContext;
-  }
-
-  public static void setEmployeeContext(EmployeeContext employeeContext) {
-    getInstance().employeeContext = employeeContext;
   }
 
   public static SceneCode getCurrentScene() {

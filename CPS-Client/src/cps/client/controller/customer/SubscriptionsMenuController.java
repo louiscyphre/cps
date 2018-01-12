@@ -1,12 +1,19 @@
 /**
  * 
  */
-package cps.client.controller;
+package cps.client.controller.customer;
 
+import java.util.List;
+
+import cps.client.controller.ControllerConstants;
+import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ViewController;
+import cps.client.controller.ControllerConstants.SceneCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 /**
  * Created on: 2018-01-09 1:04:02 AM 
@@ -33,13 +40,13 @@ public class SubscriptionsMenuController implements ViewController {
   }
 
   @Override
-  public void displayInfo(String infoMsg) {
+  public void displayInfo(List<Text> formattedText) {
     // TODO Auto-generated method stub
     
   }
 
   @Override
-  public void displayError(String errorMsg) {
+  public void displayError(List<Text> formettedErrorMsg) {
     // TODO Auto-generated method stub
     
   }
@@ -52,6 +59,18 @@ public class SubscriptionsMenuController implements ViewController {
 
   @Override
   public void turnProcessingStateOff() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void displayInfo(String simpleInfoMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void displayError(String simpleErrorMsg) {
     // TODO Auto-generated method stub
     
   }

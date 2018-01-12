@@ -5,6 +5,7 @@ import cps.client.controller.ViewController;
 import cps.client.controller.ControllerConstants.SceneCode;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -13,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class ServiceLoginSceneController implements ViewController {
 
@@ -60,13 +62,13 @@ public class ServiceLoginSceneController implements ViewController {
   }
 
   @Override
-  public void displayInfo(String infoMsg) {
+  public void displayInfo(List<Text> formattedText) {
     // TODO Auto-generated method stub
     
   }
 
   @Override
-  public void displayError(String errorMsg) {
+  public void displayError(List<Text> formettedErrorMsg) {
     // TODO Auto-generated method stub
     
   }
@@ -79,6 +81,18 @@ public class ServiceLoginSceneController implements ViewController {
 
   @Override
   public void turnProcessingStateOff() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void displayInfo(String simpleInfoMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void displayError(String simpleErrorMsg) {
     // TODO Auto-generated method stub
     
   }

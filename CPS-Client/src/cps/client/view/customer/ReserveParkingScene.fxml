@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="705.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.ReserveParkingController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="705.0" style="-fx-background-color: E6DDD4;" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.ReserveParkingController">
   <center>
     <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="360.0" spacing="0.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
@@ -57,10 +57,25 @@
                </VBox.margin></TextField>
             <TextField fx:id="lotidTF" layoutX="50.0" layoutY="239.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter lotId here" styleClass="inputField">
                <VBox.margin>
-                  <Insets bottom="20.0" />
+                  <Insets bottom="15.0" />
                </VBox.margin>
             </TextField>
-            <TextField fx:id="emailTF" layoutX="50.0" layoutY="271.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter Email here" styleClass="inputField" />
+            <TextField fx:id="emailTF" layoutX="50.0" layoutY="271.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter Email here" styleClass="inputField">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></TextField>
+        <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="299.0" spacing="0.0" styleClass="infoLabel">
+          <children>
+            <ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />
+                  <TextFlow fx:id="infoLabel" prefHeight="77.0" prefWidth="280.0" textAlignment="CENTER">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></TextFlow>
+          </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+        </VBox>
         <HBox alignment="CENTER" maxWidth="280.0" prefHeight="60.0" prefWidth="280.0" spacing="0.0" style="-fx-padding:0 0 0 0;">
           <children>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="0.0" style="&#10;">
@@ -69,9 +84,6 @@
                   <font>
                     <Font size="16.0" fx:id="x1" />
                   </font>
-                  <stylesheets>
-                    <URL value="@application.css" />
-                  </stylesheets>
                 </Button>
               </children>
               <HBox.margin>
@@ -81,9 +93,6 @@
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0">
               <children>
                 <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
-                  <stylesheets>
-                    <URL value="@application.css" />
-                  </stylesheets>
                   <VBox.margin>
                     <Insets fx:id="x3" />
                   </VBox.margin>
@@ -98,30 +107,10 @@
                   <Insets top="20.0" />
                </VBox.margin>
         </HBox>
-        <VBox fx:id="infoBox" alignment="CENTER" prefHeight="113.0" prefWidth="256.0" spacing="0.0">
-          <children>
-            <ProgressIndicator fx:id="infoProgress" visible="false">
-              <VBox.margin>
-                <Insets bottom="15.0" />
-              </VBox.margin>
-            </ProgressIndicator>
-            <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="280.0" prefHeight="55.0" prefWidth="280.0" styleClass="infoLabel" text="Just some info goes here" textAlignment="CENTER" wrapText="true">
-              <VBox.margin>
-                <Insets fx:id="x4" />
-              </VBox.margin>
-            </Label>
-          </children>
-          <padding>
-            <Insets top="10.0" />
-          </padding>
-        </VBox>
       </children>
       <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="15.0" />
       </padding>
-      <stylesheets>
-        <URL value="@application.css" />
-      </stylesheets>
     </VBox>
   </center>
   <padding>

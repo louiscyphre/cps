@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cps.client.controller;
+package cps.client.utils;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

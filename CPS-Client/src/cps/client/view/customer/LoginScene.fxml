@@ -9,7 +9,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.LoginController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.LoginController">
   <center>
     <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="360.0" spacing="5.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
@@ -23,6 +23,23 @@
             <Insets bottom="20.0" fx:id="x2" />
           </VBox.margin>
         </PasswordField>
+        <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="100.0" spacing="0.0">
+          <children>
+            <ProgressIndicator fx:id="infoProgress" visible="false">
+              <VBox.margin>
+                <Insets bottom="15.0" />
+              </VBox.margin>
+            </ProgressIndicator>
+            <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="73.0" styleClass="infoLabel" text="Just some info goes here" textAlignment="CENTER" wrapText="true">
+              <VBox.margin>
+                <Insets fx:id="x4" />
+              </VBox.margin>
+            </Label>
+          </children>
+          <padding>
+            <Insets bottom="-1.0" left="10.0" right="10.0" top="10.0" />
+          </padding>
+        </VBox>
         <HBox alignment="CENTER" prefHeight="60.0" prefWidth="263.0" spacing="0.0" style="-fx-padding:0 0 0 0;">
           <children>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="0.0" style="&#10;">
@@ -32,7 +49,7 @@
                     <Font size="16.0" fx:id="x1" />
                   </font>
                   <stylesheets>
-                    <URL value="@application.css" />
+                    <URL value="@../application.css" />
                   </stylesheets>
                 </Button>
               </children>
@@ -44,7 +61,7 @@
               <children>
                 <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
                   <stylesheets>
-                    <URL value="@application.css" />
+                    <URL value="@../application.css" />
                   </stylesheets>
                   <VBox.margin>
                     <Insets fx:id="x3" />
@@ -57,29 +74,12 @@
             </VBox>
           </children>
         </HBox>
-        <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="100.0" spacing="0.0">
-          <children>
-            <ProgressIndicator fx:id="infoProgress">
-              <VBox.margin>
-                <Insets bottom="15.0" />
-              </VBox.margin>
-            </ProgressIndicator>
-            <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="73.0" style="-fx-background-color: #d9edf7; -fx-background-radius: 8 8 8 8; -fx-text-fill: #31708f; -fx-border-radius: 8 8 8 8;" text="Just some info goes here" textAlignment="CENTER" wrapText="true">
-              <VBox.margin>
-                <Insets fx:id="x4" />
-              </VBox.margin>
-            </Label>
-          </children>
-          <padding>
-            <Insets bottom="-1.0" left="10.0" right="10.0" top="10.0" />
-          </padding>
-        </VBox>
       </children>
       <padding>
         <Insets bottom="30.0" left="35.0" right="35.0" top="30.0" />
       </padding>
       <stylesheets>
-        <URL value="@application.css" />
+        <URL value="@../application.css" />
       </stylesheets>
     </VBox>
   </center>

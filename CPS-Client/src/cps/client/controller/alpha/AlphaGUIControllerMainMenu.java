@@ -1,9 +1,11 @@
-package cps.client.controller;
-
+package cps.client.controller.alpha;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import cps.client.controller.ControllerConstants;
+import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ViewController;
 import cps.client.controller.ControllerConstants.SceneCode;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -11,7 +13,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-
+import javafx.scene.text.Text;
+import java.util.List;
 
 public class AlphaGUIControllerMainMenu implements ViewController {
 
@@ -23,11 +26,11 @@ public class AlphaGUIControllerMainMenu implements ViewController {
 
   @FXML
   private Label infoLabel; // test button
-  
+
   private boolean infoToggled = true;
-  
+
   private int count = 0;
-  
+
   @FXML // fx:id="quitBtn"
   private Button quitBtn; // Value injected by FXMLLoader
 
@@ -55,33 +58,32 @@ public class AlphaGUIControllerMainMenu implements ViewController {
 
   @FXML
   void handleRequestIncidentalParkingBtn(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INCIDENTAL_PARKING);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ALPHA_INCIDENTAL_PARKING);
   }
 
   @FXML
   void handleViewParkingRequestsBtn(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_REQUESTS);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ALPHA_VIEW_MY_REQUESTS);
   }
 
   @FXML
   void handleRequestParkingEntryBtn(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REQUEST_PARKING_ENTRY);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ALPHA_REQUEST_PARKING_ENTRY);
   }
 
   @FXML
   void handleInitParkingLot(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INIT_PARKING_LOT);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ALPHA_INIT_PARKING_LOT);
   }
-  
 
   @FXML
   void toggleLabelStyle(ActionEvent event) {
-    if(infoToggled) {
+    if (infoToggled) {
       infoToggled = false;
-      displayError("infoToggled = " + infoToggled + " and count is " + ++count);
+//      displayError("infoToggled = " + infoToggled + " and count is " + ++count);
     } else {
       infoToggled = true;
-      displayInfo("infoToggled = " + infoToggled + " and count is " + ++count);
+//      displayInfo("infoToggled = " + infoToggled + " and count is " + ++count);
     }
   }
 
@@ -93,32 +95,44 @@ public class AlphaGUIControllerMainMenu implements ViewController {
     assert viewParkingRequestsBtn != null : "fx:id=\"viewParkingRequestsBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
     assert quitBtn != null : "fx:id=\"quitBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
     assert incidentalParkingBtn != null : "fx:id=\"incidentalParkingBtn\" was not injected: check your FXML file 'AlphaGUI.fxml'.";
-    ControllersClientAdapter.registerCtrl(this,ControllerConstants.SceneCode.MAIN_MENU);
+    ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.ALPHA_MAIN_MENU);
   }
 
   // TODO @Michael check this idea out
   @Override
-  public void displayInfo(String infoMsg) {
-    infoLabel.setText(infoMsg);
+  public void displayInfo(List<Text> formattedText) {
+//    infoLabel.setText(formattedText);
     infoLabel.getStyleClass().clear();
     infoLabel.getStyleClass().add("infoLabel");
   }
 
   @Override
-  public void displayError(String errorMsg) {
-    infoLabel.setText(errorMsg);
+  public void displayError(List<Text> formettedErrorMsg) {
+//    infoLabel.setText(formettedErrorMsg);
     infoLabel.getStyleClass().clear();
-    infoLabel.getStyleClass().add("errorLabel");    
+    infoLabel.getStyleClass().add("errorLabel");
   }
 
   @Override
   public void turnProcessingStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnProcessingStateOff() {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void displayInfo(String simpleInfoMsg) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void displayError(String simpleErrorMsg) {
     // TODO Auto-generated method stub
     
   }

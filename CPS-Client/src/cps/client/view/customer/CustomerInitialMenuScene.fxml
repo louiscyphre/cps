@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" padding="$x2" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.CustomerMainMenuController">
+<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" padding="$x2" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.CustomerMainMenuController">
   <center>
     <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="360.0" spacing="15.0" style="&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
@@ -19,7 +19,7 @@
             <Font size="16.0" fx:id="x1" />
           </font>
           <stylesheets>
-            <URL value="@application.css" />
+            <URL value="@../application.css" />
           </stylesheets>
         </Button>
         <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" graphicTextGap="4.0" mnemonicParsing="false" onAction="#handleReserveParkingButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Reserve parking" textAlignment="CENTER" />
@@ -42,7 +42,7 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" fx:id="x2" />
       </padding>
       <stylesheets>
-        <URL value="@application.css" />
+        <URL value="@../application.css" />
       </stylesheets>
     </VBox>
   </center>

@@ -1,4 +1,4 @@
-package cps.client.controller;
+package cps.client.context;
 
 public class EmployeeContextImpl implements EmployeeContext {
 

@@ -12,9 +12,9 @@ import cps.api.response.Response;
 import cps.api.response.ResponseHandler;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
+import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.responsehandler.ResponseHandlerImpl;
-import cps.client.controller.ControllersClientAdapter;
 import cps.client.network.CPSNetworkClient;
 import cps.client.network.INetworkClient;
 import cps.client.utils.CmdParser;
@@ -60,11 +60,7 @@ public class ClientApplication extends Application implements INetworkClient {
       initializeStage(scene, "CPS Kiosk Client");
 
       ControllersClientAdapter.registerScene(SceneCode.LOGIN);
-      ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
-      ControllersClientAdapter.registerScene(SceneCode.REQUEST_PARKING_ENTRY);
-      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_REQUESTS);
-      ControllersClientAdapter.registerScene(SceneCode.INIT_PARKING_LOT);
       ControllersClientAdapter.registerScene(SceneCode.RESERVE_PARKING);
     } catch (IOException e) {
       e.printStackTrace();
