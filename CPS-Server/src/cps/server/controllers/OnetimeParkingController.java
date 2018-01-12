@@ -100,7 +100,6 @@ public class OnetimeParkingController extends RequestController {
    * @return the server response
    */
   public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {
-    // TODO pay in advance for ReservedParking
     Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
     Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
     ReservedParkingResponse response = new ReservedParkingResponse(false, "");
