@@ -29,6 +29,7 @@ import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
+import cps.server.ServerException;
 import cps.server.controllers.DatabaseController;
 import cps.server.controllers.OnetimeParkingController;
 import cps.server.session.CustomerSession;
@@ -50,7 +51,7 @@ public class TegraTests {
   }
 
   @Test
-  public void testInsertCars() {
+  public void testInsertCars() throws ServerException {
     int parkingRequestsNo = 5;
     /*
      * Create parking lot Create incidental parking request Insert the car
@@ -95,7 +96,7 @@ public class TegraTests {
         Timestamp.valueOf(request.getPlannedEndTime()), false);
   }
 
-  private ParkingLot initParkingLot() {
+  private ParkingLot initParkingLot() throws ServerException {
     ParkingLot lt = null;
     InitLotAction request = new InitLotAction(1, "Sesam 2", 4, 5, 3, "12.f.t43");
     ServerResponse response = server.dispatch(request, context);

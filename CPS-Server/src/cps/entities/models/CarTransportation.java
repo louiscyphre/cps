@@ -111,8 +111,8 @@ public class CarTransportation implements Serializable {
     statement.setInt(field++, authID);
     statement.setInt(field++, lotID);
 
-    if (statement.executeUpdate() <= 0) {
-      throw new ServerException("CarTransportation entry creation failed");
+    if (statement.executeUpdate() < 1) {
+      throw new ServerException("Failed to create CarTransportation");
     }
 
     ResultSet keys = statement.getGeneratedKeys();

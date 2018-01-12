@@ -2,12 +2,7 @@ package cps.api.response;
 
 public class InitLotResponse extends ServerResponse {
   private static final long serialVersionUID = 1L;
-  private int               lotID;
-
-  public InitLotResponse(boolean success, String description, int lotID) {
-    super(success, description);
-    this.lotID = lotID;
-  }
+  private int               lotID            = 0;
 
   public int getLotID() {
     return lotID;

@@ -5,14 +5,8 @@ import cps.entities.models.OnetimeService;
 
 public class ListOnetimeEntriesResponse extends ServerResponse {
   private static final long          serialVersionUID = 1L;
-  private Collection<OnetimeService> data;
-  private int                        customerID;
-
-  public ListOnetimeEntriesResponse(Collection<OnetimeService> data, int customerID) {
-    super(data != null, "ListOnetimeEntriesRequest");
-    this.data = data;
-    this.customerID = customerID;
-  }
+  private Collection<OnetimeService> data             = null;
+  private int                        customerID       = 0;
 
   public Collection<OnetimeService> getData() {
     return data;

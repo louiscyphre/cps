@@ -16,7 +16,6 @@ import cps.server.ServerException;
  * The Class ParkingLot.
  */
 public class ParkingLot implements Serializable {
-
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 1L;
 
@@ -183,6 +182,13 @@ public class ParkingLot implements Serializable {
     return result;
   }
 
+  public ParkingCell[][][] constructContentArray(Connection conn) throws SQLException, ServerException {
+    ParkingCell[][][] result = new ParkingCell[size][3][3];
+    ParkingCell.lotForEach(conn, id,
+        cell -> result[cell.locationI][cell.locationJ][cell.locationK] = cell);
+    return result;
+  }
+
   /**
    * Sets the content.
    *
@@ -330,25 +336,29 @@ public class ParkingLot implements Serializable {
     // Create SQL statement and request table for table keys
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_PARKING_LOT, Statement.RETURN_GENERATED_KEYS);
     String lotContent = generateEmptyContent(size);
-    // Fill in the fields of SQL statement
+
+    // Fill in the fields of the SQL statement
     int field = 1;
     stmt.setString(field++, streetAddress);
     stmt.setInt(field++, size);
+
     // Parking lot content as a string
     stmt.setString(field++, lotContent);
     stmt.setFloat(field++, price1);
     stmt.setFloat(field++, price2);
     stmt.setString(field++, robotIP);
+
     // Execute SQL query
     stmt.executeUpdate();
+
     // Extract the auto-generated keys created as a result of executing this
     // Statement object
     ResultSet keys = stmt.getGeneratedKeys();
     int newID = 0;
-    // if keys were created take the first one
+
+    // If keys were created take the first one
     // A ResultSet cursor is initially positioned before the first row; the
-    // first
-    // call to the method next makes the first row the current row
+    // first call to the method next makes the first row the current row
     if (keys != null && keys.next()) {
       newID = keys.getInt(1);
       keys.close();
@@ -432,8 +442,12 @@ public class ParkingLot implements Serializable {
     return free;
   }
 
+  // TODO add a method to calculate the number of cells that will need to be
+  // available for OnetimeService or SubscriptionService customers at a given
+  // point in time
+
   public int update(Connection conn) throws SQLException, ServerException {
-    java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
+    PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
     int index = 1;
     int result = 0;
     st.setString(index++, this.streetAddress);
@@ -448,7 +462,7 @@ public class ParkingLot implements Serializable {
     result = st.executeUpdate();
     st.close();
 
-    if (result <= 0) {
+    if (result < 1) {
       throw new ServerException("Failed to update ParkingLot");
     }
 

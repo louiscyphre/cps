@@ -125,8 +125,7 @@ public class OnetimeParkingController extends RequestController {
    * @return the server response
    */
   public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
-    return database.performQuery(conn -> {
-      CancelOnetimeParkingResponse response = new CancelOnetimeParkingResponse();
+    return database.performQuery(new CancelOnetimeParkingResponse(), (conn, response) -> {
       // Mark Order as canceled
       OnetimeService service = OnetimeService.findByID(conn, request.getOnetimeServiceID());
 
@@ -191,9 +190,16 @@ public class OnetimeParkingController extends RequestController {
    * @return the server response
    */
   public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {
-    return database.performQuery(conn -> {
+    return database.performQuery(new ListOnetimeEntriesResponse(), (conn, response) -> {
       Collection<OnetimeService> result = OnetimeService.findByCustomerID(conn, request.getCustomerID());
-      return new ListOnetimeEntriesResponse(result, request.getCustomerID());
+
+      // This shouldn't happen - at least an empty list should always be returned
+      errorIfNull(result, "Failed to create list of OnetimeService entries");
+      
+      response.setData(result);
+      response.setCustomerID(request.getCustomerID());
+      response.setSuccess("ListOnetimeEntriesRequest completed successfully");
+      return response;
     });
   }
 }

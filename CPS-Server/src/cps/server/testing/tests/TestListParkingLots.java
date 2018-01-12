@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.Collection;
 
 import cps.server.ServerController;
+import cps.server.ServerException;
 import cps.server.controllers.DatabaseController;
 import cps.server.session.CustomerSession;
 import cps.server.session.UserSession;
@@ -40,7 +41,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @SuppressWarnings("unused")
 public class TestListParkingLots extends ServerControllerTest {
   @Test
-  public void testListParkingLots() {
+  public void testListParkingLots() throws ServerException {
     header("testListParkingLots");
 
     // Create lots

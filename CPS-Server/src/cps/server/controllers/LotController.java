@@ -15,10 +15,9 @@ import cps.api.response.RequestLotStateResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
-import cps.server.ServerException;
+import cps.entities.models.ParkingLot;
 import cps.server.ServerController;
 import cps.server.session.UserSession;
-import cps.entities.models.ParkingLot;
 
 /**
  * The Class LotController.
@@ -43,7 +42,7 @@ public class LotController extends RequestController {
    * @return Collection of ParkingLot objects
    */
   public ServerResponse handle(ListParkingLotsRequest request, UserSession session) {
-    return database.performQuery(conn -> {
+    return database.performQuery(new ListParkingLotsResponse(), (conn, response) -> {
       Collection<ParkingLot> result = ParkingLot.findAll(conn);
 
       // Filter out information that customers shouldn't see
@@ -52,7 +51,9 @@ public class LotController extends RequestController {
         lot.setRobotIP(null);
       });
 
-      return new ListParkingLotsResponse(result);
+      response.setData(result);
+      response.setSuccess("ListParkingLotsRequest completed successfully");
+      return response;
     });
   }
 
@@ -64,15 +65,15 @@ public class LotController extends RequestController {
    * @return the server response
    */
   public InitLotResponse handle(InitLotAction request, UserSession session) {
-    return database.performQuery(conn -> {
+    return database.performQuery(new InitLotResponse(), (conn, response) -> {
       ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(),
           request.getPrice2(), request.getRobotIP());
 
-      if (result == null) {
-        return new InitLotResponse(false, "Failed to create parking lot", 0);
-      }
+      errorIfNull(result, "Failed to create parking lot");
 
-      return new InitLotResponse(true, "Parking lot created successfully", result.getId());
+      response.setLotID(result.getId());
+      response.setSuccess("Parking lot created successfully");
+      return response;
     });
   }
 
@@ -84,47 +85,40 @@ public class LotController extends RequestController {
    * @return the update prices response
    */
   public UpdatePricesResponse handle(UpdatePricesAction action, UserSession session) {
-    return database.performQuery(conn -> {
-      ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
+    return database.performQuery(new UpdatePricesResponse(), (conn, response) -> {
+      ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());
+
+      errorIf(action.getPrice1() < 0f, "Price cannot be negative");
+      errorIf(action.getPrice2() < 0f, "Price cannot be negative");
+
       lot.setPrice1(action.getPrice1());
       lot.setPrice2(action.getPrice2());
 
-      try {
-        lot.update(conn);
-        return new UpdatePricesResponse(true, "Prices updates succsessfully");
-      } catch (ServerException ex) {
-        return new UpdatePricesResponse(false, ex.getMessage());
-      }
+      lot.update(conn);
+      response.setSuccess("Prices updates succsessfully");
+      return response;
     });
   }
 
   public SetFullLotResponse handle(SetFullLotAction action, UserSession session) {
-    return database.performQuery(conn -> {
+    return database.performQuery(new SetFullLotResponse(), (conn, response) -> {
       ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
       lot.setLotFull(action.getLotFull());
-      lot.setAlternativeLots(Integer.toString(action.getAlternativeLotID()));
 
-      try {
-        lot.update(conn);
-        return new SetFullLotResponse(true, "Lot status set");
-      } catch (ServerException ex) {
-        return new SetFullLotResponse(false, ex.getMessage());
-      }
+      // TODO this should be a list of alternative lot IDs
+      lot.setAlternativeLots(Integer.toString(action.getAlternativeLotID()));
+      lot.update(conn);
+      response.setSuccess("ParkingLot status updated");
+      return response;
     });
   }
 
   public RequestLotStateResponse handle(RequestLotStateAction action, UserSession session) {
-    return database.performQuery(conn -> {
-      RequestLotStateResponse response = new RequestLotStateResponse(false, "", null);
+    return database.performQuery(new RequestLotStateResponse(), (conn, response) -> {
+      ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());
 
-      try {
-        ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());
-        response.setLot(lot);
-        response.setSuccess("RequestLotState request completed successfully");
-      } catch (ServerException e) {
-        response.setError(e.getMessage());
-      }
-
+      response.setLot(lot);
+      response.setSuccess("RequestLotState request completed successfully");
       return response;
     });
   }
