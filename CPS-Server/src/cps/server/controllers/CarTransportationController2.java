@@ -16,6 +16,7 @@ import cps.entities.models.ParkingService;
 import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.devices.Robot;
+import javafx.util.converter.LocalDateTimeStringConverter;
 import jdk.internal.dynalink.beans.CallerSensitiveDetector;
 
 @SuppressWarnings("unused")
@@ -181,9 +182,10 @@ public class CarTransportationController2 extends RequestController {
              * priorities
              */
             if (otherPriority > iSize + 3 && otherPriority > priority) {
-              //otherPriority - 3 is a row (in iSize) where this car should have been standing
+              // otherPriority - 3 is a row (in iSize) where this car should
+              // have been standing
               for (int i = otherPriority - 3 + 1; (i < lotSize) && (maxSize == -1); i++) {
-                if(freeSpotsCount[i]!=0) {
+                if (freeSpotsCount[i] != 0) {
                   maxSize = iSize;
                   maxHeight = Math.floorMod(iHeight, 3);
                   maxDepth = Math.floorDiv(iHeight, 3) + 1;
@@ -207,13 +209,13 @@ public class CarTransportationController2 extends RequestController {
         }
       }
       /*
-       * By this time there should be a spot for us to insert a car
-       * Now we have to pave the way to the spot because there may be other cars in the way
+       * By this time there should be a spot for us to insert a car Now we have
+       * to pave the way to the spot because there may be other cars in the way
        */
-      if (maxSize==-1) {
-        System.out.printf("Could not find a spot for the car %s at %s", carId,exitTime);
+      if (maxSize == -1) {
+        System.out.printf("Could not find a spot for the car %s at %s", carId, exitTime);
       }
-      Pave(carIds,exitTimes,maxSize,maxHeight,maxDepth,thisContent);
+      Pave(carIds, exitTimes, maxSize, maxHeight, maxDepth, thisContent);
 
       // insert the car
       System.out
@@ -436,13 +438,37 @@ public class CarTransportationController2 extends RequestController {
 
     return priority;
   }
-  private void Pave(Stack<String> carIds, Stack<LocalDateTime> exitTimes, int maxSize, int maxHeight, int maxDepth,String[][][] content) {
+
+  private void Pave(Stack<String> carIds, Stack<LocalDateTime> exitTimes, int maxSize, int maxHeight, int maxDepth,
+      String[][][] content) {
     int i;
-    for (i=0;i<maxSize;i++) {
-      
+    String[] carinfo;
+    for (i = 0; i < maxSize; i++) {
+      // TODO Check if there is a car here
+      if (content[i][0][0].equals("Car")) {
+        carinfo = content[i][0][0].split(";");
+        carIds.push(carinfo[0]);
+        exitTimes.push(LocalDateTime.parse(carinfo[1]));
+      }
     }
-    // TODO Auto-generated method stub
-    
+    for (i = 0; i < maxHeight; i++) {
+      if (content[maxSize][i][0].equals("Car")) {
+        carinfo = content[maxSize][i][0].split(";");
+        carIds.push(carinfo[0]);
+        exitTimes.push(LocalDateTime.parse(carinfo[1]));
+      }
+    }
+    for (i = 0; i < maxDepth; i++) {
+      if (content[maxSize][maxHeight][i].equals("Car")) {
+        carinfo = content[maxSize][maxHeight][i].split(";");
+        carIds.push(carinfo[0]);
+        exitTimes.push(LocalDateTime.parse(carinfo[1]));
+      }
+    }
+    if (content[maxSize][maxHeight][maxDepth].equals("Car")) {
+      carinfo = content[maxSize][maxHeight][maxDepth].split(";");
+      carIds.push(carinfo[0]);
+      exitTimes.push(LocalDateTime.parse(carinfo[1]));
+    }
   }
-  
 }
