@@ -24,163 +24,167 @@ import cps.server.session.UserSession;
  */
 public class ParkingExitController extends RequestController {
 
-	/**
-	 * Instantiates a new entry exit controller.
-	 *
-	 * @param serverController
-	 *            the server application
-	 */
-	public ParkingExitController(ServerController serverController) {
-		super(serverController);
-	}
+  /**
+   * Instantiates a new entry exit controller.
+   *
+   * @param serverController
+   *          the server application
+   */
+  public ParkingExitController(ServerController serverController) {
+    super(serverController);
+  }
 
-	/**
-	 * Handle ParkingExitRequest.
-	 *
-	 * @param request
-	 *            the request
-	 * @param session
-	 * @return the server response
-	 */
-	public ServerResponse handle(ParkingExitRequest request, UserSession session) {
-		return database.performQuery(conn -> {
-			ParkingExitResponse response = new ParkingExitResponse(false, "");
+  /**
+   * Handle ParkingExitRequest.
+   *
+   * @param request
+   *          the request
+   * @param session
+   * @return the server response
+   */
+  public ServerResponse handle(ParkingExitRequest request, UserSession session) {
+    return database.performQuery(conn -> {
+      ParkingExitResponse response = new ParkingExitResponse(false, "");
 
-			CarTransportation entry = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
-					request.getLotID());
+      CarTransportation entry = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
+          request.getLotID());
 
-			if (entry == null) { // CarTransportation does not exist
-				response.setError("CarTransportation with the requested parameters does not exist");
-				return response;
-			}
+      if (entry == null) { // CarTransportation does not exist
+        response.setError("CarTransportation with the requested parameters does not exist");
+        return response;
+      }
 
-			// Update the removedAt field
-			Timestamp removedAt = new Timestamp(System.currentTimeMillis());
+      // Update the removedAt field
+      Timestamp removedAt = new Timestamp(System.currentTimeMillis());
 
-			if (!entry.updateRemovedAt(conn, removedAt)) {
-				response.setError("Failed to update car transportation");
-				return response;
-			}
+      if (!entry.updateRemovedAt(conn, removedAt)) {
+        response.setError("Failed to update car transportation");
+        return response;
+      }
 
-			try {
-				// Calculate the amount of money that the customer has to pay
-				float sum = calculatePayment(conn, entry, request);
+      try {
+        // Calculate the amount of money that the customer has to pay
+        float sum = calculatePayment(conn, entry, request);
 
-				// Find customer
-				Customer customer = Customer.findByIDNotNull(conn, request.getCustomerID());
+        // Find customer
+        Customer customer = Customer.findByIDNotNull(conn, request.getCustomerID());
 
-				// Write payment
-				customer.pay(conn, sum);
+        // Write payment
+        customer.pay(conn, sum);
 
-				/*
-				 * Attempt to retrieve the car from the lot The function will shuffle the cars
-				 * that get in the way in an attempt to locate them in accordance to the current
-				 * situation
-				 */
-				CarTransportationController transportationController = serverController.getTransportationController();
-				transportationController.retrieveCar(conn, request.getLotID(), request.getCarID());
+        /*
+         * Attempt to retrieve the car from the lot The function will shuffle
+         * the cars that get in the way in an attempt to locate them in
+         * accordance to the current situation
+         */
+        CarTransportationController transportationController = serverController.getTransportationController();
+        transportationController.retrieveCar(conn, request.getLotID(), request.getCarID());
 
-				// Success
-				response.setCustomerID(customer.getId());
-				response.setPayment(sum);
-				response.setSuccess("ParkingExit request completed successfully");
-			} catch (ServerException | CarTransportationException ex) {
-				response.setError(ex.getMessage());
-			}
+        // Success
+        response.setCustomerID(customer.getId());
+        response.setPayment(sum);
+        response.setSuccess("ParkingExit request completed successfully");
+      } catch (ServerException | CarTransportationException ex) {
+        response.setError(ex.getMessage());
+      }
 
-			return response;
-		});
-	}
+      return response;
+    });
+  }
 
-	public static float calculatePayment(Connection conn, CarTransportation carTransportation,
-			ParkingExitRequest exitRequest) throws SQLException, ServerException {
+  public static float calculatePayment(Connection conn, CarTransportation carTransportation,
+      ParkingExitRequest exitRequest) throws SQLException, ServerException {
 
-		// Determine if this is a subscription or one time
-		switch (carTransportation.getAuthType()) {
-		case Constants.LICENSE_TYPE_ONETIME:
-			// If customer did not park by subscription charge according to parking type
-			return calculatePayment(conn, carTransportation, exitRequest,
-					OnetimeService.findByIDNotNull(conn, carTransportation.getAuthID()));
-		case Constants.LICENSE_TYPE_SUBSCRIPTION:
-			// Calculate extra payment for staying overdue with a subscription
-			return calculatePayment(conn, carTransportation, exitRequest,
-					SubscriptionService.findByIDNotNull(conn, carTransportation.getAuthID()));
-		default:
-			throw new ServerException("Unknown service type");
-		}
+    // Determine if this is a subscription or one time
+    switch (carTransportation.getAuthType()) {
+      case Constants.LICENSE_TYPE_ONETIME:
+        // If customer did not park by subscription charge according to parking
+        // type
+        return calculatePayment(conn, carTransportation, exitRequest,
+            OnetimeService.findByIDNotNull(conn, carTransportation.getAuthID()));
+      case Constants.LICENSE_TYPE_SUBSCRIPTION:
+        // Calculate extra payment for staying overdue with a subscription
+        return calculatePayment(conn, carTransportation, exitRequest,
+            SubscriptionService.findByIDNotNull(conn, carTransportation.getAuthID()));
+      default:
+        throw new ServerException("Unknown service type");
+    }
 
-	}
+  }
 
-	public static float calculatePayment(Connection conn, CarTransportation carTransportation,
-			ParkingExitRequest exitRequest, OnetimeService service) throws SQLException, ServerException {
-		// Determine prices at that parking lot
-		ParkingLot parkingLot = ParkingLot.findByIDNotNull(conn, exitRequest.getLotID());
-		float tariffLow = parkingLot.getPriceForService(service.getParkingType()) / 60;
-		float tariffHigh = parkingLot.getPrice1() / 60; // fine price is higher
+  public static float calculatePayment(Connection conn, CarTransportation carTransportation,
+      ParkingExitRequest exitRequest, OnetimeService service) throws SQLException, ServerException {
+    // Determine prices at that parking lot
+    ParkingLot parkingLot = ParkingLot.findByIDNotNull(conn, exitRequest.getLotID());
+    float tariffLow = parkingLot.getPriceForService(service.getParkingType()) / 60;
+    float tariffHigh = parkingLot.getPrice1() / 60; // fine price is higher
 
-		// Was the customer late or early? negative means early positive means late
-		long startedLate = carTransportation.getInsertedAt().getTime() - service.getPlannedStartTime().getTime();
-		startedLate = startedLate / (60 * 1000); // convert to minutes
+    // Was the customer late or early? negative means early positive means late
+    long startedLate = carTransportation.getInsertedAt().getTime() - service.getPlannedStartTime().getTime();
+    startedLate = startedLate / (60 * 1000); // convert to minutes
 
-		// How much time the customer ordered?
-		long inside = service.getPlannedEndTime().getTime() - service.getPlannedStartTime().getTime();
-		inside = inside / (60 * 1000);
+    // How much time the customer ordered?
+    long inside = service.getPlannedEndTime().getTime() - service.getPlannedStartTime().getTime();
+    inside = inside / (60 * 1000);
 
-		// Has the customer left late or early? negative means early positive means late
-		long endedLate = carTransportation.getRemovedAt().getTime() - service.getPlannedEndTime().getTime();
-		endedLate = endedLate / (60 * 1000);
+    // Has the customer left late or early? negative means early positive means
+    // late
+    long endedLate = carTransportation.getRemovedAt().getTime() - service.getPlannedEndTime().getTime();
+    endedLate = endedLate / (60 * 1000);
 
-		// If the customer running late less than 30 minutes - discard being late and
-		// charge full ordered time
-		if (startedLate < 30) {
-			startedLate = 0;
-		} else {
-			// if the customer came in early simply add minutes to total time and charge
-			// normal
-			if (startedLate < 0) {
-				inside -= startedLate;
-			}
-		}
+    // If the customer running late less than 30 minutes - discard being late
+    // and
+    // charge full ordered time
+    if (startedLate < 30) {
+      startedLate = 0;
+    } else {
+      // if the customer came in early simply add minutes to total time and
+      // charge
+      // normal
+      if (startedLate < 0) {
+        inside -= startedLate;
+      }
+    }
 
-		// If the customer exits early - charge full time and discard early minutes
-		if (endedLate < 0) {
-			endedLate = 0;
-		}
+    // If the customer exits early - charge full time and discard early minutes
+    if (endedLate < 0) {
+      endedLate = 0;
+    }
 
-		// At last we calculate the sum
-		// The formula is according to the requirements
-		return startedLate * tariffLow * 1.2f + inside * tariffLow + endedLate * tariffHigh;
-	}
+    // At last we calculate the sum
+    // The formula is according to the requirements
+    return startedLate * tariffLow * 1.2f + inside * tariffLow + endedLate * tariffHigh;
+  }
 
-	public static float calculatePayment(Connection conn, CarTransportation carTransportation,
-			ParkingExitRequest exitRequest, SubscriptionService service) throws SQLException, ServerException {
-		if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
-			Timestamp plannedExitTime = Timestamp
-					.valueOf(LocalDateTime.of(LocalDate.now(), service.getDailyExitTime()));
+  public static float calculatePayment(Connection conn, CarTransportation carTransportation,
+      ParkingExitRequest exitRequest, SubscriptionService service) throws SQLException, ServerException {
+    if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
+      Timestamp plannedExitTime = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(), service.getDailyExitTime()));
 
-			long removedAt = carTransportation.getRemovedAt().getTime();
-			long lateMinutes = (removedAt - plannedExitTime.getTime()) / 60 / 1000;
+      long removedAt = carTransportation.getRemovedAt().getTime();
+      long lateMinutes = (removedAt - plannedExitTime.getTime()) / 60 / 1000;
 
-			if (lateMinutes > 0) {
-				ParkingLot parkingLot = ParkingLot.findByIDNotNull(conn, exitRequest.getLotID());
-				return lateMinutes * parkingLot.getPrice1() / 60;
-			}
-		} else if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_FULL) {
-			// Charge a fine if customer stays parked continuously for longer than 14 days
-			// with a full subscription
-			long maxMinutes = 14 * 24 * 60; // 14 days
-			long removedAt = carTransportation.getRemovedAt().getTime();
-			long insertedAt = carTransportation.getInsertedAt().getTime();
-			long lateMinutes = (removedAt - insertedAt) / 60 / 1000 - maxMinutes;
+      if (lateMinutes > 0) {
+        ParkingLot parkingLot = ParkingLot.findByIDNotNull(conn, exitRequest.getLotID());
+        return lateMinutes * parkingLot.getPrice1() / 60;
+      }
+    } else if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_FULL) {
+      // Charge a fine if customer stays parked continuously for longer than 14
+      // days
+      // with a full subscription
+      long maxMinutes = 14 * 24 * 60; // 14 days
+      long removedAt = carTransportation.getRemovedAt().getTime();
+      long insertedAt = carTransportation.getInsertedAt().getTime();
+      long lateMinutes = (removedAt - insertedAt) / 60 / 1000 - maxMinutes;
 
-			if (lateMinutes > 0) { // customer stayed parked longer than 14 days
-				ParkingLot parkingLot = ParkingLot.findByIDNotNull(conn, exitRequest.getLotID());
-				return lateMinutes * parkingLot.getPrice1() / 60;
-			}
-		} else {
-			throw new ServerException("Unknown subscription type");
-		}
+      if (lateMinutes > 0) { // customer stayed parked longer than 14 days
+        ParkingLot parkingLot = ParkingLot.findByIDNotNull(conn, exitRequest.getLotID());
+        return lateMinutes * parkingLot.getPrice1() / 60;
+      }
+    } else {
+      throw new ServerException("Unknown subscription type");
+    }
 
-		return 0f;
-	}
+    return 0f;
+  }
 }

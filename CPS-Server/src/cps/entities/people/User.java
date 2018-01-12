@@ -1,13 +1,13 @@
 package cps.entities.people;
 
 public interface User {
-	int getId();
+  int getId();
 
-	String getEmail();
+  String getEmail();
 
-	int getUserType();
+  int getUserType();
 
-	int getAccessLevel();
+  int getAccessLevel();
 
-	boolean canAccessDomain(int domain);
+  boolean canAccessDomain(int domain);
 }

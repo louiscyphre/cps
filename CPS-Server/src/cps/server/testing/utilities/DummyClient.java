@@ -9,25 +9,25 @@ import cps.api.response.ServerResponse;
 import ocsf.client.AbstractClient;
 
 public class DummyClient extends AbstractClient {
-	LinkedList<ServerResponse> responses;
+  LinkedList<ServerResponse> responses;
 
-	public DummyClient(String host, int port) {
-		super(host, port);
-		try {
-			openConnection();
-		} catch (Exception exception) {
-			System.out.println("Error: Can't setup connection! Terminating client.");
-			System.exit(1);
-		}
-	}
+  public DummyClient(String host, int port) {
+    super(host, port);
+    try {
+      openConnection();
+    } catch (Exception exception) {
+      System.out.println("Error: Can't setup connection! Terminating client.");
+      System.exit(1);
+    }
+  }
 
-	@Override
-	public void handleMessageFromServer(Object message) {
-		assertThat(message, instanceOf(ServerResponse.class));
-		responses.add((ServerResponse) message);
-	}
+  @Override
+  public void handleMessageFromServer(Object message) {
+    assertThat(message, instanceOf(ServerResponse.class));
+    responses.add((ServerResponse) message);
+  }
 
-	public ServerResponse getLastResponse() {
-		return responses.getLast();
-	}
+  public ServerResponse getLastResponse() {
+    return responses.getLast();
+  }
 }

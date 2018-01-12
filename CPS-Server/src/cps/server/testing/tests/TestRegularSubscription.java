@@ -39,21 +39,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @SuppressWarnings("unused")
 public class TestRegularSubscription extends ServerControllerTest {
-	@Test
-	public void testRegularSubscription() {
-		/*
-		 * Scenario: 1. Create Parking Lot 2. Send Full Subscription request 3. Send
-		 * Parking Entry request - license: FullSubscription 4. Send Parking Exit
-		 * request
-		 */
+  @Test
+  public void testRegularSubscription() {
+    /*
+     * Scenario: 1. Create Parking Lot 2. Send Full Subscription request 3. Send
+     * Parking Entry request - license: FullSubscription 4. Send Parking Exit
+     * request
+     */
 
-		header("testRegularSubscription");
-		CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+    header("testRegularSubscription");
+    CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
 
-		initParkingLot();
-		requestRegularSubscription(data, getContext());
-		requestParkingEntry(data, getContext());
-		requestParkingExit(data, getContext());
+    initParkingLot();
+    requestRegularSubscription(data, getContext());
+    requestParkingEntry(data, getContext());
+    requestParkingExit(data, getContext());
 
-	}
+  }
 }

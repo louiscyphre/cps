@@ -1,14 +1,14 @@
 package cps.api.response;
 
 public class LoginResponse extends CustomerResponse {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	public LoginResponse(boolean success, String description, int customerID) {
-		super(success, description, customerID);
-	}
+  public LoginResponse(boolean success, String description, int customerID) {
+    super(success, description, customerID);
+  }
 
-	@Override
-	public ServerResponse handle(ResponseHandler handler) {
-		return handler.handle(this);
-	}
+  @Override
+  public ServerResponse handle(ResponseHandler handler) {
+    return handler.handle(this);
+  }
 }

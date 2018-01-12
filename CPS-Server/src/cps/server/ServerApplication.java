@@ -18,143 +18,144 @@ import cps.server.session.*;
  * The Class ServerApplication.
  */
 public class ServerApplication extends AbstractServer {
-	private Gson gson = new Gson();
-	private ServerController serverController;
+  private Gson             gson = new Gson();
+  private ServerController serverController;
 
-	/**
-	 * Constructs an instance of the server application.
-	 *
-	 * @param port
-	 *            The port number to connect on.
-	 * @param config
-	 *            the config
-	 * @throws Exception
-	 *             the exception
-	 */
-	public ServerApplication(int port, ServerConfig config) throws Exception {
-		super(port);
-		this.serverController = new ServerController(config);
+  /**
+   * Constructs an instance of the server application.
+   *
+   * @param port
+   *          The port number to connect on.
+   * @param config
+   *          the config
+   * @throws Exception
+   *           the exception
+   */
+  public ServerApplication(int port, ServerConfig config) throws Exception {
+    super(port);
+    this.serverController = new ServerController(config);
 
-	}
+  }
 
-	public ServerController getServerController() {
-		return serverController;
-	}
+  public ServerController getServerController() {
+    return serverController;
+  }
 
-	public DatabaseController getDatabaseController() {
-		return serverController.getDatabaseController();
-	}
+  public DatabaseController getDatabaseController() {
+    return serverController.getDatabaseController();
+  }
 
-	/**
-	 * Send object to client.
-	 *
-	 * @param client
-	 *            The client object
-	 * @param msg
-	 *            The Object to be serialized and sent
-	 */
-	private void sendToClient(ConnectionToClient client, Object msg) {
-		try {
-			System.out.println("Sending to client: " + gson.toJson(msg));
-			client.sendToClient(msg);
-		} catch (Exception ex) {
-			System.out.println("ERROR - Could not send to client!!!");
-			ex.printStackTrace();
-		}
-	}
+  /**
+   * Send object to client.
+   *
+   * @param client
+   *          The client object
+   * @param msg
+   *          The Object to be serialized and sent
+   */
+  private void sendToClient(ConnectionToClient client, Object msg) {
+    try {
+      System.out.println("Sending to client: " + gson.toJson(msg));
+      client.sendToClient(msg);
+    } catch (Exception ex) {
+      System.out.println("ERROR - Could not send to client!!!");
+      ex.printStackTrace();
+    }
+  }
 
-	/**
-	 * This method handles any messages received from the client.
-	 *
-	 * @param message
-	 *            The message received from the client.
-	 * @param client
-	 *            The connection from which the message originated.
-	 */
-	@Override
-	protected void handleMessageFromClient(Object message, ConnectionToClient client) {
-		// Message object should be of type Request and not null
-		if (message == null || !(message instanceof Request)) {
-			sendToClient(client, ServerResponse.error("Unknown request type"));
-			return;
-		}
+  /**
+   * This method handles any messages received from the client.
+   *
+   * @param message
+   *          The message received from the client.
+   * @param client
+   *          The connection from which the message originated.
+   */
+  @Override
+  protected void handleMessageFromClient(Object message, ConnectionToClient client) {
+    // Message object should be of type Request and not null
+    if (message == null || !(message instanceof Request)) {
+      sendToClient(client, ServerResponse.error("Unknown request type"));
+      return;
+    }
 
-		Request request = (Request) message; // type cast was checked with instanceof
+    Request request = (Request) message; // type cast was checked with
+                                         // instanceof
 
-		// Print the request to console
-		System.out.println("Message from: " + client + ", type: " + request.getClass().getSimpleName() + ", content: "
-				+ gson.toJson(request));
+    // Print the request to console
+    System.out.println("Message from: " + client + ", type: " + request.getClass().getSimpleName() + ", content: "
+        + gson.toJson(request));
 
-		// Get the context object associated with this client connection, if exists
-		// A context object stores data about the current client session
-		SessionHolder context = (SessionHolder) client.getInfo("Context");
+    // Get the context object associated with this client connection, if exists
+    // A context object stores data about the current client session
+    SessionHolder context = (SessionHolder) client.getInfo("Context");
 
-		if (context == null) { // Session doesn't exist -> create new
-			context = new SessionHolder();
-			client.setInfo("Context", context);
-		}
+    if (context == null) { // Session doesn't exist -> create new
+      context = new SessionHolder();
+      client.setInfo("Context", context);
+    }
 
-		// Dispatch request and get a response object
-		ServerResponse response = serverController.dispatch(request, context);
+    // Dispatch request and get a response object
+    ServerResponse response = serverController.dispatch(request, context);
 
-		// Send response to client
-		if (response != null) {
-			sendToClient(client, response);
-		}
-	}
+    // Send response to client
+    if (response != null) {
+      sendToClient(client, response);
+    }
+  }
 
-	/**
-	 * This method overrides the one in the superclass. Called when the server
-	 * starts listening for connections.
-	 */
-	@Override
-	protected void serverStarted() {
-		System.out.println("Server listening for connections on port " + getPort());
-	}
+  /**
+   * This method overrides the one in the superclass. Called when the server
+   * starts listening for connections.
+   */
+  @Override
+  protected void serverStarted() {
+    System.out.println("Server listening for connections on port " + getPort());
+  }
 
-	/**
-	 * This method overrides the one in the superclass. Called when the server stops
-	 * listening for connections.
-	 */
-	@Override
-	protected void serverStopped() {
-		System.out.println("Server has stopped listening for connections.");
-	}
+  /**
+   * This method overrides the one in the superclass. Called when the server
+   * stops listening for connections.
+   */
+  @Override
+  protected void serverStopped() {
+    System.out.println("Server has stopped listening for connections.");
+  }
 
-	@Override
-	protected void clientConnected(ConnectionToClient client) {
-		System.out.println("Client connected: " + client);
-	}
+  @Override
+  protected void clientConnected(ConnectionToClient client) {
+    System.out.println("Client connected: " + client);
+  }
 
-	@Override
-	protected synchronized void clientDisconnected(ConnectionToClient client) {
-		System.out.println("Client disconnected: " + client);
-	}
+  @Override
+  protected synchronized void clientDisconnected(ConnectionToClient client) {
+    System.out.println("Client disconnected: " + client);
+  }
 
-	public static void main(String[] args) {
-		int port = Constants.DEFAULT_PORT;
+  public static void main(String[] args) {
+    int port = Constants.DEFAULT_PORT;
 
-		try {
-			port = Integer.parseInt(args[0]);
-		} catch (Throwable t) {
-			port = Constants.DEFAULT_PORT;
-		}
+    try {
+      port = Integer.parseInt(args[0]);
+    } catch (Throwable t) {
+      port = Constants.DEFAULT_PORT;
+    }
 
-		boolean remote = true;
+    boolean remote = true;
 
-		for (String elem : args) {
-			if (elem.equals("--local")) {
-				remote = false;
-			}
-		}
+    for (String elem : args) {
+      if (elem.equals("--local")) {
+        remote = false;
+      }
+    }
 
-		try {
-			ServerConfig config = remote ? ServerConfig.remote() : ServerConfig.local();
-			ServerApplication server = new ServerApplication(port, config);
-			server.listen(); // Start listening for connections
-		} catch (Exception ex) {
-			System.out.println("ERROR - Could not listen for clients!");
-			ex.printStackTrace();
-		}
-	}
+    try {
+      ServerConfig config = remote ? ServerConfig.remote() : ServerConfig.local();
+      ServerApplication server = new ServerApplication(port, config);
+      server.listen(); // Start listening for connections
+    } catch (Exception ex) {
+      System.out.println("ERROR - Could not listen for clients!");
+      ex.printStackTrace();
+    }
+  }
 }
