@@ -232,7 +232,7 @@ public abstract class ServerControllerTest extends TestCase {
   }
 
   protected void requestReservedParking(CustomerData data, SessionHolder context) {
-    requestReservedParking(data, Duration.ZERO, context);
+    requestReservedParking(data, Duration.ofHours(1), context);
   }
 
   protected ParkingLot initParkingLot() {

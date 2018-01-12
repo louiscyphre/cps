@@ -46,30 +46,35 @@ public class OnetimeParkingController extends RequestController {
   }
 
   public ServerResponse handle(OnetimeParkingRequest request, CustomerSession session,
-      OnetimeParkingResponse serverResponse, Timestamp startTime, Timestamp plannedEndTime) {
+      OnetimeParkingResponse serverResponse, Timestamp startTime, Timestamp plannedEndTime, LocalDateTime now) {
     return database.performQuery(serverResponse, (conn, response) -> {
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
       // TODO check time overlap for this car with other parking services
+      
+      // Check that the starting time is not in the past
+      errorIf(startTime.toLocalDateTime().isBefore(now), "The specified starting date is in the past");
+
+      // Check that parking end time is after the starting time
       long duration = (plannedEndTime.getTime() - startTime.getTime()) / 60 / 1000;
       errorIf(duration < 1, "Length of parking must be at least one minute");
-      
+
       // Check that lot exists
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
 
       OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
           request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);
       errorIfNull(service, "Failed to create OnetimeService entry");
-      
+
       // Calculate payment for service
       float price = lot.getPriceForService(service.getParkingType());
       float payment = service.calculatePayment(price);
-      
+
       // Notify customer of what the payment is going to be
       response.setPayment(payment);
-      
-      if (service.getParkingType() == Constants.PARKING_TYPE_RESERVED) {        
+
+      if (service.getParkingType() == Constants.PARKING_TYPE_RESERVED) {
         // If this was a reserved parking, customer has to pay in advance
         customer.pay(conn, payment);
       }
@@ -94,7 +99,7 @@ public class OnetimeParkingController extends RequestController {
     Timestamp startTime = new Timestamp(System.currentTimeMillis());
     Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
     IncidentalParkingResponse response = new IncidentalParkingResponse();
-    return handle(request, session, response, startTime, plannedEndTime);
+    return handle(request, session, response, startTime, plannedEndTime, startTime.toLocalDateTime());
   }
 
   /**
@@ -108,7 +113,7 @@ public class OnetimeParkingController extends RequestController {
     Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
     Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
     ReservedParkingResponse response = new ReservedParkingResponse();
-    return handle(request, session, response, startTime, plannedEndTime);
+    return handle(request, session, response, startTime, plannedEndTime, LocalDateTime.now());
   }
 
   /**

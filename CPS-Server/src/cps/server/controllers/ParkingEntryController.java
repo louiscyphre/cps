@@ -2,6 +2,8 @@ package cps.server.controllers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 
 import cps.api.request.ParkingEntryRequest;
 import cps.api.response.ParkingEntryResponse;
@@ -106,10 +108,16 @@ public class ParkingEntryController extends RequestController {
       errorIfNull(service,
           "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
 
-      // Check that the lot ID is correct
+      // Check that the lot ID is correct for regular subscription
       errorIf(service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && lotID != service.getLotID(),
           String.format("Requested parking in lotID = %s, but subscription is for lotID = %s", lotID,
               service.getLotID()));
+
+      // Check that the user is not trying to enter with a regular subscription
+      // on a weekend
+      DayOfWeek currentDay = LocalDate.now().getDayOfWeek();
+      errorIf(service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && currentDay == DayOfWeek.SATURDAY,
+          "Regular subscription cannot be used to park during weekends");
 
       return service;
     }
