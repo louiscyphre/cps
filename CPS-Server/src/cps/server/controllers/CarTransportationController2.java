@@ -32,8 +32,8 @@ public class CarTransportationController2 extends RequestController {
 	private Map<Integer, Robot> robots;
 
 	/**
-	 * Insert multiply cars.
-	 * 
+	 * Insert multiply cars. This function should only be run after checking there
+	 * is at least one empty space in the parking lot
 	 *
 	 * @param conn
 	 *            the conn
@@ -46,14 +46,17 @@ public class CarTransportationController2 extends RequestController {
 	 * @return true, if successful
 	 * @throws SQLException
 	 *             the SQL exception
+	 * @throws ServerException
+	 *             the server exception
 	 */
 	private boolean insertCars(Connection conn, ParkingLot lot, Stack<String> carIds, Stack<LocalDateTime> exitTimes)
-			throws SQLException,ServerException {
+			throws SQLException, ServerException {
 		// Get the parking lot
 		String[][][] thisContent = lot.getContentAsArray();
 		String carId = null;
 		LocalDateTime exitTime = null;
 		LocalDateTime fullSubscriptionTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+
 		/*
 		 * Lower number represents higher priority - the car will be closer to exit 0
 		 * <--> size+3 (7,11,15) We have a priority for each Row and another three for
@@ -62,6 +65,31 @@ public class CarTransportationController2 extends RequestController {
 		 */
 		int priority, worstPriority = lot.getSize() + 3;
 		int iSize, iHeight, maxSize, maxHeight, maxDepth, path, minPath;
+		// Easy count of free spots in each priority
+		int[] freeSpotsCount = new int[worstPriority];
+		for (int i = 0; i < worstPriority; i++) {
+			freeSpotsCount[i] = 0;
+		}
+		/*
+		 * Count priorities from 3 to worst
+		 */
+		for (iSize = 0; iSize < lot.getSize(); iSize++) {
+			for (iHeight = 0; iHeight < 5; iHeight++)
+				if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
+						.equals(Constants.SPOT_IS_EMPTY)) {
+					freeSpotsCount[iSize + 3]++;
+				}
+		}
+		/*
+		 * count priorities 0,1,2
+		 */
+		for (iHeight = 0; iHeight < 3; iHeight++) {
+			for (iSize = lot.getSize(); iSize >= 0; iSize++) {
+				if (thisContent[iSize][iHeight][0].equals(Constants.SPOT_IS_EMPTY)) {
+					freeSpotsCount[iHeight]++;
+				}
+			}
+		}
 
 		while (!carIds.isEmpty()) {
 			carId = carIds.pop();
@@ -95,152 +123,70 @@ public class CarTransportationController2 extends RequestController {
 					/*
 					 * if less that two days divide minutes until exit by minutes in two days it
 					 * will give us a number between 0 and 1 multiply by size and add 3 this means
-					 * that we will attemp to inserts the car further back before trying to put it
-					 * somwhere in the way of transportation
+					 * that we will attempt to inserts the car further back before trying to put it
+					 * somewhere in the way of transportation
 					 */
 					priority = (int) (3 + (lot.getSize()) * (LocalDateTime.now().until(exitTime, ChronoUnit.MINUTES))
 							/ (LocalTime.MAX.toSecondOfDay() * 2 / 60));
-					//if there was an error in calculations we want to know for debug
+					// if there was an error in calculations we want to know for debug
 					if (priority > worstPriority || priority < 0) {
-						System.out.printf("Error in calculations!!! Priority = %d",priority);
+						System.out.printf("Error in calculations!!! Priority = %d", priority);
 					}
 				}
 
 			}
 			// Find spot for the car, based on priority
-			iSize=priority;
-			while (maxSize == -1) {
-				/*
-				 * Seek a place among this and worse priorities
-				 */
-				for (iSize = priority; (iSize >= worstPriority) && (maxSize == -1); iSize++)
-				{
-					for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
-						if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3)]
-								.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
-							maxSize = iSize;
-							maxHeight = Math.floorMod(iHeight, 3);
-							maxDepth = Math.floorDiv(iHeight, 3);
-						}
+			iSize = priority;
+			/*
+			 * Seek a place among this and worse priorities
+			 */
+			for (iSize = priority; (iSize >= worstPriority) && (maxSize == -1); iSize++) {
+				for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+					if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
+							.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
+						maxSize = iSize;
+						maxHeight = Math.floorMod(iHeight, 3);
+						maxDepth = Math.floorDiv(iHeight, 3) + 1;
 					}
-				}
-				
-				for (iSize = priority-1; (iSize < 2 ) && (maxSize == -1); iSize--)
-				{
-					for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
-						if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3)]
-								.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
-							maxSize = iSize;
-							maxHeight = Math.floorMod(iHeight, 3);
-							maxDepth = Math.floorDiv(iHeight, 3);
-						}
-					}
-				}
-				
-				switch (priority) {
-				case 0:
-					for (iSize = 0; iSize < lot.getSize(); iSize++) {
-						if ((thisContent[iSize][0][0]).compareTo(Constants.SPOT_IS_EMPTY) == 0) {
-							maxSize = iSize;
-							maxHeight = 0;
-							maxDepth = 0;
-						}
-					}
-					/*
-					 * If we reached end of the line and have not found a place for this priority,
-					 * lower the priority and try again
-					 */
-					if (maxSize == -1) {
-						priority++;
-					}
-					break;
-				case 1:
-					for (iSize = 0; iSize < lot.getSize(); iSize++) {
-						for (iHeight = 0; iHeight < priority + 1; iHeight++) {
-							if ((thisContent[iSize][iHeight][priority - iHeight])
-									.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
-								path = calculatePath(thisContent, iSize, iHeight, priority - iHeight);
-								if (path < minPath) {
-									minPath = path;
-									maxSize = iSize;
-									maxHeight = iHeight;
-									maxDepth = priority - iHeight;
-								}
-							}
-						}
-					}
-					if (maxSize == -1) {
-						priority++;
-					}
-					break;
-				case 2:
-					for (iSize = 0; iSize < lot.getSize(); iSize++) {
-						for (iHeight = 0; iHeight < priority + 1; iHeight++) {
-							if ((thisContent[iSize][iHeight][priority - iHeight])
-									.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
-								path = calculatePath(thisContent, iSize, iHeight, priority - iHeight);
-								if (path < minPath) {
-									minPath = path;
-									maxSize = iSize;
-									maxHeight = iHeight;
-									maxDepth = priority - iHeight;
-								}
-							}
-						}
-					}
-					if (maxSize == -1) {
-						priority++;
-					}
-					break;
-				case 3:
-					for (iSize = 0; iSize < lot.getSize(); iSize++) {
-						for (iHeight = 1; iHeight < priority; iHeight++) {
-							if ((thisContent[iSize][iHeight][priority - iHeight])
-									.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
-								path = calculatePath(thisContent, iSize, iHeight, priority - iHeight);
-								if (path < minPath) {
-									minPath = path;
-									maxSize = iSize;
-									maxHeight = iHeight;
-									maxDepth = priority - iHeight;
-								}
-							}
-						}
-					}
-					if (maxSize == -1) {
-						priority++;
-					}
-					break;
-				case 4:
-					for (iSize = 0; iSize < lot.getSize(); iSize++) {
-						if ((thisContent[iSize][2][2]).compareTo(Constants.SPOT_IS_EMPTY) == 0) {
-							path = calculatePath(thisContent, iSize, 2, 2);
-							if (path < minPath) {
-								minPath = path;
-								maxSize = iSize;
-								maxHeight = 2;
-								maxDepth = 2;
-							}
-						}
-					}
-					// if we reached end of the line and have not found a place for this priority,
-					// Randomize the priority
-					if (maxSize == -1) {
-						priority = (int) Math.random() * 4;
-					}
-					break;
-
-				default:
-					break;
 				}
 			}
+
+			for (iSize = priority - 1; (iSize < 2) && (maxSize == -1); iSize--) {
+				for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+					if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
+							.compareTo(Constants.SPOT_IS_EMPTY) == 0) {
+						maxSize = iSize;
+						maxHeight = Math.floorMod(iHeight, 3);
+						maxDepth = Math.floorDiv(iHeight, 3) + 1;
+					}
+				}
+			}
+
+			for (iHeight = 2; (iHeight >= 0) && (maxHeight == -1); iHeight--) {
+				for (iSize = lot.getSize() - 1; ((iSize >= 0) && (maxSize == -1)); iSize--) {
+					if (thisContent[iSize][iHeight][0].compareTo(Constants.SPOT_IS_EMPTY) == 0) {
+						maxSize = iSize;
+						maxHeight = iHeight;
+						maxDepth = 0;
+					}
+				}
+			}
+			/*
+			 * for (iSize = 0; iSize < lot.getSize(); iSize++) { for (iHeight = 0; iHeight <
+			 * priority + 1; iHeight++) { if ((thisContent[iSize][iHeight][priority -
+			 * iHeight]) .compareTo(Constants.SPOT_IS_EMPTY) == 0) { path =
+			 * calculatePath(thisContent, iSize, iHeight, priority - iHeight); if (path <
+			 * minPath) { minPath = path; maxSize = iSize; maxHeight = iHeight; maxDepth =
+			 * priority - iHeight; } } } }
+			 */
+
 			// insert the car
 			System.out.println(
 					String.format("Inserting car %s into location %s, %s, %s", carId, maxSize, maxHeight, maxDepth));
-			thisContent[maxSize][maxHeight][maxDepth] = carId;
+			thisContent[maxSize][maxHeight][maxDepth] = String.format("%s;%s", carId, exitTime.toString());
 			// call a robot
-			// this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId, maxSize,
-			// maxHeight, maxDepth);
+			// this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId,
+			// maxSize,maxHeight, maxDepth);
 		}
 
 		lot.setContentFromArray(thisContent);
@@ -264,12 +210,13 @@ public class CarTransportationController2 extends RequestController {
 	 *            the car id
 	 * @param exitTime
 	 *            the exit time
-	 * @param response
-	 *            the response
 	 * @return the server response
 	 * @throws SQLException
 	 *             the SQL exception
+	 * @throws ServerException
+	 *             the server exception
 	 * @throws CarTransportationException
+	 *             the car transportation exception
 	 */
 	public void insertCar(Connection conn, ParkingLot lot, String carId, LocalDateTime exitTime)
 			throws SQLException, ServerException, CarTransportationException {
@@ -341,7 +288,7 @@ public class CarTransportationController2 extends RequestController {
 	 * @throws CarTransportationException
 	 */
 	public void retrieveCar(Connection conn, int lotId, String carID)
-			throws SQLException, CarTransportationException,ServerException {
+			throws SQLException, CarTransportationException, ServerException {
 		ParkingLot lot = ParkingLot.findByID(conn, lotId);
 		String[][][] content = lot.getContentAsArray();
 
