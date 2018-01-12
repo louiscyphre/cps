@@ -1,17 +1,16 @@
 package cps.client.controller.alpha;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
-import cps.client.controller.ControllerConstants.SceneCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import java.util.List;
 
 public class AlphaGUIController3 implements ViewController {
 

@@ -7,16 +7,17 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Locale;
 
 import cps.api.request.ReservedParkingRequest;
 import cps.client.controller.ControllerConstants;
+import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
-import cps.client.controller.ControllerConstants.SceneCode;
+import cps.client.utils.FormatValidation.InputFormats;
+//import jfxtras.scene.control.CalendarPicker;
 import javafx.application.Platform;
-import javafx.scene.text.Text;
-import java.util.List;
 
 //import java.time.LocalDate;
 //import java.util.Calendar;
@@ -26,16 +27,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.DatePicker;
-//import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import cps.client.utils.FormatValidation.InputFormats;
-//import jfxtras.scene.control.CalendarPicker;
 
 /**
  * Created on: 2018-01-09 8:26:06 PM

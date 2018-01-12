@@ -3,19 +3,18 @@
  */
 package cps.client.controller.customer;
 
+import java.util.List;
 import java.util.ResourceBundle;
 
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
-import cps.client.controller.ControllerConstants.SceneCode;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import java.util.List;
 
 /**
  * Created on: 2018-01-08 11:17:39 PM

@@ -3,11 +3,12 @@
  */
 package cps.client.controller.customer;
 
+import java.util.List;
+
 import cps.api.request.LoginRequest;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
-import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.utils.FormatValidation.InputFormats;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -17,7 +18,6 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import java.util.List;
 
 /**
  * Created on: 2018-01-06 6:43:00 PM
