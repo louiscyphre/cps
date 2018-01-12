@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -28,7 +29,7 @@ public class LoginController implements ViewController {
   private TextField emailTextField; // Value injected by FXMLLoader
 
   @FXML // fx:id="passwordTextField"
-  private TextField passwordTextField;
+  private PasswordField passwordTextField;
 
   @FXML
   private VBox infoBox;

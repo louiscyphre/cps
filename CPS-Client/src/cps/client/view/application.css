@@ -60,6 +60,7 @@
 	-fx-text-fill :  #31708f;
 	-fx-border-radius :  8 8 8 8;
 	-fx-border-color : #bce8f1;
+	-fx-margin-top:20;
 }
 
 .errorLabel {
