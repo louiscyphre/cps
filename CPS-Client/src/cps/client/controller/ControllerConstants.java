@@ -12,9 +12,10 @@ public class ControllerConstants {
 
     // customer views
     LOGIN("../view/customer/LoginScene.fxml"), CUSTOMER_INITIAL_MENU(
-        "../view/customer/CustomerInitialMenuScene.fxml"), CUSTOMER_LIST_SUBSCRIPTIONS(
-            "../view/customer/CustomerListSubscriptionsScene.fxml"), RESERVE_PARKING(
-                "../view/customer/ReserveParkingScene.fxml"),
+        "../view/customer/CustomerInitialMenuScene.fxml"), CUSTOMER_INITIAL_MENU_MK2(
+            "../view/customer/CustomerInitialMenuSceneMk2.fxml"), CUSTOMER_LIST_SUBSCRIPTIONS(
+                "../view/customer/CustomerListSubscriptionsScene.fxml"), RESERVE_PARKING(
+                    "../view/customer/ReserveParkingScene.fxml"),
 
     // service views
     SERVICE_ACTION_DISABLE_SLOT("../view/service/ServiceActionDisableSlot.fxml"), SERVICE_ACTION_INIT_LOT(
