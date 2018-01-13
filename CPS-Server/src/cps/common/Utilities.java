@@ -1,5 +1,6 @@
 package cps.common;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -71,5 +72,9 @@ public abstract class Utilities {
     }
 
     return builder.toString();
+  }
+
+  public static boolean isWeekend(DayOfWeek day) {
+    return day == DayOfWeek.SATURDAY;
   }
 }

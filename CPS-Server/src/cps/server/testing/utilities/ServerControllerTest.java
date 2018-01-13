@@ -244,17 +244,27 @@ public abstract class ServerControllerTest extends TestCase {
     return lot;
   }
 
-  protected void requestParkingEntry(CustomerData data, SessionHolder context) throws ServerException {
+  protected boolean requestParkingEntry(CustomerData data, SessionHolder context, boolean weekend) throws ServerException {
     // subscriptionID = 0 means entry by OnetimeParking license
     ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, data.subsID, data.lotID, data.carID);
     ServerResponse response = server.dispatch(request, context);
+    assertNotNull(response);
     printObject(response);
-    assertTrue(response.success());
-
-    assertEquals(1, db.countEntities("car_transportation"));
-
-    CarTransportation entry = db.performQuery(conn -> CarTransportation.findByCarId(conn, data.carID, data.lotID));
-    printObject(entry);
+    
+    if (!weekend) {
+      assertTrue(response.success());
+      assertEquals(1, db.countEntities("car_transportation"));
+      CarTransportation entry = db.performQuery(conn -> CarTransportation.findByCarId(conn, data.carID, data.lotID));
+      printObject(entry);
+    } else {
+      assertFalse(response.success());
+    }
+    
+    return response.success();
+  }
+  
+  protected boolean requestParkingEntry(CustomerData data, SessionHolder context) throws ServerException {
+    return requestParkingEntry(data, context, false);
   }
 
   protected void requestParkingExit(CustomerData data, SessionHolder context) throws ServerException {
