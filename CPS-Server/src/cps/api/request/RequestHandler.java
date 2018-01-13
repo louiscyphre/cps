@@ -28,6 +28,8 @@ public interface RequestHandler<SessionType> {
   public ServerResponse handle(LoginRequest request, SessionType session);
 
   // CompanyPerson actions
+  public ServerResponse handle(ServiceLoginAction action, SessionType session);
+  
   public ServerResponse handle(DisableParkingSlotsAction action, SessionType session);
 
   public ServerResponse handle(InitLotAction action, SessionType session);
