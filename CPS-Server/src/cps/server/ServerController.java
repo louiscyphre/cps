@@ -40,7 +40,7 @@ public class ServerController implements RequestHandler<SessionHolder> {
     subscriptionController = new SubscriptionController(this);
     userController = new CustomerController(this);
     complaintController = new ComplaintController(this);
-    transportationController = new CarTransportationController1(this);
+    transportationController = new CarTransportationController3(this);
     reportController = new ReportController(this);
   }
 
