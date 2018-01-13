@@ -125,7 +125,7 @@ public class OnetimeService implements ParkingService {
   }
 
   /**
-   * Creates the.
+   * Creates Onetime Service.
    *
    * @param conn the Connection
    * @param type Constants.ServiceType
