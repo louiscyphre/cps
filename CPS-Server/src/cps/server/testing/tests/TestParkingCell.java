@@ -35,9 +35,9 @@ public class TestParkingCell extends ServerControllerTest {
     assertNotNull(result);
     printObject(result);
     assertEquals(cell.lotID, result.lotID);
-    assertEquals(cell.lSize, result.lSize);
-    assertEquals(cell.lHeight, result.lHeight);
-    assertEquals(cell.lDepth, result.lDepth);
+    assertEquals(cell.width, result.width);
+    assertEquals(cell.height, result.height);
+    assertEquals(cell.depth, result.depth);
     assertEquals(cell.getCarID(), result.getCarID());
     assertEquals(cell.isReserved(), result.isReserved());
     assertEquals(cell.isDisabled(), result.isDisabled());

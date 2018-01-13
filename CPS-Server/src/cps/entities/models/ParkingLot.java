@@ -185,7 +185,7 @@ public class ParkingLot implements Serializable {
   public ParkingCell[][][] constructContentArray(Connection conn) throws SQLException, ServerException {
     ParkingCell[][][] result = new ParkingCell[size][3][3];
     ParkingCell.lotForEach(conn, id,
-        cell -> result[cell.lSize][cell.lHeight][cell.lDepth] = cell);
+        cell -> result[cell.width][cell.height][cell.depth] = cell);
     return result;
   }
 
