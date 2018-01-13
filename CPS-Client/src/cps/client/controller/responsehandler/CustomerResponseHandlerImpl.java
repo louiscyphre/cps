@@ -127,13 +127,41 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
   @Override
   public ServerResponse handle(ParkingEntryResponse response) {
-    // TODO Auto-generated method stub
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    List<Text> formattedMessage = new LinkedList<Text>();
+
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("The parking entry is granted!\nRobot will collect your car shortly.\n"));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("The parking entry is denied!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
     return response;
   }
 
   @Override
   public ServerResponse handle(ParkingExitResponse response) {
-    // TODO Auto-generated method stub
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    List<Text> formattedMessage = new LinkedList<Text>();
+
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("The car retrieval is granted!\nRobot will retrieve your car shortly.\n"));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("The car retrieval is denied!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
     return response;
   }
 
@@ -165,7 +193,6 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       ControllersClientAdapter.turnLoggedInStateOn();
     }
 
-    // TODO differs here
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       formattedMessage.add(new Text("Succesfully reserved parking per request!\n"));
       ctrl.turnProcessingStateOff();
