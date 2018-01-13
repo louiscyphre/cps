@@ -160,8 +160,10 @@ public class LotController extends RequestController {
 
       // Require a parking lot
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());
+      ParkingCell[][][] content = lot.constructContentArray(conn);
 
       response.setLot(lot);
+      response.setContent(content);
       response.setSuccess("RequestLotState request completed successfully");
       return response;
     });
