@@ -195,7 +195,9 @@ public class OnetimeService implements ParkingService {
   public static ArrayList<OnetimeService> findForOverlap(Connection conn, String carID, Timestamp startTime, Timestamp plannedEndTime)
       throws SQLException {
     ArrayList<OnetimeService> result=new ArrayList<OnetimeService>();
-    PreparedStatement stmt= conn.prepareStatement("SELECT * FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND planned_end_time > ?) OR (planned_start_time>? AND planned_start_time<?))");
+//    PreparedStatement stmt= conn.prepareStatement("SELECT * FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND planned_end_time > ?) OR (planned_start_time>? AND planned_start_time<?))");
+    PreparedStatement stmt= conn.prepareStatement("SELECT * FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (?<planned_start_time AND planned_start_time<?))");
+    // y between x and z -> x <= y and y <= z
     int i=1;
     stmt.setString(i++, carID);
     stmt.setTimestamp(i++, startTime);
