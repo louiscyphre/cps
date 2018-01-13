@@ -108,12 +108,11 @@ public class CarTransportationController2 extends RequestController {
       priority = calculatePriority(exitTime, worstPriority, lotSize);
 
       // Find spot for the car, based on priority
-      iSize = priority;
       /*
        * Seek a place among this and worse priorities
        */
-      for (iSize = priority; (iSize >= worstPriority) && (maxSize == -1); iSize++) {
-        if (freeSpotsCount[iSize] != 0) {
+      for (iSize = priority - 3; (iSize >= worstPriority - 3) && (maxSize == -1); iSize++) {
+        if (freeSpotsCount[iSize + 3] != 0) {
           // If there is at least one free space here find it
           for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
             if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
@@ -156,8 +155,8 @@ public class CarTransportationController2 extends RequestController {
       /*
        * if no spot was found among worse priorities, start rising up
        */
-      for (iSize = priority - 1; (iSize < 2) && (maxSize == -1); iSize--) {
-        if (freeSpotsCount[iSize] != 0) {
+      for (iSize = priority - 3 - 1; (iSize < 0) && (maxSize == -1); iSize--) {
+        if (freeSpotsCount[iSize + 3] != 0) {
           // If there is at least one free space here find it
           for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
             if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
@@ -213,9 +212,9 @@ public class CarTransportationController2 extends RequestController {
        * to pave the way to the spot because there may be other cars in the way
        */
       if (maxSize == -1) {
-        System.out.printf("Could not find a spot for the car %s at %s", carId, exitTime);
+        System.out.printf("Could not find a spot for the car %s at %s\n", carId, exitTime);
       }
-      Pave(carIds, exitTimes, maxSize, maxHeight, maxDepth, thisContent);
+      pave(carIds, exitTimes, maxSize, maxHeight, maxDepth, thisContent, freeSpotsCount);
 
       // insert the car
       System.out
@@ -439,8 +438,8 @@ public class CarTransportationController2 extends RequestController {
     return priority;
   }
 
-  private void Pave(Stack<String> carIds, Stack<LocalDateTime> exitTimes, int maxSize, int maxHeight, int maxDepth,
-      String[][][] content) {
+  private void pave(Stack<String> carIds, Stack<LocalDateTime> exitTimes, int maxSize, int maxHeight, int maxDepth,
+      String[][][] content, int[] freeSpotsCount) {
     int i;
     String[] carinfo;
     for (i = 0; i < maxSize; i++) {
@@ -449,6 +448,8 @@ public class CarTransportationController2 extends RequestController {
         carinfo = content[i][0][0].split(";");
         carIds.push(carinfo[0]);
         exitTimes.push(LocalDateTime.parse(carinfo[1]));
+        content[i][0][0] = Constants.SPOT_IS_EMPTY;
+        freeSpotsCount[0]++;
       }
     }
     for (i = 0; i < maxHeight; i++) {
@@ -456,6 +457,8 @@ public class CarTransportationController2 extends RequestController {
         carinfo = content[maxSize][i][0].split(";");
         carIds.push(carinfo[0]);
         exitTimes.push(LocalDateTime.parse(carinfo[1]));
+        content[maxSize][i][0] = Constants.SPOT_IS_EMPTY;
+        freeSpotsCount[i]++;
       }
     }
     for (i = 0; i < maxDepth; i++) {
@@ -463,12 +466,24 @@ public class CarTransportationController2 extends RequestController {
         carinfo = content[maxSize][maxHeight][i].split(";");
         carIds.push(carinfo[0]);
         exitTimes.push(LocalDateTime.parse(carinfo[1]));
+        content[maxSize][maxHeight][i] = Constants.SPOT_IS_EMPTY;
+        if (i == 0) {
+          freeSpotsCount[maxHeight]++;
+        } else {
+          freeSpotsCount[maxSize + 3]++;
+        }
       }
     }
     if (content[maxSize][maxHeight][maxDepth].equals("Car")) {
       carinfo = content[maxSize][maxHeight][maxDepth].split(";");
       carIds.push(carinfo[0]);
       exitTimes.push(LocalDateTime.parse(carinfo[1]));
+      content[maxSize][maxHeight][maxDepth] = Constants.SPOT_IS_EMPTY;
+      if (maxDepth == 0) {
+        freeSpotsCount[maxHeight]++;
+      } else {
+        freeSpotsCount[maxDepth + 3]++;
+      }
     }
   }
 }
