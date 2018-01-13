@@ -59,6 +59,13 @@
     -fx-pref-height:650;
 }
 
+.comboBox {
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-pref-width:320;
+    -fx-pref-height:40;
+}
+
 .datePicker {
     -fx-border-radius: 8 8 8 8;
     -fx-background-radius: 8 8 8 8;

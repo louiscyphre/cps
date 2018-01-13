@@ -10,6 +10,7 @@ import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
@@ -32,9 +33,29 @@ public class SubscriptionsMenuController implements ViewController {
 
   @FXML
   private ToggleGroup subscriptionRadioButtons;
-
+  
+  @FXML
+  private ComboBox<String> parkingLotsList;
+  
   private boolean processing;
 
+  @FXML
+  void toggleRegularSubscriptionChoice(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    parkingLotsList.setDisable(false);
+    
+  }
+  
+  @FXML
+  void toggleFullSubscriptionChoice(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    parkingLotsList.setDisable(true);
+  }
+  
   @FXML
   void handleBackButton(ActionEvent event) {
     if (processing) {
