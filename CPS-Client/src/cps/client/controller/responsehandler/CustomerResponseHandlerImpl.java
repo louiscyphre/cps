@@ -27,25 +27,63 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
   @Override
   public ServerResponse handle(CancelOnetimeParkingResponse response) {
     // TODO Auto-generated method stub
-    return null;
+    return response;
   }
 
   @Override
   public ServerResponse handle(ComplaintResponse response) {
     // TODO Auto-generated method stub
-    return null;
+    return response;
   }
 
   @Override
   public ServerResponse handle(FullSubscriptionResponse response) {
     // TODO Auto-generated method stub
-    return null;
+    return response;
   }
 
   @Override
   public ServerResponse handle(IncidentalParkingResponse response) {
-    // TODO Auto-generated method stub
-    return null;
+    CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    int responseCustomerId = response.getCustomerID();
+    List<Text> formattedMessage = new LinkedList<Text>();
+    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId()) {
+      // outputting the customer id on screen
+      context.setCustomerId(responseCustomerId);
+      formattedMessage.add(new Text("Your Customer ID:"));
+      Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      Font defaultFont = customerIdText.getFont();
+      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(customerIdText);
+      formattedMessage.add(new Text("\n"));
+      // password part
+      formattedMessage.add(new Text("Your Password:"));
+      Text password = new Text(response.getPassword());
+      defaultFont = password.getFont();
+      password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(password);
+      formattedMessage.add(new Text("\n"));
+      // binding new user to application context
+      context.setCustomerId(responseCustomerId);
+      context.acceptPendingEmail();
+      ControllersClientAdapter.turnLoggedInStateOn();
+    }
+
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("Your incidental parking reserved!\n"));
+      formattedMessage.add(new Text("Use your password in 'Enter Parking' to fill this reservation.\n"));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("Could not reserve parking at this moment!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+
+    return response;
   }
 
   @Override
@@ -56,20 +94,47 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
   @Override
   public ServerResponse handle(LoginResponse response) {
-    // TODO Auto-generated method stub
-    return null;
+
+    CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    int responseCustomerId = response.getCustomerID();
+    List<Text> formattedMessage = new LinkedList<Text>();
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      context.setCustomerId(responseCustomerId);
+      formattedMessage.add(new Text("Your Customer ID:"));
+      Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      Font defaultFont = customerIdText.getFont();
+      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(customerIdText);
+      formattedMessage.add(new Text("\n"));
+
+      Text loginSuccessfulMessage = new Text("Login was successful");
+      formattedMessage.add(loginSuccessfulMessage);
+      formattedMessage.add(new Text("\n"));
+
+      context.setCustomerId(responseCustomerId);
+      context.acceptPendingEmail();
+      ControllersClientAdapter.turnLoggedInStateOn();
+
+      ctrl.displayInfo(formattedMessage);
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      ctrl.displayError(response.getDescription());
+    }
+
+    return response;
   }
 
   @Override
   public ServerResponse handle(ParkingEntryResponse response) {
     // TODO Auto-generated method stub
-    return null;
+    return response;
   }
 
   @Override
   public ServerResponse handle(ParkingExitResponse response) {
     // TODO Auto-generated method stub
-    return null;
+    return response;
   }
 
   @Override
@@ -91,16 +156,18 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       formattedMessage.add(new Text("Your Password:"));
       Text password = new Text(response.getPassword());
       defaultFont = password.getFont();
-      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(password);
       formattedMessage.add(new Text("\n"));
 
+      context.setCustomerId(responseCustomerId);
       context.acceptPendingEmail();
+      ControllersClientAdapter.turnLoggedInStateOn();
     }
 
+    // TODO differs here
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       formattedMessage.add(new Text("Succesfully reserved parking per request!\n"));
-      formattedMessage.add(new Text(response.getDescription()));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
 
@@ -111,18 +178,18 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       ctrl.displayError(formattedMessage);
     }
 
-    return null;
+    return response;
   }
 
   @Override
   public ServerResponse handle(RegularSubscriptionResponse response) {
     // TODO Auto-generated method stub
-    return null;
+    return response;
   }
 
   @Override
   public ServerResponse handle(ServerResponse response) {
     // TODO Auto-generated method stub
-    return null;
+    return response;
   }
 }

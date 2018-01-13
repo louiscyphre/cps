@@ -25,9 +25,11 @@ public interface ViewController {
 
   public void turnProcessingStateOff(); // Makes spinner invisible, display TODO
                                         // something or nothing
-  
+
   public void turnLoggedInStateOn();
-  
+
   public void turnLoggedInStateOff();
-  
+
+  public void cleanCtrl();
+
 }

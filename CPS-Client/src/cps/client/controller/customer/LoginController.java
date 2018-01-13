@@ -21,14 +21,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-/**
- * Created on: 2018-01-06 6:43:00 PM
- */
 public class LoginController implements ViewController {
 
   private static final String DEFAULT_INFO_LABEL = "";
-  private boolean processing = false;
-  
+  private boolean             processing         = false;
+
   @FXML // fx:id="emailTextField"
   private TextField emailTextField; // Value injected by FXMLLoader
 
@@ -72,15 +69,16 @@ public class LoginController implements ViewController {
       return;
     }
 
+    ControllersClientAdapter.getCustomerContext().setPendingEmail(email);
+
     LoginRequest request = new LoginRequest(email, password);
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
   @FXML
   void handleBackButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU_MK2);//TODO //FIXME if needed
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
   }
- 
 
   @FXML
   void initialize() {
@@ -94,6 +92,7 @@ public class LoginController implements ViewController {
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
   }
+
   @Override
   public void displayInfo(List<Text> formattedText) {
     infoBox.getStyleClass().clear();
@@ -150,14 +149,23 @@ public class LoginController implements ViewController {
 
   @Override
   public void turnLoggedInStateOn() {
-    // TODO Auto-generated method stub
-    
+    // view does not change
   }
 
   @Override
   public void turnLoggedInStateOff() {
-    // TODO Auto-generated method stub
-    
+    // view does not change
+  }
+
+  @Override
+  public void cleanCtrl() {
+    // info box clear
+    infoBox.getStyleClass().add("infoLabel");
+    infoProgress.visibleProperty().set(false);
+    infoLabel.getChildren().clear();
+    // input fields clear
+    emailTextField.clear();
+    passwordTextField.clear();
   }
 
 }
