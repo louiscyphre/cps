@@ -68,6 +68,6 @@ public class TestRequestLotState extends ServerControllerTest {
     assertNotNull(responseLot);
     assertEquals(lot.getId(), responseLot.getId());
 //    assertEquals(lot.getContent(), responseLot.getContent());
-    // TODO modify lot state response to contain the content in a separate field
+    // TODO test lot content in RequestLotStateResponse
   }
 }

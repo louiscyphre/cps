@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import com.google.gson.Gson;
+
 import cps.common.Constants;
 import cps.server.ServerException;
 
@@ -429,5 +431,26 @@ public class ParkingLot implements Serializable {
         }
       }
     }
+  }
+  
+  public Collection<ParkingLot> retrieveAlternativeLots(Connection conn, Gson gson) throws SQLException, ServerException {
+    int[] lotIDs;
+    
+    try {
+      lotIDs = gson.fromJson(getAlternativeLots(), int[].class);
+    } catch (Exception e) {
+      throw new ServerException(e.getMessage());
+    }
+
+    LinkedList<ParkingLot> lots = new LinkedList<>();
+    
+    for (int lotID : lotIDs) {
+      ParkingLot lot = findByID(conn, lotID);
+      if (lot != null) {
+        lots.add(lot);
+      }
+    }
+    
+    return lots;
   }
 }

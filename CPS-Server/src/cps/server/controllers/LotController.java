@@ -2,6 +2,7 @@ package cps.server.controllers;
 
 import static cps.common.Utilities.between;
 import static cps.common.Utilities.isEmpty;
+import static cps.common.Utilities.valueOrDefault;
 
 import java.util.Collection;
 
@@ -140,14 +141,20 @@ public class LotController extends RequestController {
       // Require the employee to have access rights to this action
       errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_WORKER, "You cannot perform this action");
+      
+      // Check request parameters
+      int[] alternativeLots = valueOrDefault(action.getAlternativeLots(), new int[] {});      
+      errorIf(alternativeLots.length > 10, "There can be at most 10 alternative lots");
 
       // Require a parking lot
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());
+      
+      // Update parking lot
       lot.setLotFull(action.getLotFull());
-
-      // TODO this should be a list of alternative lot IDs?
-      lot.setAlternativeLots(Integer.toString(action.getAlternativeLotID()));
+      lot.setAlternativeLots(gson.toJson(alternativeLots));
       lot.update(conn);
+      
+      // Success
       response.setSuccess("ParkingLot status updated");
       return response;
     });
