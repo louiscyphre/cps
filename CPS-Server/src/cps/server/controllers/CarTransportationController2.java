@@ -27,7 +27,7 @@ public class CarTransportationController2 extends RequestController {
   }
 
   /** The robots. */
-  private Map<Integer, Robot> robots;
+  private Map<String, Robot> robots;
 
   /**
    * Insert multiply cars. This function should only be run after checking there
@@ -331,8 +331,8 @@ public class CarTransportationController2 extends RequestController {
 
     // Get the robot in the parking lot
     /*
-     * Robot robbie = robots.get(Integer.parseInt(lot.getRobotIP())); if (robbie
-     * == null) { return false; }
+     * Robot robbie = robots.get(lot.getRobotIP()); if (robbie == null) { return
+     * false; }
      */
 
     int eSize = -1, eHeight = -1, eDepth = -1;
