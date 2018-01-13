@@ -119,7 +119,7 @@ public class CarTransportationController3 extends RequestController implements C
       for (iSize = priority - 3; (iSize <= worstPriority - 3) && (maxSize == -1); iSize++) {
         if (freeSpotsCount[iSize + 3] != 0) {
           // If there is at least one free space here find it
-          for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+          for (iHeight = 5; (iHeight >= 0) && (maxSize == -1); iHeight--) {
             int j = Math.floorMod(iHeight, 3);
             int k = Math.floorDiv(iHeight, 3) + 1;
             if (content[iSize][j][k].isFree()) {
@@ -132,7 +132,7 @@ public class CarTransportationController3 extends RequestController implements C
           // if there are no free spaces here, try to promote someone
           int otherPriority;
           // For every car in "priority block"
-          for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+          for (iHeight = 5; (iHeight >= 0) && (maxSize == -1); iHeight--) {
             // Parse the car info
             ParkingCell cell = content[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1];
             // Calculate the priority
@@ -142,15 +142,26 @@ public class CarTransportationController3 extends RequestController implements C
              * higher priorities
              */
             if (otherPriority < iSize + 3 && otherPriority < priority) {
-              for (int i = iSize - 1; (i < otherPriority - 1) && (maxSize == -1); i--) {
+              for (int i = iSize - 1; (i >= otherPriority - 3) && (maxSize == -1); i--) {
                 /*
                  * If there is a spot for him - mark his current spot as a spot
                  * for our insertion
                  */
-                if (freeSpotsCount[i] != 0) {
+                if (freeSpotsCount[i + 3] != 0) {
                   maxSize = iSize;
                   maxHeight = Math.floorMod(iHeight, 3);
                   maxDepth = Math.floorDiv(iHeight, 3) + 1;
+                }
+              }
+            } else {
+              if (/* otherPriority>iSize +3 && */otherPriority > priority) {
+                // TODO - test this part REALLY good
+                for (int i = iSize + 1; (i < lotWidth) && (maxSize == -1); i++) {
+                  if (freeSpotsCount[i + 3] != 0) {
+                    maxSize = iSize;
+                    maxHeight = Math.floorMod(iHeight, 3);
+                    maxDepth = Math.floorDiv(iHeight, 3) + 1;
+                  }
                 }
               }
             }
@@ -163,7 +174,7 @@ public class CarTransportationController3 extends RequestController implements C
       for (iSize = priority - 3 - 1; (iSize >= 0) && (maxSize == -1); iSize--) {
         if (freeSpotsCount[iSize + 3] != 0) {
           // If there is at least one free space here find it
-          for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+          for (iHeight = 5; (iHeight >= 0) && (maxSize == -1); iHeight--) {
             int j = Math.floorMod(iHeight, 3);
             int k = Math.floorDiv(iHeight, 3) + 1;
             if (content[iSize][j][k].isFree()) {
@@ -176,7 +187,7 @@ public class CarTransportationController3 extends RequestController implements C
           // if there are no free spaces here, try to demote someone
           int otherPriority;
           // For every car in "priority block"
-          for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
+          for (iHeight = 5; (iHeight >= 0) && (maxSize == -1); iHeight--) {
             // Parse the car info
             ParkingCell cell = content[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1];
             // Calculate the priority
@@ -228,11 +239,17 @@ public class CarTransportationController3 extends RequestController implements C
       ParkingCell cell = content[maxSize][maxHeight][maxDepth];
       cell.setCarID(carId);
       cell.setPlannedExitTime(Timestamp.valueOf(exitTime));
+      // update priorities map
+      if (maxDepth == 0) {
+        freeSpotsCount[maxHeight]--;
+      } else {
+        freeSpotsCount[maxSize + 3]++;
+      }
       // call a robot
       // this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId,
       // maxSize,maxHeight, maxDepth);
     }
-    
+
     lot.updateContent(conn, content);
 
     return true;
@@ -277,17 +294,17 @@ public class CarTransportationController3 extends RequestController implements C
     if (!insertCars(conn, lot, carIds, exitTimes)) {
       throw new ServerException("Car Insertion failed");
     }
-    
+
     printLotContent(lot.constructContentArray(conn));
   }
-  
-  void printLotContent(ParkingCell[][][] content) {  
+
+  void printLotContent(ParkingCell[][][] content) {
     Gson gson = new Gson();
 
-    for (ParkingCell[][] i: content) {
-      for (ParkingCell[] j: i) {
-        for (ParkingCell cell: j) {
-          System.out.println(gson.toJson(cell));          
+    for (ParkingCell[][] i : content) {
+      for (ParkingCell[] j : i) {
+        for (ParkingCell cell : j) {
+          System.out.println(gson.toJson(cell));
         }
       }
     }
@@ -349,7 +366,7 @@ public class CarTransportationController3 extends RequestController implements C
     ParkingLot lot = ParkingLot.findByID(conn, lotId);
     // String[][][] content = lot.getContentAsArray();
     ParkingCell[][][] content = lot.constructContentArray(conn);
-//    printLotContent(content);
+    // printLotContent(content);
 
     // Get the robot in the parking lot
     /*

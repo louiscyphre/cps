@@ -3,7 +3,7 @@ package cps.server.testing.tests;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
-
+import cps.server.controllers.CarTransportationController3;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -26,10 +26,12 @@ import cps.common.Utilities.Pair;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
+import cps.entities.models.ParkingCell;
 import cps.entities.models.ParkingLot;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.ServerException;
+import cps.server.controllers.CarTransportationController3;
 import cps.server.controllers.DatabaseController;
 import cps.server.controllers.OnetimeParkingController;
 import cps.server.controllers.ParkingEntryController;
@@ -53,7 +55,7 @@ public class TegraTests {
 
   @Test
   public void testInsertCars() throws ServerException {
-    int parkingRequestsNo = 5;
+    int carstoinsert = 7;
     // Create parking lot Create incidental parking request
     // Insert the car
     ParkingLot lot = initParkingLot();
@@ -93,12 +95,32 @@ public class TegraTests {
     a[8] = Timestamp.valueOf(LocalDateTime.now().plusHours(40));
     // Exit in 50 hours
     a[9] = Timestamp.valueOf(LocalDateTime.now().plusHours(50));
-    
-    
-    OnetimeService[] reservedParkings = new OnetimeService[5];
+    CarTransportationController3 transcontroller = new CarTransportationController3(server);
+    OnetimeService[][] reservedParkings = new OnetimeService[3][carstoinsert];
     db.performAction(conn -> {
-      reservedParkings[0] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3,
-          "no@email.com", "123-sdf", lot.getId(), a[0], a[1], false);
+      for (int j = 1, k = 0; j < 4; j++, k++) {
+        for (int i = 0; i < carstoinsert; i++) {
+          int customerEGO = (int) Math.random() * 500;
+          String randomemail = Utilities.randomString("angjurufjfjsl", 7) + "@gmail.com";
+          String randomcarID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
+          reservedParkings[k][i] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED,
+              customerEGO, randomemail, randomcarID, lot.getId(), a[0], a[j], false);
+        }
+      }
+
+    });
+
+    db.performAction(conn -> {
+      for (int j = 2; j >= 0; j--) {
+        for (int i = 0; i < carstoinsert; i++) {
+          transcontroller.insertCar(conn, lot, reservedParkings[j][i].getCarID(), reservedParkings[j][i].getExitTime());
+        }
+      }
+      /*
+      ParkingLot nlot = ParkingLot.findByID(conn, lot.getId());
+      ParkingCell[][][] cells = nlot.constructContentArray(conn);
+      System.out.println("---- Printing Parking Lot ----");
+      System.out.println(cells.toString());*/
     });
 
   }
@@ -145,19 +167,6 @@ public class TegraTests {
     assertTrue(ServerResponse.STATUS_OK == respo.getStatus());
     return new CarTransportation(respo.getCustomerID(), _cdata.getCarID(), Constants.LICENSE_TYPE_ONETIME,
         _cdata.getId(), _cdata.getLotID(), Timestamp.valueOf(LocalDateTime.now()), null);
-  }
-
-  private OnetimeService newRandomIncidentalParking(int lotId) {
-    LocalDateTime endTime = LocalDateTime.now().plusHours((long) (Math.random() * 12) + 2)
-        .plusMinutes((long) Math.random() * 55);
-    IncidentalParkingRequest request = new IncidentalParkingRequest((int) Math.random() * 500,
-        Utilities.randomString("angjurufjfjsl@", 10), Utilities.randomString("ILBTA1234567890-", 7), lotId, endTime);
-    IncidentalParkingResponse response = (IncidentalParkingResponse) server.dispatch(request, context);
-    assertNotNull(response);
-    assertTrue(response.getStatus() == ServerResponse.STATUS_OK);
-    return new OnetimeService(response.getServiceID(), 1, response.getCustomerID(), request.getEmail(),
-        request.getCarID(), lotId, Timestamp.valueOf(LocalDateTime.now()),
-        Timestamp.valueOf(request.getPlannedEndTime()), false);
   }
 
   protected ParkingLot initParkingLot() throws ServerException {
