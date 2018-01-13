@@ -7,4 +7,9 @@ public abstract class LocalEmployee extends Employee {
       String jobTitle, int managerID, int departmentID) {
     super(id, email, username, password, firstName, lastName, jobTitle, managerID, departmentID);
   }
+  
+  @Override
+  public int getLotID() {
+    return getDepartmentID();
+  }
 }
