@@ -194,10 +194,16 @@ public class OnetimeService implements ParkingService {
 
   public static ArrayList<OnetimeService> findForOverlap(Connection conn,String carID) throws SQLException{
     ArrayList<OnetimeService> result=new ArrayList<OnetimeService>();
-    OnetimeService res = null;
     PreparedStatement stmt= conn.prepareStatement("");
-    
-    return null;
+    int i=1;
+    stmt.setString(i++, carID);
+    ResultSet rs=stmt.executeQuery();
+    while (rs.next()) {
+      result.add(new OnetimeService(rs));
+    }
+    rs.close();
+    stmt.close();
+    return result;
   }
   
   public static OnetimeService findByID(Connection conn, int sId) throws SQLException {
