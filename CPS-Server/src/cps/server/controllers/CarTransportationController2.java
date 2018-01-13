@@ -16,6 +16,8 @@ import cps.entities.models.ParkingService;
 import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.devices.Robot;
+import javafx.util.converter.LocalDateTimeStringConverter;
+import jdk.internal.dynalink.beans.CallerSensitiveDetector;
 
 @SuppressWarnings("unused")
 public class CarTransportationController2 extends RequestController {
@@ -25,7 +27,7 @@ public class CarTransportationController2 extends RequestController {
   }
 
   /** The robots. */
-  private Map<Integer, Robot> robots;
+  private Map<String, Robot> robots;
 
   /**
    * Insert multiply cars. This function should only be run after checking there
@@ -106,12 +108,11 @@ public class CarTransportationController2 extends RequestController {
       priority = calculatePriority(exitTime, worstPriority, lotSize);
 
       // Find spot for the car, based on priority
-      iSize = priority;
       /*
        * Seek a place among this and worse priorities
        */
-      for (iSize = priority; (iSize >= worstPriority) && (maxSize == -1); iSize++) {
-        if (freeSpotsCount[iSize] != 0) {
+      for (iSize = priority - 3; (iSize >= worstPriority - 3) && (maxSize == -1); iSize++) {
+        if (freeSpotsCount[iSize + 3] != 0) {
           // If there is at least one free space here find it
           for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
             if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
@@ -154,8 +155,8 @@ public class CarTransportationController2 extends RequestController {
       /*
        * if no spot was found among worse priorities, start rising up
        */
-      for (iSize = priority - 1; (iSize < 2) && (maxSize == -1); iSize--) {
-        if (freeSpotsCount[iSize] != 0) {
+      for (iSize = priority - 3 - 1; (iSize < 0) && (maxSize == -1); iSize--) {
+        if (freeSpotsCount[iSize + 3] != 0) {
           // If there is at least one free space here find it
           for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
             if (thisContent[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1]
@@ -176,11 +177,20 @@ public class CarTransportationController2 extends RequestController {
             // Calculate the priority
             otherPriority = calculatePriority(LocalDateTime.parse(carInfo[1]), worstPriority, lotSize);
             /*
-             * If this one can be demoted, try to find a place for him in higher
+             * If this one can be demoted, try to find a place for him in lower
              * priorities
              */
-            // if(otherPriority>)
-            // isize +1 --> maxsize
+            if (otherPriority > iSize + 3 && otherPriority > priority) {
+              // otherPriority - 3 is a row (in iSize) where this car should
+              // have been standing
+              for (int i = otherPriority - 3 + 1; (i < lotSize) && (maxSize == -1); i++) {
+                if (freeSpotsCount[i] != 0) {
+                  maxSize = iSize;
+                  maxHeight = Math.floorMod(iHeight, 3);
+                  maxDepth = Math.floorDiv(iHeight, 3) + 1;
+                }
+              }
+            }
           }
         }
       }
@@ -198,13 +208,13 @@ public class CarTransportationController2 extends RequestController {
         }
       }
       /*
-       * for (iSize = 0; iSize < lotSize; iSize++) { for (iHeight = 0; iHeight <
-       * priority + 1; iHeight++) { if ((thisContent[iSize][iHeight][priority -
-       * iHeight]) .compareTo(Constants.SPOT_IS_EMPTY) == 0) { path =
-       * calculatePath(thisContent, iSize, iHeight, priority - iHeight); if
-       * (path < minPath) { minPath = path; maxSize = iSize; maxHeight =
-       * iHeight; maxDepth = priority - iHeight; } } } }
+       * By this time there should be a spot for us to insert a car Now we have
+       * to pave the way to the spot because there may be other cars in the way
        */
+      if (maxSize == -1) {
+        System.out.printf("Could not find a spot for the car %s at %s\n", carId, exitTime);
+      }
+      pave(carIds, exitTimes, maxSize, maxHeight, maxDepth, thisContent, freeSpotsCount);
 
       // insert the car
       System.out
@@ -321,8 +331,8 @@ public class CarTransportationController2 extends RequestController {
 
     // Get the robot in the parking lot
     /*
-     * Robot robbie = robots.get(Integer.parseInt(lot.getRobotIP())); if (robbie
-     * == null) { return false; }
+     * Robot robbie = robots.get(lot.getRobotIP()); if (robbie == null) { return
+     * false; }
      */
 
     int eSize = -1, eHeight = -1, eDepth = -1;
@@ -428,4 +438,52 @@ public class CarTransportationController2 extends RequestController {
     return priority;
   }
 
+  private void pave(Stack<String> carIds, Stack<LocalDateTime> exitTimes, int maxSize, int maxHeight, int maxDepth,
+      String[][][] content, int[] freeSpotsCount) {
+    int i;
+    String[] carinfo;
+    for (i = 0; i < maxSize; i++) {
+      // TODO Check if there is a car here
+      if (content[i][0][0].equals("Car")) {
+        carinfo = content[i][0][0].split(";");
+        carIds.push(carinfo[0]);
+        exitTimes.push(LocalDateTime.parse(carinfo[1]));
+        content[i][0][0] = Constants.SPOT_IS_EMPTY;
+        freeSpotsCount[0]++;
+      }
+    }
+    for (i = 0; i < maxHeight; i++) {
+      if (content[maxSize][i][0].equals("Car")) {
+        carinfo = content[maxSize][i][0].split(";");
+        carIds.push(carinfo[0]);
+        exitTimes.push(LocalDateTime.parse(carinfo[1]));
+        content[maxSize][i][0] = Constants.SPOT_IS_EMPTY;
+        freeSpotsCount[i]++;
+      }
+    }
+    for (i = 0; i < maxDepth; i++) {
+      if (content[maxSize][maxHeight][i].equals("Car")) {
+        carinfo = content[maxSize][maxHeight][i].split(";");
+        carIds.push(carinfo[0]);
+        exitTimes.push(LocalDateTime.parse(carinfo[1]));
+        content[maxSize][maxHeight][i] = Constants.SPOT_IS_EMPTY;
+        if (i == 0) {
+          freeSpotsCount[maxHeight]++;
+        } else {
+          freeSpotsCount[maxSize + 3]++;
+        }
+      }
+    }
+    if (content[maxSize][maxHeight][maxDepth].equals("Car")) {
+      carinfo = content[maxSize][maxHeight][maxDepth].split(";");
+      carIds.push(carinfo[0]);
+      exitTimes.push(LocalDateTime.parse(carinfo[1]));
+      content[maxSize][maxHeight][maxDepth] = Constants.SPOT_IS_EMPTY;
+      if (maxDepth == 0) {
+        freeSpotsCount[maxHeight]++;
+      } else {
+        freeSpotsCount[maxDepth + 3]++;
+      }
+    }
+  }
 }
