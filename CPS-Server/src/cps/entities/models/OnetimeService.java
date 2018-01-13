@@ -192,24 +192,62 @@ public class OnetimeService implements ParkingService {
     return result;
   }
 
+  // Return a list of all entries whose time period overlaps with the given period
   public static ArrayList<OnetimeService> findForOverlap(Connection conn, String carID, Timestamp startTime, Timestamp plannedEndTime)
       throws SQLException {
     ArrayList<OnetimeService> result=new ArrayList<OnetimeService>();
-//    PreparedStatement stmt= conn.prepareStatement("SELECT * FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND planned_end_time > ?) OR (planned_start_time>? AND planned_start_time<?))");
-    PreparedStatement stmt= conn.prepareStatement("SELECT * FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (?<planned_start_time AND planned_start_time<?))");
-    // y between x and z -> x <= y and y <= z
+    
+    // When two time periods [a, b] [c, d] overlap, one of the following conditions is true:
+    // 1. c <= a and a <= d -- Start time of the given period is between the start time and end time of another period
+    // 2. a <= c and c <= b -- Start time of another period is between the start time and end time of the given period
+    PreparedStatement stmt= conn.prepareStatement("SELECT * FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (? < planned_start_time AND planned_start_time < ?))");
+    
     int i=1;
     stmt.setString(i++, carID);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, plannedEndTime);
+    
     ResultSet rs=stmt.executeQuery();
+    
     while (rs.next()) {
       result.add(new OnetimeService(rs));
     }
+    
     rs.close();
     stmt.close();
+    
+    return result;
+  }
+
+  // Return true if there is at least one entry whose time period overlaps with the given period
+  public static boolean overlapExists(Connection conn, String carID, Timestamp startTime, Timestamp endTime)
+      throws SQLException {
+    boolean result = false;
+    
+    // When two time periods [a, b] [c, d] overlap, one of the following conditions is true:
+    // 1. c <= a and a <= d -- Start time of the given period is between the start time and end time of another period
+    // 2. a <= c and c <= b -- Start time of another period is between the start time and end time of the given period
+    PreparedStatement stmt= conn.prepareStatement("SELECT count(*) FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (? < planned_start_time AND planned_start_time < ?))");
+
+    int i=1;    
+    stmt.setString(i++, carID);
+    stmt.setTimestamp(i++, startTime);
+    stmt.setTimestamp(i++, startTime);
+    stmt.setTimestamp(i++, startTime);
+    stmt.setTimestamp(i++, endTime);
+    
+    ResultSet rs=stmt.executeQuery();
+    
+    if (rs.next()) {
+      // If there is one or more results, we have an overlapping OnetimeService entry
+      result = rs.getInt(1) > 1;
+    }
+    
+    rs.close();
+    stmt.close();
+    
     return result;
   }
   

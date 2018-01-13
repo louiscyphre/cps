@@ -13,15 +13,11 @@ import java.util.Stack;
 import com.google.gson.Gson;
 
 import cps.common.Constants;
-import cps.entities.models.CarTransportation;
 import cps.entities.models.ParkingCell;
 import cps.entities.models.ParkingLot;
-import cps.entities.models.ParkingService;
 import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.devices.Robot;
-import javafx.util.converter.LocalDateTimeStringConverter;
-import jdk.internal.dynalink.beans.CallerSensitiveDetector;
 
 @SuppressWarnings("unused")
 public class CarTransportationController3 extends RequestController implements CarTransportationController {
@@ -54,7 +50,6 @@ public class CarTransportationController3 extends RequestController implements C
   private boolean insertCars(Connection conn, ParkingLot lot, Stack<String> carIds, Stack<LocalDateTime> exitTimes)
       throws SQLException, ServerException {
     // Get the parking lot
-    // String[][][] thisContent = lot.getContentAsArray(); // TODO remove
     ParkingCell[][][] content = lot.constructContentArray(conn);
     int lotWidth = lot.getSize();
 
@@ -278,7 +273,7 @@ public class CarTransportationController3 extends RequestController implements C
       throw new ServerException("Car Insertion failed");
     }
     
-    printLotContent(lot.constructContentArray(conn));
+//    printLotContent(lot.constructContentArray(conn));
   }
   
   void printLotContent(ParkingCell[][][] content) {  

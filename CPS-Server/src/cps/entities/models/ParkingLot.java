@@ -473,10 +473,10 @@ public class ParkingLot implements Serializable {
   // available for OnetimeService or SubscriptionService customers at a given
   // point in time
 
-  public int update(Connection conn) throws SQLException, ServerException {
+  public void update(Connection conn) throws SQLException, ServerException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
+    
     int index = 1;
-    int result = 0;
     st.setString(index++, this.streetAddress);
     st.setInt(index++, this.size);
     st.setString(index++, this.content);
@@ -486,14 +486,10 @@ public class ParkingLot implements Serializable {
     st.setString(index++, this.robotIP);
     st.setBoolean(index++, this.lotFull);
     st.setInt(index++, this.id);
-    result = st.executeUpdate();
+    
+    st.executeUpdate();
+    
     st.close();
-
-    if (result < 1) {
-      throw new ServerException("Failed to update ParkingLot");
-    }
-
-    return result;
   }
 
   public static Collection<ParkingLot> findAll(Connection conn) throws SQLException {

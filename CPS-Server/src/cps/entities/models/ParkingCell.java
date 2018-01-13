@@ -236,12 +236,8 @@ public class ParkingCell implements Serializable {
     statement.setInt(field++, depth);
     
     statement.executeUpdate();
-
-//     if (statement.executeUpdate() < 1) {
-//     throw new ServerException("Failed to update ParkingCell");
-//     }
-    // TODO disable update exceptions everywhere - it can return 0 if data
-    // didn't change
+    
+    // TODO disable update exceptions everywhere - it can return 0 if data didn't change
 
     statement.close();
   }

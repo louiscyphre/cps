@@ -32,7 +32,6 @@ import cps.server.session.UserSession;
 /**
  * The Class OnetimeParkingController.
  */
-@SuppressWarnings("unused")
 public class OnetimeParkingController extends RequestController {
 
   /**
@@ -51,12 +50,9 @@ public class OnetimeParkingController extends RequestController {
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
-      // TODO check time overlap for this car with other parking services
-      /* Tegra block start */
-      
-      errorIf(!OnetimeService.findForOverlap(conn, request.getCarID(),startTime,plannedEndTime).isEmpty(), "Parking spot is already reserved for this car in this timeframe");
-      /* Tegra block end */
-      
+      errorIf(OnetimeService.overlapExists(conn, request.getCarID(), startTime, plannedEndTime),
+          "Parking spot is already reserved for this car in this timeframe");
+
       // Check that the starting time is not in the past
       errorIf(startTime.toLocalDateTime().isBefore(now), "The specified starting date is in the past");
 
@@ -197,9 +193,10 @@ public class OnetimeParkingController extends RequestController {
     return database.performQuery(new ListOnetimeEntriesResponse(), (conn, response) -> {
       Collection<OnetimeService> result = OnetimeService.findByCustomerID(conn, request.getCustomerID());
 
-      // This shouldn't happen - at least an empty list should always be returned
+      // This shouldn't happen - at least an empty list should always be
+      // returned
       errorIfNull(result, "Failed to create list of OnetimeService entries");
-      
+
       response.setData(result);
       response.setCustomerID(request.getCustomerID());
       response.setSuccess("ListOnetimeEntriesRequest completed successfully");

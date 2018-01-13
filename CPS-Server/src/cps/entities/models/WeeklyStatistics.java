@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+// TODO write update method
 public class WeeklyStatistics implements Serializable {
   private static final long serialVersionUID = 1L;
   // `start` date NOT NULL,
