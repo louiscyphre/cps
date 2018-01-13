@@ -1,20 +1,19 @@
 package cps.client.controller.service;
 
-import cps.client.controller.ControllersClientAdapter;
-import cps.client.controller.ViewController;
-import cps.client.controller.ControllerConstants.SceneCode;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import cps.client.controller.ControllerConstants.SceneCode;
+import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 public class ServiceActionUpdatePricesController implements ViewController {
 
@@ -25,7 +24,7 @@ public class ServiceActionUpdatePricesController implements ViewController {
   private URL location;
 
   @FXML // fx:id="infoLabel"
-  private Label infoLabel; // Value injected by FXMLLoader
+  private TextFlow infoLabel; // Value injected by FXMLLoader
 
   @FXML // fx:id="newreservedTF"
   private TextField newreservedTF; // Value injected by FXMLLoader
@@ -101,12 +100,18 @@ public class ServiceActionUpdatePricesController implements ViewController {
   @Override
   public void turnLoggedInStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnLoggedInStateOff() {
     // TODO Auto-generated method stub
-    
+
+  }
+
+  @Override
+  public void cleanCtrl() {
+    // TODO Auto-generated method stub
+
   }
 }

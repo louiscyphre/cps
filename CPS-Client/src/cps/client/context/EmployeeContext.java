@@ -12,4 +12,6 @@ public interface EmployeeContext {
   public int getEmployeeAccessLevel();
 
   public void setEmployeeAccessLevel(int accessLevel);
+
+  public void logContextOut();
 }

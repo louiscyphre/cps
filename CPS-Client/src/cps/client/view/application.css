@@ -47,6 +47,23 @@
     -fx-padding: 15px;
     -fx-border-radius: 8 8 8 8;
     -fx-background-radius: 8 8 8 8;
+    -fx-pref-width:280;
+    -fx-pref-height:40;
+    -fx-max-width:280;
+}
+
+.vbox {
+    -fx-padding: 15 20 20 20;
+    -fx-spacing:15px;
+    -fx-pref-width:360;
+    -fx-pref-height:650;
+}
+
+.comboBox {
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-pref-width:320;
+    -fx-pref-height:40;
 }
 
 .datePicker {
@@ -60,7 +77,10 @@
 	-fx-text-fill :  #31708f;
 	-fx-border-radius :  8 8 8 8;
 	-fx-border-color : #bce8f1;
+	-fx-margin-top:20;
 }
+
+
 
 .errorLabel {
 	-fx-background-color : #f2dede;
@@ -85,3 +105,5 @@
 	-fx-border-radius :  8 8 8 8;
 	-fx-border-color : #f4f441;
 }
+
+

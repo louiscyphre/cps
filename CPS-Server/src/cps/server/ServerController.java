@@ -14,7 +14,7 @@ public class ServerController implements RequestHandler<SessionHolder> {
   private final ParkingEntryController      entryController;
   private final ParkingExitController       exitController;
   private final SubscriptionController      subscriptionController;
-  private final CustomerController          userController;
+  private final UserController          userController;
   private final ComplaintController         complaintController;
   private final CarTransportationController transportationController;
   private ReportController                  reportController;
@@ -38,7 +38,7 @@ public class ServerController implements RequestHandler<SessionHolder> {
     entryController = new ParkingEntryController(this);
     exitController = new ParkingExitController(this);
     subscriptionController = new SubscriptionController(this);
-    userController = new CustomerController(this);
+    userController = new UserController(this);
     complaintController = new ComplaintController(this);
     transportationController = new CarTransportationController3(this);
     reportController = new ReportController(this);
@@ -109,6 +109,11 @@ public class ServerController implements RequestHandler<SessionHolder> {
   }
 
   @Override
+  public ServerResponse handle(LoginRequest request, SessionHolder context) {
+    return userController.handle(request, context.acquireCustomerSession());
+  }
+
+  @Override
   public ServerResponse handle(ParkingEntryRequest request, SessionHolder context) {
     return entryController.handle(request, context.acquireCustomerSession());
   }
@@ -126,11 +131,6 @@ public class ServerController implements RequestHandler<SessionHolder> {
   @Override
   public ServerResponse handle(ReservedParkingRequest request, SessionHolder context) {
     return onetimeParkingController.handle(request, context.acquireCustomerSession());
-  }
-
-  @Override
-  public ServerResponse handle(LoginRequest request, SessionHolder context) {
-    return userController.handle(request, context.acquireCustomerSession());
   }
 
   @Override
@@ -161,6 +161,11 @@ public class ServerController implements RequestHandler<SessionHolder> {
   @Override
   public ServerResponse handle(ReserveParkingSlotsAction action, SessionHolder context) {
     return lotController.handle(action, context.acquireServiceSession());
+  }
+
+  @Override
+  public ServerResponse handle(ServiceLoginAction action, SessionHolder context) {
+    return userController.handle(action, context.acquireServiceSession());
   }
 
   @Override

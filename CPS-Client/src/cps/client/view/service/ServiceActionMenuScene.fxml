@@ -84,14 +84,15 @@
                      </styleClass></Button>
                </children>
             </GridPane>
-            <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="360.0" spacing="10.0">
+            <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">
                <children>
-                  <ProgressIndicator fx:id="infoProgress" visible="false" />
-                  <Label fx:id="infoLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="73.0" prefWidth="340.0" styleClass="infoLabel" text="Just some info goes here" textAlignment="CENTER" wrapText="true" />
+                  <ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />
+                  <TextFlow fx:id="infoLabel" prefHeight="77.0" prefWidth="280.0" textAlignment="CENTER">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </TextFlow>
                </children>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
             </VBox>
          </children>
          <padding>

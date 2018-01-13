@@ -168,7 +168,7 @@ public class CarTransportation implements Serializable {
     return result;
   }
 
-  public boolean updateRemovedAt(Connection conn, Timestamp removedAt) throws SQLException {
+  public void updateRemovedAt(Connection conn, Timestamp removedAt) throws SQLException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_REMOVED_AT);
 
     this.removedAt = removedAt;
@@ -180,11 +180,9 @@ public class CarTransportation implements Serializable {
     st.setInt(index++, this.lotID);
     st.setTimestamp(index++, this.insertedAt);
 
-    int updated = st.executeUpdate();
+    st.executeUpdate();
 
     st.close();
-
-    return updated > 0;
   }
 
   public static CarTransportation findByCarId(Connection conn, String carID, int lotID) throws SQLException {

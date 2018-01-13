@@ -443,7 +443,6 @@ public class CarTransportationController2 extends RequestController {
     int i;
     String[] carinfo;
     for (i = 0; i < maxSize; i++) {
-      // TODO Check if there is a car here
       if (content[i][0][0].equals("Car")) {
         carinfo = content[i][0][0].split(";");
         carIds.push(carinfo[0]);

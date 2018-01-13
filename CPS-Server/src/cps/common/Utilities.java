@@ -77,4 +77,16 @@ public abstract class Utilities {
   public static boolean isWeekend(DayOfWeek day) {
     return day == DayOfWeek.SATURDAY;
   }
+  
+  public static boolean isEmpty(String string) {
+    return string == null || string.trim().isEmpty();
+  }
+  
+  public static boolean between(int x, int a, int b) {
+    return a <= x && x <= b;
+  }
+  
+  public static boolean between(float x, float a, float b) {
+    return a <= x && x <= b;
+  }
 }

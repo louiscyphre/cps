@@ -10,9 +10,12 @@ import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 /**
  * Created on: 2018-01-09 1:04:02 AM
@@ -20,70 +23,129 @@ import javafx.scene.text.Text;
 public class SubscriptionsMenuController implements ViewController {
 
   @FXML
+  private TextFlow infoLabel;
+
+  @FXML
+  private ProgressIndicator infoProgress;
+
+  @FXML
   private VBox infoBox;
 
   @FXML
-  private Label infoLabel;
+  private ToggleGroup subscriptionRadioButtons;
+  
+  @FXML
+  private ComboBox<String> parkingLotsList;
+  
+  private boolean processing;
 
   @FXML
+  void toggleRegularSubscriptionChoice(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    parkingLotsList.setDisable(false);
+    
+  }
+  
+  @FXML
+  void toggleFullSubscriptionChoice(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    parkingLotsList.setDisable(true);
+  }
+  
+  @FXML
   void handleBackButton(ActionEvent event) {
+    if (processing) {
+      return;
+    }
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
   }
 
   @FXML
+  void handleNextButton(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    // TODO
+    // ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
+  }
+
+  @FXML
   void initialize() {
-    assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
     assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
+    assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
+    assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
+    assert subscriptionRadioButtons != null : "fx:id=\"subscriptionRadioButtons\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
 
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
   }
 
   @Override
   public void displayInfo(List<Text> formattedText) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void displayError(List<Text> formettedErrorMsg) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnProcessingStateOn() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnProcessingStateOff() {
-    // TODO Auto-generated method stub
-
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("infoLabel");
+    infoLabel.getChildren().clear();
+    for (Text ft : formattedText) {
+      infoLabel.getChildren().add(ft);
+    }
   }
 
   @Override
   public void displayInfo(String simpleInfoMsg) {
-    // TODO Auto-generated method stub
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("infoLabel");
+    infoLabel.getChildren().clear();
+    infoLabel.getChildren().add(new Text(simpleInfoMsg));
+  }
 
+  @Override
+  public void displayError(List<Text> formettedErrorMsg) {
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("errorLabel");
+    infoLabel.getChildren().clear();
+    for (Text ft : formettedErrorMsg) {
+      infoLabel.getChildren().add(ft);
+    }
   }
 
   @Override
   public void displayError(String simpleErrorMsg) {
-    // TODO Auto-generated method stub
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("errorLabel");
+    infoLabel.getChildren().clear();
+    infoLabel.getChildren().add(new Text(simpleErrorMsg));
+  }
 
+  @Override
+  public void turnProcessingStateOn() {
+    processing = false;
+  }
+
+  @Override
+  public void turnProcessingStateOff() {
+    processing = true;
   }
 
   @Override
   public void turnLoggedInStateOn() {
-    // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnLoggedInStateOff() {
-    // TODO Auto-generated method stub
-    
+
   }
 
+  @Override
+  public void cleanCtrl() {
+    // info box clear
+    infoBox.getStyleClass().add("infoLabel");
+    infoProgress.visibleProperty().set(false);
+    infoLabel.getChildren().clear();
+    // toggles clear
+    subscriptionRadioButtons.getToggles().clear();
+  }
 }

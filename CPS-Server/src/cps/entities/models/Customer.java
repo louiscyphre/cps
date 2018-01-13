@@ -175,13 +175,9 @@ public class Customer implements Serializable, User {
     st.setFloat(index++, credit);
     st.setInt(index++, id);
 
-    int updated = st.executeUpdate();
+    st.executeUpdate();
 
     st.close();
-
-    if (updated <= 0) {
-      throw new ServerException("Failed to update customer");
-    }
   }
 
   public void pay(Connection conn, float sum) throws SQLException, ServerException {

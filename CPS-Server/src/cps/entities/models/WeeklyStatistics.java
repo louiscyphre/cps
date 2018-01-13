@@ -1,13 +1,20 @@
 package cps.entities.models;
 
 import java.io.Serializable;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+import com.mysql.jdbc.Connection;
+
+import cps.common.Constants;
+
 public class WeeklyStatistics implements Serializable {
   private static final long serialVersionUID = 1L;
   // `start` date NOT NULL,
+  // `lot_id` int(10) NOT NULL,
   // `realized_orders_mean` float NOT NULL DEFAULT '0',
   // `realized_orders_median` float NOT NULL DEFAULT '0',
   // `canceled_orders_mean` float NOT NULL DEFAULT '0',
@@ -18,6 +25,7 @@ public class WeeklyStatistics implements Serializable {
   // `canceled_orders_dist` varchar(300) NOT NULL,
   // `late_arrivals_dist` varchar(300) NOT NULL,
   private LocalDate start;
+  private int       lotID;
   private float     realizedOrdersMean;
   private float     canceledOrdersMean;
   private float     lateArrivalsMean;
@@ -28,11 +36,11 @@ public class WeeklyStatistics implements Serializable {
   private String    canceledOrdersDist;
   private String    lateArrivalsDist;
 
-  public WeeklyStatistics(LocalDate start, float realizedOrdersMean, float canceledOrdersMean, float lateArrivalsMean,
-      float realizedOrdersMedian, float canceledOrdersMedian, float lateArrivalsMedian, String realizedOrdersDist,
-      String canceledOrdersDist, String lateArrivalsDist) {
+  public WeeklyStatistics(LocalDate start, int lotID, float realizedOrdersMean, float canceledOrdersMean, float lateArrivalsMean, float realizedOrdersMedian,
+      float canceledOrdersMedian, float lateArrivalsMedian, String realizedOrdersDist, String canceledOrdersDist, String lateArrivalsDist) {
     super();
     this.start = start;
+    this.setLotID(lotID);
     this.realizedOrdersMean = realizedOrdersMean;
     this.canceledOrdersMean = canceledOrdersMean;
     this.lateArrivalsMean = lateArrivalsMean;
@@ -45,8 +53,78 @@ public class WeeklyStatistics implements Serializable {
   }
 
   public WeeklyStatistics(ResultSet rs) throws SQLException {
-    this(rs.getDate(1).toLocalDate(), rs.getFloat(2), rs.getFloat(3), rs.getFloat(4), rs.getFloat(5), rs.getFloat(6),
-        rs.getFloat(7), rs.getString(8), rs.getString(9), rs.getString(10));
+    this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getFloat(3), rs.getFloat(4), rs.getFloat(5), rs.getFloat(6), rs.getFloat(7), rs.getFloat(8),
+        rs.getString(9), rs.getString(10), rs.getString(11));
+  }
+
+  public static WeeklyStatistics create(Connection conn, LocalDate start, int lotID, float realizedOrdersMean, float canceledOrdersMean, float lateArrivalsMean,
+      float realizedOrdersMedian, float canceledOrdersMedian, float lateArrivalsMedian, String realizedOrdersDist, String canceledOrdersDist,
+      String lateArrivalsDist) throws SQLException {
+    PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_WEEKLY_STATISTICS);
+
+    int field = 0;
+
+    statement.setDate(field++, Date.valueOf(start));
+    statement.setInt(field++, lotID);
+    statement.setFloat(field++, realizedOrdersMean);
+    statement.setFloat(field++, canceledOrdersMean);
+    statement.setFloat(field++, lateArrivalsMean);
+    statement.setFloat(field++, realizedOrdersMedian);
+    statement.setFloat(field++, canceledOrdersMedian);
+    statement.setFloat(field++, lateArrivalsMedian);
+    statement.setString(field++, realizedOrdersDist);
+    statement.setString(field++, canceledOrdersDist);
+    statement.setString(field++, lateArrivalsDist);
+
+    statement.executeUpdate();
+    statement.close();
+
+    return new WeeklyStatistics(start, lotID, realizedOrdersMean, canceledOrdersMean, lateArrivalsMean, realizedOrdersMedian, canceledOrdersMedian,
+        lateArrivalsMedian, realizedOrdersDist, canceledOrdersDist, lateArrivalsDist);
+  }
+
+  public static WeeklyStatistics find(Connection conn, LocalDate start, int lotID) throws SQLException {
+    WeeklyStatistics item = null;
+    PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_WEEKLY_STATISTICS);
+
+    int field = 0;
+
+    statement.setDate(field++, Date.valueOf(start));
+    statement.setInt(field++, lotID);
+
+    ResultSet result = statement.executeQuery();
+
+    if (result.next()) {
+      item = new WeeklyStatistics(result);
+    }
+
+    result.close();
+    statement.close();
+
+    return item;
+
+  }
+
+  public void update(Connection conn) throws SQLException {
+    PreparedStatement statement = conn.prepareStatement(Constants.SQL_UPDATE_WEEKLY_STATISTICS);
+
+    int field = 0;
+
+    statement.setDate(field++, Date.valueOf(start));
+    statement.setInt(field++, lotID);
+    statement.setFloat(field++, realizedOrdersMean);
+    statement.setFloat(field++, canceledOrdersMean);
+    statement.setFloat(field++, lateArrivalsMean);
+    statement.setFloat(field++, realizedOrdersMedian);
+    statement.setFloat(field++, canceledOrdersMedian);
+    statement.setFloat(field++, lateArrivalsMedian);
+    statement.setString(field++, realizedOrdersDist);
+    statement.setString(field++, canceledOrdersDist);
+    statement.setString(field++, lateArrivalsDist);
+
+    statement.executeUpdate();
+
+    statement.close();
   }
 
   public LocalDate getStart() {
@@ -55,6 +133,14 @@ public class WeeklyStatistics implements Serializable {
 
   public void setStart(LocalDate start) {
     this.start = start;
+  }
+
+  public int getLotID() {
+    return lotID;
+  }
+
+  public void setLotID(int lotID) {
+    this.lotID = lotID;
   }
 
   public float getRealizedOrdersMean() {

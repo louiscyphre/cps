@@ -44,9 +44,6 @@ public class SubscriptionController extends RequestController {
   public ServerResponse handle(SubscriptionRequest request, CustomerSession session,
       SubscriptionResponse serverResponse, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
     return database.performQuery(serverResponse, (conn, response) -> {
-      // Handle login
-      Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
-
       // TODO check overlapping subscriptions with the same car ID?
       
       // Check that the start date is not in the past
@@ -59,6 +56,9 @@ public class SubscriptionController extends RequestController {
         // Check that lot is not full
         errorIf(lot.getFreeSpotsNumber() < 1, "Parking Lot is full");
       }
+      
+      // Handle login
+      Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
       SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(),
           request.getEmail(), request.getCarID(), request.getLotID(), startDate, endDate, dailyExitTime);

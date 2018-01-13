@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 import cps.api.request.ReservedParkingRequest;
+import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
@@ -40,8 +41,6 @@ import javafx.scene.text.TextFlow;
 // TODO some pc displays kryakozyabry in month , handleBackButton implementation
 // just for navigation
 public class ReserveParkingController implements ViewController {
-
-  private static final String DEFAULT_INFO_LABEL = "";
 
   private boolean processing = false;
 
@@ -237,12 +236,12 @@ public class ReserveParkingController implements ViewController {
 
   // returns email if logged in from customer context,
   private String getEmail() {
-    String email = ControllersClientAdapter.getCustomerContext().getCustomerEmail();
-
-    if (email == null) {
-      email = emailTF.getText();
+    CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
+    if (cntx.isLoggedIn()) {
+      return cntx.getCustomerEmail();
+    } else {
+      return emailTF.getText();
     }
-    return email;
   }
 
   // return car id or null if empty
@@ -355,18 +354,32 @@ public class ReserveParkingController implements ViewController {
   public void turnProcessingStateOff() {
     infoProgress.visibleProperty().set(false);
     processing = false;
-    displayInfo(DEFAULT_INFO_LABEL);
   }
 
   @Override
   public void turnLoggedInStateOn() {
-    // TODO Auto-generated method stub
-    
+    emailTF.setVisible(false);
   }
 
   @Override
   public void turnLoggedInStateOff() {
-    // TODO Auto-generated method stub
-    
+    emailTF.setVisible(true);
+  }
+
+  @Override
+  public void cleanCtrl() {
+    // info box clear
+    infoBox.getStyleClass().add("infoLabel");
+    infoProgress.visibleProperty().set(false);
+    infoLabel.getChildren().clear();
+    // input fields clear
+    startDatePicker.getEditor().clear();
+    ;
+    startTimeTF.clear();
+    endDatePicker.getEditor().clear();
+    endTimeTF.clear();
+    carIDTextField.clear();
+    emailTF.clear();
+    lotidTF.clear();
   }
 }
