@@ -21,9 +21,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-/**
- * Created on: 2018-01-06 6:43:00 PM
- */
 public class LoginController implements ViewController {
 
   private static final String DEFAULT_INFO_LABEL = "";
@@ -71,6 +68,8 @@ public class LoginController implements ViewController {
       displayError(InputVerification.MISSING_EMAIL.getMsg());
       return;
     }
+
+    ControllersClientAdapter.getCustomerContext().setPendingEmail(email);
 
     LoginRequest request = new LoginRequest(email, password);
     ControllersClientAdapter.getClient().sendRequest(request);
@@ -150,14 +149,23 @@ public class LoginController implements ViewController {
 
   @Override
   public void turnLoggedInStateOn() {
-    // TODO Auto-generated method stub
-
+    // view does not change
   }
 
   @Override
   public void turnLoggedInStateOff() {
-    // TODO Auto-generated method stub
+    // view does not change
+  }
 
+  @Override
+  public void cleanCtrl() {
+    // info box clear
+    infoBox.getStyleClass().add("infoLabel");
+    infoProgress.visibleProperty().set(false);
+    infoLabel.getChildren().clear();
+    // input fields clear
+    emailTextField.clear();
+    passwordTextField.clear();
   }
 
 }

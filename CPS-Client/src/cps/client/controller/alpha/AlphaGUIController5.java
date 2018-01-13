@@ -106,4 +106,10 @@ public class AlphaGUIController5 implements ViewController {
 
   }
 
+  @Override
+  public void cleanCtrl() {
+    // TODO Auto-generated method stub
+
+  }
+
 }

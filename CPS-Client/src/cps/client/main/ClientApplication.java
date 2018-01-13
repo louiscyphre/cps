@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.apache.commons.cli.ParseException;
 
+import cps.api.action.InitLotAction;
 import cps.api.response.Response;
 import cps.api.response.ResponseHandler;
 import cps.client.controller.ControllerConstants.SceneCode;
@@ -105,6 +106,9 @@ public class ClientApplication extends Application implements INetworkClient {
 
       ControllersClientAdapter.registerClient(this);
 
+      // TODO enable if database is cold
+      // setTheTestEnviroment();
+
       switch (parser.getMode()) {
         case "webclient":
           // loadWebclient();
@@ -175,5 +179,10 @@ public class ClientApplication extends Application implements INetworkClient {
 
   enum NetworkState {
     WAITING_FOR_RESPONSE, RESPONSIVE
+  }
+
+  private void setTheTestEnviroment() {
+    InitLotAction initLot = new InitLotAction(1, "Sesam 2", 4, 5, 3, "12.f.t43");
+    sendRequest(initLot);
   }
 }

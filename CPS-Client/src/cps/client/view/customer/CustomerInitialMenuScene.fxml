@@ -76,7 +76,4 @@
          </padding>
     </VBox>
   </center>
-  <top>
-    <Label text="Welcome to Automated Car Parking System!" BorderPane.alignment="CENTER" />
-  </top>
 </BorderPane>

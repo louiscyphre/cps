@@ -288,4 +288,19 @@ public class IncidentalParkingController implements ViewController {
                                                      // Field
   }
 
+  @Override
+  public void cleanCtrl() {
+    // info box clear
+    infoBox.getStyleClass().add("infoLabel");
+    infoProgress.visibleProperty().set(false);
+    infoLabel.getChildren().clear();
+
+    // text fields clear
+    emailTextField.clear();
+    carIDTextField.clear();
+    lotIDTextField.clear();
+    endDatePicker.getEditor().clear();
+    endTimeTextField.clear();
+  }
+
 }

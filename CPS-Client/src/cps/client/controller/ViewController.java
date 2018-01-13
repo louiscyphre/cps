@@ -30,4 +30,6 @@ public interface ViewController {
 
   public void turnLoggedInStateOff();
 
+  public void cleanCtrl();
+
 }

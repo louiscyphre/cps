@@ -116,7 +116,4 @@
   <padding>
     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
   </padding>
-  <top>
-    <Label font="$x1" text="Welcome to Automated Car Parking System!" BorderPane.alignment="CENTER" BorderPane.margin="$x3" />
-  </top>
 </BorderPane>

@@ -11,7 +11,7 @@
 
 <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.LoginController">
   <center>
-    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="360.0" spacing="5.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="360.0" spacing="10.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
         <TextField fx:id="emailTextField" alignment="CENTER" prefHeight="60.0" prefWidth="200.0" promptText="Enter your E-mail here" style="" styleClass="inputField" text="">
           <VBox.margin>
@@ -23,14 +23,14 @@
             <Insets bottom="20.0" fx:id="x2" />
           </VBox.margin>
         </PasswordField>
-        <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="100.0" spacing="0.0">
+        <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="100.0" spacing="0.0" styleClass="infoLabel">
           <children>
             <ProgressIndicator fx:id="infoProgress" visible="false">
               <VBox.margin>
                 <Insets bottom="15.0" />
               </VBox.margin>
             </ProgressIndicator>
-            <TextFlow fx:id="infoLabel"  maxWidth="1.7976931348623157E308" prefHeight="73.0" styleClass="infoLabel"  textAlignment="CENTER">
+            <TextFlow fx:id="infoLabel" maxWidth="1.7976931348623157E308" prefHeight="73.0" textAlignment="CENTER">
               <VBox.margin>
                 <Insets fx:id="x4" />
               </VBox.margin>
@@ -86,7 +86,4 @@
   <padding>
     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
   </padding>
-  <top>
-    <Label text="Welcome to Automated Car Parking System!" BorderPane.alignment="CENTER" BorderPane.margin="$x3" />
-  </top>
 </BorderPane>

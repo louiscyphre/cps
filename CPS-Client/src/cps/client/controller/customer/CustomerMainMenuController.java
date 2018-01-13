@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
@@ -78,37 +79,58 @@ public class CustomerMainMenuController implements ViewController {
   void handleEnterParkingButton(ActionEvent event) {
     // TODO
     // ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ENTER_PARKING);
+    if (processing) {
+      return;
+    }
   }
 
   @FXML
   void handleExitParkingButton(ActionEvent event) {
     // TODO
     // ControllersClientAdapter.setStage(ControllerConstants.SceneCode.EXIT_PARKING);
+    if (processing) {
+      return;
+    }
   }
 
   @FXML
   void handleViewMyReservationsButton(ActionEvent event) {
     // TODO
     // ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_REGISTRATIONS);
+    if (processing) {
+      return;
+    }
   }
 
   @FXML
   void handleLoginButton(ActionEvent event) {
+    if (processing) {
+      return;
+    }
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.LOGIN);
   }
 
   @FXML
   void handleReserveParkingButton(ActionEvent event) {
+    if (processing) {
+      return;
+    }
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.RESERVE_PARKING);
   }
 
   @FXML
   void handleBuySubscriptionButton(ActionEvent event) {
+    if (processing) {
+      return;
+    }
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
   }
 
   @FXML
   void handleParkNowButton(ActionEvent event) {
+    if (processing) {
+      return;
+    }
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INCIDENTAL_PARKING);
   }
 
@@ -133,39 +155,50 @@ public class CustomerMainMenuController implements ViewController {
                                                      // Field
   }
 
-  // TODO @Michael check this idea out
   @Override
   public void displayInfo(List<Text> formattedText) {
-    // TODO change the layout element to text flow
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("infoLabel");
+    infoLabel.getChildren().clear();
+    for (Text ft : formattedText) {
+      infoLabel.getChildren().add(ft);
+    }
+  }
+
+  @Override
+  public void displayInfo(String simpleInfoMsg) {
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("infoLabel");
+    infoLabel.getChildren().clear();
+    infoLabel.getChildren().add(new Text(simpleInfoMsg));
   }
 
   @Override
   public void displayError(List<Text> formettedErrorMsg) {
-    // TODO change the layout element to text flow
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("errorLabel");
+    infoLabel.getChildren().clear();
+    for (Text ft : formettedErrorMsg) {
+      infoLabel.getChildren().add(ft);
+    }
+  }
+
+  @Override
+  public void displayError(String simpleErrorMsg) {
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("errorLabel");
+    infoLabel.getChildren().clear();
+    infoLabel.getChildren().add(new Text(simpleErrorMsg));
   }
 
   @Override
   public void turnProcessingStateOn() {
-    // TODO
     processing = true;
   }
 
   @Override
   public void turnProcessingStateOff() {
-    // TODO
     processing = false;
-  }
-
-  @Override
-  public void displayInfo(String simpleInfoMsg) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void displayError(String simpleErrorMsg) {
-    // TODO Auto-generated method stub
-
   }
 
   @Override
@@ -175,14 +208,36 @@ public class CustomerMainMenuController implements ViewController {
     buttonsVbox.getChildren().add(4, enterParkingButton);
     buttonsVbox.getChildren().add(5, exitParkingButton);
     buttonsVbox.getChildren().add(6, viewMyReservationsButton);
+    buttonsVbox.getChildren().forEach(node -> {
+      node.getStyleClass().add("smallButton");
+    });
   }
 
   @Override
   public void turnLoggedInStateOff() {
+    cleanCtrl();
+    if (!buttonsVbox.getChildren().contains(logInButton)) {
+      buttonsVbox.getChildren().add(0, logInButton);
+    }
     buttonsVbox.getChildren().remove(logOutButton);
     buttonsVbox.getChildren().remove(enterParkingButton);
     buttonsVbox.getChildren().remove(exitParkingButton);
     buttonsVbox.getChildren().remove(viewMyReservationsButton);
+    buttonsVbox.getChildren().forEach(node -> {
+      node.getStyleClass().remove("smallButton");
+    });
+  }
+
+  @Override
+  public void cleanCtrl() {
+    // info box clear
+    infoBox.getStyleClass().add("infoLabel");
+    infoProgress.visibleProperty().set(false);
+    infoLabel.getChildren().clear();
+    CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    if (context.isLoggedIn()) {
+      infoLabel.getChildren().add(new Text("Logged in as : " + context.getCustomerEmail()));
+    }
   }
 
 }

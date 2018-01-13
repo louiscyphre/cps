@@ -159,4 +159,10 @@ public class AlphaGUIController2 implements ViewController {
 
   }
 
+  @Override
+  public void cleanCtrl() {
+    // TODO Auto-generated method stub
+
+  }
+
 }

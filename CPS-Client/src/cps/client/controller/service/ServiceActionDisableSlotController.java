@@ -112,4 +112,10 @@ public class ServiceActionDisableSlotController implements ViewController {
     // TODO Auto-generated method stub
 
   }
+
+  @Override
+  public void cleanCtrl() {
+    // TODO Auto-generated method stub
+
+  }
 }

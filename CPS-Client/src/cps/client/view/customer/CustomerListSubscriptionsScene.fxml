@@ -50,7 +50,7 @@
             <URL value="@../application.css" />
           </stylesheets>
         </GridPane>
-            <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">
+            <VBox fx:id="infoBox" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">
                <children>
                   <ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />
                   <TextFlow fx:id="infoLabel" prefHeight="77.0" prefWidth="280.0" textAlignment="CENTER">
@@ -67,7 +67,7 @@
                 <Font size="16.0" fx:id="x1" />
               </font>
             </Button>
-            <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Next" textAlignment="CENTER" />
+            <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleNextButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Next" textAlignment="CENTER" />
           </children>
         </HBox>
       </children>
@@ -82,7 +82,4 @@
   <stylesheets>
     <URL value="@../application.css" />
   </stylesheets>
-  <top>
-    <Label font="$x1" text="Welcome to Automated Car Parking System!" BorderPane.alignment="CENTER" />
-  </top>
 </BorderPane>
