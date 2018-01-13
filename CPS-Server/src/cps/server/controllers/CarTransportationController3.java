@@ -10,6 +10,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Stack;
 
+import com.google.gson.Gson;
+
 import cps.common.Constants;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.ParkingCell;
@@ -54,8 +56,6 @@ public class CarTransportationController3 extends RequestController implements C
     // Get the parking lot
     // String[][][] thisContent = lot.getContentAsArray(); // TODO remove
     ParkingCell[][][] content = lot.constructContentArray(conn);
-    String carId = null;
-    LocalDateTime exitTime = null;
     int lotWidth = lot.getSize();
 
     /*
@@ -87,7 +87,7 @@ public class CarTransportationController3 extends RequestController implements C
      * count priorities 0,1,2
      */
     for (iHeight = 0; iHeight < 3; iHeight++) {
-      for (iSize = lotWidth; iSize >= 0; iSize++) {
+      for (iSize = lotWidth - 1; iSize >= 0; iSize--) {
         if (content[iSize][iHeight][0].isFree()) {
           freeSpotsCount[iHeight]++;
         }
@@ -99,8 +99,8 @@ public class CarTransportationController3 extends RequestController implements C
      */
 
     while (!carIds.isEmpty()) {
-      carId = carIds.pop();
-      exitTime = exitTimes.pop();
+      String carId = carIds.pop();
+      LocalDateTime exitTime = exitTimes.pop();
 
       priority = worstPriority;
       /*
@@ -116,7 +116,7 @@ public class CarTransportationController3 extends RequestController implements C
       /*
        * Seek a place among this and worse priorities
        */
-      for (iSize = priority - 3; (iSize >= worstPriority - 3) && (maxSize == -1); iSize++) {
+      for (iSize = priority - 3; (iSize <= worstPriority - 3) && (maxSize == -1); iSize++) {
         if (freeSpotsCount[iSize + 3] != 0) {
           // If there is at least one free space here find it
           for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
@@ -160,7 +160,7 @@ public class CarTransportationController3 extends RequestController implements C
       /*
        * if no spot was found among worse priorities, start rising up
        */
-      for (iSize = priority - 3 - 1; (iSize < 0) && (maxSize == -1); iSize--) {
+      for (iSize = priority - 3 - 1; (iSize >= 0) && (maxSize == -1); iSize--) {
         if (freeSpotsCount[iSize + 3] != 0) {
           // If there is at least one free space here find it
           for (iHeight = 5; (iHeight > 0) && (maxSize == -1); iHeight--) {
@@ -231,6 +231,16 @@ public class CarTransportationController3 extends RequestController implements C
       // call a robot
       // this.robots.get(Integer.parseInt(lot.getRobotIP())).insertCar(carId,
       // maxSize,maxHeight, maxDepth);
+    }
+    
+    Gson gson = new Gson();
+
+    for (ParkingCell[][] i: content) {
+      for (ParkingCell[] j: i) {
+        for (ParkingCell cell: j) {
+          System.out.println(gson.toJson(cell));          
+        }
+      }
     }
 
     lot.updateContent(conn, content);
@@ -335,6 +345,16 @@ public class CarTransportationController3 extends RequestController implements C
     ParkingLot lot = ParkingLot.findByID(conn, lotId);
     // String[][][] content = lot.getContentAsArray();
     ParkingCell[][][] content = lot.constructContentArray(conn);
+    
+//    Gson gson = new Gson();
+//
+//    for (ParkingCell[][] i: content) {
+//      for (ParkingCell[] j: i) {
+//        for (ParkingCell cell: j) {
+//          System.out.println(gson.toJson(cell));          
+//        }
+//      }
+//    }
 
     // Get the robot in the parking lot
     /*
