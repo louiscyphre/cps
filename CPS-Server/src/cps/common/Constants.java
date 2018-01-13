@@ -29,6 +29,9 @@ public interface Constants {
   public final int    COMPLAINT_STATUS_ACCEPTED   = 2;
   public final int    COMPLAINT_STATUS_REJECTED   = 3;
   public final String SPOT_IS_EMPTY               = "0";
+  
+  public final int LOT_HEIGHT = 3;
+  public final int LOT_DEPTH = 3;
 
   // SQL queries - OnetimeService
   public final String SQL_CREATE_ONETIME_SERVICE                    = "INSERT INTO onetime_service values(default, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -69,6 +72,7 @@ public interface Constants {
   public final String SQL_FIND_PARKING_CELL = "SELECT * FROM parking_cell WHERE lot_id=? and i=? and j=? and k=?";
   public final String SQL_UPDATE_PARKING_CELL = "UPDATE parking_cell SET lot_id=?, i=?, j=?, k=?, car_id=?, planned_end_time=?, reserved=?, disabled=?";
   public final String SQL_FIND_PARKING_CELL_BY_LOT_ID = "SELECT * FROM parking_cell WHERE lot_id=?";
+  public final String SQL_COUNT_FREE_PARKING_CELLS = "SELECT count(*) FROM parking_cell WHERE lot_id=? AND car_id IS NULL AND NOT reserved AND NOT disabled";
 
   // SQL queries - Customer
   public final String SQL_UPDATE_CUSTOMER                     = "UPDATE customer SET email=?, password=?, debit=?, credit=? WHERE id=?";

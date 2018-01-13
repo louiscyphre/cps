@@ -1,11 +1,5 @@
 package cps.server.controllers;
 
-import cps.api.response.*;
-import cps.common.Constants;
-import cps.entities.models.Customer;
-import cps.entities.models.ParkingLot;
-import cps.entities.models.SubscriptionService;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -14,6 +8,14 @@ import java.time.LocalTime;
 import cps.api.request.FullSubscriptionRequest;
 import cps.api.request.RegularSubscriptionRequest;
 import cps.api.request.SubscriptionRequest;
+import cps.api.response.FullSubscriptionResponse;
+import cps.api.response.RegularSubscriptionResponse;
+import cps.api.response.ServerResponse;
+import cps.api.response.SubscriptionResponse;
+import cps.common.Constants;
+import cps.entities.models.Customer;
+import cps.entities.models.ParkingLot;
+import cps.entities.models.SubscriptionService;
 import cps.server.ServerController;
 import cps.server.session.CustomerSession;
 

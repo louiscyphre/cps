@@ -143,6 +143,7 @@ public class ParkingLot implements Serializable {
    * @return the size
    */
   public int getSize() {
+    // TODO rename to width
     return size;
   }
 
@@ -154,6 +155,21 @@ public class ParkingLot implements Serializable {
    */
   public void setSize(int size) {
     this.size = size;
+  }
+
+  public int getHeight() {
+    return Constants.LOT_HEIGHT;
+  }
+
+  public int getDepth() {
+    return Constants.LOT_DEPTH;
+  }
+
+  /**
+   * @return a product of lot dimensions
+   */
+  public int getVolume() {
+    return getSize() * getHeight() * getDepth();
   }
 
   /**
@@ -184,8 +200,7 @@ public class ParkingLot implements Serializable {
 
   public ParkingCell[][][] constructContentArray(Connection conn) throws SQLException, ServerException {
     ParkingCell[][][] result = new ParkingCell[size][3][3];
-    ParkingCell.lotForEach(conn, id,
-        cell -> result[cell.width][cell.height][cell.depth] = cell);
+    ParkingCell.lotForEach(conn, id, cell -> result[cell.width][cell.height][cell.depth] = cell);
     return result;
   }
 
@@ -330,9 +345,10 @@ public class ParkingLot implements Serializable {
    * @return New parking lot object
    * @throws SQLException
    *           the SQL exception
+   * @throws ServerException
    */
   public static ParkingLot create(Connection conn, String streetAddress, int size, float price1, float price2,
-      String robotIP) throws SQLException {
+      String robotIP) throws SQLException, ServerException {
     // Create SQL statement and request table for table keys
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_PARKING_LOT, Statement.RETURN_GENERATED_KEYS);
     String lotContent = generateEmptyContent(size);
@@ -349,7 +365,9 @@ public class ParkingLot implements Serializable {
     stmt.setString(field++, robotIP);
 
     // Execute SQL query
-    stmt.executeUpdate();
+    if (stmt.executeUpdate() < 1) {
+      throw new ServerException("Failed to create ParkingLot");
+    }
 
     // Extract the auto-generated keys created as a result of executing this
     // Statement object
@@ -365,6 +383,15 @@ public class ParkingLot implements Serializable {
     }
 
     stmt.close();
+
+    // Create parking cells
+    for (int i = 0; i < size; i++) {
+      for (int j = 0; j < 3; j++) {
+        for (int k = 0; k < 3; k++) {
+          ParkingCell.create(conn, newID, i, j, k, null, null, false, false);
+        }
+      }
+    }
 
     return new ParkingLot(newID, streetAddress, size, lotContent, price1, price2, "", robotIP, false);
   }
@@ -483,5 +510,26 @@ public class ParkingLot implements Serializable {
     stmt.close();
 
     return results;
+  }
+
+  public int countFreeCells(Connection conn) throws SQLException, ServerException {
+    int count = ParkingCell.countAvailable(conn, id);
+
+    if (count > getVolume()) {
+      // This shouldn't happen during normal operation
+      throw new ServerException("There is more free cells than the lot size");
+    }
+
+    return count;
+  }
+
+  public void updateContent(Connection conn, ParkingCell[][][] content) throws SQLException {
+    for (ParkingCell[][] slice1 : content) {
+      for (ParkingCell[] slice2 : slice1) {
+        for (ParkingCell cell : slice2) {
+          cell.update(conn);
+        }
+      }
+    }
   }
 }

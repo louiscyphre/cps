@@ -1,5 +1,7 @@
 package cps.server.controllers;
 
+import static cps.common.Utilities.isWeekend;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
@@ -116,7 +118,7 @@ public class ParkingEntryController extends RequestController {
       // Check that the user is not trying to enter with a regular subscription
       // on a weekend
       DayOfWeek currentDay = LocalDate.now().getDayOfWeek();
-      errorIf(service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && currentDay == DayOfWeek.SATURDAY,
+      errorIf(service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && isWeekend(currentDay),
           "Regular subscription cannot be used to park during weekends");
 
       return service;

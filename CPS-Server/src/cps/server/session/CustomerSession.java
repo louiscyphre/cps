@@ -1,9 +1,10 @@
 package cps.server.session;
 
+import static cps.common.Utilities.randomString;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import cps.common.Utilities;
 import cps.entities.models.Customer;
 import cps.entities.people.User;
 import cps.server.ServerException;
@@ -51,7 +52,7 @@ public class CustomerSession extends BasicSession {
   }
 
   public Customer registerCustomer(Connection conn, String email) throws SQLException, ServerException {
-    String password = Utilities.randomString("0123456789", 4);
+    String password = randomString("0123456789", 4);
     
     // System.out.println(String.format("Sending password '%s' to email %s",
     // password, email));
