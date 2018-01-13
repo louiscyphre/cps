@@ -18,9 +18,9 @@ public class ParkingCell implements Serializable {
   private static final long serialVersionUID = 1L;
 
   public final int  lotID;
-  public final int  locationI;
-  public final int  locationJ;
-  public final int  locationK;
+  public final int  lSize;
+  public final int  lHeight;
+  public final int  lDepth;
   private String    carID;
   private Timestamp plannedExitTime;
   private boolean   reserved;
@@ -30,20 +30,20 @@ public class ParkingCell implements Serializable {
    * Instantiates a new parking cell.
    *
    * @param lotID the lot ID
-   * @param locationI the location I
-   * @param locationJ the location J
-   * @param locationK the location K
+   * @param lSize the location I
+   * @param lHeight the location J
+   * @param lDepth the location K
    * @param carID the car ID
    * @param plannedExitTime the planned exit time
    * @param reserved the reserved
    * @param disabled the disabled
    */
-  public ParkingCell(int lotID, int locationI, int locationJ, int locationK, String carID, Timestamp plannedExitTime,
+  public ParkingCell(int lotID, int lSize, int lHeight, int lDepth, String carID, Timestamp plannedExitTime,
       boolean reserved, boolean disabled) {
     this.lotID = lotID;
-    this.locationI = locationI;
-    this.locationJ = locationJ;
-    this.locationK = locationK;
+    this.lSize = lSize;
+    this.lHeight = lHeight;
+    this.lDepth = lDepth;
     this.carID = carID;
     this.plannedExitTime = plannedExitTime;
     this.reserved = reserved;
@@ -98,9 +98,9 @@ public class ParkingCell implements Serializable {
    *
    * @param conn the conn
    * @param lotID the lot ID
-   * @param locationI the location I
-   * @param locationJ the location J
-   * @param locationK the location K
+   * @param lSize the location I
+   * @param lHeigh the location J
+   * @param lDepth the location K
    * @param carID the car ID
    * @param plannedExitTime the planned exit time
    * @param reserved the reserved
@@ -109,7 +109,7 @@ public class ParkingCell implements Serializable {
    * @throws SQLException the SQL exception
    * @throws ServerException the server exception
    */
-  public static ParkingCell create(Connection conn, int lotID, int locationI, int locationJ, int locationK,
+  public static ParkingCell create(Connection conn, int lotID, int lSize, int lHeigh, int lDepth,
       String carID, Timestamp plannedExitTime, boolean reserved, boolean disabled)
       throws SQLException, ServerException {
     // Create SQL statement
@@ -118,9 +118,9 @@ public class ParkingCell implements Serializable {
     // Fill in the fields of the SQL statement
     int field = 1;
     statement.setInt(field++, lotID);
-    statement.setInt(field++, locationI);
-    statement.setInt(field++, locationJ);
-    statement.setInt(field++, locationK);
+    statement.setInt(field++, lSize);
+    statement.setInt(field++, lHeigh);
+    statement.setInt(field++, lDepth);
     statement.setString(field++, carID);
     statement.setTimestamp(field++, plannedExitTime);
     statement.setBoolean(field++, reserved);
@@ -133,7 +133,7 @@ public class ParkingCell implements Serializable {
 
     statement.close();
 
-    return new ParkingCell(lotID, locationI, locationJ, locationK, carID, plannedExitTime, reserved, disabled);
+    return new ParkingCell(lotID, lSize, lHeigh, lDepth, carID, plannedExitTime, reserved, disabled);
   }
 
   /**
@@ -179,9 +179,9 @@ public class ParkingCell implements Serializable {
 
     int field = 1;
     statement.setInt(field++, lotID);
-    statement.setInt(field++, locationI);
-    statement.setInt(field++, locationJ);
-    statement.setInt(field++, locationK);
+    statement.setInt(field++, lSize);
+    statement.setInt(field++, lHeight);
+    statement.setInt(field++, lDepth);
     statement.setString(field++, carID);
     statement.setTimestamp(field++, plannedExitTime);
     statement.setBoolean(field++, reserved);
