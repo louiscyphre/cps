@@ -52,6 +52,11 @@ public class OnetimeParkingController extends RequestController {
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
       // TODO check time overlap for this car with other parking services
+      /* Tegra block start */
+      request.getCarID();
+      OnetimeService.findForOverlap(conn, request.getCarID());
+      
+      /* Tegra block end */
       
       // Check that the starting time is not in the past
       errorIf(startTime.toLocalDateTime().isBefore(now), "The specified starting date is in the past");
