@@ -73,10 +73,28 @@ public class TegraTests {
      */
 
     Timestamp[] a = new Timestamp[10];
+    // Begining of a car park
     a[0] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(5));
-    a[1] = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
-    a[2] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(10));
-    a[3] = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+    // exit in two hours
+    a[1] = Timestamp.valueOf(LocalDateTime.now().plusHours(2));
+    // exit in seven hours
+    a[2] = Timestamp.valueOf(LocalDateTime.now().plusHours(7));
+    // exit in 13 hours
+    a[3] = Timestamp.valueOf(LocalDateTime.now().plusHours(13));
+    // Exit in 18 hours
+    a[4] = Timestamp.valueOf(LocalDateTime.now().plusHours(18));
+    // Exit in 24 hours
+    a[5] = Timestamp.valueOf(LocalDateTime.now().plusHours(24));
+    // Exit in 26 hours
+    a[6] = Timestamp.valueOf(LocalDateTime.now().plusHours(26));
+    // Exit in 30 hours
+    a[7] = Timestamp.valueOf(LocalDateTime.now().plusHours(30));
+    // Exit in 40 hours
+    a[8] = Timestamp.valueOf(LocalDateTime.now().plusHours(40));
+    // Exit in 50 hours
+    a[9] = Timestamp.valueOf(LocalDateTime.now().plusHours(50));
+    
+    
     OnetimeService[] reservedParkings = new OnetimeService[5];
     db.performAction(conn -> {
       reservedParkings[0] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3,
