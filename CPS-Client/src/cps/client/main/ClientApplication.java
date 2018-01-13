@@ -56,6 +56,7 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.LOGIN);
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
       ControllersClientAdapter.registerScene(SceneCode.RESERVE_PARKING);
+      ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
       ControllersClientAdapter.turnLoggedInStateOff();
       initializeStage(scene, "CPS Kiosk Client");
     } catch (IOException e) {
