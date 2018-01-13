@@ -53,8 +53,8 @@ public class OnetimeParkingController extends RequestController {
 
       // TODO check time overlap for this car with other parking services
       /* Tegra block start */
-      request.getCarID();
-      OnetimeService.findForOverlap(conn, request.getCarID());
+//      request.getCarID();
+//      OnetimeService.findForOverlap(conn, request.getCarID());
       
       /* Tegra block end */
       

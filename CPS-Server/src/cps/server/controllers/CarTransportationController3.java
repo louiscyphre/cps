@@ -233,16 +233,6 @@ public class CarTransportationController3 extends RequestController implements C
       // maxSize,maxHeight, maxDepth);
     }
     
-    Gson gson = new Gson();
-
-    for (ParkingCell[][] i: content) {
-      for (ParkingCell[] j: i) {
-        for (ParkingCell cell: j) {
-          System.out.println(gson.toJson(cell));          
-        }
-      }
-    }
-
     lot.updateContent(conn, content);
 
     return true;
@@ -286,6 +276,20 @@ public class CarTransportationController3 extends RequestController implements C
 
     if (!insertCars(conn, lot, carIds, exitTimes)) {
       throw new ServerException("Car Insertion failed");
+    }
+    
+    printLotContent(lot.constructContentArray(conn));
+  }
+  
+  void printLotContent(ParkingCell[][][] content) {  
+    Gson gson = new Gson();
+
+    for (ParkingCell[][] i: content) {
+      for (ParkingCell[] j: i) {
+        for (ParkingCell cell: j) {
+          System.out.println(gson.toJson(cell));          
+        }
+      }
     }
   }
 
@@ -345,16 +349,7 @@ public class CarTransportationController3 extends RequestController implements C
     ParkingLot lot = ParkingLot.findByID(conn, lotId);
     // String[][][] content = lot.getContentAsArray();
     ParkingCell[][][] content = lot.constructContentArray(conn);
-    
-//    Gson gson = new Gson();
-//
-//    for (ParkingCell[][] i: content) {
-//      for (ParkingCell[] j: i) {
-//        for (ParkingCell cell: j) {
-//          System.out.println(gson.toJson(cell));          
-//        }
-//      }
-//    }
+//    printLotContent(content);
 
     // Get the robot in the parking lot
     /*

@@ -70,7 +70,7 @@ public interface Constants {
   // SQL queries - ParkingCell
   public final String SQL_CREATE_PARKING_CELL = "INSERT INTO parking_cell values(?, ?, ?, ?, ?, ?, ?, ?)";
   public final String SQL_FIND_PARKING_CELL = "SELECT * FROM parking_cell WHERE lot_id=? and i=? and j=? and k=?";
-  public final String SQL_UPDATE_PARKING_CELL = "UPDATE parking_cell SET lot_id=?, i=?, j=?, k=?, car_id=?, planned_end_time=?, reserved=?, disabled=?";
+  public final String SQL_UPDATE_PARKING_CELL = "UPDATE parking_cell SET car_id=?, planned_end_time=?, reserved=?, disabled=? where lot_id=? AND i=? AND j=? AND k=?";
   public final String SQL_FIND_PARKING_CELL_BY_LOT_ID = "SELECT * FROM parking_cell WHERE lot_id=?";
   public final String SQL_COUNT_FREE_PARKING_CELLS = "SELECT count(*) FROM parking_cell WHERE lot_id=? AND car_id IS NULL AND NOT reserved AND NOT disabled";
 

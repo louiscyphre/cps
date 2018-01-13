@@ -226,18 +226,20 @@ public class ParkingCell implements Serializable {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_CELL);
 
     int field = 1;
-    statement.setInt(field++, lotID);
-    statement.setInt(field++, width);
-    statement.setInt(field++, height);
-    statement.setInt(field++, depth);
     statement.setString(field++, carID);
     statement.setTimestamp(field++, plannedExitTime);
     statement.setBoolean(field++, reserved);
     statement.setBoolean(field++, disabled);
+    statement.setInt(field++, lotID);
+    statement.setInt(field++, width);
+    statement.setInt(field++, height);
+    statement.setInt(field++, depth);
+    
+    statement.executeUpdate();
 
-    // if (statement.executeUpdate() < 1) {
-    // throw new ServerException("Failed to update ParkingCell");
-    // }
+//     if (statement.executeUpdate() < 1) {
+//     throw new ServerException("Failed to update ParkingCell");
+//     }
     // TODO disable update exceptions everywhere - it can return 0 if data
     // didn't change
 
