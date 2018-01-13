@@ -56,7 +56,6 @@ public class LotController extends RequestController {
 
       // Filter out information that customers shouldn't see
       result.forEach(lot -> {
-        lot.setContent(null);
         lot.setRobotIP(null);
       });
 
@@ -182,7 +181,7 @@ public class LotController extends RequestController {
 
       // Check request parameters
 
-      errorIf(!between(i, 0, lot.getSize() - 1), String.format("Parameter i must be in range [0, %s] (inclusive)", lot.getSize() - 1));
+      errorIf(!between(i, 0, lot.getWidth() - 1), String.format("Parameter i must be in range [0, %s] (inclusive)", lot.getWidth() - 1));
       errorIf(!between(j, 0, Constants.LOT_HEIGHT - 1), String.format("Parameter j must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
       errorIf(!between(k, 0, Constants.LOT_DEPTH - 1), String.format("Parameter k must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
 

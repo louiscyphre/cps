@@ -54,7 +54,8 @@ public class SubscriptionController extends RequestController {
         ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
         
         // Check that lot is not full
-        errorIf(lot.getFreeSpotsNumber() < 1, "Parking Lot is full");
+        // TODO count reservations from OnetimeService and SubscriptionService and subtract from freeCells
+        errorIf(lot.countFreeCells(conn) < 1, "Parking Lot is full");
       }
       
       // Handle login

@@ -22,7 +22,7 @@ public interface Constants {
   // Bit flags
   public final int ACCESS_DOMAIN_PARKING_LOT      = 1;
   public final int ACCESS_DOMAIN_CUSTOMER_SERVICE = 2;
-  public final int ACCESS_DOMAIN_GLOBAL           = 255;
+  public final int ACCESS_DOMAIN_EVERYTHING           = 255;
 
   public final float  PRICE_PER_HOUR_RESERVED     = 4f;
   public final int    COMPLAINT_STATUS_PROCESSING = 1;

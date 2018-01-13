@@ -3,7 +3,7 @@ package cps.server.testing.tests;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
-import cps.server.controllers.CarTransportationController3;
+import cps.server.controllers.CarTransportationControllerA;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -31,7 +31,7 @@ import cps.entities.models.ParkingLot;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.ServerException;
-import cps.server.controllers.CarTransportationController3;
+import cps.server.controllers.CarTransportationControllerA;
 import cps.server.controllers.DatabaseController;
 import cps.server.controllers.OnetimeParkingController;
 import cps.server.controllers.ParkingEntryController;
@@ -95,7 +95,7 @@ public class TegraTests {
     a[8] = Timestamp.valueOf(LocalDateTime.now().plusHours(40));
     // Exit in 50 hours
     a[9] = Timestamp.valueOf(LocalDateTime.now().plusHours(50));
-    CarTransportationController3 transcontroller = new CarTransportationController3(server);
+    CarTransportationControllerA transcontroller = new CarTransportationControllerA(server);
     OnetimeService[][] reservedParkings = new OnetimeService[3][carstoinsert];
     db.performAction(conn -> {
       for (int j = 1, k = 0; j < 4; j++, k++) {

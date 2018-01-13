@@ -20,9 +20,9 @@ import cps.server.ServerException;
 import cps.server.devices.Robot;
 
 @SuppressWarnings("unused")
-public class CarTransportationController3 extends RequestController implements CarTransportationController {
+public class CarTransportationControllerA extends RequestController implements CarTransportationController {
 
-  public CarTransportationController3(ServerController serverController) {
+  public CarTransportationControllerA(ServerController serverController) {
     super(serverController);
   }
 
@@ -51,7 +51,7 @@ public class CarTransportationController3 extends RequestController implements C
       throws SQLException, ServerException {
     // Get the parking lot
     ParkingCell[][][] content = lot.constructContentArray(conn);
-    int lotWidth = lot.getSize();
+    int lotWidth = lot.getWidth();
 
     /*
      * Lower number represents higher priority - the car will be closer to exit
@@ -373,7 +373,7 @@ public class CarTransportationController3 extends RequestController implements C
     boolean found = false;
 
     // Find a car in the lot by carId
-    for (int iSize = 0; iSize < lot.getSize() && !found; iSize++) {
+    for (int iSize = 0; iSize < lot.getWidth() && !found; iSize++) {
       for (int iHeight = 0; iHeight < 3 && !found; iHeight++) {
         for (int iDepth = 0; iDepth < 3 && !found; iDepth++) {
           if (content[iSize][iHeight][iDepth].contains(carID)) {
