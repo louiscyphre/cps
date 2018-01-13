@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import cps.common.Constants;
@@ -191,6 +192,20 @@ public class OnetimeService implements ParkingService {
     return result;
   }
 
+  public static ArrayList<OnetimeService> findForOverlap(Connection conn,String carID) throws SQLException{
+    ArrayList<OnetimeService> result=new ArrayList<OnetimeService>();
+    PreparedStatement stmt= conn.prepareStatement("");
+    int i=1;
+    stmt.setString(i++, carID);
+    ResultSet rs=stmt.executeQuery();
+    while (rs.next()) {
+      result.add(new OnetimeService(rs));
+    }
+    rs.close();
+    stmt.close();
+    return result;
+  }
+  
   public static OnetimeService findByID(Connection conn, int sId) throws SQLException {
     OnetimeService result = null;
 
