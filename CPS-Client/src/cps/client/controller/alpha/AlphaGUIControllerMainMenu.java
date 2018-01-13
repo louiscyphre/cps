@@ -139,13 +139,13 @@ public class AlphaGUIControllerMainMenu implements ViewController {
   @Override
   public void turnLoggedInStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnLoggedInStateOff() {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

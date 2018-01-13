@@ -9,7 +9,7 @@ public class CustomerContextImpl implements CustomerContext {
 
   @Override
   public int getCustomerId() {
-    if(isLoggedIn()) {
+    if (isLoggedIn()) {
       return customerId;
     }
     return 0;

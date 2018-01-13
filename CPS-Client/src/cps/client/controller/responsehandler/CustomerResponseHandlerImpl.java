@@ -44,7 +44,45 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
   @Override
   public ServerResponse handle(IncidentalParkingResponse response) {
-    // TODO Auto-generated method stub
+    CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    int responseCustomerId = response.getCustomerID();
+    List<Text> formattedMessage = new LinkedList<Text>();
+    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId()) {
+      context.setCustomerId(responseCustomerId);
+      formattedMessage.add(new Text("Your Customer ID:"));
+      Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      Font defaultFont = customerIdText.getFont();
+      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(customerIdText);
+      formattedMessage.add(new Text("\n"));
+
+      formattedMessage.add(new Text("Your Password:"));
+      Text password = new Text(response.getPassword());
+      defaultFont = password.getFont();
+      password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(password);
+      formattedMessage.add(new Text("\n"));
+
+      context.acceptPendingEmail();
+    }
+
+    // TODO differs here
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("Your incidental parking reserved, you are now logged in, and may put the car!\n"));
+      formattedMessage.add(new Text("Use your password in entry, and have a nice day!"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("Could not reserve parking at this moment!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+
     return null;
   }
 
@@ -91,13 +129,14 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       formattedMessage.add(new Text("Your Password:"));
       Text password = new Text(response.getPassword());
       defaultFont = password.getFont();
-      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(password);
       formattedMessage.add(new Text("\n"));
 
       context.acceptPendingEmail();
     }
 
+    // TODO differs here
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       formattedMessage.add(new Text("Succesfully reserved parking per request!\n"));
       formattedMessage.add(new Text(response.getDescription()));

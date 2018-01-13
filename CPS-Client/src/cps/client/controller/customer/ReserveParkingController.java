@@ -239,10 +239,9 @@ public class ReserveParkingController implements ViewController {
   // returns email if logged in from customer context,
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
-    if(cntx.isLoggedIn()) {
-      return cntx.getCustomerEmail(); 
-    }
-    else {
+    if (cntx.isLoggedIn()) {
+      return cntx.getCustomerEmail();
+    } else {
       return emailTF.getText();
     }
   }

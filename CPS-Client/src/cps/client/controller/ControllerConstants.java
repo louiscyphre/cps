@@ -12,11 +12,10 @@ public class ControllerConstants {
 
     // customer views
     LOGIN("../view/customer/LoginScene.fxml"), CUSTOMER_INITIAL_MENU(
-        "../view/customer/CustomerInitialMenuScene.fxml"), CUSTOMER_INITIAL_MENU_MK2(
-            "../view/customer/CustomerInitialMenuSceneMk2.fxml"), CUSTOMER_LIST_SUBSCRIPTIONS(
-                "../view/customer/CustomerListSubscriptionsScene.fxml"), RESERVE_PARKING(
-                    "../view/customer/ReserveParkingScene.fxml"),
-    INCIDENTAL_PARKING("../view/customer/IncidentalParkingScene.fxml"),
+        "../view/customer/CustomerInitialMenuScene.fxml"), CUSTOMER_LIST_SUBSCRIPTIONS(
+            "../view/customer/CustomerListSubscriptionsScene.fxml"), RESERVE_PARKING(
+                "../view/customer/ReserveParkingScene.fxml"), INCIDENTAL_PARKING(
+                    "../view/customer/IncidentalParkingScene.fxml"),
 
     // service views
     SERVICE_ACTION_DISABLE_SLOT("../view/service/ServiceActionDisableSlot.fxml"), SERVICE_ACTION_INIT_LOT(
@@ -45,7 +44,8 @@ public class ControllerConstants {
   public enum InputVerification {
     INPUT_OK(0, "The request is valid"), MISSING_USERID(0, "Missing or bad UserID"), MISSING_EMAIL(1,
         "Missing or bad Email"), MISSING_CARID(3, "Missing or bad CarID"), MISSING_LOTID(4,
-            "Missing or bad LotID"), MISSING_PLANNEDENDTIME(5, "Missing or bad Planned End Time"), MISSING_PASSWORD(6, "Missing password"), ;
+            "Missing or bad LotID"), MISSING_PLANNEDENDTIME(5,
+                "Missing or bad Planned End Time"), MISSING_PASSWORD(6, "Missing password"),;
 
     private final int    id;
     private final String msg;

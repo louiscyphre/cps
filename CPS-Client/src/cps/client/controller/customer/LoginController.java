@@ -27,8 +27,8 @@ import javafx.scene.text.TextFlow;
 public class LoginController implements ViewController {
 
   private static final String DEFAULT_INFO_LABEL = "";
-  private boolean processing = false;
-  
+  private boolean             processing         = false;
+
   @FXML // fx:id="emailTextField"
   private TextField emailTextField; // Value injected by FXMLLoader
 
@@ -78,9 +78,8 @@ public class LoginController implements ViewController {
 
   @FXML
   void handleBackButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU_MK2);//TODO //FIXME if needed
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
   }
- 
 
   @FXML
   void initialize() {
@@ -94,6 +93,7 @@ public class LoginController implements ViewController {
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
   }
+
   @Override
   public void displayInfo(List<Text> formattedText) {
     infoBox.getStyleClass().clear();
@@ -151,13 +151,13 @@ public class LoginController implements ViewController {
   @Override
   public void turnLoggedInStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnLoggedInStateOff() {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

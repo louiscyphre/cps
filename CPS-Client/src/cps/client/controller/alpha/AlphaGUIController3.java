@@ -91,13 +91,13 @@ public class AlphaGUIController3 implements ViewController {
   @Override
   public void turnLoggedInStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnLoggedInStateOff() {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

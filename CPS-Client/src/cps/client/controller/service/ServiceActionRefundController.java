@@ -15,6 +15,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 // TODO verify with server side how the refund should behave
 public class ServiceActionRefundController implements ViewController {
@@ -26,7 +27,7 @@ public class ServiceActionRefundController implements ViewController {
   private URL location;
 
   @FXML // fx:id="infoLabel"
-  private Label infoLabel; // Value injected by FXMLLoader
+  private TextFlow infoLabel; // Value injected by FXMLLoader
 
   @FXML // fx:id="infoProgress"
   private ProgressIndicator infoProgress; // Value injected by FXMLLoader
@@ -101,12 +102,12 @@ public class ServiceActionRefundController implements ViewController {
   @Override
   public void turnLoggedInStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnLoggedInStateOff() {
     // TODO Auto-generated method stub
-    
+
   }
 }

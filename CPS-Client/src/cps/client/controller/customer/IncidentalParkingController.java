@@ -34,10 +34,8 @@ import javafx.scene.text.TextFlow;
 public class IncidentalParkingController implements ViewController {
 
   private static final String DEFAULT_INFO_LABEL = "";
-  private boolean processing = false;
+  private boolean             processing         = false;
 
-  @FXML
-  private TextField customerIDTextField;
   @FXML
   private TextField carIDTextField;
 
@@ -49,9 +47,9 @@ public class IncidentalParkingController implements ViewController {
 
   @FXML
   private ProgressIndicator infoProgress;
-  
+
   @FXML
-  private DatePicker  endDatePicker;
+  private DatePicker endDatePicker;
 
   @FXML
   private TextField endTimeTextField;
@@ -70,7 +68,7 @@ public class IncidentalParkingController implements ViewController {
 
   @FXML
   void handleCancelButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU_MK2);//TODO //FIXME if needed
+    ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU);
   }
 
   @FXML
@@ -140,8 +138,8 @@ public class IncidentalParkingController implements ViewController {
       ControllersClientAdapter.getCustomerContext().setPendingEmail(email);
     }
 
-    IncidentalParkingRequest request = new IncidentalParkingRequest(customerID, 
-        email, carID, lotID, plannedEndDateTime);
+    IncidentalParkingRequest request = new IncidentalParkingRequest(customerID, email, carID, lotID,
+        plannedEndDateTime);
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
@@ -151,12 +149,11 @@ public class IncidentalParkingController implements ViewController {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
-  
+
   // return car id or null if empty
   private String getCarId() {
     return carIDTextField.getText();
   }
-
 
   // returns planned end date or null if empty
   private LocalDateTime getPlannedEndDateTime() {
@@ -169,6 +166,7 @@ public class IncidentalParkingController implements ViewController {
       return null;
     }
   }
+
   // returns planned end time or null if empty
   private LocalTime getEndTime() {
     try {
@@ -188,15 +186,14 @@ public class IncidentalParkingController implements ViewController {
     } catch (NumberFormatException e) {
       return -1;
     }
-  } 
+  }
 
   // returns email if logged in from customer context,
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
-    if(cntx.isLoggedIn()) {
-      return cntx.getCustomerEmail(); 
-    }
-    else {
+    if (cntx.isLoggedIn()) {
+      return cntx.getCustomerEmail();
+    } else {
       return emailTextField.getText();
     }
   }
@@ -210,7 +207,7 @@ public class IncidentalParkingController implements ViewController {
   public void hideEmail() {
     emailTextField.visibleProperty().set(false);
   }
-  
+
   @Override
   public void displayInfo(List<Text> formattedText) {
     infoBox.getStyleClass().clear();
@@ -268,18 +265,15 @@ public class IncidentalParkingController implements ViewController {
   @Override
   public void turnLoggedInStateOn() {
     emailTextField.setVisible(false);
-    customerIDTextField.setVisible(false);
   }
 
   @Override
   public void turnLoggedInStateOff() {
     emailTextField.setVisible(true);
-    customerIDTextField.setVisible(true);
   }
-  
+
   @FXML
   void initialize() {
-    assert customerIDTextField != null : "fx:id=\"customerIDTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert carIDTextField != null : "fx:id=\"carIDTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'. ";
     assert lotIDTextField != null : "fx:id=\"lotIDTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
@@ -288,7 +282,6 @@ public class IncidentalParkingController implements ViewController {
     assert endTimeTextField != null : "fx:id=\"endTimeTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert emailTextField != null : "fx:id=\"emailTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
-
 
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.INCIDENTAL_PARKING);
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text

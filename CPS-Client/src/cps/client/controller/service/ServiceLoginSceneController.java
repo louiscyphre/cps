@@ -15,6 +15,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 public class ServiceLoginSceneController implements ViewController {
 
@@ -28,7 +29,7 @@ public class ServiceLoginSceneController implements ViewController {
   private TextField usernameTF; // Value injected by FXMLLoader
 
   @FXML // fx:id="infoLabel"
-  private Label infoLabel; // Value injected by FXMLLoader
+  private TextFlow infoLabel; // Value injected by FXMLLoader
 
   @FXML // fx:id="infoProgress"
   private ProgressIndicator infoProgress; // Value injected by FXMLLoader
@@ -100,12 +101,12 @@ public class ServiceLoginSceneController implements ViewController {
   @Override
   public void turnLoggedInStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnLoggedInStateOff() {
     // TODO Auto-generated method stub
-    
+
   }
 }

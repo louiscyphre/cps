@@ -25,7 +25,6 @@
   <center>
     <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="628.0" prefWidth="360.0" spacing="15.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
-            <TextField fx:id="customerIDTextField" alignment="BASELINE_LEFT" layoutX="50.0" layoutY="36.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter your Customer ID here" style="" styleClass="inputField" text="" />
         <TextField fx:id="carIDTextField" alignment="BASELINE_LEFT" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter your Car ID here" style="" styleClass="inputField" text="">
                <VBox.margin>
                   <Insets />
