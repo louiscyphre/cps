@@ -6,6 +6,7 @@ package cps.server.controllers;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import cps.api.request.CancelOnetimeParkingRequest;
@@ -53,9 +54,8 @@ public class OnetimeParkingController extends RequestController {
 
       // TODO check time overlap for this car with other parking services
       /* Tegra block start */
-      request.getCarID();
-      OnetimeService.findForOverlap(conn, request.getCarID());
       
+      errorIf(ExistsOverlap(OnetimeService.findForOverlap(conn, request.getCarID(),startTime,plannedEndTime),request.getCarID()), "Parking spot is already reserved for this car in this timeframe");
       /* Tegra block end */
       
       // Check that the starting time is not in the past
@@ -90,6 +90,13 @@ public class OnetimeParkingController extends RequestController {
       response.setSuccess("OnetimeParkingRequest completed successfully");
       return response;
     });
+  }
+
+  private boolean ExistsOverlap(ArrayList<OnetimeService> findForOverlap, String carID) {
+    if (findForOverlap.isEmpty()) {
+      return true;
+    }
+    return false;
   }
 
   /**
