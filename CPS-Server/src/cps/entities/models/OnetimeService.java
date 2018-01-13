@@ -124,6 +124,21 @@ public class OnetimeService implements ParkingService {
     return Constants.LICENSE_TYPE_ONETIME;
   }
 
+  /**
+   * Creates Onetime Service.
+   *
+   * @param conn the Connection
+   * @param type Constants.ServiceType
+   * @param customerID the customer ID
+   * @param email the email
+   * @param carID the car ID
+   * @param lotID the lot ID
+   * @param plannedStartTime the planned start time
+   * @param plannedEndTime the planned end time
+   * @param canceled If the service was canceled (default false)
+   * @return the onetime service
+   * @throws SQLException the SQL exception
+   */
   public static OnetimeService create(Connection conn, int type, int customerID, String email, String carID, int lotID,
       Timestamp plannedStartTime, Timestamp plannedEndTime, boolean canceled) throws SQLException {
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_ONETIME_SERVICE,
