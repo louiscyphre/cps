@@ -53,9 +53,8 @@ public class OnetimeParkingController extends RequestController {
 
       // TODO check time overlap for this car with other parking services
       /* Tegra block start */
-//      request.getCarID();
-//      OnetimeService.findForOverlap(conn, request.getCarID());
       
+      errorIf(ExistsOverlap(OnetimeService.findForOverlap(conn, request.getCarID(),startTime,plannedEndTime),request.getCarID()), "Parking spot is already reserved for this car in this timeframe");
       /* Tegra block end */
       
       // Check that the starting time is not in the past

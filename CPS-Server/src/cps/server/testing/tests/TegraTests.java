@@ -32,6 +32,7 @@ import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.controllers.DatabaseController;
 import cps.server.controllers.OnetimeParkingController;
+import cps.server.controllers.ParkingEntryController;
 import cps.server.session.CustomerSession;
 import cps.server.session.SessionHolder;
 import cps.server.testing.utilities.CustomerData;
@@ -53,23 +54,40 @@ public class TegraTests {
   @Test
   public void testInsertCars() throws ServerException {
     int parkingRequestsNo = 5;
-    /*
-     * Create parking lot Create incidental parking request Insert the car
-     */
-
+    // Create parking lot Create incidental parking request
+    // Insert the car
     ParkingLot lot = initParkingLot();
     CustomerData data = new CustomerData((int) Math.random() * 1000,
         Utilities.randomString("abcdefghijklmnopqrstuvwxyz", 8), Utilities.randomString("1234567890", 4),
         Utilities.randomString("1234567890ABCDTRUOTSKL", 7), 1, 0);
-    OnetimeService[] incidentalParkingRequests = new OnetimeService[parkingRequestsNo];
+    /*
+     * OnetimeService[] incidentalParkingRequests = new
+     * OnetimeService[parkingRequestsNo]; for (int i = 0; i < parkingRequestsNo;
+     * i++) { incidentalParkingRequests[i] = newIncidentalParking(lot.getId());
+     * }
+     */
+    /*
+     * CarTransportation[] req = new CarTransportation[parkingRequestsNo]; for
+     * (int i = 0; i < parkingRequestsNo; i++) { req[i] =
+     * newParkingEntry(incidentalParkingRequests[i]);
+     */
 
-    for (int i = 0; i < parkingRequestsNo; i++) {
-      incidentalParkingRequests[i] = newIncidentalParking(lot.getId());
-    }
-    CarTransportation[] req = new CarTransportation[parkingRequestsNo];
-    for (int i = 0; i < parkingRequestsNo; i++) {
-      req[i] = newParkingEntry(incidentalParkingRequests[i]);
-    }
+    Timestamp[] a = new Timestamp[10];
+    a[0] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(5));
+    a[1] = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+    a[2] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(10));
+    a[3] = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+    OnetimeService[] reservedParkings = new OnetimeService[5];
+    db.performAction(conn -> {
+      reservedParkings[0] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3,
+          "no@email.com", "123-sdf", lot.getId(), a[0], a[1], false);
+      /*
+       * reservedParkings[1] = OnetimeService.create(db.getConnection(),
+       * Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "123-sdf",
+       * lot.getId(), a[2], a[3], false);
+       */
+      assertTrue(0 < OnetimeService.findForOverlap(conn, "123-sdf", a[2], a[3]).size());
+    });
 
   }
 
@@ -96,15 +114,14 @@ public class TegraTests {
         Timestamp.valueOf(request.getPlannedEndTime()), false);
   }
 
-  private ParkingLot initParkingLot() throws ServerException {
-    ParkingLot lt = null;
-    InitLotAction request = new InitLotAction(1, "Sesam 2", 4, 5, 3, "12.f.t43");
-    ServerResponse response = server.dispatch(request, context);
-    InitLotResponse re2 = (InitLotResponse) response;
-    lt = db.performQuery(conn -> ParkingLot.findByID(conn, re2.getLotID()));
-    assertNotNull(lt);
-    return lt;
+  protected ParkingLot initParkingLot() throws ServerException {
+    ParkingLot lot = db.performQuery(conn -> ParkingLot.create(conn, "Sesam 2", 4, 5, 3, "12.f.t43"));
+    assertNotNull(lot);
+    // printObject(lot);
+    assertEquals(1, db.countEntities("parking_lot"));
+    return lot;
   }
+
   /*
    * @Test public void testRetrieveCar() { fail("Not yet implemented"); }
    * @Test public void testHandleInitLotAction() { fail("Not yet implemented");

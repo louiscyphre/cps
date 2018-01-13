@@ -56,6 +56,5 @@ public class TestFullSubscription extends ServerControllerTest {
     requestFullSubscription(data, getContext());
     requestParkingEntry(data, getContext());
     requestParkingExit(data, getContext());
-
   }
 }

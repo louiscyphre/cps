@@ -64,10 +64,10 @@ public class CarTransportationController3 extends RequestController implements C
      * for the time when all the lot is full except the front lines of three
      * Then we will start to fill them one by one
      */
-    int priority, worstPriority = lotWidth + 3;
+    int priority, worstPriority = lotWidth + 3 - 1;
     int iSize, iHeight, maxSize, maxHeight, maxDepth, path, minPath;
     // Easy count of free spots in each priority
-    int[] freeSpotsCount = new int[worstPriority];
+    int[] freeSpotsCount = new int[worstPriority + 1];
     for (int i = 0; i < worstPriority; i++) {
       freeSpotsCount[i] = 0;
     }
