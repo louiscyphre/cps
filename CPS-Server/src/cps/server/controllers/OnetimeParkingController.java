@@ -47,9 +47,7 @@ public class OnetimeParkingController extends RequestController {
   public ServerResponse handle(OnetimeParkingRequest request, CustomerSession session,
       OnetimeParkingResponse serverResponse, Timestamp startTime, Timestamp plannedEndTime, LocalDateTime now) {
     return database.performQuery(serverResponse, (conn, response) -> {
-      // Handle login
-      Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
-
+      // Check that the same car is not going to be parked in different locations at the same time
       errorIf(OnetimeService.overlapExists(conn, request.getCarID(), startTime, plannedEndTime),
           "Parking spot is already reserved for this car in this timeframe");
 
@@ -62,6 +60,11 @@ public class OnetimeParkingController extends RequestController {
 
       // Check that lot exists
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
+      
+      // TODO redirect to alternative lot if current lot is full
+
+      // Handle login
+      Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
       OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
           request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);

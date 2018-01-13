@@ -237,8 +237,6 @@ public class ParkingCell implements Serializable {
     
     statement.executeUpdate();
     
-    // TODO disable update exceptions everywhere - it can return 0 if data didn't change
-
     statement.close();
   }
 
