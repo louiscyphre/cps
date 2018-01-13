@@ -7,59 +7,69 @@ import java.util.List;
 
 import cps.api.request.LoginRequest;
 import cps.client.controller.ControllerConstants;
+import cps.client.controller.ControllerConstants.InputVerification;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
 import cps.client.utils.FormatValidation.InputFormats;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
-/**
- * Created on: 2018-01-06 6:43:00 PM
- */
 public class LoginController implements ViewController {
+
+  private static final String DEFAULT_INFO_LABEL = "";
+  private boolean             processing         = false;
 
   @FXML // fx:id="emailTextField"
   private TextField emailTextField; // Value injected by FXMLLoader
 
   @FXML // fx:id="passwordTextField"
-  private TextField passwordTextField;
+  private PasswordField passwordTextField;
 
   @FXML
   private VBox infoBox;
 
   @FXML
-  private Label infoLabel;
+  private TextFlow infoLabel;
 
   @FXML
   private ProgressIndicator infoProgress;
 
   @FXML
   void handleSubmitButton(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    validateAndSend();
+  }
 
+  private void validateAndSend() {
     String email = null;
     try {
       email = emailTextField.getText();
     } catch (NumberFormatException e) {
-      // displayError(ControllerConstants.InputVerification.MISSING_USERID.getMsg());
+      displayError(InputVerification.MISSING_USERID.getMsg());
       return;
     }
     String password = null;
     try {
       password = passwordTextField.getText();
     } catch (NumberFormatException e) {
-      // displayError(ControllerConstants.InputVerification.MISSING_PASSWORD.getMsg());
+      displayError(InputVerification.MISSING_PASSWORD.getMsg());
       return;
     }
     if (!InputFormats.isValidEmailAddress(email)) {
-      // displayError(InputValidation.BAD_EMAIL.getMsg());
+      displayError(InputVerification.MISSING_EMAIL.getMsg());
       return;
     }
+
+    ControllersClientAdapter.getCustomerContext().setPendingEmail(email);
 
     LoginRequest request = new LoginRequest(email, password);
     ControllersClientAdapter.getClient().sendRequest(request);
@@ -69,25 +79,6 @@ public class LoginController implements ViewController {
   void handleBackButton(ActionEvent event) {
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
   }
-  /*
-   * (non-Javadoc)
-   * @see cps.client.controller.Notification#displayInfo(java.lang.String)
-   */
-  // @Override
-  // public void displayInfo(String infoMsg) {
-  // TODO Auto-generated method stub
-
-  // }
-
-  /*
-   * (non-Javadoc)
-   * @see cps.client.controller.Notification#displayError(java.lang.String)
-   */
-  // @Override
-  // public void displayError(String errorMsg) {
-  // TODO Auto-generated method stub
-
-  // }
 
   @FXML
   void initialize() {
@@ -104,50 +95,77 @@ public class LoginController implements ViewController {
 
   @Override
   public void displayInfo(List<Text> formattedText) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void displayError(List<Text> formettedErrorMsg) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnProcessingStateOn() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnProcessingStateOff() {
-    // TODO Auto-generated method stub
-
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("infoLabel");
+    infoLabel.getChildren().clear();
+    for (Text ft : formattedText) {
+      infoLabel.getChildren().add(ft);
+    }
   }
 
   @Override
   public void displayInfo(String simpleInfoMsg) {
-    // TODO Auto-generated method stub
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("infoLabel");
+    infoLabel.getChildren().clear();
+    infoLabel.getChildren().add(new Text(simpleInfoMsg));
+  }
 
+  @Override
+  public void displayError(List<Text> formettedErrorMsg) {
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("errorLabel");
+    infoLabel.getChildren().clear();
+    for (Text ft : formettedErrorMsg) {
+      infoLabel.getChildren().add(ft);
+    }
   }
 
   @Override
   public void displayError(String simpleErrorMsg) {
-    // TODO Auto-generated method stub
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("errorLabel");
+    infoLabel.getChildren().clear();
+    infoLabel.getChildren().add(new Text(simpleErrorMsg));
+  }
 
+  @Override
+  public void turnProcessingStateOn() {
+    infoProgress.visibleProperty().set(true);
+    Text text = new Text("Processing...");
+    infoLabel.getChildren().clear();
+    infoLabel.getChildren().add(text);
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("processingLabel");
+    processing = true;
+  }
+
+  @Override
+  public void turnProcessingStateOff() {
+    infoProgress.visibleProperty().set(false);
+    processing = false;
+    displayInfo(DEFAULT_INFO_LABEL);
   }
 
   @Override
   public void turnLoggedInStateOn() {
-    // TODO Auto-generated method stub
-    
+    // view does not change
   }
 
   @Override
   public void turnLoggedInStateOff() {
-    // TODO Auto-generated method stub
-    
+    // view does not change
+  }
+
+  @Override
+  public void cleanCtrl() {
+    // info box clear
+    infoBox.getStyleClass().add("infoLabel");
+    infoProgress.visibleProperty().set(false);
+    infoLabel.getChildren().clear();
+    // input fields clear
+    emailTextField.clear();
+    passwordTextField.clear();
   }
 
 }

@@ -36,4 +36,11 @@ public class EmployeeContextImpl implements EmployeeContext {
     this.accessLevel = accessLevel;
   }
 
+  @Override
+  public void logContextOut() {
+    id = 0;
+    username = null;
+    accessLevel = 0;
+  }
+
 }

@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 // TODO implement access-level dependent button style/handling 
 public class ServiceActionMenuSceneController implements ViewController {
@@ -25,7 +26,7 @@ public class ServiceActionMenuSceneController implements ViewController {
   private URL location;
 
   @FXML // fx:id="infoLabel"
-  private Label infoLabel; // Value injected by FXMLLoader
+  private TextFlow infoLabel; // Value injected by FXMLLoader
 
   @FXML // fx:id="jobTitleLabel"
   private Label jobTitleLabel; // Value injected by FXMLLoader
@@ -130,12 +131,18 @@ public class ServiceActionMenuSceneController implements ViewController {
   @Override
   public void turnLoggedInStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnLoggedInStateOff() {
     // TODO Auto-generated method stub
-    
+
+  }
+
+  @Override
+  public void cleanCtrl() {
+    // TODO Auto-generated method stub
+
   }
 }

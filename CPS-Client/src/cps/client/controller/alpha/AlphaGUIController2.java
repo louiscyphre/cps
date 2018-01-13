@@ -150,13 +150,19 @@ public class AlphaGUIController2 implements ViewController {
   @Override
   public void turnLoggedInStateOn() {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void turnLoggedInStateOff() {
     // TODO Auto-generated method stub
-    
+
+  }
+
+  @Override
+  public void cleanCtrl() {
+    // TODO Auto-generated method stub
+
   }
 
 }

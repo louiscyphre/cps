@@ -86,6 +86,8 @@ public class ControllersClientAdapter {
     stage.setY(bounds.getMinY());
     stage.setWidth(bounds.getWidth());
     stage.setHeight(bounds.getHeight());
+
+    fetchCtrl(code).cleanCtrl();
   }
 
   public static CustomerContext getCustomerContext() {
@@ -103,4 +105,16 @@ public class ControllersClientAdapter {
   public static ViewController getCurrentCtrl() {
     return fetchCtrl(getCurrentScene());
   }
+
+  public static void turnLoggedInStateOn() {
+    getCustomerContext().setLoggedIn(true);
+    getInstance().ctrlMapping.forEach((k, v) -> v.turnLoggedInStateOn());
+  }
+
+  public static void turnLoggedInStateOff() {
+    getCustomerContext().logContextOut();
+    getEmployeeContext().logContextOut();
+    getInstance().ctrlMapping.forEach((k, v) -> v.turnLoggedInStateOff());
+  }
+
 }
