@@ -7,43 +7,26 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 
 import cps.api.request.IncidentalParkingRequest;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
-import cps.client.controller.ViewController;
-import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.utils.FormatValidation.InputFormats;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 /**
  * Created on: 2018-01-13 1:01:03 AM
  */
-public class IncidentalParkingController implements ViewController {
-
-  private static final String DEFAULT_INFO_LABEL = "";
-  private boolean             processing         = false;
-
+public class IncidentalParkingController extends CustomerActionControllerBase {
   @FXML
   private TextField carIDTextField;
-
-  @FXML
-  private TextFlow infoLabel;
-
-  @FXML
-  private ProgressIndicator infoProgress;
 
   @FXML
   private DatePicker endDatePicker;
@@ -55,18 +38,10 @@ public class IncidentalParkingController implements ViewController {
   private TextField emailTextField;
 
   @FXML
-  private VBox infoBox;
-
-  @FXML
   private Font x1;
 
   @FXML
   private Insets x3;
-
-  @FXML
-  void handleCancelButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU);
-  }
 
   @FXML
   void handleSubmitButton(ActionEvent event) {
@@ -203,78 +178,24 @@ public class IncidentalParkingController implements ViewController {
   }
 
   @Override
-  public void displayInfo(List<Text> formattedText) {
-    infoBox.getStyleClass().clear();
-    infoBox.getStyleClass().add("infoLabel");
-    infoLabel.getChildren().clear();
-    for (Text ft : formattedText) {
-      infoLabel.getChildren().add(ft);
-    }
-  }
-
-  @Override
-  public void displayInfo(String simpleInfoMsg) {
-    infoBox.getStyleClass().clear();
-    infoBox.getStyleClass().add("infoLabel");
-    infoLabel.getChildren().clear();
-    infoLabel.getChildren().add(new Text(simpleInfoMsg));
-  }
-
-  @Override
-  public void displayError(List<Text> formettedErrorMsg) {
-    infoBox.getStyleClass().clear();
-    infoBox.getStyleClass().add("errorLabel");
-    infoLabel.getChildren().clear();
-    for (Text ft : formettedErrorMsg) {
-      infoLabel.getChildren().add(ft);
-    }
-  }
-
-  @Override
-  public void displayError(String simpleErrorMsg) {
-    infoBox.getStyleClass().clear();
-    infoBox.getStyleClass().add("errorLabel");
-    infoLabel.getChildren().clear();
-    infoLabel.getChildren().add(new Text(simpleErrorMsg));
-  }
-
-  @Override
-  public void turnProcessingStateOn() {
-    infoProgress.visibleProperty().set(true);
-    Text text = new Text("Processing...");
-    infoLabel.getChildren().clear();
-    infoLabel.getChildren().add(text);
-    infoBox.getStyleClass().clear();
-    infoBox.getStyleClass().add("processingLabel");
-    processing = true;
-  }
-
-  @Override
-  public void turnProcessingStateOff() {
-    infoProgress.visibleProperty().set(false);
-    processing = false;
-    displayInfo(DEFAULT_INFO_LABEL);
-  }
-
-  @Override
   public void turnLoggedInStateOn() {
+    super.turnLoggedInStateOn();
     emailTextField.setVisible(false);
   }
 
   @Override
   public void turnLoggedInStateOff() {
+    super.turnLoggedInStateOff();
     emailTextField.setVisible(true);
   }
 
   @FXML
   void initialize() {
+    super.baseInitialize();
     assert carIDTextField != null : "fx:id=\"carIDTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
-    assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'. ";
-    assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert endDatePicker != null : "fx:id=\"endDatePicker\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert endTimeTextField != null : "fx:id=\"endTimeTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert emailTextField != null : "fx:id=\"emailTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
-    assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
 
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.INCIDENTAL_PARKING);
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
@@ -284,9 +205,7 @@ public class IncidentalParkingController implements ViewController {
   @Override
   public void cleanCtrl() {
     // info box clear
-    infoBox.getStyleClass().add("infoLabel");
-    infoProgress.visibleProperty().set(false);
-    infoLabel.getChildren().clear();
+    super.cleanCtrl();
 
     // text fields clear
     emailTextField.clear();

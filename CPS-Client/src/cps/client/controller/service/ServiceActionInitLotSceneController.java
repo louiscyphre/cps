@@ -31,7 +31,7 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
-    super.initialize();
+    super.baseInitialize();
     assert streetAddressTF != null : "fx:id=\"streetAddressTF\" was not injected: check your FXML file 'ServiceActionInitLotScene.fxml'.";
     assert lotSizeTF != null : "fx:id=\"lotSizeTF\" was not injected: check your FXML file 'ServiceActionInitLotScene.fxml'.";
     assert incidentalTariffTF != null : "fx:id=\"incidentalTariffTF\" was not injected: check your FXML file 'ServiceActionInitLotScene.fxml'.";

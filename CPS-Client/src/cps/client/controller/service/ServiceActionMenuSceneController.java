@@ -79,7 +79,7 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
-    super.initialize();
+    super.baseInitialize();
     assert jobTitleLabel != null : "fx:id=\"jobTitleLabel\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
     assert usernameLabel != null : "fx:id=\"usernameLabel\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_MENU);

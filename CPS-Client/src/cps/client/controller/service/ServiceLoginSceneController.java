@@ -28,7 +28,7 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
-    super.initialize();
+    super.baseInitialize();
     assert usernameTF != null : "fx:id=\"usernameTF\" was not injected: check your FXML file 'ServiceLoginScene.fxml'.";
     assert passwordTF != null : "fx:id=\"passwordTF\" was not injected: check your FXML file 'ServiceLoginScene.fxml'.";
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_LOGIN);

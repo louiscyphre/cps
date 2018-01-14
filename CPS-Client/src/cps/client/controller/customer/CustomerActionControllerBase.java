@@ -1,4 +1,4 @@
-package cps.client.controller.service;
+package cps.client.controller.customer;
 
 import cps.client.controller.ClientControllerBase;
 import cps.client.controller.ControllersClientAdapter;
@@ -6,16 +6,22 @@ import cps.client.controller.ControllerConstants.SceneCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
-public class ServiceActionControllerBase extends ClientControllerBase {
+public class CustomerActionControllerBase extends ClientControllerBase {
 
   @FXML
   void handleBackButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
+    if (processing) {
+      return;
+    }
+    ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU);
   }
 
   @FXML
   void handleCancelButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
+    if (processing) {
+      return;
+    }
+    ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU);
   }
 
 }

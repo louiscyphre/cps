@@ -1,11 +1,9 @@
 package cps.client.controller.customer;
 
-import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
@@ -18,41 +16,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.Callback;
 
-public class ViewMyReservationsController implements ParkingLotsController, OnetimeEntriesController {
-
-  @FXML // ResourceBundle that was given to the FXMLLoader
-  private ResourceBundle resources;
-
-  @FXML // URL location of the FXML file that was given to the FXMLLoader
-  private URL location;
-
-  @FXML // fx:id="infoLabel"
-  private TextFlow infoLabel; // Value injected by FXMLLoader
-
-  @FXML // fx:id="infoProgress"
-  private ProgressIndicator infoProgress; // Value injected by FXMLLoader
+public class ViewMyReservationsController extends CustomerActionControllerBase implements ParkingLotsController, OnetimeEntriesController {
 
   @FXML // fx:id="tableView"
   private TableView<TableOnetimeService> tableView; // Value injected by
                                                     // FXMLLoader
-
-  @FXML // fx:id="infoBox"
-  private VBox infoBox; // Value injected by FXMLLoader
-
-  @FXML
-  void handleBackButton(ActionEvent event) {
-
-  }
 
   @FXML
   void handleRefreshButton(ActionEvent event) {
@@ -62,10 +37,8 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
-    assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
-    assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
+    super.baseInitialize();
     assert tableView != null : "fx:id=\"tableView\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
-    assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
@@ -73,57 +46,9 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
   }
 
   @Override
-  public void displayInfo(List<Text> formattedText) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void displayInfo(String simpleInfoMsg) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void displayError(List<Text> formettedErrorMsg) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void displayError(String simpleErrorMsg) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnProcessingStateOn() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnProcessingStateOff() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnLoggedInStateOn() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnLoggedInStateOff() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
   public void cleanCtrl() {
     // TODO Auto-generated method stub
-
+    super.cleanCtrl();
   }
 
   @Override

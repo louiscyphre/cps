@@ -9,7 +9,7 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
-    super.initialize();
+    super.baseInitialize();
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_LOT_STATE);
   }
 

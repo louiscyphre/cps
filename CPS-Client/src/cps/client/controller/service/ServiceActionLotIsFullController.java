@@ -25,7 +25,7 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
-    super.initialize();
+    super.baseInitialize();
     assert lotId != null : "fx:id=\"lotId\" was not injected: check your FXML file 'ServiceActionLotIsFull.fxml'.";
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.SERVICE_ACTION_LOT_IS_FULL);
   }
