@@ -243,6 +243,8 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
     };
 
     actionCol.setCellFactory(cellFactory);
+    
+    
   }
 
 }
