@@ -6,7 +6,6 @@ import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.entities.people.User;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -27,14 +26,8 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
   @FXML // fx:id="robotIpTF"
   private TextField robotIpTF; // Value injected by FXMLLoader
 
-  @FXML
-  void handleOkButton(ActionEvent event) {
-    if (!processing) {      
-      validateAndSend();
-    }
-  }
-
-  private void validateAndSend() { 
+  @Override
+  void validateAndSend() { 
     try {
       String streetAddress = requireFieldTrim(streetAddressTF, "Street Address");
       int lotSize = requireInteger(lotSizeTF, "Lot Width");

@@ -38,7 +38,8 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
                                                      // Field
   }
 
-  private void validateAndSend() {
+  @Override
+  void validateAndSend() {
     String username = null;
     try {
       username = getUsername();

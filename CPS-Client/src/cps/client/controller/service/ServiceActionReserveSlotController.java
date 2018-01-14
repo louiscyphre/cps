@@ -39,4 +39,10 @@ public class ServiceActionReserveSlotController extends ServiceActionControllerB
     floorJTF.clear();
     rowKTF.clear();
   }
+
+  @Override
+  void validateAndSend() {
+    // TODO Auto-generated method stub
+    
+  }
 }

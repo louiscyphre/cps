@@ -1,8 +1,11 @@
 package cps.client.controller.service;
 
+import cps.api.action.RefundAction;
+import cps.api.response.RefundResponse;
+import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
-import javafx.event.ActionEvent;
+import cps.entities.people.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -13,11 +16,6 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
 
   @FXML // fx:id="refundAmountTF"
   private TextField refundAmountTF; // Value injected by FXMLLoader
-
-  @FXML
-  void handleOkButton(ActionEvent event) {
-
-  }
 
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
@@ -34,5 +32,32 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     super.cleanCtrl();
     complaintIdTF.clear();
     refundAmountTF.clear();
+  }
+
+  @Override
+  void validateAndSend() { 
+    try {
+      int complaintId = requireInteger(complaintIdTF, "Complaint ID");
+      float refundAmount = requireFloat(refundAmountTF, "Refund Amount");
+  
+      User user = ControllersClientAdapter.getEmployeeContext().requireCompanyPerson();
+      RefundAction action = new RefundAction(user.getId(), refundAmount, complaintId) ;
+      ControllersClientAdapter.getClient().sendRequest(action);
+    } catch (Exception e) {
+      displayError(e.getMessage());
+    }    
+  }
+
+  @Override
+  public ServerResponse handle(RefundResponse response) {
+    if (response.success()) {
+      turnProcessingStateOff();
+      displayInfo(response.getDescription());
+    } else {
+      displayError(response.getDescription());
+      turnProcessingStateOff();
+    }
+    
+    return null;
   }
 }

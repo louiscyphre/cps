@@ -2,7 +2,6 @@ package cps.client.controller.service;
 
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -16,11 +15,6 @@ public class ServiceActionDisableSlotController extends ServiceActionControllerB
 
   @FXML // fx:id="rowKTF"
   private TextField rowKTF; // Value injected by FXMLLoader
-
-  @FXML
-  void handleOkButton(ActionEvent event) {
-
-  }
 
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
@@ -38,5 +32,11 @@ public class ServiceActionDisableSlotController extends ServiceActionControllerB
     columnITF.clear();
     floorJTF.clear();
     rowKTF.clear();
+  }
+
+  @Override
+  void validateAndSend() {
+    // TODO Auto-generated method stub
+    
   }
 }

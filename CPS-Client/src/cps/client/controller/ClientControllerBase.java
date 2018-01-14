@@ -33,7 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class ClientControllerBase implements ViewController {
+public abstract class ClientControllerBase implements ViewController {
   protected static final String DEFAULT_INFO_LABEL = "Welcome to Car Parking System!";
 
   @FXML // ResourceBundle that was given to the FXMLLoader
@@ -286,7 +286,7 @@ public class ClientControllerBase implements ViewController {
   }
   
   public float requireFloat(TextField field, String parameterName) throws UserLevelClientException {
-    return requireInteger(getText(field), parameterName);
+    return requireFloat(getText(field), parameterName);
   }
 
 }

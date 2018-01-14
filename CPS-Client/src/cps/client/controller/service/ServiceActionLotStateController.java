@@ -17,4 +17,10 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
   public void cleanCtrl() {
     super.cleanCtrl();
   }
+
+  @Override
+  void validateAndSend() {
+    // TODO Auto-generated method stub
+    
+  }
 }
