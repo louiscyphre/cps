@@ -5,24 +5,16 @@ import cps.api.response.ServerResponse;
 
 public class SetFullLotAction extends LotAction {
   private static final long serialVersionUID = 1L;
-  int                       alternativeLotID;
+  int[]                     alternativeLots;
   boolean                   lotFull;
 
-  public SetFullLotAction(int userID, int lotID, boolean lotfull, int alternativeLotID) {
+  public SetFullLotAction(int userID, int lotID, boolean lotfull, int[] alternativeLots) {
     super(userID, lotID);
-    this.alternativeLotID = alternativeLotID;
+    this.alternativeLots = alternativeLots;
     this.lotFull = lotfull;
-
   }
 
-  public int getAlternativeLotID() {
-    return alternativeLotID;
-  }
-
-  public void setAlternativeLotID(int alternativeLotID) {
-    this.alternativeLotID = alternativeLotID;
-  }
-
+  // TODO discuss the lotFull flag
   public boolean getLotFull() {
     return lotFull;
   }
@@ -34,5 +26,13 @@ public class SetFullLotAction extends LotAction {
   @Override
   public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
     return handler.handle(this, session);
+  }
+
+  public int[] getAlternativeLots() {
+    return alternativeLots;
+  }
+
+  public void setAlternativeLots(int[] alternativeLots) {
+    this.alternativeLots = alternativeLots;
   }
 }

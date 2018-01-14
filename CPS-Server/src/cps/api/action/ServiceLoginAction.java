@@ -34,6 +34,6 @@ public class ServiceLoginAction extends Request {
 
   @Override
   public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
-    return null;
+    return handler.handle(this, session);
   }
 }

@@ -89,4 +89,8 @@ public abstract class Utilities {
   public static boolean between(float x, float a, float b) {
     return a <= x && x <= b;
   }
+
+  public static <T> T valueOrDefault(T value, T defaultValue) {
+    return value == null ? defaultValue : value;
+  }
 }

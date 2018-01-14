@@ -2,6 +2,7 @@ package cps.server.controllers;
 
 import static cps.common.Utilities.between;
 import static cps.common.Utilities.isEmpty;
+import static cps.common.Utilities.valueOrDefault;
 
 import java.util.Collection;
 
@@ -56,7 +57,6 @@ public class LotController extends RequestController {
 
       // Filter out information that customers shouldn't see
       result.forEach(lot -> {
-        lot.setContent(null);
         lot.setRobotIP(null);
       });
 
@@ -141,14 +141,20 @@ public class LotController extends RequestController {
       // Require the employee to have access rights to this action
       errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_WORKER, "You cannot perform this action");
+      
+      // Check request parameters
+      int[] alternativeLots = valueOrDefault(action.getAlternativeLots(), new int[] {});      
+      errorIf(alternativeLots.length > 10, "There can be at most 10 alternative lots");
 
       // Require a parking lot
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());
+      
+      // Update parking lot
       lot.setLotFull(action.getLotFull());
-
-      // TODO this should be a list of alternative lot IDs?
-      lot.setAlternativeLots(Integer.toString(action.getAlternativeLotID()));
+      lot.setAlternativeLots(gson.toJson(alternativeLots));
       lot.update(conn);
+      
+      // Success
       response.setSuccess("ParkingLot status updated");
       return response;
     });
@@ -161,8 +167,10 @@ public class LotController extends RequestController {
 
       // Require a parking lot
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());
+      ParkingCell[][][] content = lot.constructContentArray(conn);
 
       response.setLot(lot);
+      response.setContent(content);
       response.setSuccess("RequestLotState request completed successfully");
       return response;
     });
@@ -182,7 +190,7 @@ public class LotController extends RequestController {
 
       // Check request parameters
 
-      errorIf(!between(i, 0, lot.getSize() - 1), String.format("Parameter i must be in range [0, %s] (inclusive)", lot.getSize() - 1));
+      errorIf(!between(i, 0, lot.getWidth() - 1), String.format("Parameter i must be in range [0, %s] (inclusive)", lot.getWidth() - 1));
       errorIf(!between(j, 0, Constants.LOT_HEIGHT - 1), String.format("Parameter j must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
       errorIf(!between(k, 0, Constants.LOT_DEPTH - 1), String.format("Parameter k must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
 

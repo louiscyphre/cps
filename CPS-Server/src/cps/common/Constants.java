@@ -22,7 +22,7 @@ public interface Constants {
   // Bit flags
   public final int ACCESS_DOMAIN_PARKING_LOT      = 1;
   public final int ACCESS_DOMAIN_CUSTOMER_SERVICE = 2;
-  public final int ACCESS_DOMAIN_GLOBAL           = 255;
+  public final int ACCESS_DOMAIN_EVERYTHING           = 255;
 
   public final float  PRICE_PER_HOUR_RESERVED     = 4f;
   public final int    COMPLAINT_STATUS_PROCESSING = 1;
@@ -67,10 +67,10 @@ public interface Constants {
   public final String SQL_UPDATE_WEEKLY_STATISTICS = "UPDATE weekly_statistics SET start = ?, lot_id = ?, realized_orders_mean = ?, canceled_orders_mean = ?, late_arrivals_mean = ?, realized_orders_median = ?, canceled_orders_median = ?, late_arrivals_median = ?, realized_orders_dist = ?, canceled_orders_dist = ?, late_arrivals_dist = ?";
 
   // SQL queries - ParkingLot
-  public final String SQL_CREATE_PARKING_LOT    = "INSERT INTO parking_lot values(default, ?, ?, ?, ?, ?, default, ?,default)";
+  public final String SQL_CREATE_PARKING_LOT    = "INSERT INTO parking_lot values(default, ?, ?, ?, ?, default, ?,default)";
   public final String SQL_GET_LOT_BY_ID         = "SELECT * FROM parking_lot WHERE id=?";
   public final String SQL_FIND_ALL_PARKING_LOTS = "SELECT * FROM parking_lot ORDER BY id";
-  public final String SQL_UPDATE_PARKING_LOT    = "UPDATE parking_lot SET street_address=?, size=?, content=?, price1=?, price2=?, alternative_lots=?, robot_ip=?, lot_full=? WHERE id=?";
+  public final String SQL_UPDATE_PARKING_LOT    = "UPDATE parking_lot SET street_address=?, size=?, price1=?, price2=?, alternative_lots=?, robot_ip=?, lot_full=? WHERE id=?";
 
   // SQL queries - ParkingCell
   public final String SQL_CREATE_PARKING_CELL         = "INSERT INTO parking_cell values(?, ?, ?, ?, ?, ?, ?, ?)";

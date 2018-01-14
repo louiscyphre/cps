@@ -53,7 +53,7 @@ public class SubscriptionController extends RequestController {
         ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
         
         // Check that lot is not full
-        errorIf(lot.getFreeSpotsNumber() < 1, "Parking Lot is full");
+        session.requireLotNotFull(conn, gson, lot, response);
       }
       
       // TODO check overlapping subscriptions with the same car ID?

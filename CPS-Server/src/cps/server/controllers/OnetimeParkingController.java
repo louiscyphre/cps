@@ -61,7 +61,8 @@ public class OnetimeParkingController extends RequestController {
       // Check that lot exists
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
       
-      // TODO redirect to alternative lot if current lot is full
+      // Check that lot is not full
+      session.requireLotNotFull(conn, gson, lot, response);
 
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());

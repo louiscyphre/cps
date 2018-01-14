@@ -5,7 +5,11 @@ import static cps.common.Utilities.randomString;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import com.google.gson.Gson;
+
+import cps.api.response.ParkingServiceResponse;
 import cps.entities.models.Customer;
+import cps.entities.models.ParkingLot;
 import cps.entities.people.User;
 import cps.server.ServerException;
 
@@ -81,5 +85,13 @@ public class CustomerSession extends BasicSession {
     }
 
     return registerCustomer(conn, email);
+  }
+  
+  public void requireLotNotFull(Connection conn, Gson gson, ParkingLot lot, ParkingServiceResponse response) throws SQLException, ServerException {
+    // TODO find a more reliable way to check if lot is full
+    if (lot.isLotFull() || lot.countFreeCells(conn) < 1) {
+      response.setAlternativeLots(lot.retrieveAlternativeLots(conn, gson));
+      throw new ServerException("The specified lot is full; please try one of the alternative lots");
+    }
   }
 }

@@ -1,5 +1,7 @@
 package cps.server.controllers;
 
+import com.google.gson.Gson;
+
 import cps.server.ServerController;
 import cps.server.ServerException;
 
@@ -13,6 +15,7 @@ public abstract class RequestController {
 
   /** The server application. */
   protected final ServerController serverController;
+  protected final Gson gson;
 
   /**
    * Instantiates a new request controller.
@@ -23,6 +26,7 @@ public abstract class RequestController {
   public RequestController(ServerController serverController) {
     this.database = serverController.getDatabaseController();
     this.serverController = serverController;
+    this.gson = new Gson();
   }
 
   /**
