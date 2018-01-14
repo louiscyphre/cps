@@ -6,16 +6,6 @@ public class ControllerConstants {
 
     TEST_SCENE("../view/testScene.fxml"),
 
-    ALPHA_INCIDENTAL_PARKING("../view/AlphaGUI_2.fxml"),
-
-    ALPHA_VIEW_MY_REQUESTS("../view/AlphaGUI_3.fxml"),
-
-    ALPHA_REQUEST_PARKING_ENTRY("../view/AlphaGUI_4.fxml"),
-
-    ALPHA_INIT_PARKING_LOT("../view/AlphaGUI_5.fxml"),
-
-    ALPHA_MAIN_MENU("../view/AlphaGUI_mainMenu.fxml"),
-
     // customer views
     LOGIN("../view/customer/LoginScene.fxml"),
 
