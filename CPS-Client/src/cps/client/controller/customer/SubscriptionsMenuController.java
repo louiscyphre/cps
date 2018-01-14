@@ -82,7 +82,13 @@ public class SubscriptionsMenuController implements ParkingLotsController {
   
   private void getRegularSubscriptionDetailsForLot(String choice) {
     // 60 hours * one time parking price
-    float subsriptionPrice = parkingLotsMap.get(choice).getPriceForService(Constants.PARKING_TYPE_RESERVED);
+    float reservedParkingPrice = parkingLotsMap.get(choice).getPriceForService(Constants.PARKING_TYPE_RESERVED);
+    float subscriptionOverallPrice = reservedParkingPrice * Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS;
+    StringBuilder builder = new StringBuilder();
+    builder.append("Regular subscription:").append(Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS).append(" parking hours for ");
+    builder.append(subscriptionOverallPrice).append("$ only!");
+    String info = builder.toString();
+    
   }
   
   private void  getFullSubscriptionDetailsForLot(String choice) {
