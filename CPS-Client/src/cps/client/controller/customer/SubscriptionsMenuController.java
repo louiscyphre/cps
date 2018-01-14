@@ -75,24 +75,27 @@ public class SubscriptionsMenuController implements ParkingLotsController {
     fillComboBoxItems(addresses);
   }
 
-  void fillComboBoxItems(ObservableList<String> addresses) {
+  private void fillComboBoxItems(ObservableList<String> addresses) {
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
   }
 
-  private void getRegularSubscriptionDetailsForLot(String choice) {
-    // 60 hours * one time parking price
+  private void setRegularSubscriptionInfoForLot(String choice) {
     float reservedParkingPrice = parkingLotsMap.get(choice).getPriceForService(Constants.PARKING_TYPE_RESERVED);
     float subscriptionOverallPrice = reservedParkingPrice * Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS;
     StringBuilder builder = new StringBuilder();
     builder.append("Regular subscription:").append(Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS).append(" parking hours for ");
     builder.append(subscriptionOverallPrice).append("$ only!");
-    String info = builder.toString();
-    
+    regularSubscriptionInfo.setText(builder.toString());
   }
   
-  private void  getFullSubscriptionDetailsForLot(String choice) {
-    
+  private void  setFullSubscriptionInfo() {
+    float subscriptionOverallPrice = Constants.PRICE_PER_HOUR_RESERVED * Constants.SUBSCRIPTION_TYPE_FULL_HOURS;
+    StringBuilder builder = new StringBuilder();
+    builder.append("Full subscription:").append(Constants.SUBSCRIPTION_TYPE_FULL_HOURS).append(" parking hours in any parking lot for ");
+    builder.append(subscriptionOverallPrice).append("$ only!");
+    String info = builder.toString();
+    fullSubscriptionInfo.setText(info);
   }
   
   @FXML
@@ -100,10 +103,7 @@ public class SubscriptionsMenuController implements ParkingLotsController {
     if (processing) {
       return;
     }
-    String choice = parkingLotsList.getValue();
-    // regularSubscriptionInfo.setText(getRegularSubscriptionDetailsForLot(choice));//TODO
-    // Will continue from here
-    // fullSubscriptionInfo.setText(getFullSubscriptionDetailsForLot(choice));
+    setRegularSubscriptionInfoForLot(parkingLotsList.getValue());
   }
 
   @FXML
@@ -122,6 +122,7 @@ public class SubscriptionsMenuController implements ParkingLotsController {
     if (processing) {
       return;
     }
+    setFullSubscriptionInfo();
     parkingLotsList.setDisable(true);
   }
 
@@ -138,8 +139,7 @@ public class SubscriptionsMenuController implements ParkingLotsController {
     if (processing) {
       return;
     }
-    // TODO
-    // ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
+   // ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
   }
 
   @FXML
