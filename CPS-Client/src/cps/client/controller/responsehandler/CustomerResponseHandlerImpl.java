@@ -1,5 +1,6 @@
 package cps.client.controller.responsehandler;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import cps.api.response.ComplaintResponse;
 import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
 import cps.api.response.ListOnetimeEntriesResponse;
+import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.LoginResponse;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
@@ -16,7 +18,9 @@ import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ParkingLotsController;
 import cps.client.controller.ViewController;
+import cps.entities.models.ParkingLot;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -134,6 +138,16 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
   @Override
   public ServerResponse handle(ParkingExitResponse response) {
     // TODO Auto-generated method stub
+    return response;
+  }
+
+  @Override
+  public ServerResponse handle(ListParkingLotsResponse response) {
+    //CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();//FIXME//TODO normally
+    List<ParkingLot> list = new LinkedList<ParkingLot>(response.getData());
+    ctrl.setParkingLots(list);//FIXME//TODO normally
+    ctrl.turnProcessingStateOff();
     return response;
   }
 

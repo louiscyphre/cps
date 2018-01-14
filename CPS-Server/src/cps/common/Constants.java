@@ -12,6 +12,10 @@ public interface Constants {
   public final int SUBSCRIPTION_TYPE_REGULAR = 1;
   public final int SUBSCRIPTION_TYPE_FULL    = 2;
 
+  public final int SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS      = 60;
+  public final int SUBSCRIPTION_TYPE_REGULAR_MULTIPLE_CAR_HOURS = 54;
+  public final int SUBSCRIPTION_TYPE_FULL_HOURS                 = 72;
+
   public final int USER_TYPE_CUSTOMER                   = 1;
   public final int USER_TYPE_COMPANY_PERSON             = 2;
   public final int ACCESS_LEVEL_LOCAL_WORKER            = 10;
@@ -63,11 +67,11 @@ public interface Constants {
   public final String SQL_GET_LOT_BY_ID         = "SELECT * FROM parking_lot WHERE id=?";
   public final String SQL_FIND_ALL_PARKING_LOTS = "SELECT * FROM parking_lot ORDER BY id";
   public final String SQL_UPDATE_PARKING_LOT    = "UPDATE parking_lot SET street_address=?, size=?, content=?, price1=?, price2=?, alternative_lots=?, robot_ip=?, lot_full=? WHERE id=?";
-  
+
   // SQL queries - ParkingCell
-  public final String SQL_CREATE_PARKING_CELL = "INSERT INTO parking_cell values(?, ?, ?, ?, ?, ?, ?, ?)";
-  public final String SQL_FIND_PARKING_CELL = "SELECT * FROM parking_cell WHERE lot_id=? and i=? and j=? and k=?";
-  public final String SQL_UPDATE_PARKING_CELL = "UPDATE parking_cell SET lot_id=?, i=?, j=?, k=?, car_id=?, planned_end_time=?, reserved=?, disabled=?";
+  public final String SQL_CREATE_PARKING_CELL         = "INSERT INTO parking_cell values(?, ?, ?, ?, ?, ?, ?, ?)";
+  public final String SQL_FIND_PARKING_CELL           = "SELECT * FROM parking_cell WHERE lot_id=? and i=? and j=? and k=?";
+  public final String SQL_UPDATE_PARKING_CELL         = "UPDATE parking_cell SET lot_id=?, i=?, j=?, k=?, car_id=?, planned_end_time=?, reserved=?, disabled=?";
   public final String SQL_FIND_PARKING_CELL_BY_LOT_ID = "SELECT * FROM parking_cell WHERE lot_id=?";
 
   // SQL queries - Customer

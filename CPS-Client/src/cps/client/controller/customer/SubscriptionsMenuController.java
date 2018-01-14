@@ -3,31 +3,42 @@
  */
 package cps.client.controller.customer;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import cps.api.request.ListParkingLotsRequest;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
-import cps.client.controller.ViewController;
+import cps.client.controller.ParkingLotsController;
+import cps.entities.models.ParkingLot;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Created on: 2018-01-09 1:04:02 AM
  */
-public class SubscriptionsMenuController implements ViewController {
+public class SubscriptionsMenuController implements ParkingLotsController {
 
   @FXML
   private TextFlow infoLabel;
 
   @FXML
   private ProgressIndicator infoProgress;
-
+  @FXML
+  private Label regularSubscriptionInfo;
+  @FXML
+  private Label fullSubscriptionInfo;
+  
   @FXML
   private VBox infoBox;
 
@@ -35,17 +46,57 @@ public class SubscriptionsMenuController implements ViewController {
   private ToggleGroup subscriptionRadioButtons;
   
   @FXML
+  private RadioButton regularSubscriptionRadioButton;
+  
+  @FXML
+  private RadioButton fullSubscriptionRadioButton;
+  
+  @FXML
   private ComboBox<String> parkingLotsList;
+  
+  List<ParkingLot> parkingLotsMap;
   
   private boolean processing;
 
+
+  /**
+   * @param parkingLots
+   */
+  public void setParkingLots(List<ParkingLot> list) {
+    parkingLotsMap = list;
+    List<String> tmp = new ArrayList<String> ();
+    for (ParkingLot i: parkingLotsMap) {
+      String address = new String(i.getStreetAddress());
+      tmp.add(address);
+    }
+    ObservableList<String> addresses = FXCollections.observableList(tmp);
+    fillComboBoxItems(addresses);
+  }
+  
+  void fillComboBoxItems(ObservableList<String> addresses) {
+    parkingLotsList.getItems().addAll(addresses);
+    parkingLotsList.setDisable(false);
+  }
+  
+  @FXML
+  void showSubscriptionsForLot(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    String choice = parkingLotsList.getValue();
+    //regularSubscriptionInfo.setText(getRegularSubscriptionDetailsForLot(choice));//TODO Will continue from here
+    //fullSubscriptionInfo.setText(getFullSubscriptionDetailsForLot(choice));
+  }
+  
   @FXML
   void toggleRegularSubscriptionChoice(ActionEvent event) {
     if (processing) {
       return;
     }
     parkingLotsList.setDisable(false);
-    
+    ListParkingLotsRequest request = new ListParkingLotsRequest();
+    turnProcessingStateOn();
+    ControllersClientAdapter.getClient().sendRequest(request);
   }
   
   @FXML
@@ -121,12 +172,12 @@ public class SubscriptionsMenuController implements ViewController {
 
   @Override
   public void turnProcessingStateOn() {
-    processing = false;
+    processing = true;
   }
 
   @Override
   public void turnProcessingStateOff() {
-    processing = true;
+    processing = false;
   }
 
   @Override
