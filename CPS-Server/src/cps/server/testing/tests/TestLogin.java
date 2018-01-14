@@ -78,7 +78,7 @@ public class TestLogin extends ServerControllerTest {
     // Test the response
     ServerResponse response = server.dispatch(action, getContext());
     printObject(response);
-    assertThat(response, instanceOf(LoginResponse.class));
+    assertThat(response, instanceOf(ServiceLoginResponse.class));
     assertTrue(response.success());   
   }
 }
