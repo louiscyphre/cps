@@ -30,8 +30,6 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private ResponseHandler responseHandler = new ResponseHandlerImpl();
 
-  
-
   /**
    *
    */
@@ -42,6 +40,8 @@ public class ClientApplication extends Application implements INetworkClient {
     try {
       Scene scene = ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
       ControllersClientAdapter.registerScene(SceneCode.LOGIN);
+      ControllersClientAdapter.registerScene(SceneCode.ENTER_PARKING);
+      ControllersClientAdapter.registerScene(SceneCode.EXIT_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
       ControllersClientAdapter.registerScene(SceneCode.RESERVE_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);

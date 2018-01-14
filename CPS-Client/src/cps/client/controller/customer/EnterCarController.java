@@ -113,15 +113,15 @@ public class EnterCarController implements ViewController {
     return carIdTextField.getText();
   }
 
-  // returns lot id or -1 if empty
+  // returns lot id or 0 if empty
   private int getLotId() {
     if (ControllersClientAdapter.getLotID() == 0) {
-      return -1;
+      return 0;
     }
     return ControllersClientAdapter.getLotID();
   }
 
-  // returns lot id or 0 if empty or -1 if not a number
+  // returns lot id or 0 if empty or 0 if not a number
   private int getSubscriptionId() {
     if (subscriptionIdTextField.getText() == null) {
       return 0;
@@ -129,7 +129,7 @@ public class EnterCarController implements ViewController {
     try {
       return Integer.parseInt(subscriptionIdTextField.getText());
     } catch (NumberFormatException e) {
-      return -1;
+      return 0;
     }
   }
 

@@ -36,29 +36,28 @@ public class SubscriptionsMenuController implements ParkingLotsController {
   @FXML
   private ProgressIndicator infoProgress;
   @FXML
-  private Label regularSubscriptionInfo;
+  private Label             regularSubscriptionInfo;
   @FXML
-  private Label fullSubscriptionInfo;
-  
+  private Label             fullSubscriptionInfo;
+
   @FXML
   private VBox infoBox;
 
   @FXML
   private ToggleGroup subscriptionRadioButtons;
-  
+
   @FXML
   private RadioButton regularSubscriptionRadioButton;
-  
+
   @FXML
   private RadioButton fullSubscriptionRadioButton;
-  
+
   @FXML
   private ComboBox<String> parkingLotsList;
-  
-  List<ParkingLot> parkingLotsMap;
-  
-  private boolean processing;
 
+  List<ParkingLot> parkingLotsMap;
+
+  private boolean processing;
 
   /**
    * @param parkingLots
@@ -74,7 +73,7 @@ public class SubscriptionsMenuController implements ParkingLotsController {
     ObservableList<String> addresses = FXCollections.observableList(tmp);
     fillComboBoxItems(addresses);
   }
-  
+
   void fillComboBoxItems(ObservableList<String> addresses) {
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
@@ -86,18 +85,19 @@ public class SubscriptionsMenuController implements ParkingLotsController {
   
   private void  getFullSubscriptionDetailsForLot(String choice) {
     
-  }
-  
+  }  
+
   @FXML
   void showSubscriptionsForLot(ActionEvent event) {
     if (processing) {
       return;
     }
     String choice = parkingLotsList.getValue();
-    //regularSubscriptionInfo.setText(getRegularSubscriptionDetailsForLot(choice));//TODO Will continue from here
-    //fullSubscriptionInfo.setText(getFullSubscriptionDetailsForLot(choice));
+    // regularSubscriptionInfo.setText(getRegularSubscriptionDetailsForLot(choice));//TODO
+    // Will continue from here
+    // fullSubscriptionInfo.setText(getFullSubscriptionDetailsForLot(choice));
   }
-  
+
   @FXML
   void toggleRegularSubscriptionChoice(ActionEvent event) {
     if (processing) {
@@ -108,7 +108,7 @@ public class SubscriptionsMenuController implements ParkingLotsController {
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
-  
+
   @FXML
   void toggleFullSubscriptionChoice(ActionEvent event) {
     if (processing) {
@@ -116,13 +116,13 @@ public class SubscriptionsMenuController implements ParkingLotsController {
     }
     parkingLotsList.setDisable(true);
   }
-  
+
   @FXML
   void handleBackButton(ActionEvent event) {
     if (processing) {
       return;
     }
-    //ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
   }
 
   @FXML

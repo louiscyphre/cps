@@ -43,9 +43,6 @@ public class IncidentalParkingController implements ViewController {
   private TextFlow infoLabel;
 
   @FXML
-  private TextField lotIDTextField;
-
-  @FXML
   private ProgressIndicator infoProgress;
 
   @FXML
@@ -121,9 +118,10 @@ public class IncidentalParkingController implements ViewController {
       return;
     }
 
-    // TODO replace the lotid handling from the list instead
+    // TODO replace the lotid handling from the list instead lotid may be 1 or 0
+    // - check
     int lotID = getLotId();
-    if (lotID < 0) {
+    if (lotID <= 0) {
       displayError("Invalid lot ID");
       return;
     }
@@ -178,14 +176,10 @@ public class IncidentalParkingController implements ViewController {
 
   // returns lot id or -1 if empty
   private int getLotId() {
-    if (lotIDTextField.getText() == null) {
+    if (ControllersClientAdapter.getLotID() == 0) {
       return -1;
     }
-    try {
-      return Integer.parseInt(lotIDTextField.getText());
-    } catch (NumberFormatException e) {
-      return -1;
-    }
+    return ControllersClientAdapter.getLotID();
   }
 
   // returns email if logged in from customer context,
@@ -276,7 +270,6 @@ public class IncidentalParkingController implements ViewController {
   void initialize() {
     assert carIDTextField != null : "fx:id=\"carIDTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'. ";
-    assert lotIDTextField != null : "fx:id=\"lotIDTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert endDatePicker != null : "fx:id=\"endDatePicker\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert endTimeTextField != null : "fx:id=\"endTimeTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
@@ -298,7 +291,6 @@ public class IncidentalParkingController implements ViewController {
     // text fields clear
     emailTextField.clear();
     carIDTextField.clear();
-    lotIDTextField.clear();
     endDatePicker.getEditor().clear();
     endTimeTextField.clear();
   }

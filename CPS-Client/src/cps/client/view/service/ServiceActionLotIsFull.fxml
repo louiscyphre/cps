@@ -16,7 +16,9 @@
    <center>
       <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="296.0" spacing="20.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="lotId" alignment="CENTER" prefHeight="50.0" prefWidth="242.0" promptText="Enter Lot ID here" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="" />
+            <ComboBox maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="219.0" promptText="Lot to set" />
+            <CheckBox maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Set Full State" />
+            <ComboBox maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="219.0" promptText="Alternative Lots" />
             <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">
                <children>
                   <ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />

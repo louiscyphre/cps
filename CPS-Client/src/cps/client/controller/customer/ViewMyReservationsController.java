@@ -213,38 +213,36 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
     TableColumn actionCol = new TableColumn("Action");
     actionCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
-    Callback<TableColumn<TableOnetimeService, String>, TableCell<TableOnetimeService, String>> cellFactory
-            = //
-            new Callback<TableColumn<TableOnetimeService, String>, TableCell<TableOnetimeService, String>>() {
-        @Override
-        public TableCell call(final TableColumn<TableOnetimeService, String> param) {
+    Callback<TableColumn<TableOnetimeService, String>, TableCell<TableOnetimeService, String>> cellFactory = //
+        new Callback<TableColumn<TableOnetimeService, String>, TableCell<TableOnetimeService, String>>() {
+          @Override
+          public TableCell call(final TableColumn<TableOnetimeService, String> param) {
             final TableCell<TableOnetimeService, String> cell = new TableCell<TableOnetimeService, String>() {
 
-                final Button btn = new Button("Just Do It");
+              final Button btn = new Button("Just Do It");
 
-                @Override
-                public void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                        setText(null);
-                    } else {
-                        btn.setOnAction(event -> {
-                          TableOnetimeService person = getTableView().getItems().get(getIndex());
-                          System.out.println("button pressed");
-                        });
-                        setGraphic(btn);
-                        setText(null);
-                    }
+              @Override
+              public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                  setGraphic(null);
+                  setText(null);
+                } else {
+                  btn.setOnAction(event -> {
+                    TableOnetimeService person = getTableView().getItems().get(getIndex());
+                    System.out.println("button pressed");
+                  });
+                  setGraphic(btn);
+                  setText(null);
                 }
+              }
             };
             return cell;
-        }
-    };
+          }
+        };
 
     actionCol.setCellFactory(cellFactory);
-    
-    
+
   }
 
 }
