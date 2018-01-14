@@ -176,6 +176,41 @@ public class TegraTests {
 
   }
 
+  @Test
+  public void testCountOrderedCells() throws ServerException {
+    // Create parking lot Create incidental parking request
+    // Insert the car
+    ParkingLot lot = initParkingLot();
+    CustomerData data = new CustomerData((int) Math.random() * 1000,
+        Utilities.randomString("abcdefghijklmnopqrstuvwxyz", 8), Utilities.randomString("1234567890", 4),
+        Utilities.randomString("1234567890ABCDTRUOTSKL", 7), 1, 0);
+
+    Timestamp[] a = new Timestamp[10];
+    // Main reservation start
+    a[0] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(20));
+    // Main reservation end - will be used for more reservations
+    a[1] = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+    // Reservation starts before but continues into
+    a[2] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(10));
+    // Reservation starts after the beginning
+    a[3] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(30));
+    // Reservation that doesn't overlap start
+    a[4] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(5));
+    a[5] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(4).plusDays(1));
+
+    OnetimeService[] reservedParkings = new OnetimeService[5];
+    db.performAction(conn -> {
+      reservedParkings[0] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3,
+          "no@email.com", "123-sdf", lot.getId(), a[0], a[1], false);
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[2], a[1]));
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[3], a[1]));
+      assertFalse(OnetimeService.overlapExists(conn, "123-sdf", a[4], a[2]));
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[4], a[5]));
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[0], a[1]));      
+    });
+
+  }
+  
   private CarTransportation newParkingEntry(OnetimeService _cdata) {
     ParkingEntryRequest request = new ParkingEntryRequest(_cdata.getCustomerID(), 0, _cdata.getLotID(),
         _cdata.getCarID());

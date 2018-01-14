@@ -377,12 +377,9 @@ public class ParkingLot implements Serializable {
     return result;
   }
 
-  // TODO add a method to calculate the number of cells that will need to be
-  // available for OnetimeService customers at a given
-  // point in time
-
   /**
-   * Ordered cells.
+   * Counts the number of cells that will need to be available for
+   * OnetimeService customers at a given point in time
    *
    * @param conn
    *          the conn
@@ -395,7 +392,8 @@ public class ParkingLot implements Serializable {
    * @return the int
    * @throws SQLException
    */
-  public int orderedCells(Connection conn, int lotId, Timestamp startTime, int hoursInAdvance) throws SQLException {
+  public int countOrderedCells(Connection conn, int lotId, Timestamp startTime, int hoursInAdvance)
+      throws SQLException {
     int result = 0;
     LocalDateTime latest = startTime.toLocalDateTime();
     latest.plusHours(hoursInAdvance);
