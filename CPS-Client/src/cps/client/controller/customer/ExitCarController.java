@@ -64,7 +64,7 @@ public class ExitCarController implements ViewController {
     assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'EnterParkingScene.fxml'.";
     assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'EnterParkingScene.fxml'.";
     assert carIdTextField != null : "fx:id=\"carIdTextField\" was not injected: check your FXML file 'EnterParkingScene.fxml'.";
-    ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.ENTER_PARKING);
+    ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.EXIT_PARKING);
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
   }

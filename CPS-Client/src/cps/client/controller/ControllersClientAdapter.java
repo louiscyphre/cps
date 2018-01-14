@@ -89,7 +89,10 @@ public class ControllersClientAdapter {
     stage.setWidth(bounds.getWidth());
     stage.setHeight(bounds.getHeight());
 
-    fetchCtrl(code).cleanCtrl();
+    ViewController ctrl = fetchCtrl(code);
+    if (ctrl != null) {
+      ctrl.cleanCtrl();
+    }
   }
 
   public static CustomerContext getCustomerContext() {
@@ -126,5 +129,5 @@ public class ControllersClientAdapter {
   public static void setLotID(int lotID) {
     getInstance().lotID = lotID;
   }
-  
+
 }

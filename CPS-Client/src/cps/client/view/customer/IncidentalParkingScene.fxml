@@ -40,11 +40,6 @@
                <VBox.margin>
                   <Insets />
                </VBox.margin></TextField>
-            <TextField fx:id="lotIDTextField" layoutX="50.0" layoutY="239.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter lot ID here" styleClass="inputField">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </TextField>
             <TextField fx:id="emailTextField" layoutX="50.0" layoutY="271.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter Email here" styleClass="inputField">
                <VBox.margin>
                   <Insets />

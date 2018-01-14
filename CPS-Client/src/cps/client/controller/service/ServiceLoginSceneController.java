@@ -49,7 +49,7 @@ public class ServiceLoginSceneController implements ViewController {
 
   @FXML
   void handleLogInButton(ActionEvent event) {
-    if(processing) {
+    if (processing) {
       return;
     }
     validateAndSend();

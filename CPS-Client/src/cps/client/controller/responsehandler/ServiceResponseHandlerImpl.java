@@ -66,8 +66,9 @@ class ServiceResponseHandlerImpl implements ServiceResponseHandler {
   @Override
   public ServerResponse handle(ServiceLoginResponse response) {
 
-    ControllersClientAdapter.getEmployeeContext().setCompanyPerson(response.getUser());;
-    
+    ControllersClientAdapter.getEmployeeContext().setCompanyPerson(response.getUser());
+    ;
+
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
       ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MAIN_MENU);
