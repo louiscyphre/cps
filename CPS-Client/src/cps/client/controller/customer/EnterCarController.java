@@ -115,10 +115,10 @@ public class EnterCarController implements ViewController {
 
   // returns lot id or -1 if empty
   private int getLotId() {
-    if (ControllersClientAdapter.getClient().getLotID() == 0) {
+    if (ControllersClientAdapter.getLotID() == 0) {
       return -1;
     }
-    return ControllersClientAdapter.getClient().getLotID();
+    return ControllersClientAdapter.getLotID();
   }
 
   // returns lot id or 0 if empty or -1 if not a number

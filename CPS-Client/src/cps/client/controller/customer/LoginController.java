@@ -72,6 +72,7 @@ public class LoginController implements ViewController {
     ControllersClientAdapter.getCustomerContext().setPendingEmail(email);
 
     LoginRequest request = new LoginRequest(email, password);
+    turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
