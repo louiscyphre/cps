@@ -79,7 +79,7 @@ public class SubscriptionsMenuController implements ParkingLotsController {
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
   }
-  
+
   private void getRegularSubscriptionDetailsForLot(String choice) {
     // 60 hours * one time parking price
     float reservedParkingPrice = parkingLotsMap.get(choice).getPriceForService(Constants.PARKING_TYPE_RESERVED);
@@ -93,8 +93,8 @@ public class SubscriptionsMenuController implements ParkingLotsController {
   
   private void  getFullSubscriptionDetailsForLot(String choice) {
     
-  }  
-
+  }
+  
   @FXML
   void showSubscriptionsForLot(ActionEvent event) {
     if (processing) {
