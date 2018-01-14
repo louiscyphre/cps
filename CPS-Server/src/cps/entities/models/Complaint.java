@@ -159,7 +159,7 @@ public class Complaint implements Serializable {
 
   // Light update - write all fields except complaint description
   // Full update - write all fields, including description
-  public boolean update(Connection conn, boolean light) throws SQLException {
+  public void update(Connection conn, boolean light) throws SQLException {
     String queryString = light ? Constants.SQL_UPDATE_COMPLAINT_LIGHT : Constants.SQL_UPDATE_COMPLAINT;
     PreparedStatement st = conn.prepareStatement(queryString);
 
@@ -174,16 +174,14 @@ public class Complaint implements Serializable {
       st.setString(field++, description);
     }
 
-    int updated = st.executeUpdate();
+    st.executeUpdate();
 
     st.close();
-
-    return updated > 0;
   }
 
   // Default - full update
-  public boolean update(Connection conn) throws SQLException {
-    return update(conn, false);
+  public void update(Connection conn) throws SQLException {
+    update(conn, false);
   }
 
 }

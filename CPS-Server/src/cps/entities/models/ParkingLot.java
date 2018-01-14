@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import com.google.gson.Gson;
+
 import cps.common.Constants;
 import cps.server.ServerException;
 
@@ -27,12 +29,6 @@ public class ParkingLot implements Serializable {
 
   /** Amount of columns in parking lot. */
   private int size;
-
-  /**
-   * Serialized three dimensional array that reflects status of the parking
-   * spots.
-   */
-  private String content;
 
   /** The price of incidental parking. */
   private float price1;
@@ -72,12 +68,10 @@ public class ParkingLot implements Serializable {
    * @param robotIP
    *          IP address of the robot
    */
-  public ParkingLot(int id, String streetAddress, int size, String content, float price1, float price2,
-      String alternativeLots, String robotIP, boolean lotfull) {
+  public ParkingLot(int id, String streetAddress, int size, float price1, float price2, String alternativeLots, String robotIP, boolean lotfull) {
     this.id = id;
     this.streetAddress = streetAddress;
     this.size = size;
-    this.content = content;
     this.price1 = price1;
     this.price2 = price2;
     this.alternativeLots = alternativeLots;
@@ -94,9 +88,8 @@ public class ParkingLot implements Serializable {
    *           the SQL exception
    */
   public ParkingLot(ResultSet rs) throws SQLException {
-    this(rs.getInt("id"), rs.getString("street_address"), rs.getInt("size"), rs.getString("content"),
-        rs.getFloat("price1"), rs.getFloat("price2"), rs.getString("alternative_lots"), rs.getString("robot_ip"),
-        rs.getBoolean("lot_full"));
+    this(rs.getInt("id"), rs.getString("street_address"), rs.getInt("size"), rs.getFloat("price1"), rs.getFloat("price2"), rs.getString("alternative_lots"),
+        rs.getString("robot_ip"), rs.getBoolean("lot_full"));
   }
 
   /**
@@ -142,7 +135,8 @@ public class ParkingLot implements Serializable {
    *
    * @return the size
    */
-  public int getSize() {
+  public int getWidth() {
+    // TODO rename to width
     return size;
   }
 
@@ -156,66 +150,29 @@ public class ParkingLot implements Serializable {
     this.size = size;
   }
 
+  public int getHeight() {
+    return Constants.LOT_HEIGHT;
+  }
+
+  public int getDepth() {
+    return Constants.LOT_DEPTH;
+  }
+
   /**
-   * Gets the content.
-   *
-   * @return the content
+   * @return a product of lot dimensions
    */
-  public String getContent() {
-    return content;
+  public int getVolume() {
+    return getWidth() * getHeight() * getDepth();
   }
 
-  public String[][][] getContentAsArray() {
-    String[][][] result = new String[this.size][3][3];
-    int iSize, iHeight, iDepth;
-    String[] pSize, pHeight, pDepth;
-    pSize = this.content.split("&&&");
-    for (iSize = 0; iSize < this.size; iSize++) {
-      pHeight = pSize[iSize].split("&&");
-      for (iHeight = 0; iHeight < 3; iHeight++) {
-        pDepth = pHeight[iHeight].split("&");
-        for (iDepth = 0; iDepth < 3; iDepth++) {
-          result[iSize][iHeight][iDepth] = pDepth[iDepth];
-        }
-      }
-    }
-    return result;
-  }
-
+  /**
+   * @return a three dimensional array that reflects status of the parking
+   *         spots.
+   */
   public ParkingCell[][][] constructContentArray(Connection conn) throws SQLException, ServerException {
     ParkingCell[][][] result = new ParkingCell[size][3][3];
-    ParkingCell.lotForEach(conn, id,
-        cell -> result[cell.width][cell.height][cell.depth] = cell);
+    ParkingCell.lotForEach(conn, id, cell -> result[cell.width][cell.height][cell.depth] = cell);
     return result;
-  }
-
-  /**
-   * Sets the content.
-   *
-   * @param content
-   *          the new content
-   */
-  public void setContent(String content) {
-    this.content = content;
-  }
-
-  public void setContentFromArray(String[][][] newContent) {
-
-    String result = "";
-    int iSize, iHeight, iDepth;
-
-    for (iSize = 0; iSize < this.size; iSize++) {
-      for (iHeight = 0; iHeight < 3; iHeight++) {
-        for (iDepth = 0; iDepth < 3; iDepth++) {
-          result += newContent[iSize][iHeight][iDepth];
-          result += "&";
-        }
-        result += "&";
-      }
-      result += "&";
-    }
-    result = result.substring(0, result.length() - 3);
-    this.content = result;
   }
 
   /**
@@ -330,12 +287,12 @@ public class ParkingLot implements Serializable {
    * @return New parking lot object
    * @throws SQLException
    *           the SQL exception
+   * @throws ServerException
    */
-  public static ParkingLot create(Connection conn, String streetAddress, int size, float price1, float price2,
-      String robotIP) throws SQLException {
+  public static ParkingLot create(Connection conn, String streetAddress, int size, float price1, float price2, String robotIP)
+      throws SQLException, ServerException {
     // Create SQL statement and request table for table keys
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_PARKING_LOT, Statement.RETURN_GENERATED_KEYS);
-    String lotContent = generateEmptyContent(size);
 
     // Fill in the fields of the SQL statement
     int field = 1;
@@ -343,13 +300,14 @@ public class ParkingLot implements Serializable {
     stmt.setInt(field++, size);
 
     // Parking lot content as a string
-    stmt.setString(field++, lotContent);
     stmt.setFloat(field++, price1);
     stmt.setFloat(field++, price2);
     stmt.setString(field++, robotIP);
 
     // Execute SQL query
-    stmt.executeUpdate();
+    if (stmt.executeUpdate() < 1) {
+      throw new ServerException("Failed to create ParkingLot");
+    }
 
     // Extract the auto-generated keys created as a result of executing this
     // Statement object
@@ -366,25 +324,16 @@ public class ParkingLot implements Serializable {
 
     stmt.close();
 
-    return new ParkingLot(newID, streetAddress, size, lotContent, price1, price2, "", robotIP, false);
-  }
-
-  private static String generateEmptyContent(int size) {
-    String result = "";
-    int iSize, iHeight, iDepth;
-
-    for (iSize = 0; iSize < size; iSize++) {
-      for (iHeight = 0; iHeight < 3; iHeight++) {
-        for (iDepth = 0; iDepth < 3; iDepth++) {
-          result += Constants.SPOT_IS_EMPTY;
-          result += "&";
+    // Create parking cells
+    for (int i = 0; i < size; i++) {
+      for (int j = 0; j < 3; j++) {
+        for (int k = 0; k < 3; k++) {
+          ParkingCell.create(conn, newID, i, j, k, null, null, false, false);
         }
-        result += "&";
       }
-      result += "&";
     }
-    result = result.substring(0, result.length() - 3);
-    return result;
+
+    return new ParkingLot(newID, streetAddress, size, price1, price2, null, robotIP, false);
   }
 
   /**
@@ -425,48 +374,26 @@ public class ParkingLot implements Serializable {
     return result;
   }
 
-  public int getFreeSpotsNumber() {
-    int iSize, iHeight, iDepth;
-    int free = 0;
-    String[][][] content = this.getContentAsArray();
-
-    for (iSize = 0; iSize < this.size; iSize++) {
-      for (iHeight = 0; iHeight < 3; iHeight++) {
-        for (iDepth = 0; iDepth < 3; iDepth++) {
-          if ((content[iSize][iHeight][iDepth]).equals(Constants.SPOT_IS_EMPTY)) {
-            free++;
-          }
-        }
-      }
-    }
-    return free;
-  }
-
   // TODO add a method to calculate the number of cells that will need to be
   // available for OnetimeService or SubscriptionService customers at a given
   // point in time
 
-  public int update(Connection conn) throws SQLException, ServerException {
+  public void update(Connection conn) throws SQLException, ServerException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
+
     int index = 1;
-    int result = 0;
     st.setString(index++, this.streetAddress);
     st.setInt(index++, this.size);
-    st.setString(index++, this.content);
     st.setFloat(index++, this.price1);
     st.setFloat(index++, this.price2);
     st.setString(index++, this.alternativeLots);
     st.setString(index++, this.robotIP);
     st.setBoolean(index++, this.lotFull);
     st.setInt(index++, this.id);
-    result = st.executeUpdate();
+
+    st.executeUpdate();
+
     st.close();
-
-    if (result < 1) {
-      throw new ServerException("Failed to update ParkingLot");
-    }
-
-    return result;
   }
 
   public static Collection<ParkingLot> findAll(Connection conn) throws SQLException {
@@ -483,5 +410,47 @@ public class ParkingLot implements Serializable {
     stmt.close();
 
     return results;
+  }
+
+  public int countFreeCells(Connection conn) throws SQLException, ServerException {
+    int count = ParkingCell.countAvailable(conn, id);
+
+    if (count > getVolume()) {
+      // This shouldn't happen during normal operation
+      throw new ServerException("There is more free cells than the lot size");
+    }
+
+    return count;
+  }
+
+  public void updateContent(Connection conn, ParkingCell[][][] content) throws SQLException {
+    for (ParkingCell[][] slice1 : content) {
+      for (ParkingCell[] slice2 : slice1) {
+        for (ParkingCell cell : slice2) {
+          cell.update(conn);
+        }
+      }
+    }
+  }
+  
+  public Collection<ParkingLot> retrieveAlternativeLots(Connection conn, Gson gson) throws SQLException, ServerException {
+    int[] lotIDs;
+    
+    try {
+      lotIDs = gson.fromJson(getAlternativeLots(), int[].class);
+    } catch (Exception e) {
+      throw new ServerException(e.getMessage());
+    }
+
+    LinkedList<ParkingLot> lots = new LinkedList<>();
+    
+    for (int lotID : lotIDs) {
+      ParkingLot lot = findByID(conn, lotID);
+      if (lot != null) {
+        lots.add(lot);
+      }
+    }
+    
+    return lots;
   }
 }

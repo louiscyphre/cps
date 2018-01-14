@@ -160,7 +160,6 @@ CREATE TABLE `parking_lot` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `street_address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `size` int(10) NOT NULL,
-  `content` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `price1` float NOT NULL DEFAULT '0',
   `price2` float NOT NULL DEFAULT '0',
   `alternative_lots` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,

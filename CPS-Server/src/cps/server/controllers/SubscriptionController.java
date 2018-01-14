@@ -1,11 +1,5 @@
 package cps.server.controllers;
 
-import cps.api.response.*;
-import cps.common.Constants;
-import cps.entities.models.Customer;
-import cps.entities.models.ParkingLot;
-import cps.entities.models.SubscriptionService;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -14,6 +8,14 @@ import java.time.LocalTime;
 import cps.api.request.FullSubscriptionRequest;
 import cps.api.request.RegularSubscriptionRequest;
 import cps.api.request.SubscriptionRequest;
+import cps.api.response.FullSubscriptionResponse;
+import cps.api.response.RegularSubscriptionResponse;
+import cps.api.response.ServerResponse;
+import cps.api.response.SubscriptionResponse;
+import cps.common.Constants;
+import cps.entities.models.Customer;
+import cps.entities.models.ParkingLot;
+import cps.entities.models.SubscriptionService;
 import cps.server.ServerController;
 import cps.server.session.CustomerSession;
 
@@ -42,9 +44,6 @@ public class SubscriptionController extends RequestController {
   public ServerResponse handle(SubscriptionRequest request, CustomerSession session,
       SubscriptionResponse serverResponse, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
     return database.performQuery(serverResponse, (conn, response) -> {
-      // Handle login
-      Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
-
       // TODO check overlapping subscriptions with the same car ID?
       
       // Check that the start date is not in the past
@@ -55,8 +54,11 @@ public class SubscriptionController extends RequestController {
         ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
         
         // Check that lot is not full
-        errorIf(lot.getFreeSpotsNumber() < 1, "Parking Lot is full");
+        session.requireLotNotFull(conn, gson, lot, response);
       }
+      
+      // Handle login
+      Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
       SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(),
           request.getEmail(), request.getCarID(), request.getLotID(), startDate, endDate, dailyExitTime);

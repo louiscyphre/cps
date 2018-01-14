@@ -110,4 +110,16 @@ public abstract class CompanyPerson implements User, Serializable {
   public boolean canAccessDomain(int domain) {
     return (accessDomain & domain) != 0;
   }
+  
+  public int getManagerID() {
+    return 0;
+  }
+  
+  public int getDepartmentID() {
+    return 0;
+  }
+  
+  public int getLotID() {
+    return 0;
+  }
 }

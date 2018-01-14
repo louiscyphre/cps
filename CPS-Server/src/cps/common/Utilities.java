@@ -1,5 +1,6 @@
 package cps.common;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -71,5 +72,25 @@ public abstract class Utilities {
     }
 
     return builder.toString();
+  }
+
+  public static boolean isWeekend(DayOfWeek day) {
+    return day == DayOfWeek.SATURDAY;
+  }
+  
+  public static boolean isEmpty(String string) {
+    return string == null || string.trim().isEmpty();
+  }
+  
+  public static boolean between(int x, int a, int b) {
+    return a <= x && x <= b;
+  }
+  
+  public static boolean between(float x, float a, float b) {
+    return a <= x && x <= b;
+  }
+
+  public static <T> T valueOrDefault(T value, T defaultValue) {
+    return value == null ? defaultValue : value;
   }
 }

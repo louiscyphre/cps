@@ -1,5 +1,9 @@
 package cps.server.controllers;
 
+import static cps.common.Utilities.between;
+import static cps.common.Utilities.isEmpty;
+import static cps.common.Utilities.valueOrDefault;
+
 import java.util.Collection;
 
 import cps.api.action.DisableParkingSlotsAction;
@@ -12,11 +16,17 @@ import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.RequestLotStateResponse;
+import cps.api.response.ReserveParkingSlotsResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
+import cps.common.Constants;
+import cps.entities.models.ParkingCell;
+import cps.entities.models.ParkingCell.ParkingCellVisitor;
 import cps.entities.models.ParkingLot;
+import cps.entities.people.User;
 import cps.server.ServerController;
+import cps.server.session.ServiceSession;
 import cps.server.session.UserSession;
 
 /**
@@ -47,7 +57,6 @@ public class LotController extends RequestController {
 
       // Filter out information that customers shouldn't see
       result.forEach(lot -> {
-        lot.setContent(null);
         lot.setRobotIP(null);
       });
 
@@ -64,13 +73,29 @@ public class LotController extends RequestController {
    *          the request
    * @return the server response
    */
-  public InitLotResponse handle(InitLotAction request, UserSession session) {
+  public InitLotResponse handle(InitLotAction request, ServiceSession session) {
     return database.performQuery(new InitLotResponse(), (conn, response) -> {
-      ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(),
-          request.getPrice2(), request.getRobotIP());
+      // Require a logged in employee
+      User user = session.requireUser();
+
+      // Require the employee to have access rights to this action
+      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
+      errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_WORKER, "You cannot perform this action");
+
+      // Check request parameters
+      errorIf(request.getPrice1() < 0f, "Price cannot be negative");
+      errorIf(request.getPrice2() < 0f, "Price cannot be negative");
+      errorIf(request.getSize() < 1, "Number of cars per row must be at least one.");
+      errorIf(isEmpty(request.getStreetAddress()), "Street address must be non-empty");
+      errorIf(isEmpty(request.getRobotIP()), "Robot IP address must be non-empty");
+
+      // Create parking lot
+      ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(), request.getPrice2(),
+          request.getRobotIP());
 
       errorIfNull(result, "Failed to create parking lot");
 
+      // Success
       response.setLotID(result.getId());
       response.setSuccess("Parking lot created successfully");
       return response;
@@ -84,8 +109,16 @@ public class LotController extends RequestController {
    *          the action
    * @return the update prices response
    */
-  public UpdatePricesResponse handle(UpdatePricesAction action, UserSession session) {
+  public UpdatePricesResponse handle(UpdatePricesAction action, ServiceSession session) {
     return database.performQuery(new UpdatePricesResponse(), (conn, response) -> {
+      // Require a logged in employee
+      User user = session.requireUser();
+
+      // Require the employee to have access rights to this action
+      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
+      errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_MANAGER, "You cannot perform this action");
+
+      // Require a parking lot
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());
 
       errorIf(action.getPrice1() < 0f, "Price cannot be negative");
@@ -100,37 +133,86 @@ public class LotController extends RequestController {
     });
   }
 
-  public SetFullLotResponse handle(SetFullLotAction action, UserSession session) {
+  public SetFullLotResponse handle(SetFullLotAction action, ServiceSession session) {
     return database.performQuery(new SetFullLotResponse(), (conn, response) -> {
-      ParkingLot lot = ParkingLot.findByID(conn, action.getLotID());
-      lot.setLotFull(action.getLotFull());
+      // Require a logged in employee
+      User user = session.requireUser();
 
-      // TODO this should be a list of alternative lot IDs
-      lot.setAlternativeLots(Integer.toString(action.getAlternativeLotID()));
+      // Require the employee to have access rights to this action
+      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
+      errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_WORKER, "You cannot perform this action");
+      
+      // Check request parameters
+      int[] alternativeLots = valueOrDefault(action.getAlternativeLots(), new int[] {});      
+      errorIf(alternativeLots.length > 10, "There can be at most 10 alternative lots");
+
+      // Require a parking lot
+      ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());
+      
+      // Update parking lot
+      lot.setLotFull(action.getLotFull());
+      lot.setAlternativeLots(gson.toJson(alternativeLots));
       lot.update(conn);
+      
+      // Success
       response.setSuccess("ParkingLot status updated");
       return response;
     });
   }
 
-  public RequestLotStateResponse handle(RequestLotStateAction action, UserSession session) {
+  public RequestLotStateResponse handle(RequestLotStateAction action, ServiceSession session) {
     return database.performQuery(new RequestLotStateResponse(), (conn, response) -> {
+      // Require a logged in employee
+      session.requireUser();
+
+      // Require a parking lot
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, action.getLotID());
+      ParkingCell[][][] content = lot.constructContentArray(conn);
 
       response.setLot(lot);
+      response.setContent(content);
       response.setSuccess("RequestLotState request completed successfully");
       return response;
     });
   }
 
-  public ServerResponse handle(ReserveParkingSlotsAction action, UserSession session) {
-    // TODO implement ReserveParkingSlotsAction
-    return null;
+  public ServerResponse reserveOrDisable(ServiceSession session, int lotID, int i, int j, int k, ParkingCellVisitor visitor, String successMessage) {
+    return database.performQuery(new ReserveParkingSlotsResponse(), (conn, response) -> {
+      // Require a logged in employee
+      User user = session.requireUser();
+
+      // Require the employee to have access rights to this action
+      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
+      errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_WORKER, "You cannot perform this action");
+
+      // Require a parking lot
+      ParkingLot lot = ParkingLot.findByIDNotNull(conn, lotID);
+
+      // Check request parameters
+
+      errorIf(!between(i, 0, lot.getWidth() - 1), String.format("Parameter i must be in range [0, %s] (inclusive)", lot.getWidth() - 1));
+      errorIf(!between(j, 0, Constants.LOT_HEIGHT - 1), String.format("Parameter j must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
+      errorIf(!between(k, 0, Constants.LOT_DEPTH - 1), String.format("Parameter k must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
+
+      ParkingCell cell = ParkingCell.find(conn, lot.getId(), i, j, k);
+      errorIfNull(cell, String.format("Parking cell with coordinates %s, %s, %s not found", i, j, k));
+
+      // TODO don't allow reserve/disable action if there is a car in the cell?
+      visitor.call(cell);
+      cell.update(conn);
+
+      response.setSuccess(successMessage);
+      return response;
+    });
   }
 
-  public ServerResponse handle(DisableParkingSlotsAction action, UserSession session) {
-    // TODO implement DisableParkingSlotsAction
-    return null;
+  public ServerResponse handle(ReserveParkingSlotsAction action, ServiceSession session) {
+    return reserveOrDisable(session, action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK(), cell -> cell.setReserved(true),
+        "Parking cell reserved successfully");
   }
 
+  public ServerResponse handle(DisableParkingSlotsAction action, ServiceSession session) {
+    return reserveOrDisable(session, action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK(), cell -> cell.setDisabled(true),
+        "Parking cell disabled successfully");
+  }
 }

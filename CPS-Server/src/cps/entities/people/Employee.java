@@ -12,7 +12,8 @@ public abstract class Employee extends CompanyPerson {
     this.managerID = managerID;
     this.departmentID = departmentID;
   }
-
+  
+  @Override
   public int getManagerID() {
     return managerID;
   }
@@ -20,7 +21,8 @@ public abstract class Employee extends CompanyPerson {
   public void setManagerID(int managerID) {
     this.managerID = managerID;
   }
-
+  
+  @Override
   public int getDepartmentID() {
     return departmentID;
   }

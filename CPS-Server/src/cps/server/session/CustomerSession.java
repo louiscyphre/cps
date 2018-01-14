@@ -1,10 +1,15 @@
 package cps.server.session;
 
+import static cps.common.Utilities.randomString;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import cps.common.Utilities;
+import com.google.gson.Gson;
+
+import cps.api.response.ParkingServiceResponse;
 import cps.entities.models.Customer;
+import cps.entities.models.ParkingLot;
 import cps.entities.people.User;
 import cps.server.ServerException;
 
@@ -51,7 +56,7 @@ public class CustomerSession extends BasicSession {
   }
 
   public Customer registerCustomer(Connection conn, String email) throws SQLException, ServerException {
-    String password = Utilities.randomString("0123456789", 4);
+    String password = randomString("0123456789", 4);
     
     // System.out.println(String.format("Sending password '%s' to email %s",
     // password, email));
@@ -80,5 +85,13 @@ public class CustomerSession extends BasicSession {
     }
 
     return registerCustomer(conn, email);
+  }
+  
+  public void requireLotNotFull(Connection conn, Gson gson, ParkingLot lot, ParkingServiceResponse response) throws SQLException, ServerException {
+    // TODO find a more reliable way to check if lot is full
+    if (lot.isLotFull() || lot.countFreeCells(conn) < 1) {
+      response.setAlternativeLots(lot.retrieveAlternativeLots(conn, gson));
+      throw new ServerException("The specified lot is full; please try one of the alternative lots");
+    }
   }
 }

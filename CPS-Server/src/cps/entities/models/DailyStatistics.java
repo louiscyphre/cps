@@ -281,15 +281,13 @@ public class DailyStatistics implements Serializable {
     if (entry != null) {
       int index = 1;
       PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_REALIZED_ORDER);
-      stmt.setInt(index++, entry.getRealizedOrders() + 1); // get realized
-                                                           // orders number and
-                                                           // increase it
+      
+      // Increase the number of realized orders
+      stmt.setInt(index++, entry.getRealizedOrders() + 1);
       stmt.setDate(index++, Date.valueOf(_date));
       stmt.setInt(index++, lotId);
 
-      if (stmt.executeUpdate() == 0) {
-        throw new ServerException("Failed to increase Realized Order Count");
-      }
+      stmt.executeUpdate();
 
       stmt.close();
     }
@@ -332,15 +330,13 @@ public class DailyStatistics implements Serializable {
     if (entry != null) {
       int index = 1;
       PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_CANCELED_ORDER);
-      stmt.setInt(index++, entry.getCanceledOrders() + 1); // get canceled
-                                                           // orders number and
-                                                           // increase it
+      
+      // Increase the number of canceled orders
+      stmt.setInt(index++, entry.getCanceledOrders() + 1);
       stmt.setDate(index++, Date.valueOf(_date));
       stmt.setInt(index++, lotId);
 
-      if (stmt.executeUpdate() == 0) {
-        throw new ServerException("Failed to increase Canceled Order Count");
-      }
+      stmt.executeUpdate();
 
       stmt.close();
     }
@@ -383,15 +379,13 @@ public class DailyStatistics implements Serializable {
     if (entry != null) {
       int index = 1;
       PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_LATE_ARRIVAL);
-      stmt.setInt(index++, entry.getLateArrivals() + 1); // get late arrivals
-                                                         // number and increase
-                                                         // it
+      
+      // Increase the number of late arrivals
+      stmt.setInt(index++, entry.getLateArrivals() + 1);
       stmt.setDate(index++, Date.valueOf(_date));
       stmt.setInt(index++, lotId);
 
-      if (stmt.executeUpdate() == 0) {
-        throw new ServerException("Failed to increase Late Arrival Count");
-      }
+      stmt.executeUpdate();
 
       stmt.close();
     }
@@ -428,21 +422,19 @@ public class DailyStatistics implements Serializable {
    */
   public static void increaseInactiveSlots(Connection conn, LocalDate _date, int lotId)
       throws SQLException, ServerException {
-    // check if line exists in database
+    // Check if line exists in database
     DailyStatistics entry = createIfNotExists(conn, _date, lotId);
 
     if (entry != null) {
       int index = 1;
       PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_INACTIVE_SLOTS);
-      stmt.setInt(index++, entry.getInactiveSlots() + 1); // get number of
-                                                          // inactive slots and
-                                                          // increase it
+      
+      // Increase the number of inactive slots
+      stmt.setInt(index++, entry.getInactiveSlots() + 1);
       stmt.setDate(index++, Date.valueOf(_date));
       stmt.setInt(index++, lotId);
 
-      if (stmt.executeUpdate() == 0) {
-        throw new ServerException("Failed to increase Inactive Slot Count");
-      }
+      stmt.executeUpdate();
 
       stmt.close();
     }

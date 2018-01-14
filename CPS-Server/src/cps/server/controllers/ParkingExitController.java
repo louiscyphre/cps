@@ -51,7 +51,7 @@ public class ParkingExitController extends RequestController {
 
       // Update the removedAt field
       Timestamp removedAt = new Timestamp(System.currentTimeMillis());
-      errorIf(!transportation.updateRemovedAt(conn, removedAt), "Failed to update car transportation");
+      transportation.updateRemovedAt(conn, removedAt); // there will be an SQL exception if this fails
 
       // Calculate the amount of money that the customer has to pay
       float sum = calculatePayment(conn, transportation, request);
