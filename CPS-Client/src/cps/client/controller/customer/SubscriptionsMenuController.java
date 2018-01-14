@@ -112,7 +112,7 @@ public class SubscriptionsMenuController implements ParkingLotsController {
     if (processing) {
       return;
     }
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
+    //ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
   }
 
   @FXML
