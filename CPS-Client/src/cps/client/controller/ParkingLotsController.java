@@ -3,7 +3,6 @@
  */
 package cps.client.controller;
 
-import java.util.HashMap;
 import java.util.List;
 
 import cps.entities.models.ParkingLot;

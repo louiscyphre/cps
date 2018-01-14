@@ -11,6 +11,8 @@ import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
 import cps.entities.models.ParkingLot;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -21,8 +23,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  * Created on: 2018-01-09 1:04:02 AM
