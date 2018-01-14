@@ -290,16 +290,16 @@ public class CarTransportationControllerA extends RequestController implements C
       throw new ServerException("Car Insertion failed");
     }
 
-//    printLotContent(lot.constructContentArray(conn));
+    // printLotContent(lot.constructContentArray(conn));
   }
-  
-  void printLotContent(ParkingCell[][][] content) {  
+
+  void printLotContent(ParkingCell[][][] content) {
     Gson gson = new Gson();
 
-    for (ParkingCell[][] i: content) {
-      for (ParkingCell[] j: i) {
-        for (ParkingCell cell: j) {
-          System.out.println(gson.toJson(cell));          
+    for (ParkingCell[][] i : content) {
+      for (ParkingCell[] j : i) {
+        for (ParkingCell cell : j) {
+          System.out.println(gson.toJson(cell));
         }
       }
     }
@@ -369,20 +369,20 @@ public class CarTransportationControllerA extends RequestController implements C
      * false; }
      */
 
-    int eSize = -1, eHeight = -1, eDepth = -1;
+    int eWidth = -1, eHeight = -1, eDepth = -1;
     boolean found = false;
 
     // Find a car in the lot by carId
-    for (int iSize = 0; iSize < lot.getWidth() && !found; iSize++) {
+    for (int iWidth = 0; iWidth < lot.getWidth() && !found; iWidth++) {
       for (int iHeight = 0; iHeight < 3 && !found; iHeight++) {
         for (int iDepth = 0; iDepth < 3 && !found; iDepth++) {
-          if (content[iSize][iHeight][iDepth].contains(carID)) {
+          if (content[iWidth][iHeight][iDepth].contains(carID)) {
             // When found, mark the spot as empty and remember the location
-            eSize = iSize;
+            eWidth = iWidth;
             eHeight = iHeight;
             eDepth = iDepth;
 
-            content[iSize][iHeight][iDepth].clear();
+            content[iWidth][iHeight][iDepth].clear();
 
             found = true;
           }
@@ -390,7 +390,7 @@ public class CarTransportationControllerA extends RequestController implements C
       }
     }
 
-    System.out.println(String.format("Retrieving car %s from location %s, %s, %s", carID, eSize, eHeight, eDepth));
+    System.out.println(String.format("Retrieving car %s from location %s, %s, %s", carID, eWidth, eHeight, eDepth));
 
     /*
      * We need to remove all the cars in the way before we will be able to
@@ -399,27 +399,31 @@ public class CarTransportationControllerA extends RequestController implements C
 
     Stack<String> carIds = new Stack<String>();
     Stack<LocalDateTime> exitTimes = new Stack<LocalDateTime>();
-
-    for (int iHeight = 0; iHeight < eHeight; iHeight++) {
-      ParkingCell cell = content[eSize][iHeight][0];
-
-      if (!cell.isFree()) {
+    for (int iWidth = 0; iWidth < eWidth; iWidth++) {
+      ParkingCell cell = content[iWidth][0][0];
+      if (cell.containsCar()) {
         carIds.push(cell.getCarID());
         exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
-
-        content[eSize][iHeight][0].clear();
+        content[iWidth][0][0].clear();
+        // robbie.retrieveCar(carIds.peek(), eSize, iHeight, 0);
+      }
+    }
+    for (int iHeight = 0; iHeight < eHeight; iHeight++) {
+      ParkingCell cell = content[eWidth][iHeight][0];
+      if (cell.containsCar()) {
+        carIds.push(cell.getCarID());
+        exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
+        content[eWidth][iHeight][0].clear();
         // robbie.retrieveCar(carIds.peek(), eSize, iHeight, 0);
       }
     }
 
     for (int iDepth = 0; iDepth < eDepth; iDepth++) {
-      ParkingCell cell = content[eSize][eHeight][iDepth];
-
-      if (!cell.isFree()) {
+      ParkingCell cell = content[eWidth][eHeight][iDepth];
+      if (cell.containsCar()) {
         carIds.push(cell.getCarID());
         exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
-
-        content[eSize][eHeight][iDepth].clear();
+        content[eWidth][eHeight][iDepth].clear();
         // robbie.retrieveCar(carIds.peek(), eSize, iHeight, iDepth);
       }
     }
