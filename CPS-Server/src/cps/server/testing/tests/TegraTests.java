@@ -55,10 +55,14 @@ public class TegraTests {
 
   @Test
   public void testInsertCars() throws ServerException {
-    int carstoinsert = 12;
+    // int carstoinsert = 12;
     // Create parking lot Create incidental parking request
     // Insert the car
-    ParkingLot lot = initParkingLot();
+    ParkingLot lot[] = new ParkingLot[3];
+    lot[1] = initParkingLot();
+    lot[2] = db.performQuery(conn -> ParkingLot.create(conn, "Rabin 14", 8, 5, 3, "13.f.t43"));
+    //lot[3] = db.performQuery(conn -> ParkingLot.create(conn, "Big 16", 12, 5, 3, "14.f.t43"));
+
     CustomerData data = new CustomerData((int) Math.random() * 1000,
         Utilities.randomString("abcdefghijklmnopqrstuvwxyz", 8), Utilities.randomString("1234567890", 4),
         Utilities.randomString("1234567890ABCDTRUOTSKL", 7), 1, 0);
@@ -96,33 +100,42 @@ public class TegraTests {
     // Exit in 50 hours
     a[9] = Timestamp.valueOf(LocalDateTime.now().plusHours(50));
     CarTransportationController3 transcontroller = new CarTransportationController3(server);
-    OnetimeService[][] reservedParkings = new OnetimeService[3][carstoinsert];
+    OnetimeService[] reservedParkings1 = new OnetimeService[36];
     db.performAction(conn -> {
-      for (int j = 1, k = 0; j < 4; j++, k++) {
-        for (int i = 0; i < carstoinsert; i++) {
-          int customerEGO = (int) Math.random() * 500;
-          String randomemail = Utilities.randomString("angjurufjfjsl", 7) + "@gmail.com";
-          String randomcarID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
-          reservedParkings[k][i] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED,
-              customerEGO, randomemail, randomcarID, lot.getId(), a[0], a[(int) (Math.random() * 8) + 1], false);
-        }
+      for (int j = 0; j < 36; j++) {
+        int customerEGO = (int) Math.random() * 500;
+        String randomemail = Utilities.randomString("angjurufjfjsl", 7) + "@gmail.com";
+        String randomcarID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
+        reservedParkings1[j] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, customerEGO,
+            randomemail, randomcarID, lot[1].getId(), a[0], a[(int) (Math.random() * 8) + 1], false);
       }
+    });
+    OnetimeService[] reservedParkings2 = new OnetimeService[71];
+    db.performAction(conn -> {
+      for (int j = 0; j < 71; j++) {
+        int customerEGO = (int) Math.random() * 500;
+        String randomemail = Utilities.randomString("angjurufjfjsl", 7) + "@gmail.com";
+        String randomcarID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
+        reservedParkings2[j] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, customerEGO,
+            randomemail, randomcarID, lot[2].getId(), a[0], a[(int) (Math.random() * 8) + 1], false);
+      }
+    });
+    db.performAction(conn ->
 
+    {
+      for (int j = 0; j < 36; j++) {
+        System.out.printf("%s ", reservedParkings1[j].getPlannedEndTime().toString());
+        transcontroller.insertCar(conn, lot[1], reservedParkings1[j].getCarID(), reservedParkings1[j].getExitTime());
+      }
     });
 
-    db.performAction(conn -> {
-      for (int j = 2; j >= 0; j--) {
-        for (int i = 0; i < carstoinsert; i++) {
-          System.out.printf("%s ", reservedParkings[j][i].getPlannedEndTime().toString());
-          transcontroller.insertCar(conn, lot, reservedParkings[j][i].getCarID(), reservedParkings[j][i].getExitTime());
-        }
+    db.performAction(conn ->
+
+    {
+      for (int j = 0; j < 71; j++) {
+        System.out.printf("%s ", reservedParkings1[j].getPlannedEndTime().toString());
+        transcontroller.insertCar(conn, lot[2], reservedParkings2[j].getCarID(), reservedParkings2[j].getExitTime());
       }
-      /*
-       * ParkingLot nlot = ParkingLot.findByID(conn, lot.getId());
-       * ParkingCell[][][] cells = nlot.constructContentArray(conn);
-       * System.out.println("---- Printing Parking Lot ----");
-       * System.out.println(cells.toString());
-       */
     });
 
   }

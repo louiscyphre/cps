@@ -290,16 +290,16 @@ public class CarTransportationController3 extends RequestController implements C
       throw new ServerException("Car Insertion failed");
     }
 
-//    printLotContent(lot.constructContentArray(conn));
+    // printLotContent(lot.constructContentArray(conn));
   }
-  
-  void printLotContent(ParkingCell[][][] content) {  
+
+  void printLotContent(ParkingCell[][][] content) {
     Gson gson = new Gson();
 
-    for (ParkingCell[][] i: content) {
-      for (ParkingCell[] j: i) {
-        for (ParkingCell cell: j) {
-          System.out.println(gson.toJson(cell));          
+    for (ParkingCell[][] i : content) {
+      for (ParkingCell[] j : i) {
+        for (ParkingCell cell : j) {
+          System.out.println(gson.toJson(cell));
         }
       }
     }
@@ -359,14 +359,14 @@ public class CarTransportationController3 extends RequestController implements C
    */
   public void retrieveCar(Connection conn, int lotId, String carID) throws SQLException, ServerException {
     ParkingLot lot = ParkingLot.findByID(conn, lotId);
-    // String[][][] content = lot.getContentAsArray();
     ParkingCell[][][] content = lot.constructContentArray(conn);
-    // printLotContent(content);
 
     // Get the robot in the parking lot
+
     /*
-     * Robot robbie = robots.get(lot.getRobotIP()); if (robbie == null) { return
-     * false; }
+     * Robot robbie = robots.get(lot.getRobotIP()); if (robbie == null) { 
+     * TODO Something should probably be here? Exception perhaps? 
+     * }
      */
 
     int eSize = -1, eHeight = -1, eDepth = -1;
@@ -390,7 +390,8 @@ public class CarTransportationController3 extends RequestController implements C
       }
     }
 
-    System.out.println(String.format("Retrieving car %s from location %s, %s, %s", carID, eSize, eHeight, eDepth)); //TODO DELETE THIS
+    System.out.println(String.format("Retrieving car %s from location %s, %s, %s", carID, eSize, eHeight, eDepth));
+    // TODO DELETE THIS
 
     /*
      * We need to remove all the cars in the way before we will be able to
@@ -473,7 +474,8 @@ public class CarTransportationController3 extends RequestController implements C
         ParkingCell cell = content[i][0][0];
         carIds.push(cell.getCarID());
         exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
-        System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(),i,0,0); //TODO DELETE THIS
+        System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(), i, 0, 0);
+        // TODO DELETE THIS
         cell.clear();
         freeSpotsCount[0]++;
       }
@@ -484,7 +486,8 @@ public class CarTransportationController3 extends RequestController implements C
         ParkingCell cell = content[maxSize][i][0];
         carIds.push(cell.getCarID());
         exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
-        System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(),maxSize,i,0); //TODO DELETE THIS
+        System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(), maxSize, i, 0);
+        // TODO DELETE THIS
         cell.clear();
         freeSpotsCount[i]++;
       }
@@ -495,7 +498,8 @@ public class CarTransportationController3 extends RequestController implements C
         ParkingCell cell = content[maxSize][maxHeight][i];
         carIds.push(cell.getCarID());
         exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
-        System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(),maxSize,maxHeight,i); //TODO DELETE THIS
+        System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(), maxSize, maxHeight, i);
+        // TODO DELETE THIS
         cell.clear();
 
         if (i == 0) {
@@ -510,7 +514,8 @@ public class CarTransportationController3 extends RequestController implements C
       ParkingCell cell = content[maxSize][maxHeight][maxDepth];
       carIds.push(cell.getCarID());
       exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
-      System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(),maxSize,maxHeight,maxDepth); //TODO DELETE THIS
+      System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(), maxSize, maxHeight, maxDepth);
+      // TODO DELETE THIS
       cell.clear();
 
       if (maxDepth == 0) {
