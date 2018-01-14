@@ -31,6 +31,8 @@ public class ControllersClientAdapter {
   private HashMap<String, ViewController> ctrlMapping;
   private HashMap<String, Scene>          sceneMapping;
 
+  private int lotID = -1; // required : -1 if web-client
+
   private ControllersClientAdapter() {
     this.ctrlMapping = new HashMap<String, ViewController>();
     this.sceneMapping = new HashMap<String, Scene>();
@@ -117,4 +119,12 @@ public class ControllersClientAdapter {
     getInstance().ctrlMapping.forEach((k, v) -> v.turnLoggedInStateOff());
   }
 
+  public static int getLotID() {
+    return getInstance().lotID;
+  }
+
+  public static void setLotID(int lotID) {
+    getInstance().lotID = lotID;
+  }
+  
 }

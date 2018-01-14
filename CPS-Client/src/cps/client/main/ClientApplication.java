@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.apache.commons.cli.ParseException;
 
-import cps.api.action.InitLotAction;
 import cps.api.response.Response;
 import cps.api.response.ResponseHandler;
 import cps.client.controller.ControllerConstants.SceneCode;
@@ -29,19 +28,9 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private Stage primaryStage;
 
-  // private Scene currentScene; TODO check whether necessary
-
   private ResponseHandler responseHandler = new ResponseHandlerImpl();
 
-  private int lotID; // required : -1 if web-client
-
-  public int getLotID() {
-    return lotID;
-  }
-
-  private void setLotID(int lotID) {
-    this.lotID = lotID;
-  }
+  
 
   /**
    *
@@ -51,9 +40,6 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private void loadKiosk() throws IOException {
     try {
-      // Scene scene =
-      // ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
-
       Scene scene = ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
       ControllersClientAdapter.registerScene(SceneCode.LOGIN);
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
@@ -68,10 +54,10 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private void loadService() {
     try {
-      Scene scene = ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MENU);
+      Scene scene = ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOGIN);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_DISABLE_SLOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_INIT_LOT);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOGIN);
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MENU);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOT_IS_FULL);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOT_STATE);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_REFUND);
@@ -106,9 +92,6 @@ public class ClientApplication extends Application implements INetworkClient {
 
       ControllersClientAdapter.registerClient(this);
 
-      // TODO enable if database is cold
-      // setTheTestEnviroment();
-
       switch (parser.getMode()) {
         case "webclient":
           // loadWebclient();
@@ -126,7 +109,7 @@ public class ClientApplication extends Application implements INetworkClient {
           loadKiosk();
       }
 
-      setLotID(parser.getLotId());
+      ControllersClientAdapter.setLotID(parser.getLotId());
 
     } catch (IOException e) {
       System.out.println("Error: Can't setup connection! Terminating client.");
@@ -175,14 +158,5 @@ public class ClientApplication extends Application implements INetworkClient {
 
   public void setPrimaryStage(Stage primaryStage) {
     this.primaryStage = primaryStage;
-  }
-
-  enum NetworkState {
-    WAITING_FOR_RESPONSE, RESPONSIVE
-  }
-
-  private void setTheTestEnviroment() {
-    InitLotAction initLot = new InitLotAction(1, "Sesam 2", 4, 5, 3, "12.f.t43");
-    sendRequest(initLot);
   }
 }
