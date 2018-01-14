@@ -2,6 +2,7 @@ package cps.client.controller.service;
 
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ViewController;
+import cps.entities.people.CompanyPerson;
 import cps.client.controller.ControllerConstants.SceneCode;
 
 import java.net.URL;
@@ -142,7 +143,10 @@ public class ServiceActionMenuSceneController implements ViewController {
 
   @Override
   public void cleanCtrl() {
-    // TODO Auto-generated method stub
-
+    CompanyPerson companyPerson = ControllersClientAdapter.getEmployeeContext().getCompanyPerson();
+    if (companyPerson != null) {
+      usernameLabel.setText(companyPerson.getFirstName() + " " + companyPerson.getLastName());
+      jobTitleLabel.setText(companyPerson.getJobTitle());
+    }
   }
 }

@@ -89,6 +89,11 @@ public class ResponseHandlerImpl implements ResponseHandler {
   public ServerResponse handle(UpdatePricesResponse response) {
     return this.serviceResponseHandler.handle(response);
   }
+  
+  @Override
+  public ServerResponse handle(ServiceLoginResponse response) {
+    return this.serviceResponseHandler.handle(response);
+  }
 
   // // // // // // // // // // // // // // // // // // // // // // // //
   // ----- Customer -----
@@ -141,5 +146,7 @@ public class ResponseHandlerImpl implements ResponseHandler {
   public ServerResponse handle(ReservedParkingResponse response) {
     return this.customerResponseHandler.handle(response);
   }
+
+  
 
 }

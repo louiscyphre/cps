@@ -44,4 +44,6 @@ public interface ResponseHandler {
   public ServerResponse handle(UpdatePricesResponse response);
 
   public ServerResponse handle(RequestLotStateResponse response);
+  
+  public ServerResponse handle(ServiceLoginResponse response);
 }
