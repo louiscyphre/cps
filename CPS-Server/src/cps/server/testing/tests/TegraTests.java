@@ -55,7 +55,7 @@ public class TegraTests {
 
   @Test
   public void testInsertCars() throws ServerException {
-    int carstoinsert = 8;
+    int carstoinsert = 12;
     // Create parking lot Create incidental parking request
     // Insert the car
     ParkingLot lot = initParkingLot();
