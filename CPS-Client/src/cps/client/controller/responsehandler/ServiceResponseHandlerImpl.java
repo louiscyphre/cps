@@ -71,7 +71,7 @@ class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
-      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MAIN_MENU);
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       ControllersClientAdapter.getCurrentCtrl().displayError(response.getDescription());
       ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();

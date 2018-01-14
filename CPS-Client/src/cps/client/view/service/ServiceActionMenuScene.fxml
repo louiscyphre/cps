@@ -82,6 +82,12 @@
                         <String fx:value="regularButton" />
                         <String fx:value="smallButton" />
                      </styleClass></Button>
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" onAction="#handleReportsButton" prefHeight="50.0" prefWidth="150.0" text="Reports" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <styleClass>
+                        <String fx:value="regularButton" />
+                        <String fx:value="smallButton" />
+                     </styleClass>
+                  </Button>
                </children>
             </GridPane>
             <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">
