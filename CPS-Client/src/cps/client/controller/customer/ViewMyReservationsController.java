@@ -17,6 +17,7 @@ import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -51,6 +52,24 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
 
   @FXML // fx:id="infoBox"
   private VBox infoBox; // Value injected by FXMLLoader
+
+  @FXML
+  private TableColumn<TableOnetimeService, String> colCancel;
+
+  @FXML
+  private TableColumn<TableOnetimeService, String> colType;
+
+  @FXML
+  private TableColumn<TableOnetimeService, String> colLeave;
+
+  @FXML
+  private TableColumn<TableOnetimeService, String> colStart;
+
+  @FXML
+  private TableColumn<TableOnetimeService, String> colCarId;
+
+  @FXML
+  private TableColumn<TableOnetimeService, String> colLot;
 
   @FXML
   void handleBackButton(ActionEvent event) {
@@ -144,11 +163,11 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
 
   private static class TableOnetimeService {
 
-    private final SimpleStringProperty type;
-    private final SimpleStringProperty carID;
-    private final SimpleStringProperty lotName;
-    private final SimpleStringProperty startDate;
-    private final SimpleStringProperty leaveDate;
+    private SimpleStringProperty type;
+    private SimpleStringProperty carID;
+    private SimpleStringProperty lotName;
+    private SimpleStringProperty startDate;
+    private SimpleStringProperty leaveDate;
 
     public TableOnetimeService(String strType, String strCarID, String strLotName, String strStartDate,
         String strLeaveDate) {
@@ -159,6 +178,41 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
       this.leaveDate = new SimpleStringProperty(strLeaveDate);
     }
 
+    public StringProperty typeProperty() {
+      if (type == null) {
+        type = new SimpleStringProperty(this, "type");
+      }
+      return type;
+    }
+
+    public StringProperty carIDProperty() {
+      if (carID == null) {
+        carID = new SimpleStringProperty(this, "carID");
+      }
+      return carID;
+    }
+    
+    public StringProperty lotNameProperty() {
+      if (lotName == null) {
+        lotName = new SimpleStringProperty(this, "lotName");
+      }
+      return lotName;
+    }
+
+    public StringProperty startDateProperty() {
+      if (startDate == null) {
+        startDate = new SimpleStringProperty(this, "startDate");
+      }
+      return type;
+    }
+
+    public StringProperty leaveDateProperty() {
+      if (leaveDate == null) {
+        leaveDate = new SimpleStringProperty(this, "leaveDate");
+      }
+      return leaveDate;
+    }
+    
     public String getType() {
       return type.get();
     }
@@ -216,6 +270,25 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
         service.getCarID(), Integer.toString(service.getLotID()), service.getPlannedStartTime().toString(),
         service.getPlannedEndTime().toString())));
 
+    
+    colType = new TableColumn<TableOnetimeService,String>("_Type");
+    colType.setCellValueFactory(new PropertyValueFactory<TableOnetimeService,String>("type"));
+
+    colCarId = new TableColumn<TableOnetimeService,String>("_Car ID");
+    colCarId.setCellValueFactory(new PropertyValueFactory<TableOnetimeService,String>("carID"));
+    
+    colLot = new TableColumn<TableOnetimeService,String>("_Lot Name");
+    colLot.setCellValueFactory(new PropertyValueFactory<TableOnetimeService,String>("lotName"));
+    
+    colStart = new TableColumn<TableOnetimeService,String>("_Start Date");
+    colStart.setCellValueFactory(new PropertyValueFactory<TableOnetimeService,String>("startDate"));
+    
+    colLeave = new TableColumn<TableOnetimeService,String>("_Leave Date");
+    colLeave.setCellValueFactory(new PropertyValueFactory<TableOnetimeService,String>("leaveDate"));
+    
+    tableView.getColumns().add(colLot);
+    tableView.getColumns().add(colType);
+    
     tableView.setItems(tableEntries);
 
   }
