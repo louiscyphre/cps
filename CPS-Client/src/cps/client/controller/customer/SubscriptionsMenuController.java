@@ -4,6 +4,7 @@
 package cps.client.controller.customer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cps.api.request.ListParkingLotsRequest;
@@ -62,11 +63,18 @@ public class SubscriptionsMenuController implements ParkingLotsController {
    * @param parkingLots
    */
   public void setParkingLots(List<ParkingLot> list) {
+<<<<<<< HEAD
     parkingLotsMap = list;
     List<String> tmp = new ArrayList<String>();
     for (ParkingLot i : parkingLotsMap) {
+=======
+    List<String> tmp = new ArrayList<String> ();
+    HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
+    for (ParkingLot i: list) {
+>>>>>>> branch 'dev-client' of https://github.com/louiscyphre/cps.git
       String address = new String(i.getStreetAddress());
       tmp.add(address);
+      
     }
     ObservableList<String> addresses = FXCollections.observableList(tmp);
     fillComboBoxItems(addresses);
@@ -76,7 +84,19 @@ public class SubscriptionsMenuController implements ParkingLotsController {
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
   }
+<<<<<<< HEAD
 
+=======
+  
+  private void getRegularSubscriptionDetailsForLot(String choice) {
+    
+  }
+  
+  private void  getFullSubscriptionDetailsForLot(String choice) {
+    
+  }
+  
+>>>>>>> branch 'dev-client' of https://github.com/louiscyphre/cps.git
   @FXML
   void showSubscriptionsForLot(ActionEvent event) {
     if (processing) {
