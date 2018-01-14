@@ -246,7 +246,7 @@ public class OnetimeService implements ParkingService {
     // 2. a <= c and c <= b -- Start time of another period is between the start time and end time of the given period
     PreparedStatement stmt= conn.prepareStatement("SELECT count(*) FROM onetime_service WHERE car_id=? AND ((planned_start_time <= ? AND ? <= planned_end_time) OR (? <= planned_start_time AND planned_start_time <= ?))");
 
-    int i=1;    
+    int i=1;
     stmt.setString(i++, carID);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, startTime);
@@ -257,7 +257,7 @@ public class OnetimeService implements ParkingService {
     
     if (rs.next()) {
       // If there is one or more results, we have an overlapping OnetimeService entry
-      result = rs.getInt(1) > 1;
+      result = rs.getInt(1) > 0;
     }
     
     rs.close();
