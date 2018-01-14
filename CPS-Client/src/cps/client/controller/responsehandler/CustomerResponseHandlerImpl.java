@@ -119,10 +119,11 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       context.setCustomerId(responseCustomerId);
       context.acceptPendingEmail();
       ControllersClientAdapter.turnLoggedInStateOn();
-
+      ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       ctrl.displayError(response.getDescription());
+      ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
     }
 
     return response;
