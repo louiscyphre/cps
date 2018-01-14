@@ -56,6 +56,7 @@ public class LotController extends RequestController {
       Collection<ParkingLot> result = ParkingLot.findAll(conn);
 
       // Filter out information that customers shouldn't see
+      // TODO don't filter for employees
       result.forEach(lot -> {
         lot.setRobotIP(null);
       });
