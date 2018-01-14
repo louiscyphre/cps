@@ -1,6 +1,8 @@
 package cps.client.controller.service;
 
 import cps.api.action.ServiceLoginAction;
+import cps.api.response.ServerResponse;
+import cps.api.response.ServiceLoginResponse;
 import cps.client.controller.ControllerConstants.InputVerification;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
@@ -73,5 +75,20 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
     super.cleanCtrl();
     usernameTF.clear();
     passwordTF.clear();
+  }
+
+  @Override
+  public ServerResponse handle(ServiceLoginResponse response) {
+    ControllersClientAdapter.getEmployeeContext().setCompanyPerson(response.getUser());
+
+    if (response.success()) {
+      turnProcessingStateOff();
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
+    } else {
+      displayError(response.getDescription());
+      turnProcessingStateOff();
+    }
+
+    return null;
   }
 }

@@ -11,7 +11,6 @@ import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.client.controller.ControllersClientAdapter;
-import cps.client.controller.ControllerConstants.SceneCode;
 
 class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 
@@ -23,8 +22,7 @@ class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 
   @Override
   public ServerResponse handle(InitLotResponse response) {
-    // TODO Auto-generated method stub
-    return null;
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   @Override
@@ -65,18 +63,7 @@ class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 
   @Override
   public ServerResponse handle(ServiceLoginResponse response) {
-
-    ControllersClientAdapter.getEmployeeContext().setCompanyPerson(response.getUser());
-
-    if (response.getStatus() == ServerResponse.STATUS_OK) {
-      ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
-      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
-    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
-      ControllersClientAdapter.getCurrentCtrl().displayError(response.getDescription());
-      ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
-    }
-
-    return null;
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
 }
