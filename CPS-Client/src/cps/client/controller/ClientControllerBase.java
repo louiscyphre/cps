@@ -25,8 +25,10 @@ import cps.api.response.ServerResponse;
 import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
+import cps.client.utils.UserLevelClientException;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -128,6 +130,7 @@ public class ClientControllerBase implements ViewController {
     infoLabel.getChildren().clear();
   }
 
+  // ResponseHandler interface
   @Override
   public ServerResponse dispatch(Response response) {
     return null;
@@ -231,6 +234,59 @@ public class ClientControllerBase implements ViewController {
   @Override
   public ServerResponse handle(ServiceLoginResponse response) {
     return null;
+  }
+  
+  // Helper methods
+  public String getText(TextField field) {
+    return field == null ? "" : field.getText();
+  }
+  
+  public String requireField(String value, String parameterName) throws UserLevelClientException {
+    if (value == null || value.trim().length() == 0) {
+      throw new UserLevelClientException(String.format("%s is missing", parameterName));
+    }
+    
+    return value;
+  }
+  
+  public String requireField(TextField field, String parameterName) throws UserLevelClientException {
+    return requireField(getText(field), parameterName);
+  }
+  
+  public String requireFieldTrim(String value, String parameterName) throws UserLevelClientException {
+    if (value == null || value.trim().length() == 0) {
+      throw new UserLevelClientException(String.format("%s is missing", parameterName));
+    }
+    
+    return value.trim();
+  }
+  
+  public String requireFieldTrim(TextField field, String parameterName) throws UserLevelClientException {
+    return requireFieldTrim(getText(field), parameterName);
+  }
+  
+  public int requireInteger(String value, String parameterName) throws UserLevelClientException {    
+    try {
+      return Integer.parseInt(requireFieldTrim(value, parameterName));
+    } catch (NumberFormatException e) {
+      throw new UserLevelClientException(String.format("%s should be an integer", parameterName));
+    }
+  }
+  
+  public int requireInteger(TextField field, String parameterName) throws UserLevelClientException {
+    return requireInteger(getText(field), parameterName);
+  }
+  
+  public float requireFloat(String value, String parameterName) throws UserLevelClientException {    
+    try {
+      return Float.parseFloat(requireFieldTrim(value, parameterName));
+    } catch (NumberFormatException e) {
+      throw new UserLevelClientException(String.format("%s should be a number", parameterName));
+    }
+  }
+  
+  public float requireFloat(TextField field, String parameterName) throws UserLevelClientException {
+    return requireInteger(getText(field), parameterName);
   }
 
 }

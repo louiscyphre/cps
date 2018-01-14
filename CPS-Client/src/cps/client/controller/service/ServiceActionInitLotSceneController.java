@@ -1,14 +1,10 @@
 package cps.client.controller.service;
 
 import cps.api.action.InitLotAction;
-import cps.api.action.ServiceLoginAction;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
-import cps.client.controller.ControllerConstants.InputVerification;
-import cps.client.controller.ControllerConstants.SceneCode;
-import cps.client.utils.FormatValidation;
 import cps.entities.people.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,27 +29,24 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
 
   @FXML
   void handleOkButton(ActionEvent event) {
-    if (processing) {
-      return;
+    if (!processing) {      
+      validateAndSend();
     }
-    validateAndSend();
-
   }
 
-  private void validateAndSend() {    
+  private void validateAndSend() { 
     try {
-      String streetAddress = streetAddressTF.getText();
-      int lotSize = Integer.parseInt(lotSizeTF.getText());
-      float incidentalTariff = Float.parseFloat(incidentalTariffTF.getText());
-      float reservedTariff = Float.parseFloat(reservedTariffTF.getText());
-      String robotIp = robotIpTF.getText();
+      String streetAddress = requireFieldTrim(streetAddressTF, "Street Address");
+      int lotSize = requireInteger(lotSizeTF, "Lot Width");
+      float incidentalTariff = requireFloat(incidentalTariffTF, "Incidental Tariff");
+      float reservedTariff = requireFloat(reservedTariffTF, "Reserved Tariff");
+      String robotIp = requireFieldTrim(robotIpTF, "Robot IP");
   
-      User user = ControllersClientAdapter.getEmployeeContext().getCompanyPerson();
+      User user = ControllersClientAdapter.getEmployeeContext().requireCompanyPerson();
       InitLotAction action = new InitLotAction(user.getId(), streetAddress, lotSize, incidentalTariff, reservedTariff, robotIp);
       ControllersClientAdapter.getClient().sendRequest(action);
     } catch (Exception e) {
-      displayError("Something is wrong with the input");
-      // TODO: detailed input validation
+      displayError(e.getMessage());
     }
   }
 

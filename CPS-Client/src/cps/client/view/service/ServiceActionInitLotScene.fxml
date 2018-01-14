@@ -14,7 +14,7 @@
       <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="448.0" spacing="10.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="streetAddressTF" alignment="CENTER" prefHeight="50.0" prefWidth="280.0" promptText="Enter your Street Address here" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" />
-            <TextField fx:id="lotSizeTF" alignment="CENTER" prefHeight="50.0" prefWidth="280.0" promptText="Enter your Lot Size here" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="">
+            <TextField fx:id="lotSizeTF" alignment="CENTER" prefHeight="50.0" prefWidth="280.0" promptText="Enter your Lot Width (number of cars per row) here" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="">
                <VBox.margin>
                   <Insets />
                </VBox.margin></TextField>

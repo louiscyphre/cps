@@ -11,9 +11,9 @@
 
 <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceLoginSceneController">
    <center>
-      <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="296.0" spacing="20.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="340.0" spacing="20.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="usernameTF" alignment="CENTER" prefHeight="50.0" prefWidth="242.0" promptText="Enter your Employee Username here" styleClass="inputField" text="" />
+            <TextField fx:id="usernameTF" alignment="CENTER" prefHeight="50.0" prefWidth="280.0" promptText="Enter your Employee Username here" styleClass="inputField" text="" />
             <PasswordField fx:id="passwordTF" alignment="CENTER" promptText="Enter your password here" styleClass="passwordInputField" />
             <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">
                <children>
