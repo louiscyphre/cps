@@ -30,7 +30,7 @@ public class ControllerConstants {
     ENTER_PARKING("../view/customer/EnterParkingScene.fxml"),
 
     EXIT_PARKING("../view/customer/ExitParkingScene.fxml"),
-    
+
     VIEW_MY_RESERVATION("../view/customer/ViewMyReservationsScene.fxml"),
 
     // service views
@@ -51,8 +51,8 @@ public class ControllerConstants {
     SERVICE_ACTION_UPDATE_PRICES("../view/service/ServiceActionUpdatePrices.fxml"),
 
     SERVICE_ACTION_LOGIN("../view/service/ServiceLoginScene.fxml"),
-
-    SERVICE_ACTION_MAIN_MENU("../view/service/ServiceMainMenuScene.fxml"),;
+    
+    ;
 
     String myRelativePath;
 

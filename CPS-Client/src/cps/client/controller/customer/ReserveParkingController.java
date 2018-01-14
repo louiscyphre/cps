@@ -352,7 +352,6 @@ public class ReserveParkingController implements ViewController {
 
   @Override
   public void turnProcessingStateOff() {
-    infoProgress.visibleProperty().set(false);
     processing = false;
   }
 

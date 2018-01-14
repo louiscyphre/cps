@@ -52,7 +52,10 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
     int responseCustomerId = response.getCustomerID();
     List<Text> formattedMessage = new LinkedList<Text>();
-    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId()) {
+
+    // if request fails customer id is 0 TODO
+    // new customer
+    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
       // outputting the customer id on screen
       context.setCustomerId(responseCustomerId);
       formattedMessage.add(new Text("Your Customer ID:"));
@@ -73,13 +76,13 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       context.acceptPendingEmail();
       ControllersClientAdapter.turnLoggedInStateOn();
     }
-
-    if (response.getStatus() == ServerResponse.STATUS_OK) {
+    // logged in customer
+    if (response.success()) {
       formattedMessage.add(new Text("Your incidental parking reserved!\n"));
       formattedMessage.add(new Text("Use your password in 'Enter Parking' to fill this reservation.\n"));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
-    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+    } else { // request failed
       formattedMessage.add(new Text("Could not reserve parking at this moment!\n"));
       formattedMessage.add(new Text(response.getDescription()));
       ctrl.turnProcessingStateOff();
@@ -171,10 +174,11 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
   @Override
   public ServerResponse handle(ListParkingLotsResponse response) {
-    //CustomerContext context = ControllersClientAdapter.getCustomerContext();
-    ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();//FIXME//TODO normally
+    // CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();// FIXME//TODO
+                                                                                                   // normally
     List<ParkingLot> list = new LinkedList<ParkingLot>(response.getData());
-    ctrl.setParkingLots(list);//FIXME//TODO normally
+    ctrl.setParkingLots(list);// FIXME//TODO normally
     ctrl.turnProcessingStateOff();
     return response;
   }

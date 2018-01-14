@@ -5,7 +5,7 @@ import cps.entities.people.CompanyPerson;
 public class EmployeeContextImpl implements EmployeeContext {
 
   private CompanyPerson companyPerson;
-  
+
   @Override
   public void logContextOut() {
     companyPerson = null;

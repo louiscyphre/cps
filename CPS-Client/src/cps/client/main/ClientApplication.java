@@ -30,8 +30,6 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private ResponseHandler responseHandler = new ResponseHandlerImpl();
 
-  
-
   /**
    *
    */
@@ -42,6 +40,8 @@ public class ClientApplication extends Application implements INetworkClient {
     try {
       Scene scene = ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
       ControllersClientAdapter.registerScene(SceneCode.LOGIN);
+      ControllersClientAdapter.registerScene(SceneCode.ENTER_PARKING);
+      ControllersClientAdapter.registerScene(SceneCode.EXIT_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
       ControllersClientAdapter.registerScene(SceneCode.RESERVE_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
@@ -54,7 +54,7 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private void loadService() {
     try {
-      Scene scene = ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOGIN);
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOGIN);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_DISABLE_SLOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_INIT_LOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MENU);
@@ -64,8 +64,8 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_RESERVE_SLOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
       ControllersClientAdapter.turnLoggedInStateOff();
-      initializeStage(scene, "CPS Service Client");
-
+//      initializeStage(scene, "CPS Service Client");
+      initializeStage(SceneCode.SERVICE_ACTION_LOGIN,"CPS Service Client");
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -130,6 +130,17 @@ public class ClientApplication extends Application implements INetworkClient {
     primaryStage.setY(bounds.getMinY());
     primaryStage.setWidth(bounds.getWidth());
     primaryStage.setHeight(bounds.getHeight());
+    primaryStage.show();
+    primaryStage.setOnCloseRequest(e -> {
+      Platform.exit();
+      System.exit(0);
+    });
+
+  }
+
+  private void initializeStage(SceneCode code, String title) {
+    ControllersClientAdapter.getClient().getPrimaryStage().setTitle(title);
+    ControllersClientAdapter.setStage(code);
     primaryStage.show();
     primaryStage.setOnCloseRequest(e -> {
       Platform.exit();

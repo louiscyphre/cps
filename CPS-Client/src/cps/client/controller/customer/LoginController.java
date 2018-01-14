@@ -23,7 +23,6 @@ import javafx.scene.text.TextFlow;
 
 public class LoginController implements ViewController {
 
-  private static final String DEFAULT_INFO_LABEL = "";
   private boolean             processing         = false;
 
   @FXML // fx:id="emailTextField"
@@ -44,6 +43,9 @@ public class LoginController implements ViewController {
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
+      return;
+    }
+    if (ControllersClientAdapter.getCustomerContext().isLoggedIn()) {
       return;
     }
     validateAndSend();
@@ -145,7 +147,6 @@ public class LoginController implements ViewController {
   public void turnProcessingStateOff() {
     infoProgress.visibleProperty().set(false);
     processing = false;
-    displayInfo(DEFAULT_INFO_LABEL);
   }
 
   @Override
@@ -161,6 +162,7 @@ public class LoginController implements ViewController {
   @Override
   public void cleanCtrl() {
     // info box clear
+    infoBox.getStyleClass().clear();
     infoBox.getStyleClass().add("infoLabel");
     infoProgress.visibleProperty().set(false);
     infoLabel.getChildren().clear();

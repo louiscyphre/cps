@@ -77,8 +77,7 @@ public class CustomerMainMenuController implements ViewController {
 
   @FXML
   void handleEnterParkingButton(ActionEvent event) {
-    // TODO
-    // ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ENTER_PARKING);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ENTER_PARKING);
     if (processing) {
       return;
     }
@@ -86,8 +85,7 @@ public class CustomerMainMenuController implements ViewController {
 
   @FXML
   void handleExitParkingButton(ActionEvent event) {
-    // TODO
-    // ControllersClientAdapter.setStage(ControllerConstants.SceneCode.EXIT_PARKING);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.EXIT_PARKING);
     if (processing) {
       return;
     }
@@ -95,8 +93,7 @@ public class CustomerMainMenuController implements ViewController {
 
   @FXML
   void handleViewMyReservationsButton(ActionEvent event) {
-    // TODO
-    // ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_REGISTRATIONS);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_RESERVATION);
     if (processing) {
       return;
     }
@@ -193,6 +190,12 @@ public class CustomerMainMenuController implements ViewController {
 
   @Override
   public void turnProcessingStateOn() {
+    infoProgress.visibleProperty().set(true);
+    Text text = new Text("Processing...");
+    infoLabel.getChildren().clear();
+    infoLabel.getChildren().add(text);
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("processingLabel");
     processing = true;
   }
 
