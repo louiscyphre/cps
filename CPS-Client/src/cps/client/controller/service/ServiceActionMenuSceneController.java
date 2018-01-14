@@ -43,37 +43,52 @@ public class ServiceActionMenuSceneController implements ViewController {
 
   @FXML
   void handleInitializeLotButton(ActionEvent event) {
+    // ACCESS_DOMAIN_PARKING_LOT , ACCESS_LEVEL_LOCAL_WORKER
     ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_INIT_LOT);
   }
 
   @FXML
   void handleDisableSlotButton(ActionEvent event) {
+    // ACCESS_DOMAIN_PARKING_LOT , ACCESS_LEVEL_LOCAL_WORKER
     ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_DISABLE_SLOT);
   }
 
   @FXML
   void handleRefundButton(ActionEvent event) {
+    // ACCESS_DOMAIN_CUSTOMER_SERVICE, ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER
     ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_REFUND);
   }
 
   @FXML
   void handleLotIsFullButton(ActionEvent event) {
+    // ACCESS_DOMAIN_PARKING_LOT, ACCESS_LEVEL_LOCAL_WORKER
     ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOT_IS_FULL);
   }
 
   @FXML
   void handleReserveSlotButton(ActionEvent event) {
+    // ACCESS_DOMAIN_PARKING_LOT, ACCESS_LEVEL_LOCAL_WORKER
     ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_RESERVE_SLOT);
   }
 
   @FXML
   void handleUpdatePricesButton(ActionEvent event) {
+    // ACCESS_DOMAIN_PARKING_LOT, ACCESS_LEVEL_LOCAL_MANAGER
     ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
   }
 
   @FXML
   void handleLotStateButton(ActionEvent event) {
+    // ACCESS_DOMAIN_PARKING_LOT, (ACCESS_LEVEL_LOCAL_WORKER)
+    // ACCESS_LEVEL_GLOBAL_MANAGER
     ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOT_STATE);
+  }
+
+  @FXML
+  void handleStatisticsButton(ActionEvent event) {
+    // ACCESS_DOMAIN_STATISTICS,
+    // ACCESS_LEVEL_GLOBAL_MANAGER
+
   }
 
   @FXML
