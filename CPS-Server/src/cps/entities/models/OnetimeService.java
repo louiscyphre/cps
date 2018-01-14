@@ -244,7 +244,7 @@ public class OnetimeService implements ParkingService {
     // When two time periods [a, b] [c, d] overlap, one of the following conditions is true:
     // 1. c <= a and a <= d -- Start time of the given period is between the start time and end time of another period
     // 2. a <= c and c <= b -- Start time of another period is between the start time and end time of the given period
-    PreparedStatement stmt= conn.prepareStatement("SELECT count(*) FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (? < planned_start_time AND planned_start_time < ?))");
+    PreparedStatement stmt= conn.prepareStatement("SELECT count(*) FROM onetime_service WHERE car_id=? AND ((planned_start_time <= ? AND ? <= planned_end_time) OR (? <= planned_start_time AND planned_start_time <= ?))");
 
     int i=1;    
     stmt.setString(i++, carID);
