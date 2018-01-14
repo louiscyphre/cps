@@ -11,6 +11,7 @@ import cps.api.request.ListParkingLotsRequest;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
+import cps.common.Constants;
 import cps.entities.models.ParkingLot;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,7 +56,7 @@ public class SubscriptionsMenuController implements ParkingLotsController {
   @FXML
   private ComboBox<String> parkingLotsList;
 
-  List<ParkingLot> parkingLotsMap;
+  HashMap<String, ParkingLot> parkingLotsMap;
 
   private boolean processing;
 
@@ -64,11 +65,11 @@ public class SubscriptionsMenuController implements ParkingLotsController {
    */
   public void setParkingLots(List<ParkingLot> list) {
     List<String> tmp = new ArrayList<String> ();
-    HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
+    parkingLotsMap = new HashMap<String, ParkingLot>();
     for (ParkingLot i: list) {
       String address = new String(i.getStreetAddress());
       tmp.add(address);
-      
+      parkingLotsMap.put(address,  i);
     }
     ObservableList<String> addresses = FXCollections.observableList(tmp);
     fillComboBoxItems(addresses);
@@ -80,7 +81,8 @@ public class SubscriptionsMenuController implements ParkingLotsController {
   }
   
   private void getRegularSubscriptionDetailsForLot(String choice) {
-    
+    // 60 hours * one time parking price
+    float subsriptionPrice = parkingLotsMap.get(choice).getPriceForService(Constants.PARKING_TYPE_RESERVED);
   }
   
   private void  getFullSubscriptionDetailsForLot(String choice) {
