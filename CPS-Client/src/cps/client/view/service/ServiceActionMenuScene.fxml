@@ -82,7 +82,7 @@
                         <String fx:value="regularButton" />
                         <String fx:value="smallButton" />
                      </styleClass></Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" onAction="#handleReportsButton" prefHeight="50.0" prefWidth="150.0" text="Reports" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" onAction="#handleStatisticsButton" prefHeight="50.0" prefWidth="150.0" text="Reports" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <styleClass>
                         <String fx:value="regularButton" />
                         <String fx:value="smallButton" />
