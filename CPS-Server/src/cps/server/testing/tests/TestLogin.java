@@ -67,4 +67,18 @@ public class TestLogin extends ServerControllerTest {
     LoginResponse loginResponse = (LoginResponse) response;
     assertEquals(customer.getId(), loginResponse.getCustomerID());
   }
+  
+  public void testServiceLogin() throws ServerException {
+    header("testServiceLogin");
+    
+    // Create service login request
+    ServiceLoginAction action = new ServiceLoginAction("malki", "1234");
+    printObject(action);
+
+    // Test the response
+    ServerResponse response = server.dispatch(action, getContext());
+    printObject(response);
+    assertThat(response, instanceOf(ServiceLoginResponse.class));
+    assertTrue(response.success());   
+  }
 }

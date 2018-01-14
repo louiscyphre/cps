@@ -44,7 +44,6 @@ public class SubscriptionController extends RequestController {
   public ServerResponse handle(SubscriptionRequest request, CustomerSession session,
       SubscriptionResponse serverResponse, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
     return database.performQuery(serverResponse, (conn, response) -> {
-      // TODO check overlapping subscriptions with the same car ID?
       
       // Check that the start date is not in the past
       errorIf(request.getStartDate().isBefore(LocalDate.now()), "The specified starting date is in the past");
@@ -56,6 +55,9 @@ public class SubscriptionController extends RequestController {
         // Check that lot is not full
         session.requireLotNotFull(conn, gson, lot, response);
       }
+      
+      // TODO check overlapping subscriptions with the same car ID?
+      
       
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
