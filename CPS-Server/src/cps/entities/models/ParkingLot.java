@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -68,7 +70,8 @@ public class ParkingLot implements Serializable {
    * @param robotIP
    *          IP address of the robot
    */
-  public ParkingLot(int id, String streetAddress, int size, float price1, float price2, String alternativeLots, String robotIP, boolean lotfull) {
+  public ParkingLot(int id, String streetAddress, int size, float price1, float price2, String alternativeLots,
+      String robotIP, boolean lotfull) {
     this.id = id;
     this.streetAddress = streetAddress;
     this.width = size;
@@ -88,8 +91,8 @@ public class ParkingLot implements Serializable {
    *           the SQL exception
    */
   public ParkingLot(ResultSet rs) throws SQLException {
-    this(rs.getInt("id"), rs.getString("street_address"), rs.getInt("size"), rs.getFloat("price1"), rs.getFloat("price2"), rs.getString("alternative_lots"),
-        rs.getString("robot_ip"), rs.getBoolean("lot_full"));
+    this(rs.getInt("id"), rs.getString("street_address"), rs.getInt("size"), rs.getFloat("price1"),
+        rs.getFloat("price2"), rs.getString("alternative_lots"), rs.getString("robot_ip"), rs.getBoolean("lot_full"));
   }
 
   /**
@@ -136,7 +139,7 @@ public class ParkingLot implements Serializable {
    * @return the size
    */
   public int getWidth() {
-    
+
     return width;
   }
 
@@ -289,8 +292,8 @@ public class ParkingLot implements Serializable {
    *           the SQL exception
    * @throws ServerException
    */
-  public static ParkingLot create(Connection conn, String streetAddress, int size, float price1, float price2, String robotIP)
-      throws SQLException, ServerException {
+  public static ParkingLot create(Connection conn, String streetAddress, int size, float price1, float price2,
+      String robotIP) throws SQLException, ServerException {
     // Create SQL statement and request table for table keys
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_PARKING_LOT, Statement.RETURN_GENERATED_KEYS);
 
@@ -374,9 +377,38 @@ public class ParkingLot implements Serializable {
     return result;
   }
 
-  // TODO add a method to calculate the number of cells that will need to be
-  // available for OnetimeService or SubscriptionService customers at a given
-  // point in time
+  /**
+   * Counts the number of cells that will need to be available for
+   * OnetimeService customers at a given point in time
+   *
+   * @param conn
+   *          the conn
+   * @param lotId
+   *          the lot id
+   * @param startTime
+   *          the start time
+   * @param hoursInAdvance
+   *          The hours in advance - default should be 1
+   * @return the int
+   * @throws SQLException
+   */
+  public int countOrderedCells(Connection conn, int lotId, Timestamp startTime, int hoursInAdvance)
+      throws SQLException {
+    int result = 0;
+    LocalDateTime latest = startTime.toLocalDateTime();
+    latest.plusHours(hoursInAdvance);
+    PreparedStatement stmt = conn.prepareStatement(
+        "SELECT count(*) FROM onetime_service WHERE (planned_start_time <= ? AND ? <= planned_end_time) OR (? <= planned_start_time AND planned_start_time <= ?)");
+    int i = 1;
+    stmt.setTimestamp(i++, startTime);
+    stmt.setTimestamp(i++, startTime);
+    stmt.setTimestamp(i++, startTime);
+    stmt.setTimestamp(i++, Timestamp.valueOf(latest));
+    ResultSet rs = stmt.executeQuery();
+    rs.next();
+    result = rs.getInt(1);
+    return result;
+  }
 
   public void update(Connection conn) throws SQLException, ServerException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
@@ -432,10 +464,11 @@ public class ParkingLot implements Serializable {
       }
     }
   }
-  
-  public Collection<ParkingLot> retrieveAlternativeLots(Connection conn, Gson gson) throws SQLException, ServerException {
+
+  public Collection<ParkingLot> retrieveAlternativeLots(Connection conn, Gson gson)
+      throws SQLException, ServerException {
     int[] lotIDs;
-    
+
     try {
       lotIDs = gson.fromJson(getAlternativeLots(), int[].class);
     } catch (Exception e) {
@@ -443,14 +476,14 @@ public class ParkingLot implements Serializable {
     }
 
     LinkedList<ParkingLot> lots = new LinkedList<>();
-    
+
     for (int lotID : lotIDs) {
       ParkingLot lot = findByID(conn, lotID);
       if (lot != null) {
         lots.add(lot);
       }
     }
-    
+
     return lots;
   }
 }

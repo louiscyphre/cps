@@ -55,9 +55,10 @@ public class TegraTests {
 
   @Test
   public void testInsertCars() throws ServerException {
-    // int carstoinsert = 12;
     // Create parking lot Create incidental parking request
     // Insert the car
+    int carsInLot1=1;
+    int carsInLot2=1;
     ParkingLot lot[] = new ParkingLot[3];
     lot[0] = initParkingLot();
     lot[1] = db.performQuery(conn -> ParkingLot.create(conn, "Rabin 14", 8, 5, 3, "13.f.t43"));
@@ -100,9 +101,9 @@ public class TegraTests {
     // Exit in 50 hours
     a[9] = Timestamp.valueOf(LocalDateTime.now().plusHours(50));
     CarTransportationControllerA transcontroller = new CarTransportationControllerA(server);
-    OnetimeService[] reservedParkings1 = new OnetimeService[36];
+    OnetimeService[] reservedParkings1 = new OnetimeService[carsInLot1];
     db.performAction(conn -> {
-      for (int j = 0; j < 36; j++) {
+      for (int j = 0; j < carsInLot1; j++) {
         int customerEGO = (int) Math.random() * 500;
         String randomemail = Utilities.randomString("angjurufjfjsl", 7) + "@gmail.com";
         String randomcarID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
@@ -110,9 +111,9 @@ public class TegraTests {
             randomemail, randomcarID, lot[0].getId(), a[0], a[(int) (Math.random() * 8) + 1], false);
       }
     });
-    OnetimeService[] reservedParkings2 = new OnetimeService[71];
+    OnetimeService[] reservedParkings2 = new OnetimeService[carsInLot2];
     db.performAction(conn -> {
-      for (int j = 0; j < 71; j++) {
+      for (int j = 0; j < carsInLot2; j++) {
         int customerEGO = (int) Math.random() * 500;
         String randomemail = Utilities.randomString("angjurufjfjsl", 7) + "@gmail.com";
         String randomcarID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
@@ -123,7 +124,7 @@ public class TegraTests {
     db.performAction(conn ->
 
     {
-      for (int j = 0; j < 36; j++) {
+      for (int j = 0; j < carsInLot1; j++) {
         System.out.printf("%s ", reservedParkings1[j].getPlannedEndTime().toString());
         transcontroller.insertCar(conn, lot[0], reservedParkings1[j].getCarID(), reservedParkings1[j].getExitTime());
       }
@@ -132,7 +133,7 @@ public class TegraTests {
     db.performAction(conn ->
 
     {
-      for (int j = 0; j < 71; j++) {
+      for (int j = 0; j < carsInLot2; j++) {
         System.out.printf("%s ", reservedParkings2[j].getPlannedEndTime().toString());
         transcontroller.insertCar(conn, lot[1], reservedParkings2[j].getCarID(), reservedParkings2[j].getExitTime());
       }
@@ -166,14 +167,50 @@ public class TegraTests {
     db.performAction(conn -> {
       reservedParkings[0] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3,
           "no@email.com", "123-sdf", lot.getId(), a[0], a[1], false);
-      assertTrue(0 < OnetimeService.findForOverlap(conn, "123-sdf", a[2], a[1]).size());
-      assertTrue(0 < OnetimeService.findForOverlap(conn, "123-sdf", a[3], a[1]).size());
-      assertTrue(0 == OnetimeService.findForOverlap(conn, "123-sdf", a[4], a[2]).size());
-      assertTrue(0 < OnetimeService.findForOverlap(conn, "123-sdf", a[4], a[5]).size());
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[2], a[1]));
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[3], a[1]));
+      assertFalse(OnetimeService.overlapExists(conn, "123-sdf", a[4], a[2]));
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[4], a[5]));
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[0], a[1]));      
     });
 
   }
 
+  @Test
+  public void testCountOrderedCells() throws ServerException {
+    // Create parking lot Create incidental parking request
+    // Insert the car
+    ParkingLot lot = initParkingLot();
+    CustomerData data = new CustomerData((int) Math.random() * 1000,
+        Utilities.randomString("abcdefghijklmnopqrstuvwxyz", 8), Utilities.randomString("1234567890", 4),
+        Utilities.randomString("1234567890ABCDTRUOTSKL", 7), 1, 0);
+
+    Timestamp[] a = new Timestamp[10];
+    // Main reservation start
+    a[0] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(20));
+    // Main reservation end - will be used for more reservations
+    a[1] = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+    // Reservation starts before but continues into
+    a[2] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(10));
+    // Reservation starts after the beginning
+    a[3] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(30));
+    // Reservation that doesn't overlap start
+    a[4] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(5));
+    a[5] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(4).plusDays(1));
+
+    OnetimeService[] reservedParkings = new OnetimeService[5];
+    db.performAction(conn -> {
+      reservedParkings[0] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3,
+          "no@email.com", "123-sdf", lot.getId(), a[0], a[1], false);
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[2], a[1]));
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[3], a[1]));
+      assertFalse(OnetimeService.overlapExists(conn, "123-sdf", a[4], a[2]));
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[4], a[5]));
+      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[0], a[1]));      
+    });
+
+  }
+  
   private CarTransportation newParkingEntry(OnetimeService _cdata) {
     ParkingEntryRequest request = new ParkingEntryRequest(_cdata.getCustomerID(), 0, _cdata.getLotID(),
         _cdata.getCarID());
