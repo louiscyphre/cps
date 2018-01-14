@@ -30,12 +30,12 @@
          <children>
             <TableView fx:id="tableView" prefHeight="454.0" prefWidth="614.0">
               <columns>
-                <TableColumn editable="false" prefWidth="76.0" text="Type" />
-                <TableColumn editable="false" minWidth="0.0" prefWidth="87.0" text="Car ID" />
-                  <TableColumn editable="false" prefWidth="106.0" text="Lot" />
-                  <TableColumn editable="false" prefWidth="113.0" text="Start Date" />
-                  <TableColumn editable="false" text="Leave Date" />
-                  <TableColumn editable="false" prefWidth="151.0" text="Cancel" />
+                <TableColumn fx:id="typeColumn" editable="false" prefWidth="76.0" text="Type" />
+                <TableColumn fx:id="caridColumn" editable="false" minWidth="0.0" prefWidth="87.0" text="Car ID" />
+                  <TableColumn fx:id="lotColumn" editable="false" prefWidth="106.0" text="Lot" />
+                  <TableColumn fx:id="startDateColumn" editable="false" prefWidth="113.0" text="Start Date" />
+                  <TableColumn fx:id="leaveDateColumn" editable="false" text="Leave Date" />
+                  <TableColumn fx:id="cancelColumn" editable="false" prefWidth="151.0" text="Cancel" />
               </columns>
             </TableView>
         <VBox fx:id="infoBox" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="113.0" prefWidth="299.0" spacing="0.0" styleClass="infoLabel">

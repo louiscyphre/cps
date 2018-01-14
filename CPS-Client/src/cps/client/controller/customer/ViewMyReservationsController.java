@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.sun.javafx.collections.ObservableListWrapper;
+
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.OnetimeEntriesController;
@@ -15,6 +17,7 @@ import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -65,6 +68,7 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
     assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
     assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
     assert tableView != null : "fx:id=\"tableView\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
+    tableView = new TableView<TableOnetimeService>();
     assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
@@ -205,43 +209,14 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
           Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()), false)));
     }
 
-    TableColumn typeCol = tableView.getColumns().get(0);
-    TableColumn carIDCol = tableView.getColumns().get(1);
-    TableColumn lotCol = tableView.getColumns().get(2);
-    TableColumn startdateCol = tableView.getColumns().get(3);
-    TableColumn leavedateCol = tableView.getColumns().get(4);
-    TableColumn actionCol = new TableColumn("Action");
-    actionCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
+    ObservableList<TableOnetimeService> tableEntries = new ObservableListWrapper<TableOnetimeService>(
+        new LinkedList<TableOnetimeService>());
 
-    Callback<TableColumn<TableOnetimeService, String>, TableCell<TableOnetimeService, String>> cellFactory = //
-        new Callback<TableColumn<TableOnetimeService, String>, TableCell<TableOnetimeService, String>>() {
-          @Override
-          public TableCell call(final TableColumn<TableOnetimeService, String> param) {
-            final TableCell<TableOnetimeService, String> cell = new TableCell<TableOnetimeService, String>() {
+    list.forEach(service -> tableEntries.add(new TableOnetimeService(Integer.toString(service.getParkingType()),
+        service.getCarID(), Integer.toString(service.getLotID()), service.getPlannedStartTime().toString(),
+        service.getPlannedEndTime().toString())));
 
-              final Button btn = new Button("Just Do It");
-
-              @Override
-              public void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                  setGraphic(null);
-                  setText(null);
-                } else {
-                  btn.setOnAction(event -> {
-                    TableOnetimeService person = getTableView().getItems().get(getIndex());
-                    System.out.println("button pressed");
-                  });
-                  setGraphic(btn);
-                  setText(null);
-                }
-              }
-            };
-            return cell;
-          }
-        };
-
-    actionCol.setCellFactory(cellFactory);
+    tableView.setItems(tableEntries);
 
   }
 
