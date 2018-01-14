@@ -28,7 +28,7 @@ public class ParkingLot implements Serializable {
   private String streetAddress;
 
   /** Amount of columns in parking lot. */
-  private int size;
+  private int width;
 
   /** The price of incidental parking. */
   private float price1;
@@ -71,7 +71,7 @@ public class ParkingLot implements Serializable {
   public ParkingLot(int id, String streetAddress, int size, float price1, float price2, String alternativeLots, String robotIP, boolean lotfull) {
     this.id = id;
     this.streetAddress = streetAddress;
-    this.size = size;
+    this.width = size;
     this.price1 = price1;
     this.price2 = price2;
     this.alternativeLots = alternativeLots;
@@ -136,18 +136,18 @@ public class ParkingLot implements Serializable {
    * @return the size
    */
   public int getWidth() {
-    // TODO rename to width
-    return size;
+    
+    return width;
   }
 
   /**
    * Sets the size.
    *
-   * @param size
+   * @param width
    *          the new size
    */
-  public void setSize(int size) {
-    this.size = size;
+  public void setWidth(int width) {
+    this.width = width;
   }
 
   public int getHeight() {
@@ -170,7 +170,7 @@ public class ParkingLot implements Serializable {
    *         spots.
    */
   public ParkingCell[][][] constructContentArray(Connection conn) throws SQLException, ServerException {
-    ParkingCell[][][] result = new ParkingCell[size][3][3];
+    ParkingCell[][][] result = new ParkingCell[width][3][3];
     ParkingCell.lotForEach(conn, id, cell -> result[cell.width][cell.height][cell.depth] = cell);
     return result;
   }
@@ -383,7 +383,7 @@ public class ParkingLot implements Serializable {
 
     int index = 1;
     st.setString(index++, this.streetAddress);
-    st.setInt(index++, this.size);
+    st.setInt(index++, this.width);
     st.setFloat(index++, this.price1);
     st.setFloat(index++, this.price2);
     st.setString(index++, this.alternativeLots);
