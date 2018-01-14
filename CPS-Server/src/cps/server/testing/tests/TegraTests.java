@@ -59,9 +59,9 @@ public class TegraTests {
     // Create parking lot Create incidental parking request
     // Insert the car
     ParkingLot lot[] = new ParkingLot[3];
-    lot[1] = initParkingLot();
-    lot[2] = db.performQuery(conn -> ParkingLot.create(conn, "Rabin 14", 8, 5, 3, "13.f.t43"));
-    lot[3] = db.performQuery(conn -> ParkingLot.create(conn, "Big 16", 12, 5, 3, "14.f.t43"));
+    lot[0] = initParkingLot();
+    lot[1] = db.performQuery(conn -> ParkingLot.create(conn, "Rabin 14", 8, 5, 3, "13.f.t43"));
+    lot[2] = db.performQuery(conn -> ParkingLot.create(conn, "Big 16", 12, 5, 3, "14.f.t43"));
 
     CustomerData data = new CustomerData((int) Math.random() * 1000,
         Utilities.randomString("abcdefghijklmnopqrstuvwxyz", 8), Utilities.randomString("1234567890", 4),
@@ -107,7 +107,7 @@ public class TegraTests {
         String randomemail = Utilities.randomString("angjurufjfjsl", 7) + "@gmail.com";
         String randomcarID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
         reservedParkings1[j] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, customerEGO,
-            randomemail, randomcarID, lot[1].getId(), a[0], a[(int) (Math.random() * 8) + 1], false);
+            randomemail, randomcarID, lot[0].getId(), a[0], a[(int) (Math.random() * 8) + 1], false);
       }
     });
     OnetimeService[] reservedParkings2 = new OnetimeService[71];
@@ -117,7 +117,7 @@ public class TegraTests {
         String randomemail = Utilities.randomString("angjurufjfjsl", 7) + "@gmail.com";
         String randomcarID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
         reservedParkings2[j] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, customerEGO,
-            randomemail, randomcarID, lot[2].getId(), a[0], a[(int) (Math.random() * 8) + 1], false);
+            randomemail, randomcarID, lot[1].getId(), a[0], a[(int) (Math.random() * 8) + 1], false);
       }
     });
     db.performAction(conn ->
@@ -125,7 +125,7 @@ public class TegraTests {
     {
       for (int j = 0; j < 36; j++) {
         System.out.printf("%s ", reservedParkings1[j].getPlannedEndTime().toString());
-        transcontroller.insertCar(conn, lot[1], reservedParkings1[j].getCarID(), reservedParkings1[j].getExitTime());
+        transcontroller.insertCar(conn, lot[0], reservedParkings1[j].getCarID(), reservedParkings1[j].getExitTime());
       }
     });
 
@@ -133,8 +133,8 @@ public class TegraTests {
 
     {
       for (int j = 0; j < 71; j++) {
-        System.out.printf("%s ", reservedParkings1[j].getPlannedEndTime().toString());
-        transcontroller.insertCar(conn, lot[2], reservedParkings2[j].getCarID(), reservedParkings2[j].getExitTime());
+        System.out.printf("%s ", reservedParkings2[j].getPlannedEndTime().toString());
+        transcontroller.insertCar(conn, lot[1], reservedParkings2[j].getCarID(), reservedParkings2[j].getExitTime());
       }
     });
 
