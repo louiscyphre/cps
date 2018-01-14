@@ -55,7 +55,7 @@ public class TegraTests {
 
   @Test
   public void testInsertCars() throws ServerException {
-    int carstoinsert = 7;
+    int carstoinsert = 8;
     // Create parking lot Create incidental parking request
     // Insert the car
     ParkingLot lot = initParkingLot();
@@ -104,7 +104,7 @@ public class TegraTests {
           String randomemail = Utilities.randomString("angjurufjfjsl", 7) + "@gmail.com";
           String randomcarID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
           reservedParkings[k][i] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED,
-              customerEGO, randomemail, randomcarID, lot.getId(), a[0], a[j], false);
+              customerEGO, randomemail, randomcarID, lot.getId(), a[0], a[(int) (Math.random() * 8) + 1], false);
         }
       }
 
@@ -113,14 +113,16 @@ public class TegraTests {
     db.performAction(conn -> {
       for (int j = 2; j >= 0; j--) {
         for (int i = 0; i < carstoinsert; i++) {
+          System.out.printf("%s ", reservedParkings[j][i].getPlannedEndTime().toString());
           transcontroller.insertCar(conn, lot, reservedParkings[j][i].getCarID(), reservedParkings[j][i].getExitTime());
         }
       }
       /*
-      ParkingLot nlot = ParkingLot.findByID(conn, lot.getId());
-      ParkingCell[][][] cells = nlot.constructContentArray(conn);
-      System.out.println("---- Printing Parking Lot ----");
-      System.out.println(cells.toString());*/
+       * ParkingLot nlot = ParkingLot.findByID(conn, lot.getId());
+       * ParkingCell[][][] cells = nlot.constructContentArray(conn);
+       * System.out.println("---- Printing Parking Lot ----");
+       * System.out.println(cells.toString());
+       */
     });
 
   }

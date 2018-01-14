@@ -390,7 +390,7 @@ public class CarTransportationController3 extends RequestController implements C
       }
     }
 
-    System.out.println(String.format("Retrieving car %s from location %s, %s, %s", carID, eSize, eHeight, eDepth));
+    System.out.println(String.format("Retrieving car %s from location %s, %s, %s", carID, eSize, eHeight, eDepth)); //TODO DELETE THIS
 
     /*
      * We need to remove all the cars in the way before we will be able to
@@ -473,6 +473,7 @@ public class CarTransportationController3 extends RequestController implements C
         ParkingCell cell = content[i][0][0];
         carIds.push(cell.getCarID());
         exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
+        System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(),i,0,0); //TODO DELETE THIS
         cell.clear();
         freeSpotsCount[0]++;
       }
@@ -483,6 +484,7 @@ public class CarTransportationController3 extends RequestController implements C
         ParkingCell cell = content[maxSize][i][0];
         carIds.push(cell.getCarID());
         exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
+        System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(),maxSize,i,0); //TODO DELETE THIS
         cell.clear();
         freeSpotsCount[i]++;
       }
@@ -493,6 +495,7 @@ public class CarTransportationController3 extends RequestController implements C
         ParkingCell cell = content[maxSize][maxHeight][i];
         carIds.push(cell.getCarID());
         exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
+        System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(),maxSize,maxHeight,i); //TODO DELETE THIS
         cell.clear();
 
         if (i == 0) {
@@ -507,6 +510,7 @@ public class CarTransportationController3 extends RequestController implements C
       ParkingCell cell = content[maxSize][maxHeight][maxDepth];
       carIds.push(cell.getCarID());
       exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
+      System.out.printf("Pulling car %s from %d,%d,%d\n", cell.getCarID(),maxSize,maxHeight,maxDepth); //TODO DELETE THIS
       cell.clear();
 
       if (maxDepth == 0) {
