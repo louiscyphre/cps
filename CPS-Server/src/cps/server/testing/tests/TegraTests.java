@@ -3,7 +3,7 @@ package cps.server.testing.tests;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
-import cps.server.controllers.CarTransportationController3;
+import cps.server.controllers.CarTransportationControllerA;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -61,7 +61,7 @@ public class TegraTests {
     ParkingLot lot[] = new ParkingLot[3];
     lot[1] = initParkingLot();
     lot[2] = db.performQuery(conn -> ParkingLot.create(conn, "Rabin 14", 8, 5, 3, "13.f.t43"));
-    //lot[3] = db.performQuery(conn -> ParkingLot.create(conn, "Big 16", 12, 5, 3, "14.f.t43"));
+    lot[3] = db.performQuery(conn -> ParkingLot.create(conn, "Big 16", 12, 5, 3, "14.f.t43"));
 
     CustomerData data = new CustomerData((int) Math.random() * 1000,
         Utilities.randomString("abcdefghijklmnopqrstuvwxyz", 8), Utilities.randomString("1234567890", 4),
