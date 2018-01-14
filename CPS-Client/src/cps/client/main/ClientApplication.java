@@ -72,7 +72,7 @@ public class ClientApplication extends Application implements INetworkClient {
   }
 
   private void loadTest() throws IOException {
-    Scene scene = ControllersClientAdapter.registerScene(SceneCode.TEST_SCENE);
+    Scene scene = ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
     initializeStage(scene, "CPS Tests");
   }
 
