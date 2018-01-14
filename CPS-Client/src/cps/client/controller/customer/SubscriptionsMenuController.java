@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -46,7 +47,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase {
   HashMap<String, ParkingLot> parkingLotsMap;
 
   /**
-   * @param parkingLots
+   * @param list
    */
   public void setParkingLots(List<ParkingLot> list) {
     List<String> tmp = new ArrayList<String> ();
@@ -70,17 +71,20 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase {
     float subscriptionOverallPrice = reservedParkingPrice * Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS;
     StringBuilder builder = new StringBuilder();
     builder.append("Regular subscription:").append(Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS).append(" parking hours for ");
-    builder.append(subscriptionOverallPrice).append("$ only!");
+    builder.append(subscriptionOverallPrice).append("NIS only!");
     regularSubscriptionInfo.setText(builder.toString());
+    fullSubscriptionInfo.setMaxWidth(Double.MAX_VALUE);
+    fullSubscriptionInfo.setAlignment(Pos.CENTER);//FIXME somehow
   }
   
   private void  setFullSubscriptionInfo() {
     float subscriptionOverallPrice = Constants.PRICE_PER_HOUR_RESERVED * Constants.SUBSCRIPTION_TYPE_FULL_HOURS;
     StringBuilder builder = new StringBuilder();
     builder.append("Full subscription:").append(Constants.SUBSCRIPTION_TYPE_FULL_HOURS).append(" parking hours in any parking lot for ");
-    builder.append(subscriptionOverallPrice).append("$ only!");
-    String info = builder.toString();
-    fullSubscriptionInfo.setText(info);
+    builder.append(subscriptionOverallPrice).append("NIS only!");
+    fullSubscriptionInfo.setText(builder.toString());
+    fullSubscriptionInfo.setMaxWidth(Double.MAX_VALUE);
+    fullSubscriptionInfo.setAlignment(Pos.CENTER);//FIXME somehow
   }
   
   @FXML
