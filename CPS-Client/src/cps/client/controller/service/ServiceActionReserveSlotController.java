@@ -24,7 +24,7 @@ public class ServiceActionReserveSlotController extends ServiceActionControllerB
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
-    super.initialize();
+    super.baseInitialize();
     assert columnITF != null : "fx:id=\"columnITF\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
     assert floorJTF != null : "fx:id=\"floorJTF\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
     assert rowKTF != null : "fx:id=\"rowKTF\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";

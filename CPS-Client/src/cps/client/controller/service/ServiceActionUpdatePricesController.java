@@ -27,7 +27,7 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
-    super.initialize();
+    super.baseInitialize();
     assert newreservedTF != null : "fx:id=\"newreservedTF\" was not injected: check your FXML file 'ServiceActionUpdatePrices.fxml'.";
     assert newincidentalTF != null : "fx:id=\"newincidentalTF\" was not injected: check your FXML file 'ServiceActionUpdatePrices.fxml'.";
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_UPDATE_PRICES);

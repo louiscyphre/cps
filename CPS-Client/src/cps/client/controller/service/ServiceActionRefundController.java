@@ -22,7 +22,7 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
-    super.initialize();
+    super.baseInitialize();
     assert complaintIdTF != null : "fx:id=\"complaintIdTF\" was not injected: check your FXML file 'ServiceActionRefund.fxml'.";
     assert refundAmountTF != null : "fx:id=\"refundAmountTF\" was not injected: check your FXML file 'ServiceActionRefund.fxml'.";
     assert refundAmountTF != null : "fx:id=\"refundAmountTF\" was not injected: check your FXML file 'ServiceActionRefund.fxml'.";

@@ -1,13 +1,9 @@
 package cps.client.controller.customer;
 
-import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ResourceBundle;
-
-import com.sun.javafx.collections.ObservableListWrapper;
 
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
@@ -17,64 +13,21 @@ import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.Callback;
 
-public class ViewMyReservationsController implements ParkingLotsController, OnetimeEntriesController {
-
-  @FXML // ResourceBundle that was given to the FXMLLoader
-  private ResourceBundle resources;
-
-  @FXML // URL location of the FXML file that was given to the FXMLLoader
-  private URL location;
-
-  @FXML // fx:id="infoLabel"
-  private TextFlow infoLabel; // Value injected by FXMLLoader
-
-  @FXML // fx:id="infoProgress"
-  private ProgressIndicator infoProgress; // Value injected by FXMLLoader
+public class ViewMyReservationsController extends CustomerActionControllerBase implements ParkingLotsController, OnetimeEntriesController {
 
   @FXML // fx:id="tableView"
   private TableView<TableOnetimeService> tableView; // Value injected by
                                                     // FXMLLoader
-
-  @FXML // fx:id="infoBox"
-  private VBox infoBox; // Value injected by FXMLLoader
-
-  @FXML
-  private TableColumn<TableOnetimeService, String> colCancel;
-
-  @FXML
-  private TableColumn<TableOnetimeService, String> colType;
-
-  @FXML
-  private TableColumn<TableOnetimeService, String> colLeave;
-
-  @FXML
-  private TableColumn<TableOnetimeService, String> colStart;
-
-  @FXML
-  private TableColumn<TableOnetimeService, String> colCarId;
-
-  @FXML
-  private TableColumn<TableOnetimeService, String> colLot;
-
-  @FXML
-  void handleBackButton(ActionEvent event) {
-
-  }
 
   @FXML
   void handleRefreshButton(ActionEvent event) {
@@ -84,11 +37,8 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
-    assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
-    assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
+    super.baseInitialize();
     assert tableView != null : "fx:id=\"tableView\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
-    tableView = new TableView<TableOnetimeService>();
-    assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ViewMyReservationsScene.fxml'.";
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
@@ -96,57 +46,9 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
   }
 
   @Override
-  public void displayInfo(List<Text> formattedText) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void displayInfo(String simpleInfoMsg) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void displayError(List<Text> formettedErrorMsg) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void displayError(String simpleErrorMsg) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnProcessingStateOn() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnProcessingStateOff() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnLoggedInStateOn() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void turnLoggedInStateOff() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
   public void cleanCtrl() {
     // TODO Auto-generated method stub
-
+    super.cleanCtrl();
   }
 
   @Override
@@ -163,11 +65,11 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
 
   private static class TableOnetimeService {
 
-    private SimpleStringProperty type;
-    private SimpleStringProperty carID;
-    private SimpleStringProperty lotName;
-    private SimpleStringProperty startDate;
-    private SimpleStringProperty leaveDate;
+    private final SimpleStringProperty type;
+    private final SimpleStringProperty carID;
+    private final SimpleStringProperty lotName;
+    private final SimpleStringProperty startDate;
+    private final SimpleStringProperty leaveDate;
 
     public TableOnetimeService(String strType, String strCarID, String strLotName, String strStartDate,
         String strLeaveDate) {
@@ -178,41 +80,6 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
       this.leaveDate = new SimpleStringProperty(strLeaveDate);
     }
 
-    public StringProperty typeProperty() {
-      if (type == null) {
-        type = new SimpleStringProperty(this, "type");
-      }
-      return type;
-    }
-
-    public StringProperty carIDProperty() {
-      if (carID == null) {
-        carID = new SimpleStringProperty(this, "carID");
-      }
-      return carID;
-    }
-    
-    public StringProperty lotNameProperty() {
-      if (lotName == null) {
-        lotName = new SimpleStringProperty(this, "lotName");
-      }
-      return lotName;
-    }
-
-    public StringProperty startDateProperty() {
-      if (startDate == null) {
-        startDate = new SimpleStringProperty(this, "startDate");
-      }
-      return type;
-    }
-
-    public StringProperty leaveDateProperty() {
-      if (leaveDate == null) {
-        leaveDate = new SimpleStringProperty(this, "leaveDate");
-      }
-      return leaveDate;
-    }
-    
     public String getType() {
       return type.get();
     }
@@ -263,33 +130,43 @@ public class ViewMyReservationsController implements ParkingLotsController, Onet
           Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()), false)));
     }
 
-    ObservableList<TableOnetimeService> tableEntries = new ObservableListWrapper<TableOnetimeService>(
-        new LinkedList<TableOnetimeService>());
+    TableColumn typeCol = tableView.getColumns().get(0);
+    TableColumn carIDCol = tableView.getColumns().get(1);
+    TableColumn lotCol = tableView.getColumns().get(2);
+    TableColumn startdateCol = tableView.getColumns().get(3);
+    TableColumn leavedateCol = tableView.getColumns().get(4);
+    TableColumn actionCol = new TableColumn("Action");
+    actionCol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 
-    list.forEach(service -> tableEntries.add(new TableOnetimeService(Integer.toString(service.getParkingType()),
-        service.getCarID(), Integer.toString(service.getLotID()), service.getPlannedStartTime().toString(),
-        service.getPlannedEndTime().toString())));
+    Callback<TableColumn<TableOnetimeService, String>, TableCell<TableOnetimeService, String>> cellFactory = //
+        new Callback<TableColumn<TableOnetimeService, String>, TableCell<TableOnetimeService, String>>() {
+          @Override
+          public TableCell call(final TableColumn<TableOnetimeService, String> param) {
+            final TableCell<TableOnetimeService, String> cell = new TableCell<TableOnetimeService, String>() {
 
-    
-    colType = new TableColumn<TableOnetimeService,String>("_Type");
-    colType.setCellValueFactory(new PropertyValueFactory<TableOnetimeService,String>("type"));
+              final Button btn = new Button("Just Do It");
 
-    colCarId = new TableColumn<TableOnetimeService,String>("_Car ID");
-    colCarId.setCellValueFactory(new PropertyValueFactory<TableOnetimeService,String>("carID"));
-    
-    colLot = new TableColumn<TableOnetimeService,String>("_Lot Name");
-    colLot.setCellValueFactory(new PropertyValueFactory<TableOnetimeService,String>("lotName"));
-    
-    colStart = new TableColumn<TableOnetimeService,String>("_Start Date");
-    colStart.setCellValueFactory(new PropertyValueFactory<TableOnetimeService,String>("startDate"));
-    
-    colLeave = new TableColumn<TableOnetimeService,String>("_Leave Date");
-    colLeave.setCellValueFactory(new PropertyValueFactory<TableOnetimeService,String>("leaveDate"));
-    
-    tableView.getColumns().add(colLot);
-    tableView.getColumns().add(colType);
-    
-    tableView.setItems(tableEntries);
+              @Override
+              public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                  setGraphic(null);
+                  setText(null);
+                } else {
+                  btn.setOnAction(event -> {
+                    TableOnetimeService person = getTableView().getItems().get(getIndex());
+                    System.out.println("button pressed");
+                  });
+                  setGraphic(btn);
+                  setText(null);
+                }
+              }
+            };
+            return cell;
+          }
+        };
+
+    actionCol.setCellFactory(cellFactory);
 
   }
 

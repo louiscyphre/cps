@@ -7,15 +7,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 import java.util.Locale;
 
 import cps.api.request.ReservedParkingRequest;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
-import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
-import cps.client.controller.ViewController;
 import cps.client.utils.FormatValidation.InputFormats;
 //import jfxtras.scene.control.CalendarPicker;
 import javafx.application.Platform;
@@ -28,30 +25,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 /**
  * Created on: 2018-01-09 8:26:06 PM
  */
 // TODO some pc displays kryakozyabry in month , handleBackButton implementation
 // just for navigation
-public class ReserveParkingController implements ViewController {
-
-  private boolean processing = false;
-
-  @FXML
-  private TextFlow infoLabel;
+public class ReserveParkingController extends CustomerActionControllerBase {
 
   @FXML
   private DatePicker endDatePicker;
-
-  @FXML
-  private ProgressIndicator infoProgress;
 
   @FXML
   private DatePicker startDatePicker;
@@ -64,9 +49,6 @@ public class ReserveParkingController implements ViewController {
 
   @FXML
   private Font x1;
-
-  @FXML
-  private VBox infoBox;
 
   @FXML
   private Insets x2;
@@ -97,14 +79,6 @@ public class ReserveParkingController implements ViewController {
   }
 
   @FXML
-  void handleCancelButton(ActionEvent event) {
-    if (processing) {
-      return;
-    }
-    ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU);
-  }
-
-  @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
       return;
@@ -129,13 +103,11 @@ public class ReserveParkingController implements ViewController {
 
   @FXML
   void initialize() {
-    assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
+    super.baseInitialize();
     assert endDatePicker != null : "fx:id=\"endDatePicker\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
     assert emailTF != null : "fx:id=\"emailTF\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
-    assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
     assert startDatePicker != null : "fx:id=\"startDatePicker\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
     startDatePicker.setOnShowing(e -> Locale.setDefault(Locale.Category.FORMAT, Locale.ENGLISH));
-    assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
     assert carIDTextField != null : "fx:id=\"carIDTextField\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
 
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.RESERVE_PARKING);
@@ -304,76 +276,23 @@ public class ReserveParkingController implements ViewController {
   }
 
   @Override
-  public void displayInfo(List<Text> formattedText) {
-    infoBox.getStyleClass().clear();
-    infoBox.getStyleClass().add("infoLabel");
-    infoLabel.getChildren().clear();
-    for (Text ft : formattedText) {
-      infoLabel.getChildren().add(ft);
-    }
-  }
-
-  @Override
-  public void displayInfo(String simpleInfoMsg) {
-    infoBox.getStyleClass().clear();
-    infoBox.getStyleClass().add("infoLabel");
-    infoLabel.getChildren().clear();
-    infoLabel.getChildren().add(new Text(simpleInfoMsg));
-  }
-
-  @Override
-  public void displayError(List<Text> formettedErrorMsg) {
-    infoBox.getStyleClass().clear();
-    infoBox.getStyleClass().add("errorLabel");
-    infoLabel.getChildren().clear();
-    for (Text ft : formettedErrorMsg) {
-      infoLabel.getChildren().add(ft);
-    }
-  }
-
-  @Override
-  public void displayError(String simpleErrorMsg) {
-    infoBox.getStyleClass().clear();
-    infoBox.getStyleClass().add("errorLabel");
-    infoLabel.getChildren().clear();
-    infoLabel.getChildren().add(new Text(simpleErrorMsg));
-  }
-
-  @Override
-  public void turnProcessingStateOn() {
-    infoProgress.visibleProperty().set(true);
-    Text text = new Text("Processing...");
-    infoLabel.getChildren().clear();
-    infoLabel.getChildren().add(text);
-    infoBox.getStyleClass().clear();
-    infoBox.getStyleClass().add("processingLabel");
-    processing = true;
-  }
-
-  @Override
-  public void turnProcessingStateOff() {
-    processing = false;
-  }
-
-  @Override
   public void turnLoggedInStateOn() {
+    super.turnLoggedInStateOn();
     emailTF.setVisible(false);
   }
 
   @Override
   public void turnLoggedInStateOff() {
+    super.turnLoggedInStateOn();
     emailTF.setVisible(true);
   }
 
   @Override
   public void cleanCtrl() {
     // info box clear
-    infoBox.getStyleClass().add("infoLabel");
-    infoProgress.visibleProperty().set(false);
-    infoLabel.getChildren().clear();
+    super.cleanCtrl();
     // input fields clear
     startDatePicker.getEditor().clear();
-    ;
     startTimeTF.clear();
     endDatePicker.getEditor().clear();
     endTimeTF.clear();

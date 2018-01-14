@@ -2,9 +2,10 @@ package cps.client.controller;
 
 import java.util.List;
 
+import cps.api.response.ResponseHandler;
 import javafx.scene.text.Text;
 
-public interface ViewController {
+public interface ViewController extends ResponseHandler {
   public void displayInfo(List<Text> formattedText); // finds the infoLabel
                                                      // element and writes the
                                                      // info text in info
