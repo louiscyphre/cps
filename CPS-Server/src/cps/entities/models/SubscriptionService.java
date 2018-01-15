@@ -253,11 +253,26 @@ public class SubscriptionService implements ParkingService {
     return item;
   }
 
+  /**
+   * CHeck if Overlap exists.
+   *
+   * @param conn the conn
+   * @param carID the car ID
+   * @param subsType the subs type
+   * @param lotId the lot id
+   * @param startDate the start date
+   * @param endDate the end date
+   * @return True if exists subscription of the same type for the same car id in the same parking lot
+   * @throws SQLException the SQL exception
+   */
   public static boolean OverlapExists(Connection conn, String carID, int subsType, int lotId, LocalDate startDate,
       LocalDate endDate) throws SQLException {
     PreparedStatement stmt = conn.prepareStatement(
         "SELECT count(*) FROM subscription_service WHERE car_id = ? AND subs_type = ? AND lot_id = ? AND ((start_date <= ? AND ? <= end_date) OR (? <= start_date AND start_date <= ?))");
+    
+    boolean result = false;
     int i = 1;
+    
     stmt.setString(i++, carID);
     stmt.setInt(i++, subsType);
     stmt.setInt(i++, lotId);
@@ -265,6 +280,13 @@ public class SubscriptionService implements ParkingService {
     stmt.setDate(i++, Date.valueOf(startDate));
     stmt.setDate(i++, Date.valueOf(startDate));
     stmt.setDate(i++, Date.valueOf(endDate));
-    return false;
+    
+    ResultSet rs = stmt.executeQuery();
+    
+    if (rs.next()) {
+      result = rs.getInt(1) > 0;
+    }
+
+    return result;
   }
 }
