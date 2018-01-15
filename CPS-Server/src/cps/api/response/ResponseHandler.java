@@ -4,6 +4,8 @@ public interface ResponseHandler {
 
   // Dispatch
   public ServerResponse dispatch(Response response);
+  
+  // TODO add SimpleResponse handler
 
   // Customer Responses
   public ServerResponse handle(CancelOnetimeParkingResponse response);

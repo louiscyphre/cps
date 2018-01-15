@@ -72,7 +72,7 @@ public class ServerController implements RequestHandler<SessionHolder> {
     ServerResponse response = message.handle(this, context);
 
     if (response == null) {
-      return ServerResponse.error("Not implemented");
+      return SimpleResponse.error("Not implemented");
     }
 
     return response;
