@@ -13,8 +13,10 @@ import org.junit.Test;
 import com.sun.swing.internal.plaf.basic.resources.basic_de;
 
 import cps.api.request.FullSubscriptionRequest;
+import cps.api.request.RegularSubscriptionRequest;
 import cps.api.request.SubscriptionRequest;
 import cps.api.response.FullSubscriptionResponse;
+import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.ResponseHandler;
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
@@ -51,12 +53,26 @@ public class TestSubscriptionOverlap {
     db.performAction(conn -> {
       SubscriptionService.create(conn, Constants.SUBSCRIPTION_TYPE_FULL, 1, "NO@email.com", "TL-12-12", 2, starttime,
           endtime, dailyexittime);
+
       FullSubscriptionRequest over = new FullSubscriptionRequest(1, "NO@email.com", "TL-12-12",
           LocalDate.now().plusDays(1));
       CustomerSession sess = new CustomerSession(new Customer(1, "NO@email.com", "123", 0f, 0f));
       FullSubscriptionResponse serverResponse = new FullSubscriptionResponse();
       ServerResponse response = subc.handle(over, sess, serverResponse, starttime, endtime, dailyexittime);
       assertFalse(response.success());
+
+      SubscriptionService.create(conn, Constants.SUBSCRIPTION_TYPE_REGULAR, 2, "NO@email.com", "TL-13-12", 1, starttime,
+          endtime, dailyexittime);
+      RegularSubscriptionRequest over2 = new RegularSubscriptionRequest(2, "NO@email.com", "TL-13-12",
+          starttime.plusDays(1), 1, dailyexittime);
+      sess = new CustomerSession(new Customer(2, "NO@email.com", "123", 0f, 0f));
+      RegularSubscriptionResponse serverResponse2 = new RegularSubscriptionResponse();
+      response = subc.handle(over2, sess, serverResponse2, starttime.plusDays(2), endtime.plusDays(2), dailyexittime);
+      assertFalse(response.success());
+
+      over2 = new RegularSubscriptionRequest(2, "NO@email.com", "TL-13-12", starttime.plusDays(2), 1, dailyexittime);
+      response = subc.handle(over2, sess, serverResponse2, starttime.plusDays(2), endtime.plusDays(2), dailyexittime);
+       assertTrue(response.success());
     });
 
   }
