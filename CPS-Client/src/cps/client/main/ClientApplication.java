@@ -38,7 +38,7 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private void loadKiosk() throws IOException {
     try {
-      Scene scene = ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
+      ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
       ControllersClientAdapter.registerScene(SceneCode.LOGIN);
       ControllersClientAdapter.registerScene(SceneCode.ENTER_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.EXIT_PARKING);
@@ -47,8 +47,8 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.REGULAR_SUBSCRIPTION);
       ControllersClientAdapter.registerScene(SceneCode.RESERVE_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
-      // TODO adding this causes glitches in the main menu
       ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
+      ControllersClientAdapter.registerScene(SceneCode.FILE_COMPLAINT);
       ControllersClientAdapter.turnLoggedInStateOff();
       // initializeStage(scene, "CPS Kiosk Client");
       initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Kiosk Client");

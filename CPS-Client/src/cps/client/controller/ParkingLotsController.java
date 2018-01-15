@@ -4,7 +4,6 @@
 package cps.client.controller;
 
 import java.util.Collection;
-import java.util.List;
 
 import cps.entities.models.ParkingLot;
 

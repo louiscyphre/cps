@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 
-import cps.api.request.ListOnetimeEntriesRequest;
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.request.ReservedParkingRequest;
 import cps.client.context.CustomerContext;

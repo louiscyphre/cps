@@ -26,10 +26,12 @@ import cps.api.response.ServerResponse;
 import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
+import cps.client.utils.InternalClientException;
 import cps.client.utils.UserLevelClientException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -124,6 +126,7 @@ public abstract class ClientControllerBase implements ViewController {
     assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
     assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
     assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
+    Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text Field
   }
 
   @Override
@@ -132,6 +135,19 @@ public abstract class ClientControllerBase implements ViewController {
     infoBox.getStyleClass().add("infoLabel");
     infoProgress.visibleProperty().set(false);
     infoLabel.getChildren().clear();
+  }
+
+  public ServerResponse handleGenericResponse(ServerResponse response) {
+    
+    if (response.success()) {
+      turnProcessingStateOff();
+      displayInfo(response.getDescription());
+    } else {
+      turnProcessingStateOff();
+      displayError(response.getDescription());
+    }
+    
+    return null;
   }
 
   // ResponseHandler interface
@@ -244,58 +260,65 @@ public abstract class ClientControllerBase implements ViewController {
   public ServerResponse handle(ServiceLoginResponse response) {
     return null;
   }
-  
+
   // Helper methods
-  public String getText(TextField field) {
+  public String getText(TextInputControl field) {
     return field == null ? "" : field.getText();
   }
-  
+
   public String requireField(String value, String parameterName) throws UserLevelClientException {
     if (value == null || value.trim().length() == 0) {
       throw new UserLevelClientException(String.format("%s is missing", parameterName));
     }
-    
+
     return value;
   }
-  
-  public String requireField(TextField field, String parameterName) throws UserLevelClientException {
+
+  public String requireField(TextInputControl field, String parameterName) throws UserLevelClientException {
     return requireField(getText(field), parameterName);
   }
-  
+
   public String requireFieldTrim(String value, String parameterName) throws UserLevelClientException {
     if (value == null || value.trim().length() == 0) {
       throw new UserLevelClientException(String.format("%s is missing", parameterName));
     }
-    
+
     return value.trim();
   }
-  
-  public String requireFieldTrim(TextField field, String parameterName) throws UserLevelClientException {
+
+  public String requireFieldTrim(TextInputControl field, String parameterName) throws UserLevelClientException {
     return requireFieldTrim(getText(field), parameterName);
   }
-  
-  public int requireInteger(String value, String parameterName) throws UserLevelClientException {    
+
+  public int requireInteger(String value, String parameterName) throws UserLevelClientException {
     try {
       return Integer.parseInt(requireFieldTrim(value, parameterName));
     } catch (NumberFormatException e) {
       throw new UserLevelClientException(String.format("%s should be an integer", parameterName));
     }
   }
-  
-  public int requireInteger(TextField field, String parameterName) throws UserLevelClientException {
+
+  public int requireInteger(TextInputControl field, String parameterName) throws UserLevelClientException {
     return requireInteger(getText(field), parameterName);
   }
-  
-  public float requireFloat(String value, String parameterName) throws UserLevelClientException {    
+
+  public float requireFloat(String value, String parameterName) throws UserLevelClientException {
     try {
       return Float.parseFloat(requireFieldTrim(value, parameterName));
     } catch (NumberFormatException e) {
       throw new UserLevelClientException(String.format("%s should be a number", parameterName));
     }
   }
-  
-  public float requireFloat(TextField field, String parameterName) throws UserLevelClientException {
+
+  public float requireFloat(TextInputControl field, String parameterName) throws UserLevelClientException {
     return requireFloat(getText(field), parameterName);
+  }
+  
+  public <T> T notNull(T object, String name) throws InternalClientException {
+    if (object == null) {
+      throw new InternalClientException(String.format("%s must not be null", name));
+    }
+    return object;
   }
 
 }
