@@ -6,12 +6,8 @@ package cps.client.controller.customer;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 
 import cps.api.request.FullSubscriptionRequest;
-import cps.api.request.ReservedParkingRequest;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.utils.FormatValidation.InputFormats;
