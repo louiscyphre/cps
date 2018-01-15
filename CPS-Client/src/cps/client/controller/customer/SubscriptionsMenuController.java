@@ -45,7 +45,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
   @FXML
   private ComboBox<String> parkingLotsList;
 
-  HashMap<String, ParkingLot> parkingLotsMap;
+  HashMap<String, ParkingLot> parkingLotsMap = null;
 
   /**
    * @param list
@@ -72,7 +72,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     float subscriptionOverallPrice = reservedParkingPrice * Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS;
     StringBuilder builder = new StringBuilder();
     builder.append("Regular subscription:").append(Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS).append(" parking hours for ");
-    builder.append(subscriptionOverallPrice).append("NIS only!");
+    builder.append(subscriptionOverallPrice).append(" NIS only!");
     regularSubscriptionInfo.setText(builder.toString());
     fullSubscriptionInfo.setMaxWidth(Double.MAX_VALUE);
     fullSubscriptionInfo.setAlignment(Pos.CENTER);//FIXME somehow
@@ -82,7 +82,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     float subscriptionOverallPrice = Constants.PRICE_PER_HOUR_RESERVED * Constants.SUBSCRIPTION_TYPE_FULL_HOURS;
     StringBuilder builder = new StringBuilder();
     builder.append("Full subscription:").append(Constants.SUBSCRIPTION_TYPE_FULL_HOURS).append(" parking hours in any parking lot for ");
-    builder.append(subscriptionOverallPrice).append("NIS only!");
+    builder.append(subscriptionOverallPrice).append(" NIS only!");
     fullSubscriptionInfo.setText(builder.toString());
     fullSubscriptionInfo.setMaxWidth(Double.MAX_VALUE);
     fullSubscriptionInfo.setAlignment(Pos.CENTER);//FIXME somehow
@@ -103,6 +103,9 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
       return;
     }
     parkingLotsList.setDisable(false);
+    if (parkingLotsMap != null) {
+      return;
+    }
     ListParkingLotsRequest request = new ListParkingLotsRequest();
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
@@ -122,7 +125,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
       return;
     }
     // TODO SubscriptionsMenuController::handleNextButton
-    // ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FULL_SUBSCRIPTION);
   }
 
   @FXML

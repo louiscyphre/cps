@@ -9,8 +9,10 @@ import java.time.LocalDate;
 
 import cps.api.request.FullSubscriptionRequest;
 import cps.client.context.CustomerContext;
+import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.utils.FormatValidation.InputFormats;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -47,7 +49,15 @@ public class FullSubscriptionController extends CustomerActionControllerBase {
       return;
     }
   }
-  
+
+  @FXML
+  void handleBackButton(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
+  }
+
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -135,5 +145,18 @@ public class FullSubscriptionController extends CustomerActionControllerBase {
     } catch (DateTimeException e) {
       return null;
     }
+  }
+  
+  @FXML
+  void initialize() {
+    super.baseInitialize();
+    assert carIDTextField != null : "fx:id=\"carIDTextField\" was not injected: check your FXML file 'FullSubscriptionScene.fxml'.";
+    assert startDatePicker != null : "fx:id=\"startDatePicker\" was not injected: check your FXML file 'FullSubscriptionScene.fxml'.";
+    assert emailTextField != null : "fx:id=\"emailTextField\" was not injected: check your FXML file 'FullSubscriptionScene.fxml'.";
+    assert customerIDTextField != null : "fx:id=\"customerIDTextField\" was not injected: check your FXML file 'FullSubscriptionScene.fxml'.";
+
+    ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.FULL_SUBSCRIPTION);
+    Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
+                                                     // Field
   }
 }

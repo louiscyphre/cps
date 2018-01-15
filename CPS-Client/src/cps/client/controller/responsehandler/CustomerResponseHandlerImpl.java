@@ -40,12 +40,6 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
   }
 
   @Override
-  public ServerResponse handle(FullSubscriptionResponse response) {
-    // TODO Auto-generated method stub
-    return response;
-  }
-
-  @Override
   public ServerResponse handle(IncidentalParkingResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
@@ -174,12 +168,9 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
   @Override
   public ServerResponse handle(ListParkingLotsResponse response) {
-    // CustomerContext context = ControllersClientAdapter.getCustomerContext();
-    ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();// FIXME//TODO
-                                                                                                   // normally
+    ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();                                                                     // normally
     List<ParkingLot> list = new LinkedList<ParkingLot>(response.getData());
-    System.out.println("Handler GOT: "+ response.toString());
-    ctrl.setParkingLots(list);// FIXME//TODO normally
+    ctrl.setParkingLots(list);
     ctrl.turnProcessingStateOff();
     return response;
   }
@@ -230,6 +221,47 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
   @Override
   public ServerResponse handle(RegularSubscriptionResponse response) {
     // TODO Auto-generated method stub
+    return response;
+  }
+
+  @Override
+  public ServerResponse handle(FullSubscriptionResponse response) {
+    CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    int responseCustomerId = response.getCustomerID();
+    List<Text> formattedMessage = new LinkedList<Text>();
+    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId()) {
+      context.setCustomerId(responseCustomerId);
+      formattedMessage.add(new Text("Your Customer ID:"));
+      Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      Font defaultFont = customerIdText.getFont();
+      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(customerIdText);
+      formattedMessage.add(new Text("\n"));
+
+      formattedMessage.add(new Text("Your Password:"));
+      Text password = new Text(response.getPassword());
+      defaultFont = password.getFont();
+      password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(password);
+      formattedMessage.add(new Text("\n"));
+
+      context.setCustomerId(responseCustomerId);
+      context.acceptPendingEmail();
+      ControllersClientAdapter.turnLoggedInStateOn();
+    }
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("Succesfully reserved parking per request!\n"));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("Could not reserve parking!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
     return response;
   }
 
