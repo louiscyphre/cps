@@ -11,6 +11,7 @@ import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ListOnetimeEntriesResponse;
+import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.LoginResponse;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
@@ -158,6 +159,11 @@ public abstract class ClientControllerBase implements ViewController {
 
   @Override
   public ServerResponse handle(ListOnetimeEntriesResponse response) {
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(ListParkingLotsResponse response) {
     return null;
   }
 

@@ -18,6 +18,8 @@ public interface ResponseHandler {
 
   public ServerResponse handle(ListOnetimeEntriesResponse response);
 
+  public ServerResponse handle(ListParkingLotsResponse response);
+
   public ServerResponse handle(ParkingEntryResponse response);
 
   public ServerResponse handle(ParkingExitResponse response);
