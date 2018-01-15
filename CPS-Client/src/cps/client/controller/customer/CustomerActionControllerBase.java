@@ -1,8 +1,8 @@
 package cps.client.controller.customer;
 
 import cps.client.controller.ClientControllerBase;
-import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ControllerConstants.SceneCode;
+import cps.client.controller.ControllersClientAdapter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 

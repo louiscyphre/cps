@@ -142,4 +142,9 @@ public class ResponseHandlerImpl implements ResponseHandler {
     return this.serviceResponseHandler.handle(response);
   }
 
+  @Override
+  public ServerResponse handle(ListMyComplaintsResponse response) {
+    return null;
+  }
+
 }

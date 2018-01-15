@@ -197,13 +197,12 @@ public class OnetimeParkingController extends RequestController {
     return database.performQuery(new ListOnetimeEntriesResponse(), (conn, response) -> {
       Collection<OnetimeService> result = OnetimeService.findByCustomerID(conn, request.getCustomerID());
 
-      // This shouldn't happen - at least an empty list should always be
-      // returned
+      // This shouldn't happen - at least an empty list should always be returned
       errorIfNull(result, "Failed to create list of OnetimeService entries");
 
       response.setData(result);
       response.setCustomerID(request.getCustomerID());
-      response.setSuccess("ListOnetimeEntriesRequest completed successfully");
+      response.setSuccess("List of OnetimeService entries retrieved successfully");
       return response;
     });
   }

@@ -12,6 +12,7 @@ import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ListComplaintsResponse;
+import cps.api.response.ListMyComplaintsResponse;
 import cps.api.response.ListOnetimeEntriesResponse;
 import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.LoginResponse;
@@ -194,6 +195,11 @@ public abstract class ClientControllerBase implements ViewController {
 
   @Override
   public ServerResponse handle(ListComplaintsResponse response) {
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(ListMyComplaintsResponse response) {
     return null;
   }
 
