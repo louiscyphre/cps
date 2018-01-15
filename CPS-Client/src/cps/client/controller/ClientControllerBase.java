@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import cps.api.request.Request;
 import cps.api.response.CancelOnetimeParkingResponse;
 import cps.api.response.ComplaintResponse;
 import cps.api.response.DisableParkingSlotsResponse;
@@ -31,8 +32,10 @@ import cps.client.utils.InternalClientException;
 import cps.client.utils.UserLevelClientException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -136,6 +139,18 @@ public abstract class ClientControllerBase implements ViewController {
     infoBox.getStyleClass().add("infoLabel");
     infoProgress.visibleProperty().set(false);
     infoLabel.getChildren().clear();
+  }
+  
+  public final void sendRequest(Request request, boolean waitForResponse) {
+    if (waitForResponse) {
+      turnProcessingStateOn();
+    }
+    
+    ControllersClientAdapter.getClient().sendRequest(request);
+  }
+  
+  public final void sendRequest(Request request) {
+    sendRequest(request, true);
   }
 
   public ServerResponse handleGenericResponse(ServerResponse response) {
@@ -325,6 +340,20 @@ public abstract class ClientControllerBase implements ViewController {
       throw new InternalClientException(String.format("%s must not be null", name));
     }
     return object;
+  }
+  
+  public void errorIf(boolean condition, String errorMessage) throws UserLevelClientException {
+    if (condition) {
+      throw new UserLevelClientException(errorMessage);
+    }
+  }
+  
+  public void errorIfNull(Object object, String errorMessage) throws UserLevelClientException {
+    errorIf(object == null, errorMessage);
+  }
+  
+  public void showAlert(String message) {
+    new Alert(AlertType.INFORMATION, message).show();
   }
 
 }

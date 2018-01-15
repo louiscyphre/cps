@@ -25,18 +25,18 @@ public class CustomerActionControllerBase extends ClientControllerBase {
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (!processing) {
-      sendRequest();
+      sendMainRequest();
     }
   }
 
   @FXML
   void handleOkButton(ActionEvent event) {
     if (!processing) {
-      sendRequest();
+      sendMainRequest();
     }
   }
 
-  void sendRequest() {
+  void sendMainRequest() {
     
   }
 

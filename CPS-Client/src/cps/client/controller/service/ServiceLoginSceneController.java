@@ -7,8 +7,6 @@ import cps.client.controller.ControllerConstants.InputVerification;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.utils.FormatValidation;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -19,14 +17,6 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
   @FXML // fx:id="passwordTF"
   private TextField passwordTF; // Value injected by FXMLLoader
 
-  @FXML
-  void handleLogInButton(ActionEvent event) {
-    if (processing) {
-      return;
-    }
-    validateAndSend();
-  }
-
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
@@ -34,8 +24,6 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
     assert usernameTF != null : "fx:id=\"usernameTF\" was not injected: check your FXML file 'ServiceLoginScene.fxml'.";
     assert passwordTF != null : "fx:id=\"passwordTF\" was not injected: check your FXML file 'ServiceLoginScene.fxml'.";
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_LOGIN);
-    Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
-                                                     // Field
   }
 
   @Override
@@ -81,13 +69,12 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
   @Override
   public ServerResponse handle(ServiceLoginResponse response) {
     ControllersClientAdapter.getEmployeeContext().setCompanyPerson(response.getUser());
+    turnProcessingStateOff();
 
     if (response.success()) {
-      turnProcessingStateOff();
       ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
     } else {
       displayError(response.getDescription());
-      turnProcessingStateOff();
     }
 
     return null;
