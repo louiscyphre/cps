@@ -18,4 +18,8 @@ public interface CustomerContext {
   public void setLoggedIn(boolean loggedIn);
 
   public void logContextOut();
+  
+  public int getChosenLotID();
+  
+  public void setChosenLotID(int lotID);
 }

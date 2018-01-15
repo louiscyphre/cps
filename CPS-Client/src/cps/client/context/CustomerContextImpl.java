@@ -6,6 +6,7 @@ public class CustomerContextImpl implements CustomerContext {
   private String  customerEmail;
   private String  pendingEmail;
   private boolean loggedIn;
+  private int     chosenLotIDforSubscription;
 
   @Override
   public int getCustomerId() {
@@ -60,5 +61,21 @@ public class CustomerContextImpl implements CustomerContext {
     customerEmail = null;
     pendingEmail = null;
     loggedIn = false;
+  }
+
+  /* (non-Javadoc)
+   * @see cps.client.context.CustomerContext#getChosenLotID()
+   */
+  @Override
+  public int getChosenLotID() {
+    return chosenLotIDforSubscription;
+  }
+
+  /* (non-Javadoc)
+   * @see cps.client.context.CustomerContext#setChosenLotID(int)
+   */
+  @Override
+  public void setChosenLotID(int lotID) {
+    chosenLotIDforSubscription = lotID;
   }
 }

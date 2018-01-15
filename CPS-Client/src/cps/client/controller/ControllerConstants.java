@@ -22,6 +22,10 @@ public class ControllerConstants {
     EXIT_PARKING("../view/customer/ExitParkingScene.fxml"),
 
     VIEW_MY_RESERVATION("../view/customer/ViewMyReservationsScene.fxml"),
+    
+    REGULAR_SUBSCRIPTION("../view/customer/RegularSubscriptionScene.fxml"),
+    
+    FULL_SUBSCRIPTION("../view/customer/FullSubscriptionScene.fxml"),
 
     // service views
     SERVICE_ACTION_DISABLE_SLOT("../view/service/ServiceActionDisableSlot.fxml"),
