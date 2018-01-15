@@ -53,6 +53,7 @@ public class TestSubscriptionOverlap {
     LocalTime dailyexittime = LocalTime.of(18, 0, 0);
     Customer mycust = initCustomer();
     ParkingLot lot = initParkingLot();
+    ParkingLot lot2 = initParkingLot();
     String[] carid = new String[5];
     carid[0] = "TL-12-12";
     carid[1] = "TL-13-12";
@@ -73,6 +74,11 @@ public class TestSubscriptionOverlap {
       assertFalse(SubscriptionService.OverlapExists(conn, carid[1], Constants.SUBSCRIPTION_TYPE_FULL, 0,
           starttime.plusDays(1), endtime));
 
+      // Test 3
+
+      assertTrue(SubscriptionService.OverlapExists(conn, carid[0], Constants.SUBSCRIPTION_TYPE_REGULAR, lot.getId(),
+          starttime.plusDays(1), endtime));
+
       /* ------------- */
 
       SubscriptionService.create(conn, Constants.SUBSCRIPTION_TYPE_REGULAR, mycust.getId(), mycust.getEmail(), carid[2],
@@ -84,8 +90,17 @@ public class TestSubscriptionOverlap {
           starttime.plusDays(1), endtime));
 
       // Test 4
+      assertFalse(SubscriptionService.OverlapExists(conn, carid[3], Constants.SUBSCRIPTION_TYPE_REGULAR, lot.getId(),
+          starttime.plusDays(1), endtime));
 
-      // assertTrue(response.success());
+      // Test 5
+
+      assertFalse(SubscriptionService.OverlapExists(conn, carid[2], Constants.SUBSCRIPTION_TYPE_REGULAR, lot2.getId(),
+          starttime.plusDays(1), endtime));
+
+      assertFalse(SubscriptionService.OverlapExists(conn, carid[2], Constants.SUBSCRIPTION_TYPE_FULL, 0,
+          starttime.plusDays(1), endtime));
+
     });
 
   }
