@@ -252,12 +252,12 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       ControllersClientAdapter.turnLoggedInStateOn();
     }
     if (response.getStatus() == ServerResponse.STATUS_OK) {
-      formattedMessage.add(new Text("Succesfully reserved parking per request!\n"));
+      formattedMessage.add(new Text("Subscription purchased successfuly!\n"));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
 
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
-      formattedMessage.add(new Text("Could not reserve parking!\n"));
+      formattedMessage.add(new Text("Could not proceed with purchase!\n"));
       formattedMessage.add(new Text(response.getDescription()));
       ctrl.turnProcessingStateOff();
       ctrl.displayError(formattedMessage);
