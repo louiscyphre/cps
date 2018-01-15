@@ -1,9 +1,9 @@
 package cps.client.controller.service;
 
+import cps.api.response.ServerResponse;
+import cps.api.response.SetFullLotResponse;
 import cps.client.controller.ControllerConstants;
-import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -11,16 +11,6 @@ import javafx.scene.control.TextField;
 public class ServiceActionLotIsFullController extends ServiceActionControllerBase {
   @FXML // fx:id="lotId"
   private TextField lotId; // Value injected by FXMLLoader
-
-  @FXML
-  void handleCancelButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
-  }
-
-  @FXML
-  void handleOkButton(ActionEvent event) {
-
-  }
 
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
@@ -34,5 +24,17 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
   public void cleanCtrl() {
     super.cleanCtrl();
     lotId.clear();
+  }
+
+  @Override
+  void validateAndSend() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public ServerResponse handle(SetFullLotResponse response) {
+    // TODO Auto-generated method stub
+    return super.handle(response);
   }
 }

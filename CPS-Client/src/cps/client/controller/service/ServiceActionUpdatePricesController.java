@@ -40,4 +40,10 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     newreservedTF.clear();
     newincidentalTF.clear();
   }
+
+  @Override
+  void validateAndSend() {
+    // TODO Auto-generated method stub
+    
+  }
 }

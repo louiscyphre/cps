@@ -10,6 +10,7 @@ import java.util.List;
 import cps.api.request.ListParkingLotsRequest;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ParkingLotsController;
 import cps.common.Constants;
 import cps.entities.models.ParkingLot;
 import javafx.collections.FXCollections;
@@ -25,7 +26,7 @@ import javafx.scene.control.ToggleGroup;
 /**
  * Created on: 2018-01-09 1:04:02 AM
  */
-public class SubscriptionsMenuController extends CustomerActionControllerBase {
+public class SubscriptionsMenuController extends CustomerActionControllerBase implements ParkingLotsController {
   
   @FXML
   private Label             regularSubscriptionInfo;

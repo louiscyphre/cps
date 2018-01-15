@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * The Class ServerResponse.
  */
-public class ServerResponse extends Response implements Serializable {
+public abstract class ServerResponse extends Response implements Serializable {
 
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 1L;
@@ -55,45 +55,6 @@ public class ServerResponse extends Response implements Serializable {
     this.status = success ? STATUS_OK : STATUS_ERROR;
     this.description = description;
   }
-
-  /**
-   * Returns Server Response OK.
-   *
-   * @param description
-   *          the description
-   * @return the server response
-   */
-  public static ServerResponse ok(String description) {
-    return new ServerResponse(STATUS_OK, description);
-  }
-
-  /**
-   * Returns Server Response Error.
-   *
-   * @param description
-   *          the description
-   * @return the server response
-   */
-  public static ServerResponse error(String description) {
-    return new ServerResponse(STATUS_ERROR, description);
-  }
-
-  // /**
-  // * Returns Server Response OK if condition == true
-  // * else returns Server Response Error
-  // *
-  // * @param description the description
-  // * @param condition the condition
-  // * @return the server response
-  // */
-  // public static ServerResponse decide(String description, boolean condition)
-  // {
-  // if (condition) {
-  // return ServerResponse.ok(description + " completed successfully");
-  // } else {
-  // return ServerResponse.error(description + " failed");
-  // }
-  // }
 
   /**
    * Gets the status.
@@ -177,10 +138,5 @@ public class ServerResponse extends Response implements Serializable {
 
   public boolean isError() {
     return this.status == STATUS_ERROR;
-  }
-
-  @Override
-  public ServerResponse handle(ResponseHandler handler) {
-    return handler.handle(this);
   }
 }

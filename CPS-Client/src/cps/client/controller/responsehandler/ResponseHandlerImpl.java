@@ -123,6 +123,11 @@ public class ResponseHandlerImpl implements ResponseHandler {
   }
 
   @Override
+  public ServerResponse handle(ListParkingLotsResponse response) {
+    return this.customerResponseHandler.handle(response);
+  }
+
+  @Override
   public ServerResponse handle(LoginResponse response) {
     return this.customerResponseHandler.handle(response);
   }

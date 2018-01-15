@@ -11,6 +11,7 @@ import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ListOnetimeEntriesResponse;
+import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.LoginResponse;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
@@ -33,7 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class ClientControllerBase implements ViewController {
+public abstract class ClientControllerBase implements ViewController {
   protected static final String DEFAULT_INFO_LABEL = "Welcome to Car Parking System!";
 
   @FXML // ResourceBundle that was given to the FXMLLoader
@@ -162,6 +163,11 @@ public class ClientControllerBase implements ViewController {
   }
 
   @Override
+  public ServerResponse handle(ListParkingLotsResponse response) {
+    return null;
+  }
+
+  @Override
   public ServerResponse handle(ParkingEntryResponse response) {
     return null;
   }
@@ -286,7 +292,7 @@ public class ClientControllerBase implements ViewController {
   }
   
   public float requireFloat(TextField field, String parameterName) throws UserLevelClientException {
-    return requireInteger(getText(field), parameterName);
+    return requireFloat(getText(field), parameterName);
   }
 
 }

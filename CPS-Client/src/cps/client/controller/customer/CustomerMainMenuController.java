@@ -55,58 +55,51 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
 
   @FXML
   void handleEnterParkingButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ENTER_PARKING);
-    if (processing) {
-      return;
+    if (!processing) {
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ENTER_PARKING);
     }
   }
 
   @FXML
   void handleExitParkingButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.EXIT_PARKING);
-    if (processing) {
-      return;
+    if (!processing) {
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.EXIT_PARKING);
     }
   }
 
   @FXML
   void handleViewMyReservationsButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_RESERVATION);
-    if (processing) {
-      return;
+    if (!processing) {
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_RESERVATION);
     }
   }
 
   @FXML
   void handleLoginButton(ActionEvent event) {
-    if (processing) {
-      return;
+    if (!processing) {
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.LOGIN);
     }
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.LOGIN);
   }
 
   @FXML
   void handleReserveParkingButton(ActionEvent event) {
-    if (processing) {
-      return;
+    if (!processing) {
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.RESERVE_PARKING);
     }
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.RESERVE_PARKING);
   }
 
   @FXML
   void handleBuySubscriptionButton(ActionEvent event) {
-    if (processing) {
-      return;
+    if (!processing) {
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
     }
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
   }
 
   @FXML
   void handleParkNowButton(ActionEvent event) {
-    if (processing) {
-      return;
+    if (!processing) {
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INCIDENTAL_PARKING);
     }
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INCIDENTAL_PARKING);
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is
