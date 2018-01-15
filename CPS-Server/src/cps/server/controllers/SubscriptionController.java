@@ -57,6 +57,7 @@ public class SubscriptionController extends RequestController {
       }
       
       // TODO check overlapping subscriptions with the same car ID?
+      // TODO Tegra is working here
       
       
       // Handle login
