@@ -7,15 +7,24 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Locale;
 
+import cps.api.request.ListOnetimeEntriesRequest;
+import cps.api.request.ListParkingLotsRequest;
 import cps.api.request.ReservedParkingRequest;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ParkingLotsController;
 import cps.client.utils.FormatValidation.InputFormats;
+import cps.entities.models.ParkingLot;
 //import jfxtras.scene.control.CalendarPicker;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 //import java.time.LocalDate;
 //import java.util.Calendar;
@@ -24,6 +33,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
@@ -33,7 +43,7 @@ import javafx.scene.text.Font;
  */
 // TODO some pc displays kryakozyabry in month , handleBackButton implementation
 // just for navigation
-public class ReserveParkingController extends CustomerActionControllerBase {
+public class ReserveParkingController extends CustomerActionControllerBase implements ParkingLotsController {
 
   @FXML
   private DatePicker endDatePicker;
@@ -66,7 +76,9 @@ public class ReserveParkingController extends CustomerActionControllerBase {
   private TextField emailTF;
 
   @FXML
-  private TextField lotidTF;
+  private ComboBox<String> parkingLotsList;
+
+  private HashMap<String, Integer> parkingLotsMap = null;
 
   // show Email field
   public void showEmail() {
@@ -101,6 +113,29 @@ public class ReserveParkingController extends CustomerActionControllerBase {
     }
   }
 
+  void loadParkingLots() {
+    if (processing) {
+      return;
+    }
+    if (parkingLotsMap.isEmpty() && parkingLotsList.getItems().isEmpty()) {
+      ListParkingLotsRequest request = new ListParkingLotsRequest();
+      turnProcessingStateOn();
+      ControllersClientAdapter.getClient().sendRequest(request);
+    }
+  }
+
+  @Override
+  public void setParkingLots(Collection<ParkingLot> list) {
+    LinkedList<String> tmp = new LinkedList<String>();
+    for (ParkingLot i : list) {
+      String address = new String(i.getStreetAddress());
+      parkingLotsMap.put(address, i.getId());
+      tmp.add(address);
+    }
+    ObservableList<String> addresses = FXCollections.observableList(tmp);
+    parkingLotsList.getItems().setAll(addresses);
+  }
+
   @FXML
   void initialize() {
     super.baseInitialize();
@@ -114,6 +149,8 @@ public class ReserveParkingController extends CustomerActionControllerBase {
 
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
+
+    parkingLotsMap = new HashMap<String, Integer>();
   }
 
   private void validateAndSend() {
@@ -208,14 +245,12 @@ public class ReserveParkingController extends CustomerActionControllerBase {
 
   // returns lot id or -1 if empty
   private int getLotId() {
-    if (lotidTF.getText() == null) {
-      return -1;
+    if (parkingLotsList == null || parkingLotsList.valueProperty() == null
+        || parkingLotsList.valueProperty().getValue() == null) {
+      return 0;
     }
-    try {
-      return Integer.parseInt(lotidTF.getText());
-    } catch (NumberFormatException e) {
-      return -1;
-    }
+    int lotId = parkingLotsMap.get(parkingLotsList.valueProperty().getValue());
+    return lotId;
   }
 
   // returns planned start date or null if empty
@@ -283,6 +318,8 @@ public class ReserveParkingController extends CustomerActionControllerBase {
     endTimeTF.clear();
     carIDTextField.clear();
     emailTF.clear();
-    lotidTF.clear();
+    parkingLotsList.getItems().clear();
+    parkingLotsMap.clear();
+    loadParkingLots();
   }
 }

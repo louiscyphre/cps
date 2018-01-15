@@ -104,6 +104,9 @@ public abstract class ClientControllerBase implements ViewController {
   @Override
   public void turnProcessingStateOff() {
     infoProgress.visibleProperty().set(false);
+    infoBox.getStyleClass().clear();
+    infoBox.getStyleClass().add("infoLabel");
+    infoLabel.getChildren().clear();
     processing = false;
   }
 

@@ -124,9 +124,8 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
 
                     turnProcessingStateOn();
                     ControllersClientAdapter.getClient().sendRequest(request);
-
-                    System.out.println(service.getCarID() + "   " + service.getStartDate());
                   });
+                  btn.setMaxWidth(Double.MAX_VALUE);
                   setGraphic(btn);
                   setText(null);
                 }
@@ -157,10 +156,13 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
   @Override
   public void setOnetimeEntries(Collection<OnetimeService> list) {
     List<TableOnetimeService> newEntriesList = new LinkedList<TableOnetimeService>();
+    Timestamp now = Timestamp.valueOf(LocalDateTime.now());
     list.forEach(e -> {
-      TableOnetimeService toAdd = new TableOnetimeService((e.getParkingType()), e.getCarID(), e.getLotID(),
-          e.getPlannedStartTime().toString(), e.getPlannedEndTime().toString(), e.getId());
-      newEntriesList.add(toAdd);
+      if(e.getPlannedEndTime().compareTo(now) > 0 && !e.isCanceled()) {
+        TableOnetimeService toAdd = new TableOnetimeService((e.getParkingType()), e.getCarID(), e.getLotID(),
+            e.getPlannedStartTime().toString(), e.getPlannedEndTime().toString(), e.getId());
+        newEntriesList.add(toAdd);
+      }
     });
     this.obsEntriesList.setAll(newEntriesList);
   }
