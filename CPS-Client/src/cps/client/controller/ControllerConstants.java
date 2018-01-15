@@ -23,6 +23,8 @@ public class ControllerConstants {
 
     VIEW_MY_RESERVATION("../view/customer/ViewMyReservationsScene.fxml"),
     
+    REGULAR_SUBSCRIPTION("../view/customer/RegularSubscriptionScene.fxml"),
+    
     FULL_SUBSCRIPTION("../view/customer/FullSubscriptionScene.fxml"),
 
     // service views

@@ -125,7 +125,13 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
       return;
     }
     // TODO SubscriptionsMenuController::handleNextButton
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FULL_SUBSCRIPTION);
+    if (fullSubscriptionRadioButton.isSelected()) {
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FULL_SUBSCRIPTION);
+      return;
+    }
+    int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
+    ControllersClientAdapter.getCustomerContext().setChosenLotID(userChosenLotID);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REGULAR_SUBSCRIPTION);
   }
 
   @FXML
