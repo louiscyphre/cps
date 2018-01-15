@@ -1,43 +1,45 @@
 package cps.api.request;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public abstract class SubscriptionRequest extends CustomerRequest {
-	private static final long serialVersionUID = 1L;
-	private int customerID;
-	private int carID;
-	private LocalDateTime startDate;
+  private static final long serialVersionUID = 1L;
+  private String            email;
+  private String            carID;
+  private LocalDate         startDate;
 
-	public SubscriptionRequest(int customerID, int carID, LocalDateTime startDate) {
-		super(customerID);
-		this.carID = carID;
-		this.startDate = startDate;
-	}
+  public SubscriptionRequest(int customerID, String email, String carID, LocalDate startDate) {
+    super(customerID);
+    this.email = email;
+    this.carID = carID;
+    this.startDate = startDate;
+  }
 
-	@Override
-	public int getCustomerID() {
-		return customerID;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	@Override
-	public void setCustomerID(int customerID) {
-		this.customerID = customerID;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	public int getCarID() {
-		return carID;
-	}
+  public String getCarID() {
+    return carID;
+  }
 
-	public void setCarID(int carID) {
-		this.carID = carID;
-	}
+  public void setCarID(String carID) {
+    this.carID = carID;
+  }
 
-	public LocalDateTime getStartDate() {
-		return startDate;
-	}
+  public LocalDate getStartDate() {
+    return startDate;
+  }
 
-	public void setStartDate(LocalDateTime startDate) {
-		this.startDate = startDate;
-	}
+  public void setStartDate(LocalDate startDate) {
+    this.startDate = startDate;
+  }
 
+  public abstract int getSubscriptionType();
+
+  public abstract int getLotID();
 }

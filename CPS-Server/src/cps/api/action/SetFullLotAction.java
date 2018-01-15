@@ -1,27 +1,38 @@
 package cps.api.action;
 
+import cps.api.request.RequestHandler;
 import cps.api.response.ServerResponse;
-import cps.server.RequestHandler;
 
 public class SetFullLotAction extends LotAction {
-	private static final long serialVersionUID = 1L;
-	int alternativeLotID;
+  private static final long serialVersionUID = 1L;
+  int[]                     alternativeLots;
+  boolean                   lotFull;
 
-	public SetFullLotAction(int userID, int lotID, int alternativeLotID) {
-		super(userID, lotID);
-		this.alternativeLotID = alternativeLotID;
-	}
+  public SetFullLotAction(int userID, int lotID, boolean lotfull, int[] alternativeLots) {
+    super(userID, lotID);
+    this.alternativeLots = alternativeLots;
+    this.lotFull = lotfull;
+  }
 
-	public int getAlternativeLotID() {
-		return alternativeLotID;
-	}
+  // TODO discuss the lotFull flag
+  public boolean getLotFull() {
+    return lotFull;
+  }
 
-	public void setAlternativeLotID(int alternativeLotID) {
-		this.alternativeLotID = alternativeLotID;
-	}
+  public void setLotFull(boolean lotFull) {
+    this.lotFull = lotFull;
+  }
 
-	@Override
-	public ServerResponse handle(RequestHandler handler) {
-		return handler.handle(this);
-	}
+  @Override
+  public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
+    return handler.handle(this, session);
+  }
+
+  public int[] getAlternativeLots() {
+    return alternativeLots;
+  }
+
+  public void setAlternativeLots(int[] alternativeLots) {
+    this.alternativeLots = alternativeLots;
+  }
 }

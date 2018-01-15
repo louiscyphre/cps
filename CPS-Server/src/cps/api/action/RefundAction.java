@@ -1,41 +1,49 @@
 package cps.api.action;
 
+import cps.api.request.RequestHandler;
 import cps.api.response.ServerResponse;
-import cps.server.RequestHandler;
 
 public class RefundAction extends ServiceAction {
-	private static final long serialVersionUID = 1L;
-	private double amount;
-	private int complaintID;
+  private static final long serialVersionUID = 1L;
+  private float             amount;
+  private int               complaintID;
 
-	public RefundAction(int userID, double amount, int complaintID) {
-		super(userID);
-		this.amount = amount;
-		this.complaintID = complaintID;
-	}
+  public RefundAction(int userID, float amount, int complaintID) {
+    super(userID);
+    this.amount = amount;
+    this.complaintID = complaintID;
+  }
 
-	public double getAmount() {
-		return amount;
-	}
+  public RefundAction(int userID, double amount, int complaintID) {
+    this(userID, (float) amount, complaintID);
+  }
 
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
+  public float getAmount() {
+    return amount;
+  }
 
-	public int getComplaintID() {
-		return complaintID;
-	}
+  public void setAmount(float amount) {
+    this.amount = amount;
+  }
 
-	public void setComplaintID(int complaintID) {
-		this.complaintID = complaintID;
-	}
+  public void setAmount(double amount) {
+    this.amount = (float) amount;
+  }
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+  public int getComplaintID() {
+    return complaintID;
+  }
 
-	@Override
-	public ServerResponse handle(RequestHandler handler) {
-		return handler.handle(this);
-	}
+  public void setComplaintID(int complaintID) {
+    this.complaintID = complaintID;
+  }
+
+  public static long getSerialversionuid() {
+    return serialVersionUID;
+  }
+
+  @Override
+  public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
+    return handler.handle(this, session);
+  }
 }

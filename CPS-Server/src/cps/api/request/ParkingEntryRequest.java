@@ -1,48 +1,47 @@
 package cps.api.request;
 
 import cps.api.response.ServerResponse;
-import cps.server.RequestHandler;
 
 public class ParkingEntryRequest extends CustomerRequest {
-	private static final long serialVersionUID = 1L;
-	
-	private int subscriptionID;
-	private int lotID;
-	private String carID;
+  private static final long serialVersionUID = 1L;
 
-	public ParkingEntryRequest(int customerID, int subscriptionID, int lotID, String carID) {
-		super(customerID);
-		this.subscriptionID = subscriptionID;
-		this.lotID = lotID;
-		this.carID = carID;
-	}
+  private int    subscriptionID;
+  private int    lotID;
+  private String carID;
 
-	public int getSubscriptionID() {
-		return subscriptionID;
-	}
+  public ParkingEntryRequest(int customerID, int subscriptionID, int lotID, String carID) {
+    super(customerID);
+    this.subscriptionID = subscriptionID;
+    this.lotID = lotID;
+    this.carID = carID;
+  }
 
-	public void setSubscriptionID(int subscriptionID) {
-		this.subscriptionID = subscriptionID;
-	}
+  public int getSubscriptionID() {
+    return subscriptionID;
+  }
 
-	public int getLotID() {
-		return lotID;
-	}
+  public void setSubscriptionID(int subscriptionID) {
+    this.subscriptionID = subscriptionID;
+  }
 
-	public void setLotID(int lotID) {
-		this.lotID = lotID;
-	}
+  public int getLotID() {
+    return lotID;
+  }
 
-	public String getCarID() {
-		return carID;
-	}
+  public void setLotID(int lotID) {
+    this.lotID = lotID;
+  }
 
-	public void setCarID(String carID) {
-		this.carID = carID;
-	}
+  public String getCarID() {
+    return carID;
+  }
 
-	@Override
-	public ServerResponse handle(RequestHandler handler) {
-		return handler.handle(this);
-	}
+  public void setCarID(String carID) {
+    this.carID = carID;
+  }
+
+  @Override
+  public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
+    return handler.handle(this, session);
+  }
 }

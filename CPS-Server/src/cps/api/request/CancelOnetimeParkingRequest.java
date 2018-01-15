@@ -1,27 +1,26 @@
 package cps.api.request;
 
 import cps.api.response.ServerResponse;
-import cps.server.RequestHandler;
 
 public class CancelOnetimeParkingRequest extends CustomerRequest {
-	public CancelOnetimeParkingRequest(int customerID, int onetimeServiceID) {
-		super(customerID);
-		this.onetimeServiceID = onetimeServiceID;
-	}
+  public CancelOnetimeParkingRequest(int customerID, int onetimeServiceID) {
+    super(customerID);
+    this.onetimeServiceID = onetimeServiceID;
+  }
 
-	private static final long serialVersionUID = 1L;
-	private int onetimeServiceID;
+  private static final long serialVersionUID = 1L;
+  private int               onetimeServiceID;
 
-	public int getOnetimeServiceID() {
-		return onetimeServiceID;
-	}
+  public int getOnetimeServiceID() {
+    return onetimeServiceID;
+  }
 
-	public void setOnetimeServiceID(int onetimeServiceID) {
-		this.onetimeServiceID = onetimeServiceID;
-	}
+  public void setOnetimeServiceID(int onetimeServiceID) {
+    this.onetimeServiceID = onetimeServiceID;
+  }
 
-	@Override
-	public ServerResponse handle(RequestHandler handler) {
-		return handler.handle(this);
-	}
+  @Override
+  public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
+    return handler.handle(this, session);
+  }
 }

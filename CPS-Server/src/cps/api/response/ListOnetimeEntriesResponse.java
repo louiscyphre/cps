@@ -4,29 +4,28 @@ import java.util.Collection;
 import cps.entities.models.OnetimeService;
 
 public class ListOnetimeEntriesResponse extends ServerResponse {
-	private static final long serialVersionUID = 1L;
-	private Collection<OnetimeService> data;
-	private int customerID;
+  private static final long          serialVersionUID = 1L;
+  private Collection<OnetimeService> data             = null;
+  private int                        customerID       = 0;
 
-	public ListOnetimeEntriesResponse(String description, Collection<OnetimeService> data, int customerID) {
-		super(STATUS_OK, description);
-		this.data = data;
-		this.customerID = customerID;
-	}
+  public Collection<OnetimeService> getData() {
+    return data;
+  }
 
-	public Collection<OnetimeService> getData() {
-		return data;
-	}
+  public void setData(Collection<OnetimeService> data) {
+    this.data = data;
+  }
 
-	public void setData(Collection<OnetimeService> data) {
-		this.data = data;
-	}
+  public int getCustomerID() {
+    return customerID;
+  }
 
-	public int getCustomerID() {
-		return customerID;
-	}
+  public void setCustomerID(int customerID) {
+    this.customerID = customerID;
+  }
 
-	public void setCustomerID(int customerID) {
-		this.customerID = customerID;
-	}
+  @Override
+  public ServerResponse handle(ResponseHandler handler) {
+    return handler.handle(this);
+  }
 }

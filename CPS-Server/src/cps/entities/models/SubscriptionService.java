@@ -1,112 +1,325 @@
 package cps.entities.models;
 
-import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-// Database entity for monthly parking subscriptions - regular or full both stored in the same table .
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collection;
+import java.util.LinkedList;
 
-public class SubscriptionService implements Serializable {
-	private static final long serialVersionUID = 1L;
+import cps.common.Constants;
 
-	int id;
-	int type; // 1 = regular, 2 = full
-	int customerID;
-	int carID;
-	int lotID; // if null then full, else regular
-	Timestamp startDate;
-	Timestamp endDate;
-	Timestamp endTime; // null for full subscription
-	String email;
+import java.sql.PreparedStatement;
 
-	public SubscriptionService(int id, int type, int customerID, int carID, int lotID, Timestamp startDate,
-			Timestamp endDate, Timestamp endTime, String email) {
-		this.id = id;
-		this.type = type;
-		this.customerID = customerID;
-		this.carID = carID;
-		this.lotID = lotID;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.endTime = endTime;
-		this.email = email;
-	}
+// Database entity for monthly parking subscriptions - regular or full both stored in the same table.
 
-	public SubscriptionService(ResultSet rs) throws SQLException {
-		this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getTimestamp(6),
-				rs.getTimestamp(7), rs.getTimestamp(8), rs.getString(9));
-	}
+public class SubscriptionService implements ParkingService {
+  private static final long serialVersionUID = 1L;
 
-	public int getId() {
-		return id;
-	}
+  int       id;
+  int       subscriptionType; // 1 = regular, 2 = full
+  String    email;
+  int       customerID;
+  String    carID;
+  int       lotID;            // if null then full, else regular
+  LocalDate startDate;
+  LocalDate endDate;
+  LocalTime dailyExitTime;    // null for full subscription
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  public SubscriptionService(int id, int type, int customerID, String email, String carID, int lotID,
+      LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
+    this.id = id;
+    this.subscriptionType = type;
+    this.customerID = customerID;
+    this.email = email;
+    this.carID = carID;
+    this.lotID = lotID;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.dailyExitTime = dailyExitTime;
+  }
 
-	public int getType() {
-		return type;
-	}
+  public SubscriptionService(ResultSet rs) throws SQLException {
+    this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getInt(6),
+        rs.getDate(7).toLocalDate(), rs.getDate(8).toLocalDate(), rs.getTime(9).toLocalTime());
+  }
 
-	public void setType(int type) {
-		this.type = type;
-	}
+  public int getId() {
+    return id;
+  }
 
-	public int getCustomerID() {
-		return customerID;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public void setCustomerID(int customerID) {
-		this.customerID = customerID;
-	}
+  public int getSubscriptionType() {
+    return subscriptionType;
+  }
 
-	public int getCarID() {
-		return carID;
-	}
+  public void setSubscriptionType(int type) {
+    this.subscriptionType = type;
+  }
 
-	public void setCarID(int carID) {
-		this.carID = carID;
-	}
+  public int getCustomerID() {
+    return customerID;
+  }
 
-	public int getLotID() {
-		return lotID;
-	}
+  public void setCustomerID(int customerID) {
+    this.customerID = customerID;
+  }
 
-	public void setLotID(int lotID) {
-		this.lotID = lotID;
-	}
+  public String getCarID() {
+    return carID;
+  }
 
-	public Timestamp getStartDate() {
-		return startDate;
-	}
+  public void setCarID(String carID) {
+    this.carID = carID;
+  }
 
-	public void setStartDate(Timestamp startDate) {
-		this.startDate = startDate;
-	}
+  public int getLotID() {
+    return lotID;
+  }
 
-	public Timestamp getEndDate() {
-		return endDate;
-	}
+  public void setLotID(int lotID) {
+    this.lotID = lotID;
+  }
 
-	public void setEndDate(Timestamp endDate) {
-		this.endDate = endDate;
-	}
+  public LocalDate getStartDate() {
+    return startDate;
+  }
 
-	public Timestamp getEndTime() {
-		return endTime;
-	}
+  public void setStartDate(LocalDate startDate) {
+    this.startDate = startDate;
+  }
 
-	public void setEndTime(Timestamp endTime) {
-		this.endTime = endTime;
-	}
+  public LocalDate getEndDate() {
+    return endDate;
+  }
 
-	public String getEmail() {
-		return email;
-	}
+  public void setEndDate(LocalDate endDate) {
+    this.endDate = endDate;
+  }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public LocalTime getDailyExitTime() {
+    return dailyExitTime;
+  }
 
+  public void setDailyExitTime(LocalTime endTime) {
+    this.dailyExitTime = endTime;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  @Override
+  public int getLicenseType() {
+    return Constants.LICENSE_TYPE_SUBSCRIPTION;
+  }
+
+  /**
+   * Creates the.
+   *
+   * @param conn the conn
+   * @param type the type
+   * @param customerID int - Customer ID
+   * @param email the email
+   * @param carID String - The car ID
+   * @param lotID int - The lot ID
+   * @param startDate LocalDate - The start date
+   * @param endDate LocalDate - The end date
+   * @param dailyExitTime LocalTime - The daily exit time
+   * @return the subscription service
+   * @throws SQLException the SQL exception
+   */
+  public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID,
+      int lotID, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
+    PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_SUBSCRIPTION_SERVICE,
+        Statement.RETURN_GENERATED_KEYS);
+
+    int field = 1;
+    statement.setInt(field++, type);
+    statement.setInt(field++, customerID);
+    statement.setString(field++, email);
+    statement.setString(field++, carID);
+    statement.setInt(field++, lotID);
+    statement.setDate(field++, Date.valueOf(startDate));
+    statement.setDate(field++, Date.valueOf(endDate));
+    statement.setTime(field++, Time.valueOf(dailyExitTime));
+    statement.executeUpdate();
+
+    ResultSet keys = statement.getGeneratedKeys();
+    int newID = 0;
+
+    if (keys != null && keys.next()) {
+      newID = keys.getInt(1);
+      keys.close();
+    }
+
+    statement.close();
+
+    return new SubscriptionService(newID, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime);
+  }
+
+  public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID)
+      throws SQLException {
+    SubscriptionService item = null;
+
+    PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR);
+
+    int index = 1;
+
+    statement.setInt(index++, subsID);
+    statement.setInt(index++, customerID);
+    statement.setString(index++, carID);
+
+    ResultSet result = statement.executeQuery();
+
+    if (result.next()) {
+      item = new SubscriptionService(result);
+    }
+
+    result.close();
+    statement.close();
+
+    return item;
+  }
+
+  public static Collection<SubscriptionService> findByCustomerID(Connection conn, int customerID) throws SQLException {
+    LinkedList<SubscriptionService> items = new LinkedList<SubscriptionService>();
+
+    PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID);
+    statement.setInt(1, customerID);
+    ResultSet result = statement.executeQuery();
+
+    while (result.next()) {
+      items.add(new SubscriptionService(result));
+    }
+
+    result.close();
+    statement.close();
+
+    return items;
+  }
+
+  @Override
+  public LocalDateTime getExitTime() {
+    if (this.subscriptionType == Constants.SUBSCRIPTION_TYPE_FULL) {
+      return LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+    }
+    return this.dailyExitTime.atDate(LocalDate.now());
+  }
+
+  public static SubscriptionService findByID(Connection conn, int authID) throws SQLException {
+    SubscriptionService item = null;
+
+    PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_SERVICE_BY_ID);
+    statement.setInt(1, authID);
+    ResultSet result = statement.executeQuery();
+
+    if (result.next()) {
+      item = new SubscriptionService(result);
+    }
+
+    result.close();
+    statement.close();
+
+    return item;
+
+  }
+
+  public static int countForCustomer(Connection conn, int customerID, int subscriptionType) throws SQLException {
+    PreparedStatement statement = conn
+        .prepareStatement("SELECT count(id) FROM subscription_service WHERE customer_id = ? AND subs_type = ?");
+
+    statement.setInt(1, customerID);
+    statement.setInt(2, subscriptionType);
+
+    ResultSet result = statement.executeQuery();
+
+    int count = 0;
+
+    if (result.next()) {
+      count = result.getInt(1);
+    }
+
+    result.close();
+    statement.close();
+
+    return count;
+  }
+
+  public static SubscriptionService findByIDNotNull(Connection conn, int id) throws SQLException, RuntimeException {
+    SubscriptionService item = findByID(conn, id);
+
+    if (item == null) {
+      throw new RuntimeException("SubscriptionService with id " + id + " does not exist");
+    }
+
+    return item;
+  }
+
+  /**
+   * CHeck if Overlap exists.
+   *
+   * @param conn
+   *          the conn
+   * @param carID
+   *          the car ID
+   * @param subsType
+   *          the subs type
+   * @param lotId
+   *          the lot id
+   * @param startDate
+   *          the start date
+   * @param endDate
+   *          the end date
+   * @return True if exists subscription of the same type for the same car id in
+   *         the same parking lot
+   * @throws SQLException
+   *           the SQL exception
+   */
+  public static boolean OverlapExists(Connection conn, String carID, int subsType, int lotId, LocalDate startDate,
+      LocalDate endDate) throws SQLException {
+    //TODO:Test this properly
+    PreparedStatement stmt = null;
+    boolean result = false;
+    int i = 1;
+    if (lotId == 0) {
+      stmt = conn.prepareStatement(
+          "SELECT count(*) FROM subscription_service WHERE car_id = ? AND subs_type = ? AND ((start_date <= ? AND ? <= end_date) OR (? <= start_date AND start_date <= ?))");
+      stmt.setString(i++, carID);
+      stmt.setInt(i++, subsType);
+
+    } else {
+      stmt = conn.prepareStatement(
+          "SELECT count(*) FROM subscription_service WHERE car_id = ? AND ((subs_type != ?) OR (subs_type = ? AND lot_id = ?)) AND ((start_date <= ? AND ? <= end_date) OR (? <= start_date AND start_date <= ?))");
+      stmt.setString(i++, carID);
+      stmt.setInt(i++, subsType);
+      stmt.setInt(i++, subsType);
+      stmt.setInt(i++, lotId);
+    }
+    
+    stmt.setDate(i++, Date.valueOf(startDate));
+    stmt.setDate(i++, Date.valueOf(startDate));
+    stmt.setDate(i++, Date.valueOf(startDate));
+    stmt.setDate(i++, Date.valueOf(endDate));
+
+    ResultSet rs = stmt.executeQuery();
+
+    if (rs.next()) {
+      result = rs.getInt(1) > 0;
+    }
+
+    return result;
+  }
 }

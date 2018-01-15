@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.20, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: softengproject.cspvcqknb3vj.eu-central-1.rds.amazonaws.com    Database: kiwi_schema
 -- ------------------------------------------------------
@@ -44,9 +44,12 @@ DROP TABLE IF EXISTS `complaint`;
 CREATE TABLE `complaint` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `customer_id` int(10) NOT NULL,
-  `description` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Processing',
   `employee_id` int(10) DEFAULT NULL,
+  `status` int(10) NOT NULL DEFAULT '1',
+  `description` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `resolved_at` timestamp NULL DEFAULT NULL,
+  `refund_amount` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -60,13 +63,12 @@ DROP TABLE IF EXISTS `customer`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `customer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `balance` float NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `password` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `debit` float NOT NULL DEFAULT '0',
+  `credit` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +126,27 @@ CREATE TABLE `onetime_service` (
   `planned_end_time` datetime NOT NULL,
   `canceled` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `parking_cell`
+--
+
+DROP TABLE IF EXISTS `parking_cell`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `parking_cell` (
+  `lot_id` int(10) NOT NULL,
+  `i` int(10) NOT NULL,
+  `j` int(10) NOT NULL,
+  `k` int(10) NOT NULL,
+  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci NULL,
+  `planned_end_time` datetime NULL,
+  `reserved` bit(1) DEFAULT b'0',
+  `disabled` bit(1) DEFAULT b'0',
+  PRIMARY KEY (`lot_id`, `i`, `j`, `k`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,13 +160,13 @@ CREATE TABLE `parking_lot` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `street_address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `size` int(10) NOT NULL,
-  `content` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `price1` float NOT NULL DEFAULT '0',
   `price2` float NOT NULL DEFAULT '0',
   `alternative_lots` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `robot_ip` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lot_full` bit(1) DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci DELAY_KEY_WRITE=1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -163,7 +185,7 @@ CREATE TABLE `subscription_service` (
   `lot_id` int(10) DEFAULT '0',
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
-  `planned_exit_time` time DEFAULT NULL,
+  `daily_exit_time` time DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -200,4 +222,4 @@ CREATE TABLE `weekly_statistics` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-29 20:36:43
+-- Dump completed on 2018-01-09 22:57:37

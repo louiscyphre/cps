@@ -1,68 +1,68 @@
 package cps.api.action;
 
+import cps.api.request.RequestHandler;
 import cps.api.response.ServerResponse;
-import cps.server.RequestHandler;
 
 public class InitLotAction extends ServiceAction {
-	private static final long serialVersionUID = 1L;
-	
-	private String streetAddress;
-	private int size;
-	private float price1;
-	private float price2;
-	private String robotIP;
+  private static final long serialVersionUID = 1L;
 
-	public InitLotAction(int userID, String streetAddress, int size, float price1, float price2, String robotIP) {
-		super(userID);
-		this.streetAddress = streetAddress;
-		this.size = size;
-		this.price1 = price1;
-		this.price2 = price2;
-		this.robotIP = robotIP;
-	}
+  private String streetAddress;
+  private int    size;
+  private float  price1;
+  private float  price2;
+  private String robotIP;
 
-	public String getStreetAddress() {
-		return streetAddress;
-	}
+  public InitLotAction(int userID, String streetAddress, int size, float price1, float price2, String robotIP) {
+    super(userID);
+    this.streetAddress = streetAddress;
+    this.size = size;
+    this.price1 = price1;
+    this.price2 = price2;
+    this.robotIP = robotIP;
+  }
 
-	public void setStreetAddress(String streetAddress) {
-		this.streetAddress = streetAddress;
-	}
+  public String getStreetAddress() {
+    return streetAddress;
+  }
 
-	public int getSize() {
-		return size;
-	}
+  public void setStreetAddress(String streetAddress) {
+    this.streetAddress = streetAddress;
+  }
 
-	public void setSize(int size) {
-		this.size = size;
-	}
+  public int getSize() {
+    return size;
+  }
 
-	public float getPrice1() {
-		return price1;
-	}
+  public void setSize(int size) {
+    this.size = size;
+  }
 
-	public void setPrice1(float price1) {
-		this.price1 = price1;
-	}
+  public float getPrice1() {
+    return price1;
+  }
 
-	public float getPrice2() {
-		return price2;
-	}
+  public void setPrice1(float price1) {
+    this.price1 = price1;
+  }
 
-	public void setPrice2(float price2) {
-		this.price2 = price2;
-	}
+  public float getPrice2() {
+    return price2;
+  }
 
-	public String getRobotIP() {
-		return robotIP;
-	}
+  public void setPrice2(float price2) {
+    this.price2 = price2;
+  }
 
-	public void setRobotIP(String robotIP) {
-		this.robotIP = robotIP;
-	}
+  public String getRobotIP() {
+    return robotIP;
+  }
 
-	@Override
-	public ServerResponse handle(RequestHandler handler) {
-		return handler.handle(this);
-	}
+  public void setRobotIP(String robotIP) {
+    this.robotIP = robotIP;
+  }
+
+  @Override
+  public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
+    return handler.handle(this, session);
+  }
 }
