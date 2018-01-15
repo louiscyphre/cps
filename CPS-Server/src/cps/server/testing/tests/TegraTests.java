@@ -176,38 +176,6 @@ public class TegraTests {
 
   }
 
-  @Test
-  public void testCountOrderedCells() throws ServerException {
-    // Create parking lot Create incidental parking request
-    // Insert the car
-    ParkingLot lot = initParkingLot();
-    CustomerData data = new CustomerData((int) Math.random() * 1000,
-        Utilities.randomString("abcdefghijklmnopqrstuvwxyz", 8), Utilities.randomString("1234567890", 4),
-        Utilities.randomString("1234567890ABCDTRUOTSKL", 7), 1, 0);
-
-    Timestamp[] a = new Timestamp[10];
-    a[0] = Timestamp.valueOf(LocalDateTime.now());
-    a[1] = Timestamp.valueOf(LocalDateTime.now().minusMinutes(10));
-    a[2] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(10));
-    a[3] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(20));
-    a[4] = Timestamp.valueOf(LocalDateTime.now().minusMinutes(20));
-    a[5] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(4).plusDays(1));
-
-    OnetimeService[] reservedParkings = new OnetimeService[5];
-    db.performAction(conn -> {
-      OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "123-sdf",
-          lot.getId(), a[4], a[1], false);
-      OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "254-sdf",
-          lot.getId(), a[0], a[3], false);
-      OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "458-sdf",
-          lot.getId(), a[0], a[5], false);
-      OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "984-sdf",
-          lot.getId(), a[3], a[5], false);
-      System.out.printf("%d", ParkingLot.countOrderedCells(conn, lot.getId(), a[2], 1));
-    });
-
-  }
-
   private CarTransportation newParkingEntry(OnetimeService _cdata) {
     ParkingEntryRequest request = new ParkingEntryRequest(_cdata.getCustomerID(), 0, _cdata.getLotID(),
         _cdata.getCarID());

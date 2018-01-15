@@ -126,6 +126,21 @@ public class SubscriptionService implements ParkingService {
     return Constants.LICENSE_TYPE_SUBSCRIPTION;
   }
 
+  /**
+   * Creates the.
+   *
+   * @param conn the conn
+   * @param type the type
+   * @param customerID int - Customer ID
+   * @param email the email
+   * @param carID String - The car ID
+   * @param lotID int - The lot ID
+   * @param startDate LocalDate - The start date
+   * @param endDate LocalDate - The end date
+   * @param dailyExitTime LocalTime - The daily exit time
+   * @return the subscription service
+   * @throws SQLException the SQL exception
+   */
   public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID,
       int lotID, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_SUBSCRIPTION_SERVICE,
@@ -281,7 +296,7 @@ public class SubscriptionService implements ParkingService {
     int i = 1;
     if (lotId == 0) {
       stmt = conn.prepareStatement(
-          "SELECT count(*) FROM subscription_service WHERE car_id = ? AND subs_type = ? ((start_date <= ? AND ? <= end_date) OR (? <= start_date AND start_date <= ?))");
+          "SELECT count(*) FROM subscription_service WHERE car_id = ? AND subs_type = ? AND ((start_date <= ? AND ? <= end_date) OR (? <= start_date AND start_date <= ?))");
       stmt.setString(i++, carID);
       stmt.setInt(i++, subsType);
 
