@@ -38,7 +38,7 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private void loadKiosk() throws IOException {
     try {
-      Scene scene = ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
+      ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
       ControllersClientAdapter.registerScene(SceneCode.LOGIN);
       ControllersClientAdapter.registerScene(SceneCode.ENTER_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.EXIT_PARKING);
@@ -47,10 +47,12 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.REGULAR_SUBSCRIPTION);
       ControllersClientAdapter.registerScene(SceneCode.RESERVE_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
-      // TODO adding this causes glitches in the main menu
-//      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
+      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
+      ControllersClientAdapter.registerScene(SceneCode.FILE_COMPLAINT);
       ControllersClientAdapter.turnLoggedInStateOff();
-      initializeStage(scene, "CPS Kiosk Client");
+      // initializeStage(scene, "CPS Kiosk Client");
+      initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Kiosk Client");
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -68,16 +70,16 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_RESERVE_SLOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
       ControllersClientAdapter.turnLoggedInStateOff();
-//      initializeStage(scene, "CPS Service Client");
-      initializeStage(SceneCode.SERVICE_ACTION_LOGIN,"CPS Service Client");
+      // initializeStage(scene, "CPS Service Client");
+      initializeStage(SceneCode.SERVICE_ACTION_LOGIN, "CPS Service Client");
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   private void loadTest() throws IOException {
-    Scene scene = ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
-    initializeStage(scene, "CPS Tests");
+    ControllersClientAdapter.registerScene(SceneCode.TEST_SCENE);
+    initializeStage(SceneCode.TEST_SCENE, "CPS Tests");
   }
 
   @Override

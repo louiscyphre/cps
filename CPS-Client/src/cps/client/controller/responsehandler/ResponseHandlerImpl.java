@@ -24,21 +24,6 @@ public class ResponseHandlerImpl implements ResponseHandler {
     Platform.runLater(() -> {
       resp.handle(this);
     });
-
-    // TODO time to get rid of stupid alerts
-    // if (resp instanceof ServerResponse) {
-    // ServerResponse srvrResp = (ServerResponse) resp;
-    // if (srvrResp.getStatus() == ServerResponse.STATUS_OK) {
-    // Platform.runLater(() -> {
-    // Alert alert = new Alert(AlertType.INFORMATION);
-    // alert.setTitle("Success");
-    // alert.setHeaderText("The operation was successful");
-    // alert.setContentText(srvrResp.getDescription());
-    // alert.showAndWait();
-    // });
-    // }
-    // }
-
     return null;
   }
 
@@ -150,6 +135,16 @@ public class ResponseHandlerImpl implements ResponseHandler {
   @Override
   public ServerResponse handle(ReservedParkingResponse response) {
     return this.customerResponseHandler.handle(response);
+  }
+
+  @Override
+  public ServerResponse handle(ListComplaintsResponse response) {
+    return this.serviceResponseHandler.handle(response);
+  }
+
+  @Override
+  public ServerResponse handle(ListMyComplaintsResponse response) {
+    return null;
   }
 
 }

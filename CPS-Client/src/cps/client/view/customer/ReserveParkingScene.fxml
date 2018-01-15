@@ -55,15 +55,11 @@
                <VBox.margin>
                   <Insets bottom="15.0" />
                </VBox.margin></TextField>
-            <TextField fx:id="lotidTF" layoutX="50.0" layoutY="239.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter lotId here" styleClass="inputField">
-               <VBox.margin>
-                  <Insets bottom="15.0" />
-               </VBox.margin>
-            </TextField>
             <TextField fx:id="emailTF" layoutX="50.0" layoutY="271.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter Email here" styleClass="inputField">
                <VBox.margin>
-                  <Insets />
+                  <Insets bottom="15.0" />
                </VBox.margin></TextField>
+            <ComboBox fx:id="parkingLotsList" maxWidth="-Infinity" minWidth="230.0" prefWidth="230.0" promptText="Please choose parking lot" styleClass="comboBox" />
         <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="299.0" spacing="0.0" styleClass="infoLabel">
           <children>
             <ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />

@@ -9,6 +9,8 @@ import java.util.LinkedList;
 
 import cps.api.response.ServerResponse;
 import cps.server.ServerException;
+import cps.common.Utilities.VisitorWithException;
+import cps.common.Utilities.VisitorWithExceptionAndReturnType;
 
 /**
  * The Class DatabaseController.
@@ -140,7 +142,7 @@ public class DatabaseController {
    *
    * @param action
    *          the action
-   * @throws ServerException 
+   * @throws ServerException
    */
   public void performAction(DatabaseAction action) throws ServerException {
     Connection conn = null;
@@ -245,8 +247,7 @@ public class DatabaseController {
     return performQuery(conn -> countEntities(conn, table));
   }
 
-  public <T> Collection<T> findAll(Connection conn, String table, String orderBy, EntityBuilder<T> builder)
-      throws SQLException {
+  public <T> Collection<T> findAll(Connection conn, String table, String orderBy, EntityBuilder<T> builder) throws SQLException {
     LinkedList<T> results = new LinkedList<T>();
 
     Statement stmt = conn.createStatement();
@@ -260,5 +261,40 @@ public class DatabaseController {
     stmt.close();
 
     return results;
+  }
+
+  public static void statementForEach(Connection conn, String sqlCommand, VisitorWithException<PreparedStatement, SQLException> withStatement,
+      VisitorWithException<ResultSet, SQLException> withResult) throws SQLException {
+    PreparedStatement statement = conn.prepareStatement(sqlCommand);
+
+    withStatement.apply(statement);
+    ResultSet result = statement.executeQuery();
+
+    while (result.next()) {
+      withResult.apply(result);
+    }
+
+    statement.close();
+    result.close();
+
+  }
+
+  public static <T> T getStatementResult(Connection conn, String sqlCommand, VisitorWithException<PreparedStatement, SQLException> withStatement,
+      VisitorWithExceptionAndReturnType<ResultSet, SQLException, T> withResult) throws SQLException {
+    T item = null;
+    PreparedStatement statement = conn.prepareStatement(sqlCommand);
+
+    withStatement.apply(statement);
+    ResultSet result = statement.executeQuery();
+
+    if (result.next()) {
+      item = withResult.apply(result);
+    }
+
+    statement.close();
+    result.close();
+    
+    return item;
+
   }
 }

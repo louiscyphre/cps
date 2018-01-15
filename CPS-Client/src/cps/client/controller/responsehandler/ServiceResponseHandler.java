@@ -21,4 +21,6 @@ public interface ServiceResponseHandler {
   public ServerResponse handle(UpdatePricesResponse response);
 
   public ServerResponse handle(ServiceLoginResponse response);
+
+  public ServerResponse handle(ListComplaintsResponse response);
 }

@@ -1,9 +1,11 @@
 package cps.client.controller;
 
-import java.util.List;
+import java.util.Collection;
 
 import cps.entities.models.OnetimeService;
 
 public interface OnetimeEntriesController extends ViewController {
-  public void setOnetimeEntries(List<OnetimeService> list);
+  public void setOnetimeEntries(Collection<OnetimeService> collection);
+
+  public void removeEntry(int onetimeServiceID);
 }

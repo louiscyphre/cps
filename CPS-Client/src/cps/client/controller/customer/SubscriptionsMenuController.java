@@ -4,6 +4,7 @@
 package cps.client.controller.customer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
   /**
    * @param list
    */
-  public void setParkingLots(List<ParkingLot> list) {
+  public void setParkingLots(Collection <ParkingLot> list) {
     List<String> tmp = new ArrayList<String> ();
     parkingLotsMap = new HashMap<String, ParkingLot>();
     for (ParkingLot i: list) {

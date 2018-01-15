@@ -3,7 +3,7 @@
  */
 package cps.client.controller;
 
-import java.util.List;
+import java.util.Collection;
 
 import cps.entities.models.ParkingLot;
 
@@ -14,5 +14,5 @@ public interface ParkingLotsController extends ViewController {
   /**
    * @param parkingLots
    */
-  public void setParkingLots(List<ParkingLot> list);
+  public void setParkingLots(Collection<ParkingLot> list);
 }

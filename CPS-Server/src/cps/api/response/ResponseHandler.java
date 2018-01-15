@@ -15,8 +15,10 @@ public interface ResponseHandler {
   public ServerResponse handle(FullSubscriptionResponse response);
 
   public ServerResponse handle(IncidentalParkingResponse response);
+  
+  public ServerResponse handle(ListMyComplaintsResponse response);
 
-  public ServerResponse handle(ListOnetimeEntriesResponse response);
+  public ServerResponse handle(ListOnetimeEntriesResponse response);  
 
   public ServerResponse handle(ListParkingLotsResponse response);
 
@@ -36,6 +38,8 @@ public interface ResponseHandler {
   public ServerResponse handle(DisableParkingSlotsResponse response);
 
   public ServerResponse handle(InitLotResponse response);
+  
+  public ServerResponse handle(ListComplaintsResponse response);
 
   public ServerResponse handle(RefundResponse response);
 
