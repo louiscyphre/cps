@@ -4,7 +4,7 @@ public class ControllerConstants {
 
   public enum SceneCode {
 
-    TEST_SCENE("../view/testScene.fxml"),
+    TEST_SCENE("../view/service/ServiceActionDisableSlotDynamicGrid.fxml"),
 
     // customer views
     LOGIN("../view/customer/LoginScene.fxml"),

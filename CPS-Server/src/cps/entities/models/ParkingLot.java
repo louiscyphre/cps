@@ -392,11 +392,11 @@ public class ParkingLot implements Serializable {
    * @return the int
    * @throws SQLException
    */
-  public int countOrderedCells(Connection conn, int lotId, Timestamp startTime, int hoursInAdvance)
+  public static int countOrderedCells(Connection conn, int lotId, Timestamp startTime, int hoursInAdvance)
       throws SQLException {
     int result = 0;
     LocalDateTime latest = startTime.toLocalDateTime();
-    latest.plusHours(hoursInAdvance);
+    latest = latest.plusHours(hoursInAdvance);
     PreparedStatement stmt = conn.prepareStatement(
         "SELECT count(*) FROM onetime_service WHERE (planned_start_time <= ? AND ? <= planned_end_time) OR (? <= planned_start_time AND planned_start_time <= ?)");
     int i = 1;

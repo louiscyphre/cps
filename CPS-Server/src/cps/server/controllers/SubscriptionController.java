@@ -44,21 +44,28 @@ public class SubscriptionController extends RequestController {
   public ServerResponse handle(SubscriptionRequest request, CustomerSession session,
       SubscriptionResponse serverResponse, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
     return database.performQuery(serverResponse, (conn, response) -> {
-      
+
       // Check that the start date is not in the past
       errorIf(request.getStartDate().isBefore(LocalDate.now()), "The specified starting date is in the past");
-      
+
       if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
         // Check that lot exists
         ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
-        
+
         // Check that lot is not full
         session.requireLotNotFull(conn, gson, lot, response);
       }
-      
-      // TODO check overlapping subscriptions with the same car ID?
-      
-      
+
+      // check overlapping subscriptions with the same car ID
+      if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
+      errorIf(SubscriptionService.OverlapExists(conn, request.getCarID(), request.getSubscriptionType(),
+          0, startDate, endDate), "Subscription for this car for this parking lot already exists in this timeframe");
+      }
+      else
+      {
+        errorIf(SubscriptionService.OverlapExists(conn, request.getCarID(), request.getSubscriptionType(),
+            request.getLotID(), startDate, endDate), "Subscription for this car already exists in this timeframe");
+      }
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 

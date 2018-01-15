@@ -25,6 +25,4 @@ public interface CustomerResponseHandler {
   public ServerResponse handle(ReservedParkingResponse response);
 
   public ServerResponse handle(LoginResponse response);
-
-  public ServerResponse handle(ServerResponse response);
 }

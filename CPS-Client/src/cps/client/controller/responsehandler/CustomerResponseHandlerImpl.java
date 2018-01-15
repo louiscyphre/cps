@@ -20,7 +20,6 @@ import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.OnetimeEntriesController;
 import cps.client.controller.ParkingLotsController;
 import cps.client.controller.ViewController;
-import cps.entities.models.ParkingLot;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -210,8 +209,7 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
   @Override
   public ServerResponse handle(ListParkingLotsResponse response) {
     ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl(); // normally
-    List<ParkingLot> list = new LinkedList<ParkingLot>(response.getData());
-    ctrl.setParkingLots(list);
+    ctrl.setParkingLots(response.getData());
     ctrl.turnProcessingStateOff();
     return response;
   }
@@ -341,9 +339,4 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
     return response;
   }
 
-  @Override
-  public ServerResponse handle(ServerResponse response) {
-    // TODO Auto-generated method stub
-    return response;
-  }
 }
