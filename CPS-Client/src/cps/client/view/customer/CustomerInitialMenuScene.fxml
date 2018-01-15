@@ -52,7 +52,7 @@
                   <Insets />
                </VBox.margin>
             </Button>
-            <Button id="" fx:id="viewMyReservationsButton" alignment="CENTER" contentDisplay="LEFT" layoutX="100.0" layoutY="316.0" mnemonicParsing="false" onAction="#handleViewMyReservationsButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="View My Reservations" textAlignment="CENTER">
+            <Button id="" fx:id="viewMyReservationsButton" alignment="CENTER" contentDisplay="LEFT" layoutX="100.0" layoutY="316.0" mnemonicParsing="false" onAction="#handleViewMyReservationsButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="View my orders" textAlignment="CENTER">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
