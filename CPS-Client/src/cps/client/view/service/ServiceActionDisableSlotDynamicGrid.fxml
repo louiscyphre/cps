@@ -29,9 +29,6 @@
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
-                           <children>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK" strokeType="INSIDE" width="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                           </children>
                         </GridPane>
                      </children>
                   </AnchorPane>
