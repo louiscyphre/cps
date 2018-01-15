@@ -7,8 +7,10 @@ import cps.api.response.RequestLotStateResponse;
 import cps.api.response.RequestReportResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
 import cps.api.response.ServerResponse;
+import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
+import cps.client.controller.ControllersClientAdapter;
 
 class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 
@@ -20,14 +22,12 @@ class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 
   @Override
   public ServerResponse handle(InitLotResponse response) {
-    // TODO Auto-generated method stub
-    return null;
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   @Override
   public ServerResponse handle(RefundResponse response) {
-    // TODO Auto-generated method stub
-    return null;
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   @Override
@@ -58,6 +58,11 @@ class ServiceResponseHandlerImpl implements ServiceResponseHandler {
   public ServerResponse handle(UpdatePricesResponse response) {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public ServerResponse handle(ServiceLoginResponse response) {
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
 }

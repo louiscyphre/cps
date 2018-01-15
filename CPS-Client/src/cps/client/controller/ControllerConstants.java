@@ -6,28 +6,43 @@ public class ControllerConstants {
 
     TEST_SCENE("../view/testScene.fxml"),
 
-    ALPHA_INCIDENTAL_PARKING("../view/AlphaGUI_2.fxml"), ALPHA_VIEW_MY_REQUESTS(
-        "../view/AlphaGUI_3.fxml"), ALPHA_REQUEST_PARKING_ENTRY("../view/AlphaGUI_4.fxml"), ALPHA_INIT_PARKING_LOT(
-            "../view/AlphaGUI_5.fxml"), ALPHA_MAIN_MENU("../view/AlphaGUI_mainMenu.fxml"),
-
     // customer views
-    LOGIN("../view/customer/LoginScene.fxml"), CUSTOMER_INITIAL_MENU(
-        "../view/customer/CustomerInitialMenuScene.fxml"), CUSTOMER_LIST_SUBSCRIPTIONS(
-            "../view/customer/CustomerListSubscriptionsScene.fxml"), RESERVE_PARKING(
-                "../view/customer/ReserveParkingScene.fxml"), INCIDENTAL_PARKING(
-                    "../view/customer/IncidentalParkingScene.fxml"),
+    LOGIN("../view/customer/LoginScene.fxml"),
+
+    CUSTOMER_INITIAL_MENU("../view/customer/CustomerInitialMenuScene.fxml"),
+
+    CUSTOMER_LIST_SUBSCRIPTIONS("../view/customer/CustomerListSubscriptionsScene.fxml"),
+
+    RESERVE_PARKING("../view/customer/ReserveParkingScene.fxml"),
+
+    INCIDENTAL_PARKING("../view/customer/IncidentalParkingScene.fxml"),
+
+    ENTER_PARKING("../view/customer/EnterParkingScene.fxml"),
+
+    EXIT_PARKING("../view/customer/ExitParkingScene.fxml"),
+
+    VIEW_MY_RESERVATION("../view/customer/ViewMyReservationsScene.fxml"),
 
     // service views
-    SERVICE_ACTION_DISABLE_SLOT("../view/service/ServiceActionDisableSlot.fxml"), SERVICE_ACTION_INIT_LOT(
-        "../view/service/ServiceActionInitLotScene.fxml"), SERVICE_ACTION_LOT_IS_FULL(
-            "../view/service/ServiceActionLotIsFull.fxml"), SERVICE_ACTION_LOT_STATE(
-                "../view/service/ServiceActionLotState.fxml"), SERVICE_ACTION_MENU(
-                    "../view/service/ServiceActionMenuScene.fxml"), SERVICE_ACTION_REFUND(
-                        "../view/service/ServiceActionRefund.fxml"), SERVICE_ACTION_RESERVE_SLOT(
-                            "../view/service/ServiceActionReserveSlot.fxml"), SERVICE_ACTION_UPDATE_PRICES(
-                                "../view/service/ServiceActionUpdatePrices.fxml"), SERVICE_ACTION_LOGIN(
-                                    "../view/service/ServiceLoginScene.fxml"), SERVICE_ACTION_MAIN_MENU(
-                                        "../view/service/ServiceMainMenuScene.fxml"),;
+    SERVICE_ACTION_DISABLE_SLOT("../view/service/ServiceActionDisableSlot.fxml"),
+
+    SERVICE_ACTION_INIT_LOT("../view/service/ServiceActionInitLotScene.fxml"),
+
+    SERVICE_ACTION_LOT_IS_FULL("../view/service/ServiceActionLotIsFull.fxml"),
+
+    SERVICE_ACTION_LOT_STATE("../view/service/ServiceActionLotState.fxml"),
+
+    SERVICE_ACTION_MENU("../view/service/ServiceActionMenuScene.fxml"),
+
+    SERVICE_ACTION_REFUND("../view/service/ServiceActionRefund.fxml"),
+
+    SERVICE_ACTION_RESERVE_SLOT("../view/service/ServiceActionReserveSlot.fxml"),
+
+    SERVICE_ACTION_UPDATE_PRICES("../view/service/ServiceActionUpdatePrices.fxml"),
+
+    SERVICE_ACTION_LOGIN("../view/service/ServiceLoginScene.fxml"),
+    
+    ;
 
     String myRelativePath;
 

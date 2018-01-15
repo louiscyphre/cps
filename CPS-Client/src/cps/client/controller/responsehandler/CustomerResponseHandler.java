@@ -18,6 +18,8 @@ public interface CustomerResponseHandler {
 
   public ServerResponse handle(ParkingExitResponse response);
 
+  public ServerResponse handle(ListParkingLotsResponse response);
+
   public ServerResponse handle(RegularSubscriptionResponse response);
 
   public ServerResponse handle(ReservedParkingResponse response);

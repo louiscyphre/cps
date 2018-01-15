@@ -1,17 +1,15 @@
 package cps.client.context;
 
+import cps.client.utils.InternalClientException;
+import cps.entities.people.CompanyPerson;
+
 public interface EmployeeContext {
-  public int getEmployeeId();
 
-  public void setEmployeeId(int id);
+  public CompanyPerson getCompanyPerson();
+  
+  public CompanyPerson requireCompanyPerson() throws InternalClientException;
 
-  public String getEmployeeUsername();
-
-  public void setEmployeeUsername(String username);
-
-  public int getEmployeeAccessLevel();
-
-  public void setEmployeeAccessLevel(int accessLevel);
+  public void setCompanyPerson(CompanyPerson companyPerson);
 
   public void logContextOut();
 }

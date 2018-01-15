@@ -1,46 +1,34 @@
 package cps.client.context;
 
+import cps.client.utils.InternalClientException;
+import cps.entities.people.CompanyPerson;
+
 public class EmployeeContextImpl implements EmployeeContext {
 
-  private int    id;
-  private String username;
-  private int    accessLevel;
-
-  @Override
-  public int getEmployeeId() {
-    return this.id;
-  }
-
-  @Override
-  public void setEmployeeId(int id) {
-    this.id = id;
-  }
-
-  @Override
-  public String getEmployeeUsername() {
-    return this.username;
-  }
-
-  @Override
-  public void setEmployeeUsername(String username) {
-    this.username = username;
-  }
-
-  @Override
-  public int getEmployeeAccessLevel() {
-    return this.accessLevel;
-  }
-
-  @Override
-  public void setEmployeeAccessLevel(int accessLevel) {
-    this.accessLevel = accessLevel;
-  }
+  private CompanyPerson companyPerson;
 
   @Override
   public void logContextOut() {
-    id = 0;
-    username = null;
-    accessLevel = 0;
+    companyPerson = null;
+  }
+
+  @Override
+  public CompanyPerson getCompanyPerson() {
+    return this.companyPerson;
+  }
+
+  @Override
+  public CompanyPerson requireCompanyPerson() throws InternalClientException {
+    if (companyPerson == null) {
+      throw new InternalClientException("This action requires a logged in user");
+    }
+    
+    return companyPerson;
+  }
+
+  @Override
+  public void setCompanyPerson(CompanyPerson companyPerson) {
+    this.companyPerson = companyPerson;
   }
 
 }

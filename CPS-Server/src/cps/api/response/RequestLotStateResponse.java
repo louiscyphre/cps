@@ -23,4 +23,9 @@ public class RequestLotStateResponse extends ServerResponse {
   public void setContent(ParkingCell[][][] content) {
     this.content = content;
   }
+
+  @Override
+  public ServerResponse handle(ResponseHandler handler) {
+    return handler.handle(this);
+  }
 }

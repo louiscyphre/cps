@@ -476,6 +476,10 @@ public class ParkingLot implements Serializable {
     }
 
     LinkedList<ParkingLot> lots = new LinkedList<>();
+    
+    if (lotIDs == null) {
+      return lots;
+    }
 
     for (int lotID : lotIDs) {
       ParkingLot lot = findByID(conn, lotID);

@@ -8,6 +8,7 @@ import cps.api.response.ComplaintResponse;
 import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
 import cps.api.response.ListOnetimeEntriesResponse;
+import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.LoginResponse;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
@@ -16,7 +17,9 @@ import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ParkingLotsController;
 import cps.client.controller.ViewController;
+import cps.entities.models.ParkingLot;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -49,7 +52,10 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
     int responseCustomerId = response.getCustomerID();
     List<Text> formattedMessage = new LinkedList<Text>();
-    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId()) {
+
+    // if request fails customer id is 0 TODO
+    // new customer
+    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
       // outputting the customer id on screen
       context.setCustomerId(responseCustomerId);
       formattedMessage.add(new Text("Your Customer ID:"));
@@ -70,13 +76,13 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       context.acceptPendingEmail();
       ControllersClientAdapter.turnLoggedInStateOn();
     }
-
-    if (response.getStatus() == ServerResponse.STATUS_OK) {
+    // logged in customer
+    if (response.success()) {
       formattedMessage.add(new Text("Your incidental parking reserved!\n"));
       formattedMessage.add(new Text("Use your password in 'Enter Parking' to fill this reservation.\n"));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
-    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+    } else { // request failed
       formattedMessage.add(new Text("Could not reserve parking at this moment!\n"));
       formattedMessage.add(new Text(response.getDescription()));
       ctrl.turnProcessingStateOff();
@@ -116,10 +122,11 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       context.setCustomerId(responseCustomerId);
       context.acceptPendingEmail();
       ControllersClientAdapter.turnLoggedInStateOn();
-
+      ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       ctrl.displayError(response.getDescription());
+      ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
     }
 
     return response;
@@ -127,13 +134,53 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
   @Override
   public ServerResponse handle(ParkingEntryResponse response) {
-    // TODO Auto-generated method stub
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    List<Text> formattedMessage = new LinkedList<Text>();
+
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("The parking entry is granted!\nRobot will collect your car shortly.\n"));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("The parking entry is denied!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
     return response;
   }
 
   @Override
   public ServerResponse handle(ParkingExitResponse response) {
-    // TODO Auto-generated method stub
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    List<Text> formattedMessage = new LinkedList<Text>();
+
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("The car retrieval is granted!\nRobot will retrieve your car shortly.\n"));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("The car retrieval is denied!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+    return response;
+  }
+
+  @Override
+  public ServerResponse handle(ListParkingLotsResponse response) {
+    // CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();// FIXME//TODO
+                                                                                                   // normally
+    List<ParkingLot> list = new LinkedList<ParkingLot>(response.getData());
+    System.out.println("Handler GOT: "+ response.toString());
+    ctrl.setParkingLots(list);// FIXME//TODO normally
+    ctrl.turnProcessingStateOff();
     return response;
   }
 
@@ -165,7 +212,6 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       ControllersClientAdapter.turnLoggedInStateOn();
     }
 
-    // TODO differs here
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       formattedMessage.add(new Text("Succesfully reserved parking per request!\n"));
       ctrl.turnProcessingStateOff();

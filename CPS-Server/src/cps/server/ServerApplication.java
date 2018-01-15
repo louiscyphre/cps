@@ -75,7 +75,7 @@ public class ServerApplication extends AbstractServer {
   protected void handleMessageFromClient(Object message, ConnectionToClient client) {
     // Message object should be of type Request and not null
     if (message == null || !(message instanceof Request)) {
-      sendToClient(client, ServerResponse.error("Unknown request type"));
+      sendToClient(client, SimpleResponse.error("Unknown request type"));
       return;
     }
 

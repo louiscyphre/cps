@@ -4,6 +4,8 @@ public interface ResponseHandler {
 
   // Dispatch
   public ServerResponse dispatch(Response response);
+  
+  // TODO add SimpleResponse handler
 
   // Customer Responses
   public ServerResponse handle(CancelOnetimeParkingResponse response);
@@ -15,6 +17,8 @@ public interface ResponseHandler {
   public ServerResponse handle(IncidentalParkingResponse response);
 
   public ServerResponse handle(ListOnetimeEntriesResponse response);
+
+  public ServerResponse handle(ListParkingLotsResponse response);
 
   public ServerResponse handle(ParkingEntryResponse response);
 
@@ -44,4 +48,6 @@ public interface ResponseHandler {
   public ServerResponse handle(UpdatePricesResponse response);
 
   public ServerResponse handle(RequestLotStateResponse response);
+  
+  public ServerResponse handle(ServiceLoginResponse response);
 }

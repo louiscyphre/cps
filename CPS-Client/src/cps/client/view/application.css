@@ -26,6 +26,7 @@
     -fx-text-fill: #555753;
     -fx-font-size: 16;
     -fx-font-family: 'Sans-serif';
+    -fx-alignment:center;
 }
 
 .regularButton {
@@ -36,6 +37,11 @@
     -fx-font-size: 16;
     -fx-font-family: 'Sans-serif';
     -fx-label-padding: 10 10 10 10;
+}
+
+.mediumButton {
+	-fx-font-size: 14;
+    -fx-label-padding: 2 2 2 2;
 }
 
 .smallButton {
@@ -63,7 +69,9 @@
     -fx-border-radius: 8 8 8 8;
     -fx-background-radius: 8 8 8 8;
     -fx-pref-width:320;
+    -fx-min-width:320;
     -fx-pref-height:40;
+    -fx-margin: 0 0 0 0;
 }
 
 .datePicker {

@@ -15,4 +15,9 @@ public class ListParkingLotsResponse extends ServerResponse {
   public void setData(Collection<ParkingLot> data) {
     this.data = data;
   }
+
+  @Override
+  public ServerResponse handle(ResponseHandler handler) {
+    return handler.handle(this);
+  }
 }

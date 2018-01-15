@@ -90,6 +90,11 @@ public class ResponseHandlerImpl implements ResponseHandler {
     return this.serviceResponseHandler.handle(response);
   }
 
+  @Override
+  public ServerResponse handle(ServiceLoginResponse response) {
+    return this.serviceResponseHandler.handle(response);
+  }
+
   // // // // // // // // // // // // // // // // // // // // // // // //
   // ----- Customer -----
   @Override
@@ -114,6 +119,11 @@ public class ResponseHandlerImpl implements ResponseHandler {
 
   @Override
   public ServerResponse handle(ListOnetimeEntriesResponse response) {
+    return this.customerResponseHandler.handle(response);
+  }
+
+  @Override
+  public ServerResponse handle(ListParkingLotsResponse response) {
     return this.customerResponseHandler.handle(response);
   }
 

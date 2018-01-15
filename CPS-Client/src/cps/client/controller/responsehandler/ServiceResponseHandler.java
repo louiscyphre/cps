@@ -19,4 +19,6 @@ public interface ServiceResponseHandler {
   public ServerResponse handle(SetFullLotResponse response);
 
   public ServerResponse handle(UpdatePricesResponse response);
+
+  public ServerResponse handle(ServiceLoginResponse response);
 }
