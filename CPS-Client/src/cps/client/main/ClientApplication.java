@@ -78,8 +78,8 @@ public class ClientApplication extends Application implements INetworkClient {
   }
 
   private void loadTest() throws IOException {
-    Scene scene = ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
-    initializeStage(scene, "CPS Tests");
+    ControllersClientAdapter.registerScene(SceneCode.TEST_SCENE);
+    initializeStage(SceneCode.TEST_SCENE, "CPS Tests");
   }
 
   @Override
