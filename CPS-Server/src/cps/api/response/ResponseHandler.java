@@ -36,6 +36,8 @@ public interface ResponseHandler {
   public ServerResponse handle(DisableParkingSlotsResponse response);
 
   public ServerResponse handle(InitLotResponse response);
+  
+  public ServerResponse handle(ListComplaintsResponse response);
 
   public ServerResponse handle(RefundResponse response);
 

@@ -49,15 +49,7 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
   }
 
   @Override
-  public ServerResponse handle(RefundResponse response) {
-    if (response.success()) {
-      turnProcessingStateOff();
-      displayInfo(response.getDescription());
-    } else {
-      displayError(response.getDescription());
-      turnProcessingStateOff();
-    }
-    
-    return null;
+  public ServerResponse handle(RefundResponse response) {    
+    return super.handleGenericResponse(response);
   }
 }

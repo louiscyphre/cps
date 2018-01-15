@@ -16,14 +16,14 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
   }
 
   @FXML
-  protected void handleCancelButton(ActionEvent event) {
+  void handleCancelButton(ActionEvent event) {
     if (!processing) {
       ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
     }
   }
 
   @FXML
-  protected void handleSubmitButton(ActionEvent event) {
+  void handleSubmitButton(ActionEvent event) {
     if (!processing) {
       validateAndSend();
     }
