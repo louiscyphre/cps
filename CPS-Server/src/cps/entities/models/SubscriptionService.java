@@ -281,7 +281,7 @@ public class SubscriptionService implements ParkingService {
     int i = 1;
     if (lotId == 0) {
       stmt = conn.prepareStatement(
-          "SELECT count(*) FROM subscription_service WHERE car_id = ? AND ((start_date <= ? AND ? <= end_date) OR (? <= start_date AND start_date <= ?))");
+          "SELECT count(*) FROM subscription_service WHERE car_id = ? AND subs_type = ? ((start_date <= ? AND ? <= end_date) OR (? <= start_date AND start_date <= ?))");
       stmt.setString(i++, carID);
       stmt.setInt(i++, subsType);
 
