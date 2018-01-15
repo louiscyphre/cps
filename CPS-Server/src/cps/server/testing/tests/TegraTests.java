@@ -191,6 +191,10 @@ public class TegraTests {
     return lot;
   }
 
+  protected Customer initCustomer() throws ServerException {
+    return db.performQuery(conn -> Customer.create(conn, "me@.com", "1234"));
+  }
+
   /*
    * @Test public void testRetrieveCar() { fail("Not yet implemented"); }
    * @Test public void testHandleInitLotAction() { fail("Not yet implemented");

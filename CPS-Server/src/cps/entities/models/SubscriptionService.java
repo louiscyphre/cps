@@ -294,7 +294,7 @@ public class SubscriptionService implements ParkingService {
     PreparedStatement stmt = null;
     boolean result = false;
     int i = 1;
-    if (lotId == 0) {
+    if (subsType == Constants.SUBSCRIPTION_TYPE_FULL) {
       stmt = conn.prepareStatement(
           "SELECT count(*) FROM subscription_service WHERE car_id = ? AND subs_type = ? AND ((start_date <= ? AND ? <= end_date) OR (? <= start_date AND start_date <= ?))");
       stmt.setString(i++, carID);
@@ -317,6 +317,7 @@ public class SubscriptionService implements ParkingService {
     ResultSet rs = stmt.executeQuery();
 
     if (rs.next()) {
+      int a=rs.getInt(1);
       result = rs.getInt(1) > 0;
     }
 
