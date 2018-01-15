@@ -53,8 +53,7 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
   @Override
   public ServerResponse handle(ComplaintResponse response) {
-    // TODO Auto-generated method stub
-    return response;
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   @Override
@@ -161,8 +160,8 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
-      ctrl.displayError(response.getDescription());
       ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
+      ctrl.displayError(response.getDescription());
     }
 
     return response;

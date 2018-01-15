@@ -41,6 +41,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
 
   @FXML // fx:id="viewMyReservationsButton"
   private Button viewMyReservationsButton; // Value injected by FXMLLoader
+  
+  @FXML // fx:id="fileComplaintButton"
+  private Button fileComplaintButton; // Value injected by FXMLLoader
 
   @FXML // fx:id="buttonsVbox"
   private VBox buttonsVbox; // Value injected by FXMLLoader
@@ -71,6 +74,13 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   void handleViewMyReservationsButton(ActionEvent event) {
     if (!processing) {
       ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_RESERVATION);
+    }
+  }
+
+  @FXML
+  void handleFileComplaintButton(ActionEvent event) {
+    if (!processing) {
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FILE_COMPLAINT);
     }
   }
 
@@ -117,6 +127,7 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     assert root != null : "fx:id=\"root\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
     assert reserveParkingButton != null : "fx:id=\"reserveParkingButton\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
     assert viewMyReservationsButton != null : "fx:id=\"viewMyReservationsButton\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
+    assert fileComplaintButton != null : "fx:id=\"fileComplaintButton\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";    
     assert buttonsVbox != null : "fx:id=\"buttonsVbox\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
     assert logInButton != null : "fx:id=\"logInButton\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
@@ -183,6 +194,7 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     buttonsVbox.getChildren().add(4, enterParkingButton);
     buttonsVbox.getChildren().add(5, exitParkingButton);
     buttonsVbox.getChildren().add(6, viewMyReservationsButton);
+    buttonsVbox.getChildren().add(7, fileComplaintButton);
     buttonsVbox.getChildren().forEach(node -> {
       node.getStyleClass().add("smallButton");
     });
@@ -198,6 +210,7 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     buttonsVbox.getChildren().remove(enterParkingButton);
     buttonsVbox.getChildren().remove(exitParkingButton);
     buttonsVbox.getChildren().remove(viewMyReservationsButton);
+    buttonsVbox.getChildren().remove(fileComplaintButton);
     buttonsVbox.getChildren().forEach(node -> {
       node.getStyleClass().remove("smallButton");
     });

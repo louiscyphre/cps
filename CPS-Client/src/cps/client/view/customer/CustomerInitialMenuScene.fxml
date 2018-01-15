@@ -57,6 +57,11 @@
                   <Insets />
                </VBox.margin>
             </Button>
+            <Button id="" fx:id="fileComplaintButton" alignment="CENTER" contentDisplay="LEFT" layoutX="100.0" layoutY="316.0" mnemonicParsing="false" onAction="#handleFileComplaintButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="File Complaint" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Button>
             <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="299.0" spacing="0.0" styleClass="infoLabel">
                <children>
                   <ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />

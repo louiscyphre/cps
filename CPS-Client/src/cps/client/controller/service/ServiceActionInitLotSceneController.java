@@ -45,15 +45,7 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
 
   @Override
   public ServerResponse handle(InitLotResponse response) {
-    if (response.success()) {
-      turnProcessingStateOff();
-      displayInfo(response.getDescription());
-    } else {
-      displayError(response.getDescription());
-      turnProcessingStateOff();
-    }
-    
-    return null;
+    return super.handleGenericResponse(response);
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is

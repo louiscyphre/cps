@@ -10,17 +10,28 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
 
   @FXML
   void handleBackButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
+    if (!processing) {
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
+    }
   }
 
   @FXML
   void handleCancelButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
+    if (!processing) {
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
+    }
+  }
+
+  @FXML
+  void handleSubmitButton(ActionEvent event) {
+    if (!processing) {
+      validateAndSend();
+    }
   }
 
   @FXML
   void handleOkButton(ActionEvent event) {
-    if (!processing) {      
+    if (!processing) {
       validateAndSend();
     }
   }

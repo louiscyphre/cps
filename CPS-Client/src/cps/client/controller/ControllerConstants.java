@@ -26,6 +26,8 @@ public class ControllerConstants {
     REGULAR_SUBSCRIPTION("../view/customer/RegularSubscriptionScene.fxml"),
 
     FULL_SUBSCRIPTION("../view/customer/FullSubscriptionScene.fxml"),
+    
+    FILE_COMPLAINT("../view/customer/FileComplaintScene.fxml"), 
 
     // service views
     SERVICE_ACTION_DISABLE_SLOT("../view/service/ServiceActionDisableSlot.fxml"),
@@ -45,7 +47,7 @@ public class ControllerConstants {
     SERVICE_ACTION_UPDATE_PRICES("../view/service/ServiceActionUpdatePrices.fxml"),
 
     SERVICE_ACTION_LOGIN("../view/service/ServiceLoginScene.fxml"),
-
+    
     ;
 
     String myRelativePath;
