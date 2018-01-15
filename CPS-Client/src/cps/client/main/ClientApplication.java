@@ -45,7 +45,7 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
       ControllersClientAdapter.registerScene(SceneCode.RESERVE_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
-      // TODO adding this causes glitches in the UI
+      // TODO adding this causes glitches in the main menu
 //      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
       ControllersClientAdapter.turnLoggedInStateOff();
       initializeStage(scene, "CPS Kiosk Client");
