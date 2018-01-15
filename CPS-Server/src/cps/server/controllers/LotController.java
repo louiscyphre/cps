@@ -6,6 +6,8 @@ import static cps.common.Utilities.valueOrDefault;
 
 import java.util.Collection;
 
+import javax.swing.text.html.ParagraphView;
+
 import cps.api.action.DisableParkingSlotsAction;
 import cps.api.action.InitLotAction;
 import cps.api.action.RequestLotStateAction;
@@ -200,6 +202,8 @@ public class LotController extends RequestController {
       errorIfNull(cell, String.format("Parking cell with coordinates %s, %s, %s not found", i, j, k));
 
       // TODO don't allow reserve/disable action if there is a car in the cell?
+      CarTransportationController trcon = serverController.getTransportationController();
+      trcon.
       visitor.call(cell);
       cell.update(conn);
 
