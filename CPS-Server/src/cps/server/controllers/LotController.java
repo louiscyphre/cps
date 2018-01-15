@@ -94,8 +94,8 @@ public class LotController extends RequestController {
       errorIf(isEmpty(request.getRobotIP()), "Robot IP address must be non-empty");
 
       // Create parking lot
-      ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(), request.getPrice2(),
-          request.getRobotIP());
+      ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(),
+          request.getPrice2(), request.getRobotIP());
 
       errorIfNull(result, "Failed to create parking lot");
 
@@ -180,8 +180,8 @@ public class LotController extends RequestController {
     });
   }
 
-  public ServerResponse reserveOrDisable(ServiceSession session, ServerResponse serverResponse, int lotID, int i, int j, int k, ParkingCellVisitor visitor,
-      String successMessage) {
+  public ServerResponse reserveOrDisable(ServiceSession session, ServerResponse serverResponse, int lotID, int i, int j,
+      int k, ParkingCellVisitor visitor, String successMessage) {
     return database.performQuery(serverResponse, (conn, response) -> {
       // Require a logged in employee
       User user = session.requireUser();
@@ -194,16 +194,28 @@ public class LotController extends RequestController {
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, lotID);
 
       // Check request parameters
-      errorIf(!between(j, 0, Constants.LOT_HEIGHT - 1), String.format("Parameter j must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
-      errorIf(!between(k, 0, Constants.LOT_DEPTH - 1), String.format("Parameter k must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
-      errorIf(!between(i, 0, lot.getWidth() - 1), String.format("Parameter i must be in range [0, %s] (inclusive)", lot.getWidth() - 1));
+      errorIf(!between(j, 0, Constants.LOT_HEIGHT - 1),
+          String.format("Parameter j must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
+      errorIf(!between(k, 0, Constants.LOT_DEPTH - 1),
+          String.format("Parameter k must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
+      errorIf(!between(i, 0, lot.getWidth() - 1),
+          String.format("Parameter i must be in range [0, %s] (inclusive)", lot.getWidth() - 1));
 
       ParkingCell cell = ParkingCell.find(conn, lot.getId(), i, j, k);
       errorIfNull(cell, String.format("Parking cell with coordinates %s, %s, %s not found", i, j, k));
 
       // TODO don't allow reserve/disable action if there is a car in the cell?
-      CarTransportationController trcon = serverController.getTransportationController();
-      trcon.
+      // Tegra was here
+      // Solution - if there are free slots - move the car and then disable the
+      // cell, else error
+
+      CarTransportationControllerA ctrc = (CarTransportationControllerA) serverController.getTransportationController();
+      if (lot.countFreeCells(conn) > 0) {
+        ctrc.clearCell(conn, lot, i, j, k, lot.constructContentArray(conn));
+      } else {
+        errorIf(true, String.format("There are no free slots to put the car"));
+      }
+
       visitor.call(cell);
       cell.update(conn);
 
@@ -213,12 +225,14 @@ public class LotController extends RequestController {
   }
 
   public ServerResponse handle(ReserveParkingSlotsAction action, ServiceSession session) {
-    return reserveOrDisable(session, new ReserveParkingSlotsResponse(), action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK(),
-        cell -> cell.setReserved(true), "Parking cell reserved successfully");
+    return reserveOrDisable(session, new ReserveParkingSlotsResponse(), action.getLotID(), action.getLocationI(),
+        action.getLocationJ(), action.getLocationK(), cell -> cell.setReserved(true),
+        "Parking cell reserved successfully");
   }
 
   public ServerResponse handle(DisableParkingSlotsAction action, ServiceSession session) {
-    return reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK(),
-        cell -> cell.setDisabled(true), "Parking cell disabled successfully");
+    return reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(), action.getLocationI(),
+        action.getLocationJ(), action.getLocationK(), cell -> cell.setDisabled(true),
+        "Parking cell disabled successfully");
   }
 }

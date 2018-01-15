@@ -152,11 +152,11 @@ public class CarTransportationControllerA extends RequestController implements C
               /*
                * If our priority is higher (lower number) than other - try to
                * demote him. This is aggressive demotiong and should be deleted
-               * if it turns out it's too aggressive.
-               * * This part have been tested and it seems to be working properly
+               * if it turns out it's too aggressive. * This part have been
+               * tested and it seems to be working properly
                */
               if (otherPriority > priority) {
-                 
+
                 for (int i = iSize + 1; (i < lotWidth) && (maxSize == -1); i++) {
                   if (freeSpotsCount[i + 3] != 0) {
                     maxSize = iSize;
@@ -476,6 +476,43 @@ public class CarTransportationControllerA extends RequestController implements C
     return priority;
   }
 
+  private void pave(Stack<String> carIds, Stack<LocalDateTime> exitTimes, int maxWidth, int maxHeight, int maxDepth,
+      ParkingCell[][][] content) {
+    for (int i = 0; i < maxWidth; i++) {
+      if (content[i][0][0].containsCar()) {
+        ParkingCell cell = content[i][0][0];
+        carIds.push(cell.getCarID());
+        exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
+        cell.clear();
+      }
+    }
+
+    for (int i = 0; i < maxHeight; i++) {
+      if (content[maxWidth][i][0].containsCar()) {
+        ParkingCell cell = content[maxWidth][i][0];
+        carIds.push(cell.getCarID());
+        exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
+        cell.clear();
+      }
+    }
+
+    for (int i = 0; i < maxDepth; i++) {
+      if (content[maxWidth][maxHeight][i].containsCar()) {
+        ParkingCell cell = content[maxWidth][maxHeight][i];
+        carIds.push(cell.getCarID());
+        exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
+        cell.clear();
+      }
+    }
+
+    if (content[maxWidth][maxHeight][maxDepth].containsCar()) {
+      ParkingCell cell = content[maxWidth][maxHeight][maxDepth];
+      carIds.push(cell.getCarID());
+      exitTimes.push(cell.getPlannedExitTime().toLocalDateTime());
+      cell.clear();
+    }
+  }
+
   private void pave(Stack<String> carIds, Stack<LocalDateTime> exitTimes, int maxSize, int maxHeight, int maxDepth,
       ParkingCell[][][] content, int[] freeSpotsCount) {
     for (int i = 0; i < maxSize; i++) {
@@ -526,4 +563,16 @@ public class CarTransportationControllerA extends RequestController implements C
       }
     }
   }
+
+  public void clearCell(Connection conn, ParkingLot lot, int maxWidth, int maxHeight, int maxDepth,
+      ParkingCell[][][] content) throws SQLException, ServerException {
+    boolean sucsess;
+    Stack<String> carIds = new Stack<String>();
+    Stack<LocalDateTime> exitTimes = new Stack<LocalDateTime>();
+    pave(carIds, exitTimes, maxWidth, maxHeight, maxDepth, content);
+    content[maxWidth][maxHeight][maxDepth].setDisabled(true);
+    sucsess = insertCars(conn, lot, carIds, exitTimes);
+    content[maxWidth][maxHeight][maxDepth].setDisabled(false);
+  }
+
 }
