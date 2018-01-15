@@ -178,6 +178,7 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
     ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();// FIXME//TODO
                                                                                                    // normally
     List<ParkingLot> list = new LinkedList<ParkingLot>(response.getData());
+    System.out.println("Handler GOT: "+ response.toString());
     ctrl.setParkingLots(list);// FIXME//TODO normally
     ctrl.turnProcessingStateOff();
     return response;
