@@ -57,8 +57,8 @@ public class TegraTests {
   public void testInsertCars() throws ServerException {
     // Create parking lot Create incidental parking request
     // Insert the car
-    int carsInLot1=1;
-    int carsInLot2=1;
+    int carsInLot1 = 1;
+    int carsInLot2 = 1;
     ParkingLot lot[] = new ParkingLot[3];
     lot[0] = initParkingLot();
     lot[1] = db.performQuery(conn -> ParkingLot.create(conn, "Rabin 14", 8, 5, 3, "13.f.t43"));
@@ -152,9 +152,9 @@ public class TegraTests {
 
     Timestamp[] a = new Timestamp[10];
     // Main reservation start
-    a[0] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(20));
+    a[0] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(10));
     // Main reservation end - will be used for more reservations
-    a[1] = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+    a[1] = Timestamp.valueOf(LocalDateTime.now().minusMinutes(10));
     // Reservation starts before but continues into
     a[2] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(10));
     // Reservation starts after the beginning
@@ -165,13 +165,13 @@ public class TegraTests {
 
     OnetimeService[] reservedParkings = new OnetimeService[5];
     db.performAction(conn -> {
-      reservedParkings[0] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3,
-          "no@email.com", "123-sdf", lot.getId(), a[0], a[1], false);
-      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[2], a[1]));
-      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[3], a[1]));
-      assertFalse(OnetimeService.overlapExists(conn, "123-sdf", a[4], a[2]));
-      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[4], a[5]));
-      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[0], a[1]));      
+      for (int j = 0; j < 5; j++) {
+        int customerEGO = (int) Math.random() * 500;
+        String randomemail = Utilities.randomString("angjurufjfjsl", 7) + "@gmail.com";
+        String randomcarID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
+        reservedParkings[j] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, customerEGO,
+            randomemail, randomcarID, lot.getId(), a[0], a[(int) (Math.random() * 4) + 1], false);
+      }
     });
 
   }
@@ -186,31 +186,28 @@ public class TegraTests {
         Utilities.randomString("1234567890ABCDTRUOTSKL", 7), 1, 0);
 
     Timestamp[] a = new Timestamp[10];
-    // Main reservation start
-    a[0] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(20));
-    // Main reservation end - will be used for more reservations
-    a[1] = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
-    // Reservation starts before but continues into
+    a[0] = Timestamp.valueOf(LocalDateTime.now());
+    a[1] = Timestamp.valueOf(LocalDateTime.now().minusMinutes(10));
     a[2] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(10));
-    // Reservation starts after the beginning
-    a[3] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(30));
-    // Reservation that doesn't overlap start
-    a[4] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(5));
+    a[3] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(20));
+    a[4] = Timestamp.valueOf(LocalDateTime.now().minusMinutes(20));
     a[5] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(4).plusDays(1));
 
     OnetimeService[] reservedParkings = new OnetimeService[5];
     db.performAction(conn -> {
-      reservedParkings[0] = OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3,
-          "no@email.com", "123-sdf", lot.getId(), a[0], a[1], false);
-      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[2], a[1]));
-      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[3], a[1]));
-      assertFalse(OnetimeService.overlapExists(conn, "123-sdf", a[4], a[2]));
-      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[4], a[5]));
-      assertTrue(OnetimeService.overlapExists(conn, "123-sdf", a[0], a[1]));      
+      OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "123-sdf",
+          lot.getId(), a[4], a[1], false);
+      OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "254-sdf",
+          lot.getId(), a[0], a[3], false);
+      OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "458-sdf",
+          lot.getId(), a[0], a[5], false);
+      OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "984-sdf",
+          lot.getId(), a[3], a[5], false);
+      System.out.printf("%d", ParkingLot.countOrderedCells(conn, lot.getId(), a[2], 1));
     });
 
   }
-  
+
   private CarTransportation newParkingEntry(OnetimeService _cdata) {
     ParkingEntryRequest request = new ParkingEntryRequest(_cdata.getCustomerID(), 0, _cdata.getLotID(),
         _cdata.getCarID());
