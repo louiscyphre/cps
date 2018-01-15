@@ -17,6 +17,7 @@ import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.OnetimeEntriesController;
 import cps.client.controller.ParkingLotsController;
 import cps.client.controller.ViewController;
 import cps.entities.models.ParkingLot;
@@ -29,7 +30,24 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
   // handlers
   @Override
   public ServerResponse handle(CancelOnetimeParkingResponse response) {
-    // TODO Auto-generated method stub
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    List<Text> formattedMessage = new LinkedList<Text>();
+
+    if (response.success()) {
+      formattedMessage.add(new Text("The following reservation had been canceled!\n"));
+      formattedMessage.add(new Text("The account had been refunded for: " + response.getRefundAmount()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+      OnetimeEntriesController casted = (OnetimeEntriesController) ctrl;
+      casted.removeEntry(response.getOnetimeServiceID());
+    } else { // request failed
+      formattedMessage.add(new Text("Could not cancel this reservation!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+
     return response;
   }
 
@@ -88,7 +106,31 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
   @Override
   public ServerResponse handle(ListOnetimeEntriesResponse response) {
-    // TODO Auto-generated method stub
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    List<Text> formattedMessage = new LinkedList<Text>();
+
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+
+      formattedMessage.add(new Text("Onetime Entries for customer with id : "));
+      Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      Font defaultFont = customerIdText.getFont();
+      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(customerIdText);
+
+      OnetimeEntriesController casted = (OnetimeEntriesController) ctrl;
+      casted.setOnetimeEntries(response.getData());
+
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("The parking entry is denied!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+
     return null;
   }
 
@@ -168,7 +210,7 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
   @Override
   public ServerResponse handle(ListParkingLotsResponse response) {
-    ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();                                                                     // normally
+    ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl(); // normally
     List<ParkingLot> list = new LinkedList<ParkingLot>(response.getData());
     ctrl.setParkingLots(list);
     ctrl.turnProcessingStateOff();
@@ -182,7 +224,7 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
     int responseCustomerId = response.getCustomerID();
     List<Text> formattedMessage = new LinkedList<Text>();
-    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId()) {
+    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
       context.setCustomerId(responseCustomerId);
       formattedMessage.add(new Text("Your Customer ID:"));
       Text customerIdText = new Text(Integer.toString(response.getCustomerID()));

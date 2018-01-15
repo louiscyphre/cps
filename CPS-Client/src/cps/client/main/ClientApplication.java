@@ -48,9 +48,11 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.RESERVE_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
       // TODO adding this causes glitches in the main menu
-//      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
+      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
       ControllersClientAdapter.turnLoggedInStateOff();
-      initializeStage(scene, "CPS Kiosk Client");
+      // initializeStage(scene, "CPS Kiosk Client");
+      initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Kiosk Client");
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -68,8 +70,8 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_RESERVE_SLOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
       ControllersClientAdapter.turnLoggedInStateOff();
-//      initializeStage(scene, "CPS Service Client");
-      initializeStage(SceneCode.SERVICE_ACTION_LOGIN,"CPS Service Client");
+      // initializeStage(scene, "CPS Service Client");
+      initializeStage(SceneCode.SERVICE_ACTION_LOGIN, "CPS Service Client");
     } catch (IOException e) {
       e.printStackTrace();
     }

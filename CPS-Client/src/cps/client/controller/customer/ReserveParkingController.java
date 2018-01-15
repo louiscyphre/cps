@@ -114,21 +114,6 @@ public class ReserveParkingController extends CustomerActionControllerBase {
 
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
-
-    // startDatePicker = new DateTimePicker();
-    // startDatePicker.withCalendar(Calendar.getInstance());
-    // startDatePicker.withShowTime(Boolean.TRUE);
-    // startDatePicker.withLocale(Locale.ENGLISH);
-    // startDatePicker.calendarProperty().addListener(new
-    // ChangeListener<Calendar>() {
-
-    // @Override
-    // public void changed(ObservableValue<? extends Calendar> ov, Calendar t,
-    // Calendar t1) {
-    // System.out.println("Selected date: "+t1.getTime().toString());
-    // }
-    // });
-
   }
 
   private void validateAndSend() {

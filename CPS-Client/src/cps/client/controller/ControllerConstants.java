@@ -22,9 +22,9 @@ public class ControllerConstants {
     EXIT_PARKING("../view/customer/ExitParkingScene.fxml"),
 
     VIEW_MY_RESERVATION("../view/customer/ViewMyReservationsScene.fxml"),
-    
+
     REGULAR_SUBSCRIPTION("../view/customer/RegularSubscriptionScene.fxml"),
-    
+
     FULL_SUBSCRIPTION("../view/customer/FullSubscriptionScene.fxml"),
 
     // service views
@@ -45,7 +45,7 @@ public class ControllerConstants {
     SERVICE_ACTION_UPDATE_PRICES("../view/service/ServiceActionUpdatePrices.fxml"),
 
     SERVICE_ACTION_LOGIN("../view/service/ServiceLoginScene.fxml"),
-    
+
     ;
 
     String myRelativePath;
@@ -61,10 +61,19 @@ public class ControllerConstants {
   }
 
   public enum InputVerification {
-    INPUT_OK(0, "The request is valid"), MISSING_USERID(0, "Missing or bad UserID"), MISSING_EMAIL(1,
-        "Missing or bad Email"), MISSING_CARID(3, "Missing or bad CarID"), MISSING_LOTID(4,
-            "Missing or bad LotID"), MISSING_PLANNEDENDTIME(5,
-                "Missing or bad Planned End Time"), MISSING_PASSWORD(6, "Missing password"),;
+    INPUT_OK(0, "The request is valid"),
+
+    MISSING_USERID(0, "Missing or bad UserID"),
+
+    MISSING_EMAIL(1, "Missing or bad Email"),
+
+    MISSING_CARID(3, "Missing or bad CarID"),
+
+    MISSING_LOTID(4, "Missing or bad LotID"),
+
+    MISSING_PLANNEDENDTIME(5, "Missing or bad Planned End Time"),
+
+    MISSING_PASSWORD(6, "Missing password"),;
 
     private final int    id;
     private final String msg;
