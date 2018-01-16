@@ -29,23 +29,18 @@ import cps.server.ServerException;
 import cps.server.session.CustomerSession;
 import cps.server.session.UserSession;
 
-/**
- * The Class OnetimeParkingController.
- */
+/** Handles OnetimeService requests. */
 public class OnetimeParkingController extends RequestController {
 
-  /**
-   * Instantiates a new one-time parking controller.
-   *
+  /** Instantiates a new one-time parking controller.
    * @param serverController
-   *          the server application
-   */
+   *        the server application */
   public OnetimeParkingController(ServerController serverController) {
     super(serverController);
   }
-
-  public ServerResponse handle(OnetimeParkingRequest request, CustomerSession session,
-      OnetimeParkingResponse serverResponse, Timestamp startTime, Timestamp plannedEndTime, LocalDateTime now) {
+  
+  private ServerResponse handle(OnetimeParkingRequest request, CustomerSession session, OnetimeParkingResponse serverResponse, Timestamp startTime,
+      Timestamp plannedEndTime, LocalDateTime now) {
     return database.performQuery(serverResponse, (conn, response) -> {
       // Check that the same car is not going to be parked in different locations at the same time
       errorIf(OnetimeService.overlapExists(conn, request.getCarID(), startTime, plannedEndTime),
@@ -60,16 +55,16 @@ public class OnetimeParkingController extends RequestController {
 
       // Check that lot exists
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
-      
+
       // Check that lot is not full
       session.requireLotNotFull(conn, gson, lot, response);
-//      lot.countOrderedCells(conn, lot.getId(), startTime, 1);
+      // lot.countOrderedCells(conn, lot.getId(), startTime, 1);
 
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
-      OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
-          request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);
+      OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(), request.getEmail(), request.getCarID(),
+          request.getLotID(), startTime, plannedEndTime, false);
       errorIfNull(service, "Failed to create OnetimeService entry");
 
       // Calculate payment for service
@@ -93,11 +88,10 @@ public class OnetimeParkingController extends RequestController {
   }
 
   /**
-   * Handle IncidentalParkingRequest.
+   *  Handle IncidentalParkingRequest.
    *
-   * @param request
-   *          the request
-   * @param session
+   * @param request the request
+   * @param session the session
    * @return the server response
    */
   public ServerResponse handle(IncidentalParkingRequest request, CustomerSession session) {
@@ -108,10 +102,10 @@ public class OnetimeParkingController extends RequestController {
   }
 
   /**
-   * Handle ReservedParkingRequest.
+   *  Handle ReservedParkingRequest.
    *
-   * @param request
-   *          the request
+   * @param request the request
+   * @param session the session
    * @return the server response
    */
   public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {
@@ -122,11 +116,10 @@ public class OnetimeParkingController extends RequestController {
   }
 
   /**
-   * Handle CancelOnetimeParkingRequest.
+   *  Handle CancelOnetimeParkingRequest.
    *
-   * @param request
-   *          the request
-   * @param session
+   * @param request the request
+   * @param session the session
    * @return the server response
    */
   public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
@@ -188,10 +181,10 @@ public class OnetimeParkingController extends RequestController {
   }
 
   /**
-   * Handle List One Time Entries Request.
+   *  Handle List One Time Entries Request.
    *
-   * @param request
-   *          the request
+   * @param request the request
+   * @param session the session
    * @return the server response
    */
   public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {

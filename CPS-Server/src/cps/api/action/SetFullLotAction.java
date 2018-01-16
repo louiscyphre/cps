@@ -14,7 +14,6 @@ public class SetFullLotAction extends LotAction {
     this.lotFull = lotfull;
   }
 
-  // TODO discuss the lotFull flag
   public boolean getLotFull() {
     return lotFull;
   }
