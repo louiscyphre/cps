@@ -54,7 +54,7 @@ public class TestOrderedCells {
 					lot.getId(), a[0], a[5], false);
 			OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "984-sdf",
 					lot.getId(), a[3], a[5], false);
-			assertTrue(3 == ParkingLot.countOrderedCells(conn, lot.getId(), a[2], 1));
+			assertTrue(3 == ParkingLot.countOrderedCells(conn, lot.getId(), a[2], a[5]));
 		});
 	}
 

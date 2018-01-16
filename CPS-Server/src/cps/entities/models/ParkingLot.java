@@ -399,11 +399,11 @@ public class ParkingLot implements Serializable {
         + "WHERE ((os.planned_start_time <= ? AND ? <= os.planned_end_time) OR (? <= os.planned_start_time AND os.planned_start_time <= ?)) "
         + "AND NOT EXISTS (SELECT * " + "FROM car_transportation ct " + "WHERE ct.auth_type=? AND ct.auth_id=os.id)");
     int i = 1;
-    stmt.setInt(i++, Constants.LICENSE_TYPE_ONETIME);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, endTime);
+    stmt.setInt(i++, Constants.LICENSE_TYPE_ONETIME);
 
     ResultSet rs = stmt.executeQuery();
     rs.next();
