@@ -64,6 +64,8 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
 
   private ArrayList<Text> cellInfo;
 
+  private Rectangle selectedCar;
+
   @FXML
   void addDummyData(ActionEvent event) {
 
@@ -232,10 +234,10 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
     overviewInfo.set(7, new Text(Integer.toString(disabled)));
     overviewInfo.set(10, new Text(Integer.toString(reserved)));
     overviewInfo.set(13, new Text(Integer.toString(occupied)));
-    
-//    overviewInfo.forEach(text -> {
-//      text.getStyleClass().add("textFont");
-//    });
+
+    // overviewInfo.forEach(text -> {
+    // text.getStyleClass().add("textFont");
+    // });
   }
 
   private void initCellInfo() {
@@ -261,9 +263,9 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
     cellInfo.add(new Text(""));
     cellInfo.add(new Text("\n"));
 
-//    cellInfo.forEach(text -> {
-//      text.getStyleClass().add("textFont");
-//    });
+    // cellInfo.forEach(text -> {
+    // text.getStyleClass().add("textFont");
+    // });
   }
 
   private void updateCellInfo(ParkingCell cell) {
@@ -331,58 +333,7 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
 
       clearParkingCells();
       initParkingCells();
-
-      double vgap = carsGrids.get(0).getVgap();
-      double hgap = carsGrids.get(0).getHgap();
-
-      Rectangle[][][] rects = new Rectangle[content[0].length][content[0][0].length][content.length];
-
-      double rectWidth = (gridAnchor.getWidth() - vgap) / content[0][0].length - vgap;
-      double rectHeight = (gridAnchor.getHeight() - hgap) / content.length - hgap;
-      Paint rectPaint;
-
-      for (int level = 0; level < content[0].length; level++) {
-        for (int depth = 0; depth < content[0][0].length; depth++) {
-          for (int width = 0; width < content.length; width++) {
-            ParkingCell currentParkingCell = content[width][level][depth];
-            parkingCell.get(level).get(depth).add(width, currentParkingCell);
-            if (currentParkingCell.isFree() || currentParkingCell == null) {
-              rectPaint = (Paint.valueOf("WHITE"));
-            } else if (currentParkingCell.isDisabled()) {
-              rectPaint = (Paint.valueOf("RED"));
-            } else if (currentParkingCell.isReserved()) {
-              rectPaint = (Paint.valueOf("GREEN"));
-            } else {
-              rectPaint = (Paint.valueOf("BLUE"));
-            }
-            Rectangle currentRectangle = new Rectangle(rectWidth, rectHeight, rectPaint);
-            currentRectangle.setArcHeight(rectWidth * 0.2);
-            currentRectangle.setArcWidth(rectHeight * 0.2);
-            currentRectangle.setStroke(Paint.valueOf("BLACK"));
-            currentRectangle.setStrokeType(StrokeType.INSIDE);
-            currentRectangle.setStrokeWidth(Math.min(rectWidth, rectHeight) * 0.1);
-            currentRectangle.setOnMouseEntered(evt -> {
-              int rowInd = GridPane.getRowIndex(currentRectangle);
-              int colInd = GridPane.getColumnIndex(currentRectangle);
-              int levelInd = getCurrentLevelIndex();
-              ParkingCell correspondingCell = parkingCell.get(levelInd).get(colInd).get(rowInd);
-              updateCellInfo(correspondingCell);
-              displayInfo(cellInfo);
-            });
-            rects[level][depth][width] = currentRectangle;
-          }
-        }
-      }
-      for (int level = 0; level < rects.length; level++) {
-        GridPane carsGrid = carsGrids.get(level);
-        for (int depth = 0; depth < rects[0].length; depth++) {
-          for (int width = 0; width < rects[0][0].length; width++) {
-            if (rects[level][depth][width] != null) {
-              carsGrid.add(rects[level][depth][width], depth, width);
-            }
-          }
-        }
-      }
+      readContent(content);
       updateView();
       updateOverviewInfo();
       overviewButton.setDisable(false);
@@ -394,5 +345,71 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
       displayError(response.getDescription());
     }
     return null;
+  }
+
+  private void readContent(ParkingCell[][][] content) {
+    double vgap = carsGrids.get(0).getVgap();
+    double hgap = carsGrids.get(0).getHgap();
+
+    Rectangle[][][] rects = new Rectangle[content[0].length][content[0][0].length][content.length];
+
+    double rectWidth = (gridAnchor.getWidth() - vgap) / content[0][0].length - vgap;
+    double rectHeight = (gridAnchor.getHeight() - hgap) / content.length - hgap;
+    Paint rectPaint;
+
+    for (int level = 0; level < content[0].length; level++) {
+      for (int depth = 0; depth < content[0][0].length; depth++) {
+        for (int width = 0; width < content.length; width++) {
+          ParkingCell currentParkingCell = content[width][level][depth];
+          parkingCell.get(level).get(depth).add(width, currentParkingCell);
+          if (currentParkingCell.isFree() || currentParkingCell == null) {
+            rectPaint = (Paint.valueOf("WHITE"));
+          } else if (currentParkingCell.isDisabled()) {
+            rectPaint = (Paint.valueOf("RED"));
+          } else if (currentParkingCell.isReserved()) {
+            rectPaint = (Paint.valueOf("GREEN"));
+          } else {
+            rectPaint = (Paint.valueOf("BLUE"));
+          }
+          Rectangle currentRectangle = new Rectangle(rectWidth, rectHeight, rectPaint);
+          currentRectangle.setArcHeight(rectWidth * 0.2);
+          currentRectangle.setArcWidth(rectHeight * 0.2);
+          currentRectangle.setStroke(Paint.valueOf("BLACK"));
+          currentRectangle.setStrokeType(StrokeType.INSIDE);
+          currentRectangle.setStrokeWidth(Math.min(rectWidth, rectHeight) * 0.1);
+          currentRectangle.setOnMouseEntered(evt -> {
+            if(selectedCar == null) {
+              int rowInd = GridPane.getRowIndex(currentRectangle);
+              int colInd = GridPane.getColumnIndex(currentRectangle);
+              int levelInd = getCurrentLevelIndex();
+              ParkingCell correspondingCell = parkingCell.get(levelInd).get(colInd).get(rowInd);
+              updateCellInfo(correspondingCell);
+              displayInfo(cellInfo);
+            }
+          });
+          currentRectangle.setOnMouseClicked(evt -> {
+            int rowInd = GridPane.getRowIndex(currentRectangle);
+            int colInd = GridPane.getColumnIndex(currentRectangle);
+            int levelInd = getCurrentLevelIndex();
+            ParkingCell correspondingCell = parkingCell.get(levelInd).get(colInd).get(rowInd);
+            if(selectedCar != null) {
+
+            }
+            selectedCar = currentRectangle;
+          });
+          rects[level][depth][width] = currentRectangle;
+        }
+      }
+    }
+    for (int level = 0; level < rects.length; level++) {
+      GridPane carsGrid = carsGrids.get(level);
+      for (int depth = 0; depth < rects[0].length; depth++) {
+        for (int width = 0; width < rects[0][0].length; width++) {
+          if (rects[level][depth][width] != null) {
+            carsGrid.add(rects[level][depth][width], depth, width);
+          }
+        }
+      }
+    }
   }
 }
