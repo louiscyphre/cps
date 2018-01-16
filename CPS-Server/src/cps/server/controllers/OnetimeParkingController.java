@@ -58,7 +58,7 @@ public class OnetimeParkingController extends RequestController {
 
       // Check that lot is not full
 //      session.requireLotNotFull(conn, gson, lot, response);
-      int availableCells = lot.getVolume() - lot.countFreeCells(conn) - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
+      int availableCells = lot.countFreeCells(conn) - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
       errorIf(lot.isLotFull() || availableCells <= 0, "The specified lot is full; please try one of the alternative lots");
 
       // Handle login
