@@ -28,15 +28,14 @@ import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.session.CustomerSession;
 import cps.server.session.UserSession;
+import cps.entities.models.WarningMessage;
 
-/**
- * The Class OnetimeParkingController.
- */
+/** Handles OnetimeService requests. */
 public class OnetimeParkingController extends RequestController {
 
   /**
    * Instantiates a new one-time parking controller.
-   *
+   * 
    * @param serverController
    *          the server application
    */
@@ -44,10 +43,11 @@ public class OnetimeParkingController extends RequestController {
     super(serverController);
   }
 
-  public ServerResponse handle(OnetimeParkingRequest request, CustomerSession session,
+  private ServerResponse handle(OnetimeParkingRequest request, CustomerSession session,
       OnetimeParkingResponse serverResponse, Timestamp startTime, Timestamp plannedEndTime, LocalDateTime now) {
     return database.performQuery(serverResponse, (conn, response) -> {
-      // Check that the same car is not going to be parked in different locations at the same time
+      // Check that the same car is not going to be parked in different
+      // locations at the same time
       errorIf(OnetimeService.overlapExists(conn, request.getCarID(), startTime, plannedEndTime),
           "Parking spot is already reserved for this car in this timeframe");
 
@@ -60,9 +60,11 @@ public class OnetimeParkingController extends RequestController {
 
       // Check that lot exists
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
-      
+
       // Check that lot is not full
-      session.requireLotNotFull(conn, gson, lot, response);
+//      session.requireLotNotFull(conn, gson, lot, response);
+      int availableCells = lot.countFreeCells(conn) - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
+      errorIf(lot.isLotFull() || availableCells <= 0, "The specified lot is full; please try one of the alternative lots");
 
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
@@ -97,6 +99,7 @@ public class OnetimeParkingController extends RequestController {
    * @param request
    *          the request
    * @param session
+   *          the session
    * @return the server response
    */
   public ServerResponse handle(IncidentalParkingRequest request, CustomerSession session) {
@@ -111,6 +114,8 @@ public class OnetimeParkingController extends RequestController {
    *
    * @param request
    *          the request
+   * @param session
+   *          the session
    * @return the server response
    */
   public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {
@@ -126,6 +131,7 @@ public class OnetimeParkingController extends RequestController {
    * @param request
    *          the request
    * @param session
+   *          the session
    * @return the server response
    */
   public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
@@ -191,19 +197,43 @@ public class OnetimeParkingController extends RequestController {
    *
    * @param request
    *          the request
+   * @param session
+   *          the session
    * @return the server response
    */
   public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {
     return database.performQuery(new ListOnetimeEntriesResponse(), (conn, response) -> {
       Collection<OnetimeService> result = OnetimeService.findByCustomerID(conn, request.getCustomerID());
 
-      // This shouldn't happen - at least an empty list should always be returned
+      // This shouldn't happen - at least an empty list should always be
+      // returned
       errorIfNull(result, "Failed to create list of OnetimeService entries");
 
       response.setData(result);
       response.setCustomerID(request.getCustomerID());
       response.setSuccess("List of OnetimeService entries retrieved successfully");
       return response;
+    });
+  }
+
+  /**
+   * Warn customer.
+   *
+   * @param cid
+   *          the cid
+   * @param email
+   *          the email
+   * @param carId
+   *          the car id
+   * @throws ServerException 
+   */
+  public void warnCustomer(int cid, String email, String carId) throws ServerException {
+    database.performAction(conn -> {
+      Collection<WarningMessage> messages = OnetimeService.findLateUnwarnedCustomers(conn);
+      for (WarningMessage mess : messages) {
+        mess.warn(conn);
+        mess.setsend(conn);
+      }
     });
   }
 }

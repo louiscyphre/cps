@@ -392,24 +392,32 @@ public class ParkingLot implements Serializable {
    * @return the int
    * @throws SQLException
    */
-  public static int countOrderedCells(Connection conn, int lotId, Timestamp startTime, int hoursInAdvance)
+  public static int countOrderedCells(Connection conn, int lotId, Timestamp startTime, Timestamp endTime)
       throws SQLException {
     int result = 0;
-    LocalDateTime latest = startTime.toLocalDateTime();
-    latest = latest.plusHours(hoursInAdvance);
-    PreparedStatement stmt = conn.prepareStatement(
-        "SELECT count(*) FROM onetime_service WHERE (planned_start_time <= ? AND ? <= planned_end_time) OR (? <= planned_start_time AND planned_start_time <= ?)");
+    PreparedStatement stmt = conn.prepareStatement("SELECT count(*) FROM onetime_service os "
+        + "WHERE ((os.planned_start_time <= ? AND ? <= os.planned_end_time) OR (? <= os.planned_start_time AND os.planned_start_time <= ?)) "
+        + "AND NOT EXISTS (SELECT * " + "FROM car_transportation ct " + "WHERE ct.auth_type=? AND ct.auth_id=os.id)");
     int i = 1;
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, startTime);
-    stmt.setTimestamp(i++, Timestamp.valueOf(latest));
+    stmt.setTimestamp(i++, endTime);
+    stmt.setInt(i++, Constants.LICENSE_TYPE_ONETIME);
+
     ResultSet rs = stmt.executeQuery();
     rs.next();
     result = rs.getInt(1);
     return result;
   }
 
+  /**
+   * Update.
+   *
+   * @param conn the conn
+   * @throws SQLException the SQL exception
+   * @throws ServerException the server exception
+   */
   public void update(Connection conn) throws SQLException, ServerException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
 
@@ -428,6 +436,13 @@ public class ParkingLot implements Serializable {
     st.close();
   }
 
+  /**
+   * Find all.
+   *
+   * @param conn the conn
+   * @return the collection
+   * @throws SQLException the SQL exception
+   */
   public static Collection<ParkingLot> findAll(Connection conn) throws SQLException {
     LinkedList<ParkingLot> results = new LinkedList<ParkingLot>();
 

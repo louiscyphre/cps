@@ -152,11 +152,11 @@ public class CarTransportationControllerA extends RequestController implements C
               /*
                * If our priority is higher (lower number) than other - try to
                * demote him. This is aggressive demotiong and should be deleted
-               * if it turns out it's too aggressive.
-               * * This part have been tested and it seems to be working properly
+               * if it turns out it's too aggressive. * This part have been
+               * tested and it seems to be working properly
                */
               if (otherPriority > priority) {
-                 
+
                 for (int i = iSize + 1; (i < lotWidth) && (maxSize == -1); i++) {
                   if (freeSpotsCount[i + 3] != 0) {
                     maxSize = iSize;
@@ -472,7 +472,6 @@ public class CarTransportationControllerA extends RequestController implements C
         }
       }
     }
-
     return priority;
   }
 
@@ -526,4 +525,5 @@ public class CarTransportationControllerA extends RequestController implements C
       }
     }
   }
+
 }

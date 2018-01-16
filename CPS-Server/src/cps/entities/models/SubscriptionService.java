@@ -288,7 +288,7 @@ public class SubscriptionService implements ParkingService {
    * @throws SQLException
    *           the SQL exception
    */
-  public static boolean OverlapExists(Connection conn, String carID, int subsType, int lotId, LocalDate startDate,
+  public static boolean overlapExists(Connection conn, String carID, int subsType, int lotId, LocalDate startDate,
       LocalDate endDate) throws SQLException {
     //TODO:Test this properly
     PreparedStatement stmt = null;
@@ -317,7 +317,6 @@ public class SubscriptionService implements ParkingService {
     ResultSet rs = stmt.executeQuery();
 
     if (rs.next()) {
-      int a=rs.getInt(1);
       result = rs.getInt(1) > 0;
     }
 

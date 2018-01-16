@@ -41,8 +41,8 @@ public class SubscriptionController extends RequestController {
     return handle(request, session, response, startDate, endDate, dailyExitTime);
   }
 
-  public ServerResponse handle(SubscriptionRequest request, CustomerSession session,
-      SubscriptionResponse serverResponse, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
+  public ServerResponse handle(SubscriptionRequest request, CustomerSession session, SubscriptionResponse serverResponse, LocalDate startDate,
+      LocalDate endDate, LocalTime dailyExitTime) {
     return database.performQuery(serverResponse, (conn, response) -> {
 
       // Check that the start date is not in the past
@@ -58,19 +58,17 @@ public class SubscriptionController extends RequestController {
 
       // check overlapping subscriptions with the same car ID
       if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
-      errorIf(SubscriptionService.OverlapExists(conn, request.getCarID(), request.getSubscriptionType(),
-          request.getLotID(), startDate, endDate), "Subscription for this car for this parking lot already exists in this timeframe");
-      }
-      else
-      {
-        errorIf(SubscriptionService.OverlapExists(conn, request.getCarID(), request.getSubscriptionType(),
-            0, startDate, endDate), "Subscription for this car already exists in this timeframe");
+        errorIf(SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(), request.getLotID(), startDate, endDate),
+            "Subscription for this car for this parking lot already exists in this timeframe");
+      } else {
+        errorIf(SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(), 0, startDate, endDate),
+            "Subscription for this car already exists in this timeframe");
       }
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
-      SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(),
-          request.getEmail(), request.getCarID(), request.getLotID(), startDate, endDate, dailyExitTime);
+      SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(), request.getEmail(), request.getCarID(),
+          request.getLotID(), startDate, endDate, dailyExitTime);
       errorIfNull(service, "Failed to create SubscriptionService entry");
 
       // Calculate payment
@@ -89,8 +87,7 @@ public class SubscriptionController extends RequestController {
     });
   }
 
-  private float paymentForSubscription(Connection conn, Customer customer, SubscriptionService service)
-      throws SQLException {
+  private float paymentForSubscription(Connection conn, Customer customer, SubscriptionService service) throws SQLException {
     if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
       // Regular monthly subscription
       ParkingLot lot = ParkingLot.findByID(conn, service.getLotID());

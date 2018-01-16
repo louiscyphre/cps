@@ -94,7 +94,8 @@ public class TestComplaint extends ServerControllerTest {
   private void makeRefund(Complaint complaint, SessionHolder context) throws ServerException {
     // Create new customer service employee session
     ServiceSession session = context.acquireServiceSession();
-    User user = session.login("eli", "9012");
+    User user = session.login("eli", "1234");
+    assertNotNull(user);
 
     // Make request
     float refundAmount = 1000000f;
