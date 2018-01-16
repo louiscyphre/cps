@@ -21,11 +21,9 @@ import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.OnetimeEntriesController;
 import cps.client.controller.ParkingLotsController;
 import cps.client.controller.ViewController;
-import javafx.animation.PauseTransition;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 

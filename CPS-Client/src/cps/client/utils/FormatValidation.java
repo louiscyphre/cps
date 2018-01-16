@@ -1,6 +1,6 @@
 package cps.client.utils;
 
-import java.util.regex.*;
+import java.util.regex.Pattern;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;

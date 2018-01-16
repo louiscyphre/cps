@@ -1,6 +1,17 @@
 package cps.client.controller.responsehandler;
 
-import cps.api.response.*;
+import cps.api.response.CancelOnetimeParkingResponse;
+import cps.api.response.ComplaintResponse;
+import cps.api.response.FullSubscriptionResponse;
+import cps.api.response.IncidentalParkingResponse;
+import cps.api.response.ListOnetimeEntriesResponse;
+import cps.api.response.ListParkingLotsResponse;
+import cps.api.response.LoginResponse;
+import cps.api.response.ParkingEntryResponse;
+import cps.api.response.ParkingExitResponse;
+import cps.api.response.RegularSubscriptionResponse;
+import cps.api.response.ReservedParkingResponse;
+import cps.api.response.ServerResponse;
 
 public interface CustomerResponseHandler {
 
