@@ -25,17 +25,17 @@ public class TestReserveOrDisable {
     db.truncateTables();
   }
 
-  @Test
-  public void testReserveOrDisable() throws ServerException {
-    ParkingLot lot=initParkingLot();
-    LotController lotcontroller=server.getLotController();
-    CarTransportationController transportationController = server.getTransportationController();
-    db.performQuery(query);
-    
-    transportationController.insertCar(
-    //lotcontroller.reserveOrDisable(session, serverResponse, lotID, i, j, k, visitor, successMessage)
-    fail("Not yet implemented");
-  }
+//  @Test
+//  public void testReserveOrDisable() throws ServerException {
+//    ParkingLot lot=initParkingLot();
+//    LotController lotcontroller=server.getLotController();
+//    CarTransportationController transportationController = server.getTransportationController();
+//    db.performQuery(query);
+//    
+//    transportationController.insertCar(
+//    //lotcontroller.reserveOrDisable(session, serverResponse, lotID, i, j, k, visitor, successMessage)
+//    fail("Not yet implemented");
+//  }
 
   protected ParkingLot initParkingLot() throws ServerException {
     ParkingLot lot = db.performQuery(conn -> ParkingLot.create(conn, "Sesam 2", 4, 5, 3, "12.f.t43"));
