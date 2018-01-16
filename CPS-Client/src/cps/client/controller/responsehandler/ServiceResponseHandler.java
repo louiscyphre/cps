@@ -3,6 +3,7 @@ package cps.client.controller.responsehandler;
 import cps.api.response.DisableParkingSlotsResponse;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ListComplaintsResponse;
+import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.RefundResponse;
 import cps.api.response.RequestLotStateResponse;
 import cps.api.response.RequestReportResponse;

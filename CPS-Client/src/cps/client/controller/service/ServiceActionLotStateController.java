@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import cps.api.action.RequestLotStateAction;
 import cps.api.request.ListParkingLotsRequest;
+import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.RequestLotStateResponse;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
@@ -303,8 +304,7 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
     }
   }
 
-  @Override
-  public void setParkingLots(Collection<ParkingLot> list) {
+  private void setParkingLots(Collection<ParkingLot> list) {
     List<String> tmp = new ArrayList<String>();
 
     parkingLotsMap.clear();
@@ -324,6 +324,13 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
     parkingLotsList.setDisable(false);
   }
 
+  @Override
+  public ServerResponse handleParkingLots(ListParkingLotsResponse response) {
+    setParkingLots(response.getData());
+    turnProcessingStateOff();
+    return response;
+  }
+  
   @Override
   public ServerResponse handle(RequestLotStateResponse response) {
 
