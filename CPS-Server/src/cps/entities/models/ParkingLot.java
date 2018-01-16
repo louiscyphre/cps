@@ -407,21 +407,16 @@ public class ParkingLot implements Serializable {
 
     ResultSet rs = stmt.executeQuery();
     rs.next();
-
     result = rs.getInt(1);
-
     return result;
   }
 
   /**
    * Update.
    *
-   * @param conn
-   *          the conn
-   * @throws SQLException
-   *           the SQL exception
-   * @throws ServerException
-   *           the server exception
+   * @param conn the conn
+   * @throws SQLException the SQL exception
+   * @throws ServerException the server exception
    */
   public void update(Connection conn) throws SQLException, ServerException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
@@ -444,11 +439,9 @@ public class ParkingLot implements Serializable {
   /**
    * Find all.
    *
-   * @param conn
-   *          the conn
+   * @param conn the conn
    * @return the collection
-   * @throws SQLException
-   *           the SQL exception
+   * @throws SQLException the SQL exception
    */
   public static Collection<ParkingLot> findAll(Connection conn) throws SQLException {
     LinkedList<ParkingLot> results = new LinkedList<ParkingLot>();
@@ -498,7 +491,7 @@ public class ParkingLot implements Serializable {
     }
 
     LinkedList<ParkingLot> lots = new LinkedList<>();
-
+    
     if (lotIDs == null) {
       return lots;
     }
