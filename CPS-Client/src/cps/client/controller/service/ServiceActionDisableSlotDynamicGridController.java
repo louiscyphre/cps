@@ -1,9 +1,5 @@
 package cps.client.controller.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import cps.api.response.RequestLotStateResponse;
@@ -13,14 +9,12 @@ import cps.entities.models.ParkingCell;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import sun.print.DocumentPropertiesUI;
 
 // TODO stub - need to implement the dynamic grid creation and the view initialization
 public class ServiceActionDisableSlotDynamicGridController extends ServiceActionControllerBase {

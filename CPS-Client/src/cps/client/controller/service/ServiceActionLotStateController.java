@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import cps.api.action.RequestLotStateAction;
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.RequestLotStateResponse;
@@ -29,7 +26,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
