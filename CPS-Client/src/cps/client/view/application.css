@@ -56,12 +56,17 @@
 }
 
 .inputField, .passwordInputField {
-    -fx-padding: 15px;
+    -fx-padding: 15 15 15 15;
     -fx-border-radius: 8 8 8 8;
     -fx-background-radius: 8 8 8 8;
-    -fx-pref-width:280;
+    -fx-pref-width:320;
     -fx-pref-height:40;
-    -fx-max-width:280;
+    -fx-max-width:320;
+}
+
+.buttonGroupHBox {
+    -fx-pref-width:320;
+    -fx-max-width:320;
 }
 
 .vbox {

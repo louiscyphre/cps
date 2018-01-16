@@ -10,6 +10,7 @@ import java.util.List;
 import cps.api.action.DisableParkingSlotsAction;
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.DisableParkingSlotsResponse;
+import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
@@ -83,8 +84,7 @@ public class ServiceActionDisableSlotController extends ServiceActionControllerB
     }
   }
 
-  @Override
-  public void setParkingLots(Collection<ParkingLot> list) {
+  private void setParkingLots(Collection<ParkingLot> list) {
     List<String> tmp = new ArrayList<String>();
     // TODO based on an assumption that street addresses are unique
 
@@ -109,5 +109,12 @@ public class ServiceActionDisableSlotController extends ServiceActionControllerB
   public ServerResponse handle(DisableParkingSlotsResponse response) {
 //    showAlert(response.getDescription());
     return super.handleGenericResponse(response);
+  }
+
+  @Override
+  public ServerResponse handleParkingLots(ListParkingLotsResponse response) {
+    setParkingLots(response.getData());
+    turnProcessingStateOff();
+    return response;
   }
 }

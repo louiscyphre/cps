@@ -10,6 +10,8 @@ import java.util.List;
 import cps.api.request.CancelOnetimeParkingRequest;
 import cps.api.request.ListOnetimeEntriesRequest;
 import cps.api.request.ListParkingLotsRequest;
+import cps.api.response.ListParkingLotsResponse;
+import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.OnetimeEntriesController;
@@ -171,9 +173,8 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
   public void removeEntry(int onetimeServiceID) {
     obsEntriesList.remove(new TableOnetimeService(0, null, 0, null, null, onetimeServiceID));
   }
-
-  @Override
-  public void setParkingLots(Collection<ParkingLot> list) {
+  
+  private void setParkingLots(Collection<ParkingLot> list) {
     parkingLotsMap = new HashMap<Integer, String>();
     for (ParkingLot i : list) {
       String address = new String(i.getStreetAddress());
@@ -287,4 +288,9 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
     obsEntriesList.addAll(entriesList);
   }
 
+  public ServerResponse handleParkingLots(ListParkingLotsResponse response) {
+    setParkingLots(response.getData());
+    turnProcessingStateOff();
+    return response;
+  }
 }

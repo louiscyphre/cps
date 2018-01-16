@@ -5,6 +5,8 @@ package cps.client.controller;
 
 import java.util.Collection;
 
+import cps.api.response.ListParkingLotsResponse;
+import cps.api.response.ServerResponse;
 import cps.entities.models.ParkingLot;
 
 /**
@@ -12,7 +14,7 @@ import cps.entities.models.ParkingLot;
  */
 public interface ParkingLotsController extends ViewController {
   /**
-   * @param parkingLots
+   * @param response
    */
-  public void setParkingLots(Collection<ParkingLot> list);
+  public ServerResponse handleParkingLots(ListParkingLotsResponse response);
 }

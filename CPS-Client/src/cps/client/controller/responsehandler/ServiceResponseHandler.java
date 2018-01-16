@@ -17,6 +17,8 @@ public interface ServiceResponseHandler {
   public ServerResponse handle(ReserveParkingSlotsResponse response);
 
   public ServerResponse handle(SetFullLotResponse response);
+  
+  public ServerResponse handle(ListParkingLotsResponse response);
 
   public ServerResponse handle(UpdatePricesResponse response);
 

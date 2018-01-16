@@ -14,6 +14,8 @@ import java.util.Locale;
 
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.request.ReservedParkingRequest;
+import cps.api.response.ListParkingLotsResponse;
+import cps.api.response.ServerResponse;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
@@ -123,8 +125,7 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
     }
   }
 
-  @Override
-  public void setParkingLots(Collection<ParkingLot> list) {
+  private void setParkingLots(Collection<ParkingLot> list) {
     LinkedList<String> tmp = new LinkedList<String>();
     for (ParkingLot i : list) {
       String address = new String(i.getStreetAddress());
@@ -320,5 +321,12 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
     parkingLotsList.getItems().clear();
     parkingLotsMap.clear();
     loadParkingLots();
+  }
+  
+  @Override
+  public ServerResponse handleParkingLots(ListParkingLotsResponse response) {
+    setParkingLots(response.getData());
+    turnProcessingStateOff();
+    return response;
   }
 }
