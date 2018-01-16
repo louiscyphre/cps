@@ -1,19 +1,21 @@
 package cps.client;
 
 import java.io.BufferedReader;
-
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
 
-import cps.common.*;
-import cps.api.action.*;
-import cps.api.request.*;
-import cps.api.response.*;
-import cps.entities.models.*;
-import cps.entities.people.*;
+import cps.api.action.InitLotAction;
+import cps.api.request.IncidentalParkingRequest;
+import cps.api.request.ListOnetimeEntriesRequest;
+import cps.api.request.ParkingEntryRequest;
+import cps.api.response.ListOnetimeEntriesResponse;
+import cps.api.response.ServerResponse;
+import cps.common.Constants;
+import cps.common.Utilities;
+import cps.entities.models.OnetimeService;
 
 @SuppressWarnings("unused")
 public class ConsoleClient implements ClientUI {
