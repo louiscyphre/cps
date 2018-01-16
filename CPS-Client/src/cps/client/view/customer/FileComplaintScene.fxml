@@ -13,7 +13,7 @@
   <center>
     <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="360.0" spacing="10.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
-            <TextArea fx:id="complaintContent" prefHeight="200.0" prefWidth="200.0" />
+            <TextArea fx:id="complaintContent" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
         <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="100.0" spacing="0.0" styleClass="infoLabel">
           <children>
             <ProgressIndicator fx:id="infoProgress" visible="false">
