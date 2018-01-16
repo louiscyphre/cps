@@ -36,6 +36,7 @@ public class Reminder extends Thread {
         // TODO check one time services where customer has to park within 30
         // minutes
 
+      
       }
 
     } catch (InterruptedException e) {

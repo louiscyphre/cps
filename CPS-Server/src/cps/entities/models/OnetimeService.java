@@ -127,17 +127,27 @@ public class OnetimeService implements ParkingService {
   /**
    * Creates Onetime Service.
    *
-   * @param conn the Connection
-   * @param type Constants.ServiceType
-   * @param customerID the customer ID
-   * @param email the email
-   * @param carID the car ID
-   * @param lotID the lot ID
-   * @param plannedStartTime the planned start time
-   * @param plannedEndTime the planned end time
-   * @param canceled If the service was canceled (default false)
+   * @param conn
+   *          the Connection
+   * @param type
+   *          Constants.ServiceType
+   * @param customerID
+   *          the customer ID
+   * @param email
+   *          the email
+   * @param carID
+   *          the car ID
+   * @param lotID
+   *          the lot ID
+   * @param plannedStartTime
+   *          the planned start time
+   * @param plannedEndTime
+   *          the planned end time
+   * @param canceled
+   *          If the service was canceled (default false)
    * @return the onetime service
-   * @throws SQLException the SQL exception
+   * @throws SQLException
+   *           the SQL exception
    */
   public static OnetimeService create(Connection conn, int type, int customerID, String email, String carID, int lotID,
       Timestamp plannedStartTime, Timestamp plannedEndTime, boolean canceled) throws SQLException {
@@ -207,65 +217,76 @@ public class OnetimeService implements ParkingService {
     return result;
   }
 
-  // Return a list of all entries whose time period overlaps with the given period
-  public static ArrayList<OnetimeService> findForOverlap(Connection conn, String carID, Timestamp startTime, Timestamp plannedEndTime)
-      throws SQLException {
-    ArrayList<OnetimeService> result=new ArrayList<OnetimeService>();
-    
-    // When two time periods [a, b] [c, d] overlap, one of the following conditions is true:
-    // 1. c <= a and a <= d -- Start time of the given period is between the start time and end time of another period
-    // 2. a <= c and c <= b -- Start time of another period is between the start time and end time of the given period
-    PreparedStatement stmt= conn.prepareStatement("SELECT * FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (? < planned_start_time AND planned_start_time < ?))");
-    
-    int i=1;
+  // Return a list of all entries whose time period overlaps with the given
+  // period
+  public static ArrayList<OnetimeService> findForOverlap(Connection conn, String carID, Timestamp startTime,
+      Timestamp plannedEndTime) throws SQLException {
+    ArrayList<OnetimeService> result = new ArrayList<OnetimeService>();
+
+    // When two time periods [a, b] [c, d] overlap, one of the following
+    // conditions is true:
+    // 1. c <= a and a <= d -- Start time of the given period is between the
+    // start time and end time of another period
+    // 2. a <= c and c <= b -- Start time of another period is between the start
+    // time and end time of the given period
+    PreparedStatement stmt = conn.prepareStatement(
+        "SELECT * FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (? < planned_start_time AND planned_start_time < ?))");
+
+    int i = 1;
     stmt.setString(i++, carID);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, plannedEndTime);
-    
-    ResultSet rs=stmt.executeQuery();
-    
+
+    ResultSet rs = stmt.executeQuery();
+
     while (rs.next()) {
       result.add(new OnetimeService(rs));
     }
-    
+
     rs.close();
     stmt.close();
-    
+
     return result;
   }
 
-  // Return true if there is at least one entry whose time period overlaps with the given period
+  // Return true if there is at least one entry whose time period overlaps with
+  // the given period
   public static boolean overlapExists(Connection conn, String carID, Timestamp startTime, Timestamp endTime)
       throws SQLException {
     boolean result = false;
-    
-    // When two time periods [a, b] [c, d] overlap, one of the following conditions is true:
-    // 1. c <= a and a <= d -- Start time of the given period is between the start time and end time of another period
-    // 2. a <= c and c <= b -- Start time of another period is between the start time and end time of the given period
-    PreparedStatement stmt= conn.prepareStatement("SELECT count(*) FROM onetime_service WHERE car_id=? AND ((planned_start_time <= ? AND ? <= planned_end_time) OR (? <= planned_start_time AND planned_start_time <= ?))");
 
-    int i=1;
+    // When two time periods [a, b] [c, d] overlap, one of the following
+    // conditions is true:
+    // 1. c <= a and a <= d -- Start time of the given period is between the
+    // start time and end time of another period
+    // 2. a <= c and c <= b -- Start time of another period is between the start
+    // time and end time of the given period
+    PreparedStatement stmt = conn.prepareStatement(
+        "SELECT count(*) FROM onetime_service WHERE car_id=? AND ((planned_start_time <= ? AND ? <= planned_end_time) OR (? <= planned_start_time AND planned_start_time <= ?))");
+
+    int i = 1;
     stmt.setString(i++, carID);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, startTime);
     stmt.setTimestamp(i++, endTime);
-    
-    ResultSet rs=stmt.executeQuery();
-    
+
+    ResultSet rs = stmt.executeQuery();
+
     if (rs.next()) {
-      // If there is one or more results, we have an overlapping OnetimeService entry
+      // If there is one or more results, we have an overlapping OnetimeService
+      // entry
       result = rs.getInt(1) > 0;
     }
-    
+
     rs.close();
     stmt.close();
-    
+
     return result;
   }
-  
+
   public static OnetimeService findByID(Connection conn, int sId) throws SQLException {
     OnetimeService result = null;
 
@@ -339,5 +360,29 @@ public class OnetimeService implements ParkingService {
 
   public float calculatePayment(float pricePerHour) {
     return pricePerHour * getPlannedDuration().getSeconds() / 3600f;
+  }
+
+  public static Collection<WarningMessage> findLateUnwarnedCustomers(Connection conn) throws SQLException {
+    LinkedList<WarningMessage> mess = new LinkedList<WarningMessage>();
+    String helper = "";
+    helper += "SELECT os.customer_id,os.email,os.car_id,os.lot_id,os.planned_start_time,os.planned_end_time ";
+    helper += "FROM onetime_service os";
+    helper += "WHERE os.planned_start_time <= ? AND"; // variable 1 - current
+                                                      // time
+    helper += " NOT EXISTS (SELECT *";
+    helper += "FROM car_transportation ct";
+    helper += "WHERE ct.customer_id=os.customer_id AND";
+    helper += "ct.auth_id=os.id AND";
+    helper += "ct.auth_type=1 AND";
+    helper += "os.lot_id=ct.lot_id) AND os.warned=false";
+    PreparedStatement stmt = conn.prepareStatement(helper);
+    stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+    ResultSet rs = stmt.executeQuery();
+
+    while (rs.next()) {
+      mess.add(new WarningMessage(rs));
+    }
+
+    return mess;
   }
 }
