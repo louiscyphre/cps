@@ -44,6 +44,10 @@ public class ServerApplication extends AbstractServer {
   public DatabaseController getDatabaseController() {
     return serverController.getDatabaseController();
   }
+  
+  public String describeMessage(String header, ConnectionToClient client, Object msg, Gson gson) {
+    return String.format("%s: %s %s\n  type: %s\n  content: %s", header, client.getName(), client, msg.getClass().getSimpleName(), gson.toJson(msg));
+  }
 
   /**
    * Send object to client.
@@ -55,7 +59,8 @@ public class ServerApplication extends AbstractServer {
    */
   private void sendToClient(ConnectionToClient client, Object msg) {
     try {
-      System.out.println("Sending to client: " + gson.toJson(msg));
+      System.out.println(describeMessage("Sending to", client, msg, gson));
+      System.out.println();
       client.sendToClient(msg);
     } catch (Exception ex) {
       System.out.println("ERROR - Could not send to client!!!");
@@ -83,8 +88,7 @@ public class ServerApplication extends AbstractServer {
                                          // instanceof
 
     // Print the request to console
-    System.out.println("Message from: " + client + ", type: " + request.getClass().getSimpleName() + ", content: "
-        + gson.toJson(request));
+    System.out.println(describeMessage("Received from", client, request, gson));
 
     // Get the context object associated with this client connection, if exists
     // A context object stores data about the current client session

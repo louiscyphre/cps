@@ -11,6 +11,16 @@ public class RegularSubscriptionRequest extends SubscriptionRequest {
   private int               lotID;
   private LocalTime         dailyExitTime;
 
+  /**
+   * Instantiates a new regular subscription request.
+   *
+   * @param customerID the customer ID
+   * @param email the email
+   * @param carID the car ID
+   * @param startDate the start date
+   * @param lotID the lot ID
+   * @param dailyExitTime the daily exit time
+   */
   public RegularSubscriptionRequest(int customerID, String email, String carID, LocalDate startDate, int lotID,
       LocalTime dailyExitTime) {
     super(customerID, email, carID, startDate);

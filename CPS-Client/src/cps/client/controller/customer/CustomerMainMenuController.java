@@ -195,9 +195,10 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     buttonsVbox.getChildren().add(5, exitParkingButton);
     buttonsVbox.getChildren().add(6, viewMyReservationsButton);
     buttonsVbox.getChildren().add(7, fileComplaintButton);
-    buttonsVbox.getChildren().forEach(node -> {
-      node.getStyleClass().add("smallButton");
-    });
+    //buttonsVbox.getChildren().forEach(node -> {
+    //  node.getStyleClass().add("smallButton");
+    //});
+    buttonsVbox.getStyleClass().add("loggedInButtonsBox");
   }
 
   @Override
@@ -211,9 +212,10 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     buttonsVbox.getChildren().remove(exitParkingButton);
     buttonsVbox.getChildren().remove(viewMyReservationsButton);
     buttonsVbox.getChildren().remove(fileComplaintButton);
-    buttonsVbox.getChildren().forEach(node -> {
-      node.getStyleClass().remove("smallButton");
-    });
+    //buttonsVbox.getChildren().forEach(node -> {
+    //  node.getStyleClass().remove("smallButton");
+    //});
+    buttonsVbox.getStyleClass().remove("loggedInButtonsBox");
   }
 
   @Override

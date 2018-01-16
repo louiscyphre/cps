@@ -1,8 +1,11 @@
 package cps.client.controller.service;
 
+import cps.client.context.EmployeeContext;
 import cps.client.controller.ClientControllerBase;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.utils.InternalClientException;
+import cps.entities.people.CompanyPerson;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -38,5 +41,13 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
 
   void validateAndSend() {
     
+  }
+  
+  EmployeeContext requireEmployeeContext() throws InternalClientException {
+    return notNull(ControllersClientAdapter.getEmployeeContext(), "Emlpoyee Context");
+  }
+  
+  CompanyPerson requireLoggedInUser() throws InternalClientException {
+    return requireEmployeeContext().requireCompanyPerson();
   }
 }

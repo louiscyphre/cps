@@ -23,9 +23,8 @@
 
 <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="705.0" style="-fx-background-color: E6DDD4;" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.RegularSubscriptionController">
   <center>
-    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="581.0" prefWidth="393.0" spacing="15.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="393.0" spacing="15.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
-            <TextField fx:id="customerIDTextField" alignment="BASELINE_LEFT" layoutX="50.0" layoutY="103.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Customer ID (blank if you don't have)" style="" styleClass="inputField" text="" />
             <TextField fx:id="emailTextField" layoutX="50.0" layoutY="271.0" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter Email here" styleClass="inputField">
                <VBox.margin>
                   <Insets />

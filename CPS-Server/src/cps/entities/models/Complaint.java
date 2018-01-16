@@ -7,9 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import cps.common.Constants;
 import cps.server.ServerException;
+import cps.server.controllers.DatabaseController;
 
 public class Complaint implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -22,8 +25,7 @@ public class Complaint implements Serializable {
   private Timestamp         resolvedAt;
   private float             refundAmount;
 
-  public Complaint(int id, int customerID, int employeeID, int status, String description, Timestamp createdAt,
-      Timestamp resolvedAt, float refundAmount) {
+  public Complaint(int id, int customerID, int employeeID, int status, String description, Timestamp createdAt, Timestamp resolvedAt, float refundAmount) {
     this.id = id;
     this.customerID = customerID;
     this.employeeID = employeeID;
@@ -35,8 +37,7 @@ public class Complaint implements Serializable {
   }
 
   public Complaint(ResultSet rs) throws SQLException {
-    this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5), rs.getTimestamp(6),
-        rs.getTimestamp(7), rs.getFloat(8));
+    this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5), rs.getTimestamp(6), rs.getTimestamp(7), rs.getFloat(8));
   }
 
   public int getId() {
@@ -103,10 +104,8 @@ public class Complaint implements Serializable {
     this.refundAmount = refundAmount;
   }
 
-  public static Complaint create(Connection conn, int customerID, String description, Timestamp createdAt,
-      Timestamp resolvedAt) throws SQLException {
-    PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_COMPLAINT,
-        Statement.RETURN_GENERATED_KEYS);
+  public static Complaint create(Connection conn, int customerID, String description, Timestamp createdAt, Timestamp resolvedAt) throws SQLException {
+    PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_COMPLAINT, Statement.RETURN_GENERATED_KEYS);
 
     int field = 1;
     int status = Constants.COMPLAINT_STATUS_PROCESSING;
@@ -155,6 +154,22 @@ public class Complaint implements Serializable {
     }
 
     return result;
+  }
+
+  public static Collection<Complaint> findByCustomerID(Connection conn, int customerID) throws SQLException {
+    Collection<Complaint> items = new LinkedList<>();
+    DatabaseController.statementForEach(conn, "SELECT * FROM complaint where customer_id = ?",
+        statement -> statement.setInt(1, customerID),
+        result -> items.add(new Complaint(result)));
+    return items;
+  }
+
+  public static Collection<Complaint> findAll(Connection conn) throws SQLException {
+    Collection<Complaint> items = new LinkedList<>();
+    DatabaseController.statementForEach(conn, "SELECT * FROM complaint",
+        statement -> {},
+        result -> items.add(new Complaint(result)));
+    return items;
   }
 
   // Light update - write all fields except complaint description

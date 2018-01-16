@@ -20,13 +20,12 @@ public class FileComplaintController extends CustomerActionControllerBase {
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.FILE_COMPLAINT);
   }
 
-  void sendRequest() {
+  @Override
+  void sendMainRequest() {
     try {
       int customerId = notNull(ControllersClientAdapter.getCustomerContext(), "CustomerContext").getCustomerId();
       String content = requireField(complaintContent, "Complaint Content");
-      ComplaintRequest request = new ComplaintRequest(customerId, content);
-      turnProcessingStateOn();
-      ControllersClientAdapter.getClient().sendRequest(request);
+      sendRequest(new ComplaintRequest(customerId, content));
     } catch (Exception e) {
       displayError(e.getMessage());
     }

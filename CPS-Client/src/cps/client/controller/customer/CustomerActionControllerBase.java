@@ -1,8 +1,8 @@
 package cps.client.controller.customer;
 
 import cps.client.controller.ClientControllerBase;
-import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ControllerConstants.SceneCode;
+import cps.client.controller.ControllersClientAdapter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -25,18 +25,18 @@ public class CustomerActionControllerBase extends ClientControllerBase {
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (!processing) {
-      sendRequest();
+      sendMainRequest();
     }
   }
 
   @FXML
   void handleOkButton(ActionEvent event) {
     if (!processing) {
-      sendRequest();
+      sendMainRequest();
     }
   }
 
-  void sendRequest() {
+  void sendMainRequest() {
     
   }
 

@@ -126,6 +126,21 @@ public class SubscriptionService implements ParkingService {
     return Constants.LICENSE_TYPE_SUBSCRIPTION;
   }
 
+  /**
+   * Creates the.
+   *
+   * @param conn the conn
+   * @param type the type
+   * @param customerID int - Customer ID
+   * @param email the email
+   * @param carID String - The car ID
+   * @param lotID int - The lot ID
+   * @param startDate LocalDate - The start date
+   * @param endDate LocalDate - The end date
+   * @param dailyExitTime LocalTime - The daily exit time
+   * @return the subscription service
+   * @throws SQLException the SQL exception
+   */
   public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID,
       int lotID, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_SUBSCRIPTION_SERVICE,
@@ -251,5 +266,61 @@ public class SubscriptionService implements ParkingService {
     }
 
     return item;
+  }
+
+  /**
+   * CHeck if Overlap exists.
+   *
+   * @param conn
+   *          the conn
+   * @param carID
+   *          the car ID
+   * @param subsType
+   *          the subs type
+   * @param lotId
+   *          the lot id
+   * @param startDate
+   *          the start date
+   * @param endDate
+   *          the end date
+   * @return True if exists subscription of the same type for the same car id in
+   *         the same parking lot
+   * @throws SQLException
+   *           the SQL exception
+   */
+  public static boolean OverlapExists(Connection conn, String carID, int subsType, int lotId, LocalDate startDate,
+      LocalDate endDate) throws SQLException {
+    //TODO:Test this properly
+    PreparedStatement stmt = null;
+    boolean result = false;
+    int i = 1;
+    if (subsType == Constants.SUBSCRIPTION_TYPE_FULL) {
+      stmt = conn.prepareStatement(
+          "SELECT count(*) FROM subscription_service WHERE car_id = ? AND subs_type = ? AND ((start_date <= ? AND ? <= end_date) OR (? <= start_date AND start_date <= ?))");
+      stmt.setString(i++, carID);
+      stmt.setInt(i++, subsType);
+
+    } else {
+      stmt = conn.prepareStatement(
+          "SELECT count(*) FROM subscription_service WHERE car_id = ? AND ((subs_type != ?) OR (subs_type = ? AND lot_id = ?)) AND ((start_date <= ? AND ? <= end_date) OR (? <= start_date AND start_date <= ?))");
+      stmt.setString(i++, carID);
+      stmt.setInt(i++, subsType);
+      stmt.setInt(i++, subsType);
+      stmt.setInt(i++, lotId);
+    }
+    
+    stmt.setDate(i++, Date.valueOf(startDate));
+    stmt.setDate(i++, Date.valueOf(startDate));
+    stmt.setDate(i++, Date.valueOf(startDate));
+    stmt.setDate(i++, Date.valueOf(endDate));
+
+    ResultSet rs = stmt.executeQuery();
+
+    if (rs.next()) {
+      int a=rs.getInt(1);
+      result = rs.getInt(1) > 0;
+    }
+
+    return result;
   }
 }

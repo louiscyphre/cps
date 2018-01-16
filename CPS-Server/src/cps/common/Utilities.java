@@ -61,6 +61,22 @@ public abstract class Utilities {
       this.b = b;
     }
   }
+  
+  public interface Visitor<T> {
+    void apply(T argument);
+  }
+  
+  public interface VisitorWithReturnType<T, R> {
+    R apply(T argument);
+  }
+  
+  public interface VisitorWithException<T, E extends Throwable> {
+    void apply(T argument) throws E;
+  }
+  
+  public interface VisitorWithExceptionAndReturnType<T, E extends Throwable, R> {
+    R apply(T argument) throws E;
+  }
 
   public static String randomString(String characterSet, int length) {
     StringBuilder builder = new StringBuilder();

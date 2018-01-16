@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import cps.api.request.Request;
 import cps.api.response.CancelOnetimeParkingResponse;
 import cps.api.response.ComplaintResponse;
 import cps.api.response.DisableParkingSlotsResponse;
@@ -11,6 +12,7 @@ import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ListComplaintsResponse;
+import cps.api.response.ListMyComplaintsResponse;
 import cps.api.response.ListOnetimeEntriesResponse;
 import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.LoginResponse;
@@ -29,13 +31,17 @@ import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.client.utils.InternalClientException;
 import cps.client.utils.UserLevelClientException;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 
 public abstract class ClientControllerBase implements ViewController {
   protected static final String DEFAULT_INFO_LABEL = "Welcome to Car Parking System!";
@@ -106,6 +112,10 @@ public abstract class ClientControllerBase implements ViewController {
 
   @Override
   public void turnProcessingStateOff() {
+    try {
+      Thread.sleep(500);
+    } catch (InterruptedException e) {
+    }
     infoProgress.visibleProperty().set(false);
     infoBox.getStyleClass().clear();
     infoBox.getStyleClass().add("infoLabel");
@@ -136,6 +146,18 @@ public abstract class ClientControllerBase implements ViewController {
     infoBox.getStyleClass().add("infoLabel");
     infoProgress.visibleProperty().set(false);
     infoLabel.getChildren().clear();
+  }
+  
+  public final void sendRequest(Request request, boolean waitForResponse) {
+    if (waitForResponse) {
+      turnProcessingStateOn();
+    }
+    
+    ControllersClientAdapter.getClient().sendRequest(request);
+  }
+  
+  public final void sendRequest(Request request) {
+    sendRequest(request, true);
   }
 
   public ServerResponse handleGenericResponse(ServerResponse response) {
@@ -179,6 +201,11 @@ public abstract class ClientControllerBase implements ViewController {
 
   @Override
   public ServerResponse handle(ListComplaintsResponse response) {
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(ListMyComplaintsResponse response) {
     return null;
   }
 
@@ -325,6 +352,20 @@ public abstract class ClientControllerBase implements ViewController {
       throw new InternalClientException(String.format("%s must not be null", name));
     }
     return object;
+  }
+  
+  public void errorIf(boolean condition, String errorMessage) throws UserLevelClientException {
+    if (condition) {
+      throw new UserLevelClientException(errorMessage);
+    }
+  }
+  
+  public void errorIfNull(Object object, String errorMessage) throws UserLevelClientException {
+    errorIf(object == null, errorMessage);
+  }
+  
+  public void showAlert(String message) {
+    new Alert(AlertType.INFORMATION, message).show();
   }
 
 }

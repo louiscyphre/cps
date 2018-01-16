@@ -36,8 +36,7 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
       String robotIp = requireFieldTrim(robotIpTF, "Robot IP");
   
       User user = ControllersClientAdapter.getEmployeeContext().requireCompanyPerson();
-      InitLotAction action = new InitLotAction(user.getId(), streetAddress, lotSize, incidentalTariff, reservedTariff, robotIp);
-      ControllersClientAdapter.getClient().sendRequest(action);
+      sendRequest(new InitLotAction(user.getId(), streetAddress, lotSize, incidentalTariff, reservedTariff, robotIp));
     } catch (Exception e) {
       displayError(e.getMessage());
     }

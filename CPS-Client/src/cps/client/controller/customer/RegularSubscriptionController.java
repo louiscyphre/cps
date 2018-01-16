@@ -71,7 +71,18 @@ public class RegularSubscriptionController extends CustomerActionControllerBase 
         validateAndSend();
       }
       
+      @Override
+      public void turnLoggedInStateOn() {
+        super.turnLoggedInStateOn();
+        emailTextField.setVisible(false);
+      }
 
+      @Override
+      public void turnLoggedInStateOff() {
+        super.turnLoggedInStateOff();
+        emailTextField.setVisible(true);
+      }
+      
       private void validateAndSend() {
         // validation in same order as order in the form
         // out of form

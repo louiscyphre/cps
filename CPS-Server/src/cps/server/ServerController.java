@@ -99,6 +99,11 @@ public class ServerController implements RequestHandler<SessionHolder> {
   }
 
   @Override
+  public ServerResponse handle(ListMyComplaintsRequest request, SessionHolder context) {
+    return complaintController.handle(request, context.acquireCustomerSession());
+  }
+
+  @Override
   public ServerResponse handle(ListOnetimeEntriesRequest request, SessionHolder context) {
     return onetimeParkingController.handle(request, context.acquireCustomerSession());
   }
@@ -141,6 +146,11 @@ public class ServerController implements RequestHandler<SessionHolder> {
   @Override
   public ServerResponse handle(InitLotAction action, SessionHolder context) {
     return lotController.handle(action, context.acquireServiceSession());
+  }
+
+  @Override
+  public ServerResponse handle(ListComplaintsAction action, SessionHolder context) {
+    return complaintController.handle(action, context.acquireServiceSession());
   }
 
   @Override

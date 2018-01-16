@@ -7,6 +7,12 @@
     -fx-background-radius: 8 8 8 8;
 }
 
+.loggedInButtonsBox {
+    -fx-min-height:750;
+    -fx-pref-height:780;
+    -fx-pref-width:460;
+}
+
 .backButton, .cancelButton {
     -fx-background-color: #F3F3F3;
     -fx-color: #ffffff;
@@ -86,6 +92,7 @@
 	-fx-border-radius :  8 8 8 8;
 	-fx-border-color : #bce8f1;
 	-fx-margin-top:20;
+	-fx-font-size:14;
 }
 
 
@@ -96,6 +103,7 @@
 	-fx-text-fill :  #a94442;
 	-fx-border-radius :  8 8 8 8;
 	-fx-border-color : #ebccd1;
+	-fx-font-size:14;
 }
 
 .successLabel {
@@ -104,6 +112,7 @@
 	-fx-text-fill :  #3c763d;
 	-fx-border-radius :  8 8 8 8;
 	-fx-border-color : #d6e9c6;
+	-fx-font-size:14;
 }
 
 .processingLabel {
@@ -112,6 +121,7 @@
 	-fx-text-fill :  #8a6d3b;
 	-fx-border-radius :  8 8 8 8;
 	-fx-border-color : #f4f441;
+	-fx-font-size:14;
 }
 
 
