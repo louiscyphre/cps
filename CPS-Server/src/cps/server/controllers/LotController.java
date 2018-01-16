@@ -6,8 +6,6 @@ import static cps.common.Utilities.valueOrDefault;
 
 import java.util.Collection;
 
-import javax.swing.text.html.ParagraphView;
-
 import cps.api.action.DisableParkingSlotsAction;
 import cps.api.action.InitLotAction;
 import cps.api.action.RequestLotStateAction;
@@ -32,28 +30,20 @@ import cps.server.ServerController;
 import cps.server.session.ServiceSession;
 import cps.server.session.UserSession;
 
-/**
- * The Class LotController.
- */
+// TODO: Auto-generated Javadoc
+/** The Class LotController. */
 public class LotController extends RequestController {
 
-  /**
-   * Instantiates a new lot controller.
-   *
-   * @param serverController
-   *          serverApplication object
-   */
+  /** Instantiates a new lot controller.
+   * @param serverController the server controller */
   public LotController(ServerController serverController) {
     super(serverController);
   }
 
-  /**
-   * Handle ListParkingLotsRequest
-   * 
-   * @param request
-   * @param session
-   * @return Collection of ParkingLot objects
-   */
+  /** Handle.
+   * @param request the request
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(ListParkingLotsRequest request, UserSession session) {
     return database.performQuery(new ListParkingLotsResponse(), (conn, response) -> {
       Collection<ParkingLot> result = ParkingLot.findAll(conn);
@@ -70,13 +60,10 @@ public class LotController extends RequestController {
     });
   }
 
-  /**
-   * Handle InitLotAction.
-   *
-   * @param request
-   *          the request
-   * @return the server response
-   */
+  /** Handle.
+   * @param request the request
+   * @param session the session
+   * @return the inits the lot response */
   public InitLotResponse handle(InitLotAction request, ServiceSession session) {
     return database.performQuery(new InitLotResponse(), (conn, response) -> {
       // Require a logged in employee
@@ -94,8 +81,8 @@ public class LotController extends RequestController {
       errorIf(isEmpty(request.getRobotIP()), "Robot IP address must be non-empty");
 
       // Create parking lot
-      ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(),
-          request.getPrice2(), request.getRobotIP());
+      ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(), request.getPrice2(),
+          request.getRobotIP());
 
       errorIfNull(result, "Failed to create parking lot");
 
@@ -106,13 +93,10 @@ public class LotController extends RequestController {
     });
   }
 
-  /**
-   * Handle Update Prices Action.
-   *
-   * @param action
-   *          the action
-   * @return the update prices response
-   */
+  /** Handle.
+   * @param action the action
+   * @param session the session
+   * @return the update prices response */
   public UpdatePricesResponse handle(UpdatePricesAction action, ServiceSession session) {
     return database.performQuery(new UpdatePricesResponse(), (conn, response) -> {
       // Require a logged in employee
@@ -137,6 +121,10 @@ public class LotController extends RequestController {
     });
   }
 
+  /** Handle.
+   * @param action the action
+   * @param session the session
+   * @return the sets the full lot response */
   public SetFullLotResponse handle(SetFullLotAction action, ServiceSession session) {
     return database.performQuery(new SetFullLotResponse(), (conn, response) -> {
       // Require a logged in employee
@@ -164,6 +152,10 @@ public class LotController extends RequestController {
     });
   }
 
+  /** Handle.
+   * @param action the action
+   * @param session the session
+   * @return the request lot state response */
   public RequestLotStateResponse handle(RequestLotStateAction action, ServiceSession session) {
     return database.performQuery(new RequestLotStateResponse(), (conn, response) -> {
       // Require a logged in employee
@@ -180,8 +172,18 @@ public class LotController extends RequestController {
     });
   }
 
-  public ServerResponse reserveOrDisable(ServiceSession session, ServerResponse serverResponse, int lotID, int i, int j,
-      int k, ParkingCellVisitor visitor, String successMessage) {
+  /** Reserve or disable.
+   * @param session the session
+   * @param serverResponse the server response
+   * @param lotID the lot ID
+   * @param i the i
+   * @param j the j
+   * @param k the k
+   * @param visitor the visitor
+   * @param successMessage the success message
+   * @return the server response */
+  public ServerResponse reserveOrDisable(ServiceSession session, ServerResponse serverResponse, int lotID, int i, int j, int k, ParkingCellVisitor visitor,
+      String successMessage) {
     return database.performQuery(serverResponse, (conn, response) -> {
       // Require a logged in employee
       User user = session.requireUser();
@@ -194,12 +196,9 @@ public class LotController extends RequestController {
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, lotID);
 
       // Check request parameters
-      errorIf(!between(j, 0, Constants.LOT_HEIGHT - 1),
-          String.format("Parameter j must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
-      errorIf(!between(k, 0, Constants.LOT_DEPTH - 1),
-          String.format("Parameter k must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
-      errorIf(!between(i, 0, lot.getWidth() - 1),
-          String.format("Parameter i must be in range [0, %s] (inclusive)", lot.getWidth() - 1));
+      errorIf(!between(j, 0, Constants.LOT_HEIGHT - 1), String.format("Parameter j must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
+      errorIf(!between(k, 0, Constants.LOT_DEPTH - 1), String.format("Parameter k must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
+      errorIf(!between(i, 0, lot.getWidth() - 1), String.format("Parameter i must be in range [0, %s] (inclusive)", lot.getWidth() - 1));
 
       ParkingCell cell = ParkingCell.find(conn, lot.getId(), i, j, k);
       errorIfNull(cell, String.format("Parking cell with coordinates %s, %s, %s not found", i, j, k));
@@ -214,15 +213,25 @@ public class LotController extends RequestController {
     });
   }
 
+  /** Handle.
+   * @param action the action
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(ReserveParkingSlotsAction action, ServiceSession session) {
-    return reserveOrDisable(session, new ReserveParkingSlotsResponse(), action.getLotID(), action.getLocationI(),
-        action.getLocationJ(), action.getLocationK(), cell -> cell.setReserved(true),
-        "Parking cell reserved successfully");
+    return reserveOrDisable(session, new ReserveParkingSlotsResponse(), action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK(),
+        cell -> {
+          if (!cell.isDisabled()) {
+            cell.setReserved(true);
+          }
+        }, "Parking cell reserved successfully");
   }
 
+  /** Handle.
+   * @param action the action
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(DisableParkingSlotsAction action, ServiceSession session) {
-    return reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(), action.getLocationI(),
-        action.getLocationJ(), action.getLocationK(), cell -> cell.setDisabled(true),
-        "Parking cell disabled successfully");
+    return reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK(),
+        cell -> cell.setDisabled(true), "Parking cell disabled successfully");
   }
 }

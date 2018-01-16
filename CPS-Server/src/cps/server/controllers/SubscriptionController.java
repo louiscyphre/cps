@@ -58,12 +58,12 @@ public class SubscriptionController extends RequestController {
 
       // check overlapping subscriptions with the same car ID
       if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
-      errorIf(SubscriptionService.OverlapExists(conn, request.getCarID(), request.getSubscriptionType(),
+      errorIf(SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(),
           request.getLotID(), startDate, endDate), "Subscription for this car for this parking lot already exists in this timeframe");
       }
       else
       {
-        errorIf(SubscriptionService.OverlapExists(conn, request.getCarID(), request.getSubscriptionType(),
+        errorIf(SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(),
             0, startDate, endDate), "Subscription for this car already exists in this timeframe");
       }
       // Handle login

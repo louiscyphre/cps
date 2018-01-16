@@ -410,6 +410,13 @@ public class ParkingLot implements Serializable {
     return result;
   }
 
+  /**
+   * Update.
+   *
+   * @param conn the conn
+   * @throws SQLException the SQL exception
+   * @throws ServerException the server exception
+   */
   public void update(Connection conn) throws SQLException, ServerException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
 
@@ -428,6 +435,13 @@ public class ParkingLot implements Serializable {
     st.close();
   }
 
+  /**
+   * Find all.
+   *
+   * @param conn the conn
+   * @return the collection
+   * @throws SQLException the SQL exception
+   */
   public static Collection<ParkingLot> findAll(Connection conn) throws SQLException {
     LinkedList<ParkingLot> results = new LinkedList<ParkingLot>();
 

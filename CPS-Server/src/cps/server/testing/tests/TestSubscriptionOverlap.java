@@ -1,24 +1,14 @@
 package cps.server.testing.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.sun.swing.internal.plaf.basic.resources.basic_de;
-
-import cps.api.request.FullSubscriptionRequest;
-import cps.api.request.RegularSubscriptionRequest;
-import cps.api.request.SubscriptionRequest;
-import cps.api.response.FullSubscriptionResponse;
-import cps.api.response.RegularSubscriptionResponse;
-import cps.api.response.ResponseHandler;
-import cps.api.response.ServerResponse;
 import cps.common.Constants;
 import cps.entities.models.Customer;
 import cps.entities.models.ParkingLot;
@@ -27,8 +17,6 @@ import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.controllers.DatabaseController;
-import cps.server.controllers.SubscriptionController;
-import cps.server.session.CustomerSession;
 import cps.server.session.SessionHolder;
 
 public class TestSubscriptionOverlap {
@@ -45,9 +33,8 @@ public class TestSubscriptionOverlap {
   }
 
   @Test
-  public void testHandleSubscriptionRequestCustomerSessionSubscriptionResponseLocalDateLocalDateLocalTime()
+  public void testSubscriptionOverlap()
       throws ServerException {
-    SubscriptionController subc = server.getSubscriptionController();
     LocalDate starttime = LocalDate.now();
     LocalDate endtime = LocalDate.now().plusDays(24);
     LocalTime dailyexittime = LocalTime.of(18, 0, 0);
@@ -66,17 +53,17 @@ public class TestSubscriptionOverlap {
           lot.getId(), starttime, endtime, dailyexittime);
       // Test 1
 
-      assertTrue(SubscriptionService.OverlapExists(conn, carid[0], Constants.SUBSCRIPTION_TYPE_FULL, 0,
+      assertTrue(SubscriptionService.overlapExists(conn, carid[0], Constants.SUBSCRIPTION_TYPE_FULL, 0,
           starttime.plusDays(1), endtime));
 
       // Test 2
 
-      assertFalse(SubscriptionService.OverlapExists(conn, carid[1], Constants.SUBSCRIPTION_TYPE_FULL, 0,
+      assertFalse(SubscriptionService.overlapExists(conn, carid[1], Constants.SUBSCRIPTION_TYPE_FULL, 0,
           starttime.plusDays(1), endtime));
 
       // Test 3
 
-      assertTrue(SubscriptionService.OverlapExists(conn, carid[0], Constants.SUBSCRIPTION_TYPE_REGULAR, lot.getId(),
+      assertTrue(SubscriptionService.overlapExists(conn, carid[0], Constants.SUBSCRIPTION_TYPE_REGULAR, lot.getId(),
           starttime.plusDays(1), endtime));
 
       /* ------------- */
@@ -86,19 +73,19 @@ public class TestSubscriptionOverlap {
 
       // Test 3
 
-      assertTrue(SubscriptionService.OverlapExists(conn, carid[2], Constants.SUBSCRIPTION_TYPE_REGULAR, lot.getId(),
+      assertTrue(SubscriptionService.overlapExists(conn, carid[2], Constants.SUBSCRIPTION_TYPE_REGULAR, lot.getId(),
           starttime.plusDays(1), endtime));
 
       // Test 4
-      assertFalse(SubscriptionService.OverlapExists(conn, carid[3], Constants.SUBSCRIPTION_TYPE_REGULAR, lot.getId(),
+      assertFalse(SubscriptionService.overlapExists(conn, carid[3], Constants.SUBSCRIPTION_TYPE_REGULAR, lot.getId(),
           starttime.plusDays(1), endtime));
 
       // Test 5
 
-      assertFalse(SubscriptionService.OverlapExists(conn, carid[2], Constants.SUBSCRIPTION_TYPE_REGULAR, lot2.getId(),
+      assertFalse(SubscriptionService.overlapExists(conn, carid[2], Constants.SUBSCRIPTION_TYPE_REGULAR, lot2.getId(),
           starttime.plusDays(1), endtime));
 
-      assertFalse(SubscriptionService.OverlapExists(conn, carid[2], Constants.SUBSCRIPTION_TYPE_FULL, 0,
+      assertFalse(SubscriptionService.overlapExists(conn, carid[2], Constants.SUBSCRIPTION_TYPE_FULL, 0,
           starttime.plusDays(1), endtime));
 
     });

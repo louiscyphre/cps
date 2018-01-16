@@ -63,6 +63,7 @@ public class OnetimeParkingController extends RequestController {
       
       // Check that lot is not full
       session.requireLotNotFull(conn, gson, lot, response);
+//      lot.countOrderedCells(conn, lot.getId(), startTime, 1);
 
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());

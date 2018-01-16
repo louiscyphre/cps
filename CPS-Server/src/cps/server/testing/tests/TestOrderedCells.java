@@ -1,16 +1,14 @@
 package cps.server.testing.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import cps.common.Constants;
-import cps.common.Utilities;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.server.ServerConfig;
@@ -18,7 +16,6 @@ import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.controllers.DatabaseController;
 import cps.server.session.SessionHolder;
-import cps.server.testing.utilities.CustomerData;
 
 public class TestOrderedCells {
 
@@ -35,7 +32,8 @@ public class TestOrderedCells {
 
 	@Test
 	public void testCountOrderedCells() throws ServerException {
-		// Create parking lot Create incidental parking request
+		// Create parking lot
+	  // Create a reserved parking service
 		// Insert the car
 		ParkingLot lot = initParkingLot();
 
