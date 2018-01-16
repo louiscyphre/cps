@@ -204,17 +204,7 @@ public class LotController extends RequestController {
       ParkingCell cell = ParkingCell.find(conn, lot.getId(), i, j, k);
       errorIfNull(cell, String.format("Parking cell with coordinates %s, %s, %s not found", i, j, k));
 
-      // TODO don't allow reserve/disable action if there is a car in the cell?
-      // Tegra was here
-      // Solution - if there are free slots - move the car and then disable the
-      // cell, else error
-
-      CarTransportationControllerA ctrc = (CarTransportationControllerA) serverController.getTransportationController();
-      if (lot.countFreeCells(conn) > 0) {
-        ctrc.clearCell(conn, lot, i, j, k, lot.constructContentArray(conn));
-      } else {
-        errorIf(true, String.format("There are no free slots to put the car"));
-      }
+      errorIf(cell.containsCar(), "The chosen cell is busy");
 
       visitor.call(cell);
       cell.update(conn);
