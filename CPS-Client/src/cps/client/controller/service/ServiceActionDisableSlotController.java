@@ -56,6 +56,8 @@ public class ServiceActionDisableSlotController extends ServiceActionControllerB
     floorJTF.clear();
     rowKTF.clear();
 
+    parkingLotsList.getItems().clear();
+    parkingLotsMap.clear();
     // Get the list of parking lots
     turnProcessingStateOn();
     sendRequest(new ListParkingLotsRequest());
