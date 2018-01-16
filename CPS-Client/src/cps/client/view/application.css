@@ -124,4 +124,8 @@
 	-fx-font-size:14;
 }
 
-
+.textFont{
+	-fx-font-size: 14;
+	-fx-text-alignment : left;
+    -fx-font-family: 'Sans-serif';
+}

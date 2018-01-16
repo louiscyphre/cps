@@ -23,12 +23,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
 
 public class ServiceActionLotStateController extends ServiceActionControllerBase implements ParkingLotsController {
 
@@ -39,7 +42,7 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
   private URL location;
 
   @FXML // fx:id="gridAnchor"
-  private AnchorPane gridAnchor; // Value injected by FXMLLoader
+  private StackPane gridAnchor; // Value injected by FXMLLoader
 
   @FXML // fx:id="parkingLotsList"
   private ComboBox<String> parkingLotsList; // Value injected by FXMLLoader
@@ -47,12 +50,19 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
   @FXML // fx:id="levelIndicator"
   private Label levelIndicator; // Value injected by FXMLLoader
 
+  @FXML
+  private Button overviewButton;
+
   private ArrayList<GridPane> carsGrids;
 
-  HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
+  private HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
 
   // matrix representing 3D array
-  ArrayList<ArrayList<ArrayList<ParkingCell>>> parkingCell;
+  private ArrayList<ArrayList<ArrayList<ParkingCell>>> parkingCell;
+
+  private ArrayList<Text> overviewInfo;
+
+  private ArrayList<Text> cellInfo;
 
   @FXML
   void addDummyData(ActionEvent event) {
@@ -82,8 +92,8 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
   }
 
   private void updateView() {
-    gridAnchor.getChildren().setAll(carsGrids.get(getCurrentLevelIndex()));
-    carsGrids.get(getCurrentLevelIndex()).requestFocus();
+    gridAnchor.getChildren().forEach(carsGrid -> carsGrid.setVisible(false));
+    gridAnchor.getChildren().get(getCurrentLevelIndex()).setVisible(true);
   }
 
   @FXML
@@ -93,22 +103,32 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
     }
   }
 
+  @FXML
+  void showOverview(ActionEvent event) {
+    if (!processing) {
+      displayInfo(overviewInfo);
+    }
+  }
+
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
     super.baseInitialize();
     assert parkingLotsList != null : "fx:id=\"parkingLotsList\" was not injected: check your FXML file 'ServiceActionLotState.fxml'.";
     assert levelIndicator != null : "fx:id=\"levelIndicator\" was not injected: check your FXML file 'ServiceActionLotState.fxml'.";
+    assert overviewButton != null : "fx:id=\"overviewButton\" was not injected: check your FXML file 'ServiceActionLotState.fxml'.";
     initParkingCells();
     initCarsGrids();
+    initOverviewInfo();
+    initCellInfo();
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_LOT_STATE);
   }
 
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
-//    gridAnchor.getChildren().setAll(new Rectangle(gridAnchor.getWidth(),gridAnchor.getHeight(), Paint.valueOf("WHITE")));
     clearCarsGrids();
+    overviewButton.setDisable(true);
     parkingLotsList.getItems().clear();
     parkingLotsList.setDisable(false);
     parkingLotsMap.clear();
@@ -129,9 +149,9 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
 
   private void initParkingCells() {
     parkingCell = new ArrayList<ArrayList<ArrayList<ParkingCell>>>(Constants.LOT_HEIGHT);
-    for (int i = 0; i < Constants.LOT_DEPTH; i++) {
+    for (int i = 0; i < Constants.LOT_HEIGHT; i++) {
       parkingCell.add(i, new ArrayList<ArrayList<ParkingCell>>(0));
-      for(int j = 0 ; j < Constants.LOT_DEPTH; j++) {
+      for (int j = 0; j < Constants.LOT_DEPTH; j++) {
         parkingCell.get(i).add(new ArrayList<ParkingCell>());
       }
     }
@@ -141,9 +161,7 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
     carsGrids.forEach(carsGrid -> {
       carsGrid.getChildren().clear();
     });
-    
-    gridAnchor.getChildren().clear();
-    
+    gridAnchor.getChildren().forEach(carsGrid -> carsGrid.setVisible(false));
   }
 
   private void initCarsGrids() {
@@ -156,8 +174,114 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
       carsGrid.setVgap(10);
       carsGrid.setHgap(10);
       carsGrid.setPadding(new Insets(10));
+      carsGrid.setVisible(false);
       carsGrids.add(i, carsGrid);
     }
+    gridAnchor.getChildren().setAll(carsGrids);
+  }
+
+  private void initOverviewInfo() {
+    overviewInfo = new ArrayList<Text>(15);
+
+    overviewInfo.add(new Text("Capacity : "));
+    overviewInfo.add(new Text(""));
+    overviewInfo.add(new Text("\n"));
+
+    overviewInfo.add(new Text("Free : "));
+    overviewInfo.add(new Text(""));
+    overviewInfo.add(new Text("\n"));
+
+    overviewInfo.add(new Text("Disabled : "));
+    overviewInfo.add(new Text(""));
+    overviewInfo.add(new Text("\n"));
+
+    overviewInfo.add(new Text("Reserved : "));
+    overviewInfo.add(new Text(""));
+    overviewInfo.add(new Text("\n"));
+
+    overviewInfo.add(new Text("Occupied : "));
+    overviewInfo.add(new Text(""));
+    overviewInfo.add(new Text("\n"));
+  }
+
+  private void updateOverviewInfo() {
+    int capacity = parkingCell.size() * parkingCell.get(0).size() * parkingCell.get(0).get(0).size();
+    int disabled = new Integer(0);
+    int reserved = 0;
+    int free = 0;
+    int occupied = 0;
+
+    // ArrayList<ArrayList<ArrayList<ParkingCell>>>
+    for (ArrayList<ArrayList<ParkingCell>> level : parkingCell) {
+      for (ArrayList<ParkingCell> row : level) {
+        for (ParkingCell cell : row) {
+          if (cell.isDisabled()) {
+            ++disabled;
+          } else if (cell.isReserved()) {
+            ++reserved;
+          } else if (cell.isFree()) {
+            ++free;
+          } else {
+            ++occupied;
+          }
+        }
+      }
+    }
+    overviewInfo.set(1, new Text(Integer.toString(capacity)));
+    overviewInfo.set(4, new Text(Integer.toString(free)));
+    overviewInfo.set(7, new Text(Integer.toString(disabled)));
+    overviewInfo.set(10, new Text(Integer.toString(reserved)));
+    overviewInfo.set(13, new Text(Integer.toString(occupied)));
+    
+//    overviewInfo.forEach(text -> {
+//      text.getStyleClass().add("textFont");
+//    });
+  }
+
+  private void initCellInfo() {
+    cellInfo = new ArrayList<Text>(15);
+
+    cellInfo.add(new Text("Placement : "));
+    cellInfo.add(new Text(""));
+    cellInfo.add(new Text("\n"));
+
+    cellInfo.add(new Text("Car ID : "));
+    cellInfo.add(new Text(""));
+    cellInfo.add(new Text("\n"));
+
+    cellInfo.add(new Text("Planned exit : "));
+    cellInfo.add(new Text(""));
+    cellInfo.add(new Text("\n"));
+
+    cellInfo.add(new Text("Is reserved : "));
+    cellInfo.add(new Text(""));
+    cellInfo.add(new Text("\n"));
+
+    cellInfo.add(new Text("Is disabled : "));
+    cellInfo.add(new Text(""));
+    cellInfo.add(new Text("\n"));
+
+//    cellInfo.forEach(text -> {
+//      text.getStyleClass().add("textFont");
+//    });
+  }
+
+  private void updateCellInfo(ParkingCell cell) {
+
+    cellInfo.set(1, new Text("[" + (cell.height + 1) + "," + (cell.depth + 1) + "," + (cell.width + 1) + "]"));
+    if (cell.getCarID() != null) {
+      cellInfo.set(4, new Text(cell.getCarID()));
+    } else {
+      cellInfo.set(4, new Text("-"));
+    }
+    if (cell.getPlannedExitTime() != null) {
+      cellInfo.set(7, new Text(cell.getPlannedExitTime().toString()));
+    } else {
+      cellInfo.set(7, new Text("-"));
+    }
+    cellInfo.set(10, new Text("" + cell.isReserved()));
+    cellInfo.set(13, new Text("" + cell.isDisabled()));
+
   }
 
   private int getCurrentLevelIndex() {
@@ -207,7 +331,7 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
 
       clearParkingCells();
       initParkingCells();
-      
+
       double vgap = carsGrids.get(0).getVgap();
       double hgap = carsGrids.get(0).getHgap();
 
@@ -232,17 +356,18 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
               rectPaint = (Paint.valueOf("BLUE"));
             }
             Rectangle currentRectangle = new Rectangle(rectWidth, rectHeight, rectPaint);
-            currentRectangle.setArcHeight(rectWidth*0.2);
-            currentRectangle.setArcWidth(rectHeight*0.2);
+            currentRectangle.setArcHeight(rectWidth * 0.2);
+            currentRectangle.setArcWidth(rectHeight * 0.2);
+            currentRectangle.setStroke(Paint.valueOf("BLACK"));
+            currentRectangle.setStrokeType(StrokeType.INSIDE);
+            currentRectangle.setStrokeWidth(Math.min(rectWidth, rectHeight) * 0.1);
             currentRectangle.setOnMouseEntered(evt -> {
               int rowInd = GridPane.getRowIndex(currentRectangle);
               int colInd = GridPane.getColumnIndex(currentRectangle);
               int levelInd = getCurrentLevelIndex();
               ParkingCell correspondingCell = parkingCell.get(levelInd).get(colInd).get(rowInd);
-              displayInfo(correspondingCell.getCarID() != null ? correspondingCell.getCarID() : "");
-            });
-            currentRectangle.setOnMouseExited(evt -> {
-              displayInfo("");
+              updateCellInfo(correspondingCell);
+              displayInfo(cellInfo);
             });
             rects[level][depth][width] = currentRectangle;
           }
@@ -259,9 +384,11 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
         }
       }
       updateView();
+      updateOverviewInfo();
+      overviewButton.setDisable(false);
       parkingLotsList.setDisable(true);
       turnProcessingStateOff();
-      displayInfo(response.getDescription());
+      displayInfo(overviewInfo);
     } else {
       turnProcessingStateOff();
       displayError(response.getDescription());
