@@ -130,10 +130,13 @@ public class ServiceActionDisableSlotDynamicGridController extends ServiceAction
     }
 
     carsGrid.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-//    carsGrid.setVgap(10);
-//    carsGrid.setHgap(10);
-//    carsGrid.setPadding(new Insets(10));
-//    carsGrid.requestLayout();
+    carsGrid.setPrefWidth(Double.MAX_VALUE);
+    carsGrid.setPrefHeight(Double.MAX_VALUE);
+    
+    carsGrid.setVgap(10);
+    carsGrid.setHgap(10);
+    carsGrid.setPadding(new Insets(10));
+    carsGrid.requestLayout();
     parent.getChildren().setAll(carsGrid);
   }
 }
