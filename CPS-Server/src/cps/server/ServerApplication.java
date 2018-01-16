@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import cps.common.*;
 import cps.api.request.Request;
 import cps.api.response.*;
+import cps.server.background.Reminder;
 import cps.server.controllers.*;
 import cps.server.session.*;
 
@@ -18,8 +19,9 @@ import cps.server.session.*;
  * The Class ServerApplication.
  */
 public class ServerApplication extends AbstractServer {
-  private Gson             gson = new Gson();
+  private Gson             gson     = new Gson();
   private ServerController serverController;
+  private Reminder         reminder = null;
 
   /**
    * Constructs an instance of the server application.
@@ -44,9 +46,10 @@ public class ServerApplication extends AbstractServer {
   public DatabaseController getDatabaseController() {
     return serverController.getDatabaseController();
   }
-  
+
   public String describeMessage(String header, ConnectionToClient client, Object msg, Gson gson) {
-    return String.format("%s: %s %s\n  type: %s\n  content: %s", header, client.getName(), client, msg.getClass().getSimpleName(), gson.toJson(msg));
+    return String.format("%s: %s %s\n  type: %s\n  content: %s", header, client.getName(), client,
+        msg.getClass().getSimpleName(), gson.toJson(msg));
   }
 
   /**
@@ -156,10 +159,21 @@ public class ServerApplication extends AbstractServer {
     try {
       ServerConfig config = remote ? ServerConfig.remote() : ServerConfig.local();
       ServerApplication server = new ServerApplication(port, config);
+      server.initialize();
       server.listen(); // Start listening for connections
     } catch (Exception ex) {
       System.out.println("ERROR - Could not listen for clients!");
       ex.printStackTrace();
     }
   }
+
+  private void initialize() {
+    /*
+     * TODO create pooling threads here
+     */
+    reminder = new Reminder(getServerController().getDatabaseController());
+    reminder.start();
+
+  }
+
 }
