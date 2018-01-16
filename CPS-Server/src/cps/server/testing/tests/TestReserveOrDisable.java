@@ -22,9 +22,11 @@ import cps.server.ServerException;
 import cps.server.controllers.CarTransportationController;
 import cps.server.controllers.DatabaseController;
 import cps.server.controllers.LotController;
+import cps.server.session.ServiceSession;
 import cps.server.session.SessionHolder;
+import cps.server.testing.utilities.ServerControllerTest;
 
-public class TestReserveOrDisable {
+public class TestReserveOrDisable extends ServerControllerTest {
   ServerController   server;
   DatabaseController db;
   SessionHolder      context = new SessionHolder();
@@ -42,13 +44,19 @@ public class TestReserveOrDisable {
     String carId = "IL-12-12";
     LocalDateTime exitTime = LocalDateTime.now();
     LotController lotcontroller = server.getLotController();
+    
     CarTransportationController transportationController = server.getTransportationController();
+    
     db.performAction(conn -> {
       transportationController.insertCar(conn, lot, carId, exitTime.plusMinutes(50));
     });
+    
     DisableParkingSlotsAction disableAction = new DisableParkingSlotsAction(1, 1, 0, 2, 2);
     ServerResponse res = server.handle(disableAction, context);
+    
     assertFalse(res.success());
+    
+    
     disableAction = new DisableParkingSlotsAction(1, 1, 0, 2, 1);
     res = server.handle(disableAction, context);
     assertTrue(res.success());
