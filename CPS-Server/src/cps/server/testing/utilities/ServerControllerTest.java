@@ -243,6 +243,10 @@ public abstract class ServerControllerTest extends TestCase {
     assertEquals(1, db.countEntities("parking_lot"));
     return lot;
   }
+  
+  protected ParkingLot initParkingLot(String lotAddress, int width, float price1, float price2, String robotIP) throws ServerException {
+    return db.performQuery(conn -> ParkingLot.create(conn, lotAddress, width, price1, price2, "12.f.t43"));
+  }
 
   protected boolean requestParkingEntry(CustomerData data, SessionHolder context, boolean weekend) throws ServerException {
     // subscriptionID = 0 means entry by OnetimeParking license
