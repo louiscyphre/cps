@@ -9,7 +9,9 @@ import cps.entities.models.ParkingLot;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.ServerException;
+import cps.server.controllers.CarTransportationController;
 import cps.server.controllers.DatabaseController;
+import cps.server.controllers.LotController;
 import cps.server.session.SessionHolder;
 
 public class TestReserveOrDisable {
@@ -26,8 +28,12 @@ public class TestReserveOrDisable {
   @Test
   public void testReserveOrDisable() throws ServerException {
     ParkingLot lot=initParkingLot();
+    LotController lotcontroller=server.getLotController();
+    CarTransportationController transportationController = server.getTransportationController();
+    db.performQuery(query);
     
-    
+    transportationController.insertCar(
+    //lotcontroller.reserveOrDisable(session, serverResponse, lotID, i, j, k, visitor, successMessage)
     fail("Not yet implemented");
   }
 
