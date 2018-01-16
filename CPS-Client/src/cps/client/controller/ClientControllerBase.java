@@ -31,6 +31,7 @@ import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.client.utils.InternalClientException;
 import cps.client.utils.UserLevelClientException;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -40,6 +41,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 
 public abstract class ClientControllerBase implements ViewController {
   protected static final String DEFAULT_INFO_LABEL = "Welcome to Car Parking System!";
@@ -110,6 +112,10 @@ public abstract class ClientControllerBase implements ViewController {
 
   @Override
   public void turnProcessingStateOff() {
+    try {
+      Thread.sleep(500);
+    } catch (InterruptedException e) {
+    }
     infoProgress.visibleProperty().set(false);
     infoBox.getStyleClass().clear();
     infoBox.getStyleClass().add("infoLabel");

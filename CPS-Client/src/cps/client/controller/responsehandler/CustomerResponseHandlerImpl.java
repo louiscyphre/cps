@@ -16,13 +16,16 @@ import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
 import cps.client.context.CustomerContext;
+import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.OnetimeEntriesController;
 import cps.client.controller.ParkingLotsController;
 import cps.client.controller.ViewController;
+import javafx.animation.PauseTransition;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
@@ -156,8 +159,9 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       context.setCustomerId(responseCustomerId);
       context.acceptPendingEmail();
       ControllersClientAdapter.turnLoggedInStateOn();
-      ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
+      ctrl.turnProcessingStateOff();
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
       ctrl.displayError(response.getDescription());
@@ -285,10 +289,10 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       ControllersClientAdapter.turnLoggedInStateOn();
     }
     if (response.getStatus() == ServerResponse.STATUS_OK) {
-      formattedMessage.add(new Text("Subscription purchased successfuly!\n"));
-      ctrl.turnProcessingStateOff();
+      formattedMessage.add(new Text("Subscription purchased successfully!\n"));
       ctrl.displayInfo(formattedMessage);
-
+      ctrl.turnProcessingStateOff();
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       formattedMessage.add(new Text("Could not proceed with purchase!\n"));
       formattedMessage.add(new Text(response.getDescription()));
@@ -326,9 +330,10 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       ControllersClientAdapter.turnLoggedInStateOn();
     }
     if (response.getStatus() == ServerResponse.STATUS_OK) {
-      formattedMessage.add(new Text("Subscription purchased successfuly!\n"));
-      ctrl.turnProcessingStateOff();
+      formattedMessage.add(new Text("Subscription purchased successfully!\n"));
       ctrl.displayInfo(formattedMessage);
+      ctrl.turnProcessingStateOff();
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
 
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       formattedMessage.add(new Text("Could not proceed with purchase!\n"));
