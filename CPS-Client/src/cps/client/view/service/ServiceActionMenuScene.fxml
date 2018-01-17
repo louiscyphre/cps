@@ -15,7 +15,7 @@
     <Label text="Action Menu" BorderPane.alignment="CENTER" />
   </top>
    <center>
-      <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="443.0" spacing="10.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="540.0" spacing="10.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
@@ -42,52 +42,15 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleInitializeLotButton" prefHeight="50.0" prefWidth="150.0" text="Initialize Lot" textAlignment="CENTER">
-                     <styleClass>
-                        <String fx:value="regularButton" />
-                        <String fx:value="smallButton" />
-                     </styleClass></Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleDisableSlotButton" prefHeight="50.0" prefWidth="150.0" text="Disable Slot" textAlignment="CENTER" GridPane.columnIndex="1">
-                     <styleClass>
-                        <String fx:value="regularButton" />
-                        <String fx:value="smallButton" />
-                     </styleClass></Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRefundButton" prefHeight="50.0" prefWidth="150.0" text="Refund" textAlignment="CENTER" GridPane.columnIndex="2">
-                     <styleClass>
-                        <String fx:value="regularButton" />
-                        <String fx:value="smallButton" />
-                     </styleClass></Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLotIsFullButton" prefHeight="50.0" prefWidth="150.0" text="Lot is full" textAlignment="CENTER" GridPane.rowIndex="1">
-                     <styleClass>
-                        <String fx:value="regularButton" />
-                        <String fx:value="smallButton" />
-                     </styleClass></Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleReserveSlotButton" prefHeight="50.0" prefWidth="150.0" text="Reserve Slot" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <styleClass>
-                        <String fx:value="regularButton" />
-                        <String fx:value="smallButton" />
-                     </styleClass></Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleUpdatePricesButton" prefHeight="50.0" prefWidth="150.0" text="Update Prices" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                     <styleClass>
-                        <String fx:value="regularButton" />
-                        <String fx:value="smallButton" />
-                     </styleClass></Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLotStateButton" prefHeight="50.0" prefWidth="150.0" text="Lot State" textAlignment="CENTER" GridPane.rowIndex="2">
-                     <styleClass>
-                        <String fx:value="regularButton" />
-                        <String fx:value="smallButton" />
-                     </styleClass></Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="50.0" prefWidth="150.0" text="Logout" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                     <styleClass>
-                        <String fx:value="regularButton" />
-                        <String fx:value="smallButton" />
-                     </styleClass></Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" onAction="#handleStatisticsButton" prefHeight="50.0" prefWidth="150.0" text="Reports" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                     <styleClass>
-                        <String fx:value="regularButton" />
-                        <String fx:value="smallButton" />
-                     </styleClass>
-                  </Button>
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleInitializeLotButton" prefHeight="60.0" prefWidth="160.0" styleClass="regularButton" text="Initialize Lot" textAlignment="CENTER" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleDisableSlotButton" prefHeight="60.0" prefWidth="160.0" styleClass="regularButton" text="Disable Slot" textAlignment="CENTER" GridPane.columnIndex="1" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleRefundButton" prefHeight="60.0" prefWidth="160.0" styleClass="regularButton" text="Refund" textAlignment="CENTER" GridPane.columnIndex="2" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLotIsFullButton" prefHeight="60.0" prefWidth="160.0" styleClass="regularButton" text="Lot is full" textAlignment="CENTER" GridPane.rowIndex="1" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleReserveSlotButton" prefHeight="60.0" prefWidth="160.0" styleClass="regularButton" text="Reserve Slot" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleUpdatePricesButton" prefHeight="60.0" prefWidth="160.0" styleClass="regularButton" text="Update Prices" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLotStateButton" prefHeight="60.0" prefWidth="160.0" styleClass="regularButton" text="Lot State" textAlignment="CENTER" GridPane.rowIndex="2" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="60.0" prefWidth="160.0" styleClass="regularButton" text="Logout" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="10.0" layoutY="191.0" mnemonicParsing="false" onAction="#handleStatisticsButton" prefHeight="60.0" prefWidth="160.0" styleClass="regularButton" text="Reports" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
             <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">

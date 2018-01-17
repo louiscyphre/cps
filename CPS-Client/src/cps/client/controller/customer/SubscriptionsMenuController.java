@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import cps.api.request.ListParkingLotsRequest;
-import cps.api.response.ListParkingLotsResponse;
-import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
@@ -53,7 +51,8 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
   /**
    * @param list
    */
-  private void setParkingLots(Collection <ParkingLot> list) {
+  @Override
+  public void setParkingLots(Collection <ParkingLot> list) {
     List<String> tmp = new ArrayList<String> ();
     parkingLotsMap = new HashMap<String, ParkingLot>();
     for (ParkingLot i: list) {
@@ -154,13 +153,5 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     super.cleanCtrl();
     // toggles clear
     subscriptionRadioButtons.getToggles().clear();
-  }
-  
-
-  @Override
-  public ServerResponse handleParkingLots(ListParkingLotsResponse response) {
-    setParkingLots(response.getData());
-    turnProcessingStateOff();
-    return response;
   }
 }

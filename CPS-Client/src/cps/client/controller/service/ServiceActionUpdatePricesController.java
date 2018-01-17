@@ -100,23 +100,24 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     }
     ObservableList<String> addresses = FXCollections.observableList(tmp);
     fillComboBoxItems(addresses);
-    turnProcessingStateOff();
   }
   
   private void fillComboBoxItems(ObservableList<String> addresses) {
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
   }
-  
-  public ServerResponse handleParkingLots(ListParkingLotsResponse response) {
-    setParkingLots(response.getData());
-    turnProcessingStateOff();
-    return response;
-  }
 
   @Override
+  public ServerResponse handle(ListParkingLotsResponse response) {
+    if (response.success()) {
+      setParkingLots(response.getData());
+    }
+    return super.handleGenericResponse(response); 
+  }
+  
+  @Override
   public ServerResponse handle(UpdatePricesResponse response) {
-    super.handleGenericResponse(response);
+    super.handleGenericResponse(response); 
     if (response.success()) {
       ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
     }

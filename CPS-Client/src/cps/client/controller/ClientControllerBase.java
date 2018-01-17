@@ -110,10 +110,6 @@ public abstract class ClientControllerBase implements ViewController {
 
   @Override
   public void turnProcessingStateOff() {
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-    }
     infoProgress.visibleProperty().set(false);
     infoBox.getStyleClass().clear();
     infoBox.getStyleClass().add("infoLabel");
@@ -168,7 +164,7 @@ public abstract class ClientControllerBase implements ViewController {
       displayError(response.getDescription());
     }
     
-    return null;
+    return response;
   }
 
   // ResponseHandler interface

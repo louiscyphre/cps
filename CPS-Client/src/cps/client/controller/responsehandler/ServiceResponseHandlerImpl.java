@@ -13,7 +13,6 @@ import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.client.controller.ControllersClientAdapter;
-import cps.client.controller.ParkingLotsController;
 
 class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 
@@ -58,7 +57,7 @@ class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 
   @Override
   public ServerResponse handle(ListParkingLotsResponse response) {
-    return ((ParkingLotsController) ControllersClientAdapter.getCurrentCtrl()).handleParkingLots(response); 
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
   
   @Override

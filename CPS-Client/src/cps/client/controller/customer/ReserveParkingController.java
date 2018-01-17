@@ -14,23 +14,15 @@ import java.util.Locale;
 
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.request.ReservedParkingRequest;
-import cps.api.response.ListParkingLotsResponse;
-import cps.api.response.ServerResponse;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
 import cps.client.utils.FormatValidation.InputFormats;
 import cps.entities.models.ParkingLot;
-//import jfxtras.scene.control.CalendarPicker;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-//import java.time.LocalDate;
-//import java.util.Calendar;
-//import java.util.Locale;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -42,8 +34,7 @@ import javafx.scene.text.Font;
 /**
  * Created on: 2018-01-09 8:26:06 PM
  */
-// TODO some pc displays kryakozyabry in month , handleBackButton implementation
-// just for navigation
+// TODO some pc displays kryakozyabry in month
 public class ReserveParkingController extends CustomerActionControllerBase implements ParkingLotsController {
 
   @FXML
@@ -125,7 +116,8 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
     }
   }
 
-  private void setParkingLots(Collection<ParkingLot> list) {
+  @Override
+  public void setParkingLots(Collection<ParkingLot> list) {
     LinkedList<String> tmp = new LinkedList<String>();
     for (ParkingLot i : list) {
       String address = new String(i.getStreetAddress());
@@ -321,12 +313,5 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
     parkingLotsList.getItems().clear();
     parkingLotsMap.clear();
     loadParkingLots();
-  }
-  
-  @Override
-  public ServerResponse handleParkingLots(ListParkingLotsResponse response) {
-    setParkingLots(response.getData());
-    turnProcessingStateOff();
-    return response;
   }
 }
