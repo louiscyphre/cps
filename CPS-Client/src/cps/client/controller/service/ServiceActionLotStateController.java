@@ -42,29 +42,31 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
   private URL location;
 
   @FXML // fx:id="gridAnchor"
-  private StackPane gridAnchor; // Value injected by FXMLLoader
+  protected StackPane gridAnchor; // Value injected by FXMLLoader
 
   @FXML // fx:id="parkingLotsList"
-  private ComboBox<String> parkingLotsList; // Value injected by FXMLLoader
+  protected ComboBox<String> parkingLotsList; // Value injected by FXMLLoader
 
   @FXML // fx:id="levelIndicator"
-  private Label levelIndicator; // Value injected by FXMLLoader
+  protected Label levelIndicator; // Value injected by FXMLLoader
 
   @FXML
-  private Button overviewButton;
+  protected Button overviewButton;
 
-  private ArrayList<GridPane> carsGrids;
+  protected ArrayList<GridPane> carsGrids;
 
-  private HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
+  protected HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
 
   // matrix representing 3D array
-  private ArrayList<ArrayList<ArrayList<ParkingCell>>> parkingCell;
+  protected ArrayList<ArrayList<ArrayList<ParkingCell>>> parkingCell;
 
-  private ArrayList<Text> overviewInfo;
+  protected ArrayList<Text> overviewInfo;
 
-  private ArrayList<Text> cellInfo;
+  protected ArrayList<Text> cellInfo;
 
-  private Rectangle selectedCar;
+  protected Rectangle selectedCar;
+  
+  protected ParkingCell selectedCell;
 
   @FXML
   void addDummyData(ActionEvent event) {
@@ -123,6 +125,10 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
     initCarsGrids();
     initOverviewInfo();
     initCellInfo();
+    registerCtrl();
+  }
+  
+  protected void registerCtrl() {
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_LOT_STATE);
   }
 
@@ -378,25 +384,10 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
           currentRectangle.setStrokeType(StrokeType.INSIDE);
           currentRectangle.setStrokeWidth(Math.min(rectWidth, rectHeight) * 0.1);
           currentRectangle.setOnMouseEntered(evt -> {
-            if (selectedCar == null) {
-              int rowInd = GridPane.getRowIndex(currentRectangle);
-              int colInd = GridPane.getColumnIndex(currentRectangle);
-              int levelInd = getCurrentLevelIndex();
-              ParkingCell correspondingCell = parkingCell.get(levelInd).get(colInd).get(rowInd);
-              updateCellInfo(correspondingCell);
-              displayInfo(cellInfo);
-            }
+            onMouseEnteredHandler(currentRectangle);
           });
           currentRectangle.setOnMouseClicked(evt -> {
-            int rowInd = GridPane.getRowIndex(currentRectangle);
-            int colInd = GridPane.getColumnIndex(currentRectangle);
-            int levelInd = getCurrentLevelIndex();
-            ParkingCell correspondingCell = parkingCell.get(levelInd).get(colInd).get(rowInd);
-            toggleSelectCar(correspondingCell, currentRectangle);
-            if (selectedCar != null) {
-              updateCellInfo(correspondingCell);
-              displayInfo(cellInfo);
-            }
+            onMouseClickedHandler(currentRectangle);
           });
           rects[level][depth][width] = currentRectangle;
         }
@@ -431,6 +422,33 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
       selectedCar = currentRectangle;
       currentRectangle.setStroke(Paint.valueOf("GOLDENROD"));
       currentRectangle.setStrokeWidth(Math.min(selectedCar.getWidth(), selectedCar.getHeight()) * 0.2);
+    }
+  }
+
+  protected void onMouseEnteredHandler(Rectangle currentRectangle) {
+    if(processing)
+      return;
+    if (selectedCar == null) {
+      int rowInd = GridPane.getRowIndex(currentRectangle);
+      int colInd = GridPane.getColumnIndex(currentRectangle);
+      int levelInd = getCurrentLevelIndex();
+      ParkingCell correspondingCell = parkingCell.get(levelInd).get(colInd).get(rowInd);
+      updateCellInfo(correspondingCell);
+      displayInfo(cellInfo);
+    }
+  }
+  
+  protected void onMouseClickedHandler(Rectangle currentRectangle) {
+    if(processing)
+      return;
+    int rowInd = GridPane.getRowIndex(currentRectangle);
+    int colInd = GridPane.getColumnIndex(currentRectangle);
+    int levelInd = getCurrentLevelIndex();
+    selectedCell = parkingCell.get(levelInd).get(colInd).get(rowInd);
+    toggleSelectCar(selectedCell, currentRectangle);
+    if (selectedCar != null) {
+      updateCellInfo(selectedCell);
+      displayInfo(cellInfo);
     }
   }
 }
