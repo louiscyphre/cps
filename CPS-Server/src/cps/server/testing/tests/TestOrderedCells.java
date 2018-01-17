@@ -47,13 +47,13 @@ public class TestOrderedCells {
 
 		db.performAction(conn -> {
 			OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "123-sdf",
-					lot.getId(), a[4], a[1], false);
+					lot.getId(), a[4], a[1]);
 			OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "254-sdf",
-					lot.getId(), a[0], a[3], false);
+					lot.getId(), a[0], a[3]);
 			OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "458-sdf",
-					lot.getId(), a[0], a[5], false);
+					lot.getId(), a[0], a[5]);
 			OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "984-sdf",
-					lot.getId(), a[3], a[5], false);
+					lot.getId(), a[3], a[5]);
 			assertTrue(3 == ParkingLot.countOrderedCells(conn, lot.getId(), a[2], a[5]));
 		});
 	}

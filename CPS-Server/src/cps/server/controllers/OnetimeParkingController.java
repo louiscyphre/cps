@@ -71,7 +71,7 @@ public class OnetimeParkingController extends RequestController {
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
       OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
-          request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);
+          request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime);
       errorIfNull(service, "Failed to create OnetimeService entry");
 
       // Calculate payment for service
