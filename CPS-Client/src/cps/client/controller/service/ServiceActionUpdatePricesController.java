@@ -118,7 +118,7 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
   public ServerResponse handle(UpdatePricesResponse response) {
     super.handleGenericResponse(response); 
     if (response.success()) {
-      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU, 10);
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU, 2000);
     }
     return response;
   }
