@@ -378,7 +378,7 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
           currentRectangle.setStrokeType(StrokeType.INSIDE);
           currentRectangle.setStrokeWidth(Math.min(rectWidth, rectHeight) * 0.1);
           currentRectangle.setOnMouseEntered(evt -> {
-            if(selectedCar == null) {
+            if (selectedCar == null) {
               int rowInd = GridPane.getRowIndex(currentRectangle);
               int colInd = GridPane.getColumnIndex(currentRectangle);
               int levelInd = getCurrentLevelIndex();
@@ -392,10 +392,11 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
             int colInd = GridPane.getColumnIndex(currentRectangle);
             int levelInd = getCurrentLevelIndex();
             ParkingCell correspondingCell = parkingCell.get(levelInd).get(colInd).get(rowInd);
-            if(selectedCar != null) {
-
+            toggleSelectCar(correspondingCell, currentRectangle);
+            if (selectedCar != null) {
+              updateCellInfo(correspondingCell);
+              displayInfo(cellInfo);
             }
-            selectedCar = currentRectangle;
           });
           rects[level][depth][width] = currentRectangle;
         }
@@ -410,6 +411,26 @@ public class ServiceActionLotStateController extends ServiceActionControllerBase
           }
         }
       }
+    }
+  }
+
+  private void toggleSelectCar(ParkingCell correspondingCell, Rectangle currentRectangle) {
+    // if pressed same or another and was assigned
+    if (selectedCar != null) {
+      selectedCar.setStroke(Paint.valueOf("BLACK"));
+      selectedCar.setStrokeWidth(Math.min(selectedCar.getWidth(), selectedCar.getHeight()) * 0.1);
+      selectedCar.getStrokeDashArray().clear();
+      if (selectedCar != currentRectangle) {
+        selectedCar = currentRectangle;
+        currentRectangle.setStroke(Paint.valueOf("GOLDENROD"));
+        currentRectangle.setStrokeWidth(Math.min(selectedCar.getWidth(), selectedCar.getHeight()) * 0.2);
+      } else { // selectedCar == currentRectangle
+        selectedCar = null;
+      }
+    } else { // nothing was selected
+      selectedCar = currentRectangle;
+      currentRectangle.setStroke(Paint.valueOf("GOLDENROD"));
+      currentRectangle.setStrokeWidth(Math.min(selectedCar.getWidth(), selectedCar.getHeight()) * 0.2);
     }
   }
 }
