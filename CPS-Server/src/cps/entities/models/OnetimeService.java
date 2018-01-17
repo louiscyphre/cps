@@ -387,7 +387,7 @@ public class OnetimeService implements ParkingService {
     return pricePerHour * getPlannedDuration().getSeconds() / 3600f;
   }
 
-  public static Collection<OnetimeService> findLateUnwarnedCustomers(Connection conn) throws SQLException {
+  public static Collection<OnetimeService> findLateCustomers(Connection conn, Duration delta, boolean warned) throws SQLException {
     LinkedList<OnetimeService> items = new LinkedList<OnetimeService>();
     PreparedStatement stmt = conn.prepareStatement(String.join(" ",
         "SELECT os.*",
@@ -398,9 +398,11 @@ public class OnetimeService implements ParkingService {
         "WHERE ct.customer_id=os.customer_id",
         "AND ct.auth_id=os.id",
         "AND ct.auth_type=?",
-        "AND os.lot_id=ct.lot_id) AND os.warned=false AND os.canceled=false"));
-    stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+        "AND os.lot_id=ct.lot_id) AND os.warned=? AND os.canceled=false"));
+    // TODO replace the inner select clause with "AND not parked"
+    stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now().minus(delta)));
     stmt.setInt(2, Constants.LICENSE_TYPE_ONETIME);
+    stmt.setBoolean(3, warned);
     ResultSet rs = stmt.executeQuery();
 
     while (rs.next()) {
