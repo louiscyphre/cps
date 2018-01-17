@@ -374,7 +374,7 @@ public class OnetimeService implements ParkingService {
     helper += "WHERE ct.customer_id=os.customer_id AND";
     helper += "ct.auth_id=os.id AND";
     helper += "ct.auth_type=1 AND";
-    helper += "os.lot_id=ct.lot_id) AND os.warned=false";
+    helper += "os.lot_id=ct.lot_id) AND os.warned=false AND os.canceled=false";
     PreparedStatement stmt = conn.prepareStatement(helper);
     stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
     ResultSet rs = stmt.executeQuery();

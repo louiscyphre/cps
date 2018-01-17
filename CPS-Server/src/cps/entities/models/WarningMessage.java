@@ -2,6 +2,7 @@ package cps.entities.models;
 
 import java.sql.Timestamp;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -19,12 +20,18 @@ public class WarningMessage {
   /**
    * Instantiates a new warning message.
    *
-   * @param customerid the customerid
-   * @param email the email
-   * @param carid the carid
-   * @param lotid the lotid
-   * @param startTime the start time
-   * @param endTime the end time
+   * @param customerid
+   *          the customerid
+   * @param email
+   *          the email
+   * @param carid
+   *          the carid
+   * @param lotid
+   *          the lotid
+   * @param startTime
+   *          the start time
+   * @param endTime
+   *          the end time
    */
   public WarningMessage(int customerid, String email, String carid, int lotid, Timestamp startTime, Timestamp endTime) {
     this.customerId = customerid;
@@ -38,8 +45,10 @@ public class WarningMessage {
   /**
    * Instantiates a new warning message.
    *
-   * @param rs the rs
-   * @throws SQLException the SQL exception
+   * @param rs
+   *          the rs
+   * @throws SQLException
+   *           the SQL exception
    */
   public WarningMessage(ResultSet rs) throws SQLException {
     this.customerId = rs.getInt("customer_id");
@@ -50,16 +59,34 @@ public class WarningMessage {
     this.plannedEndTime = rs.getTimestamp("planned_end_time");
   }
 
-  public void setsend(Connection conn) {
+  public boolean setsend(Connection conn) throws SQLException {
     // TODO mark current message as sent in the DB
-    
+    // TODO test this
+    String helper = "";
+    helper += "UPDATE onetime_service SET warned=true WHERE warned=false AND lot_id=? AND ";
+    helper += "car_id=? AND customer_id=? AND planned_start_time=? AND planned_end_time=?";
+    PreparedStatement st = conn.prepareStatement(helper);
+    int i = 1;
+    st.setInt(i++, this.lotId);
+    st.setString(i++, this.carid);
+    st.setInt(i++, this.customerId);
+    st.setTimestamp(i++, this.plannedStartTime);
+    st.setTimestamp(i++, this.plannedEndTime);
+    int count = st.executeUpdate();
+    return count == 1;
   }
 
   public void warn(Connection conn) {
-    // TODO send an email to email adress
-    
+    // TODO optional - send an email to email address
+    /*
+     * I've tried to set up mailing, but unfortunately, Gmail does not allow non
+     * registered applications to use it's smtp anymore. So screw it
+     */
+    System.out.printf(
+        "\nSending message to customer %d, to email %s.\n We are waiting for your car #%s, at %d, at %s\n",
+        this.customerId, this.email, this.carid, this.lotId, this.plannedStartTime.toString());
   }
-  
+
   public int getCustomerId() {
     return customerId;
   }
@@ -108,5 +135,4 @@ public class WarningMessage {
     this.plannedEndTime = plannedEndTime;
   }
 
-  
 }
