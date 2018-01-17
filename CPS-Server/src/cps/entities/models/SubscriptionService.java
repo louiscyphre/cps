@@ -2,10 +2,11 @@ package cps.entities.models;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.Time;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -13,8 +14,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import cps.common.Constants;
-
-import java.sql.PreparedStatement;
 
 // Database entity for monthly parking subscriptions - regular or full both stored in the same table.
 
@@ -30,9 +29,10 @@ public class SubscriptionService implements ParkingService {
   LocalDate startDate;
   LocalDate endDate;
   LocalTime dailyExitTime;    // null for full subscription
+  boolean   parked;
 
-  public SubscriptionService(int id, int type, int customerID, String email, String carID, int lotID,
-      LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
+  public SubscriptionService(int id, int type, int customerID, String email, String carID, int lotID, LocalDate startDate, LocalDate endDate,
+      LocalTime dailyExitTime, boolean parked) {
     this.id = id;
     this.subscriptionType = type;
     this.customerID = customerID;
@@ -42,11 +42,17 @@ public class SubscriptionService implements ParkingService {
     this.startDate = startDate;
     this.endDate = endDate;
     this.dailyExitTime = dailyExitTime;
+    this.parked = parked;
+  }
+
+  public SubscriptionService(int id, int type, int customerID, String email, String carID, int lotID, LocalDate startDate, LocalDate endDate,
+      LocalTime dailyExitTime) {
+    this(id, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime, false);
   }
 
   public SubscriptionService(ResultSet rs) throws SQLException {
-    this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getInt(6),
-        rs.getDate(7).toLocalDate(), rs.getDate(8).toLocalDate(), rs.getTime(9).toLocalTime());
+    this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getInt(6), rs.getDate(7).toLocalDate(), rs.getDate(8).toLocalDate(),
+        rs.getTime(9).toLocalTime());
   }
 
   public int getId() {
@@ -125,10 +131,18 @@ public class SubscriptionService implements ParkingService {
   public int getLicenseType() {
     return Constants.LICENSE_TYPE_SUBSCRIPTION;
   }
+  
+  @Override
+  public boolean isParked() {
+    return parked;
+  }
 
-  /**
-   * Creates the.
-   *
+  @Override
+  public void setParked(boolean parked) {
+    this.parked = parked;
+  }
+
+  /** Creates the.
    * @param conn the conn
    * @param type the type
    * @param customerID int - Customer ID
@@ -139,12 +153,10 @@ public class SubscriptionService implements ParkingService {
    * @param endDate LocalDate - The end date
    * @param dailyExitTime LocalTime - The daily exit time
    * @return the subscription service
-   * @throws SQLException the SQL exception
-   */
-  public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID,
-      int lotID, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
-    PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_SUBSCRIPTION_SERVICE,
-        Statement.RETURN_GENERATED_KEYS);
+   * @throws SQLException the SQL exception */
+  public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID, int lotID, LocalDate startDate,
+      LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
+    PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_SUBSCRIPTION_SERVICE, Statement.RETURN_GENERATED_KEYS);
 
     int field = 1;
     statement.setInt(field++, type);
@@ -170,8 +182,7 @@ public class SubscriptionService implements ParkingService {
     return new SubscriptionService(newID, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime);
   }
 
-  public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID)
-      throws SQLException {
+  public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID) throws SQLException {
     SubscriptionService item = null;
 
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR);
@@ -238,8 +249,7 @@ public class SubscriptionService implements ParkingService {
   }
 
   public static int countForCustomer(Connection conn, int customerID, int subscriptionType) throws SQLException {
-    PreparedStatement statement = conn
-        .prepareStatement("SELECT count(id) FROM subscription_service WHERE customer_id = ? AND subs_type = ?");
+    PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM subscription_service WHERE customer_id = ? AND subs_type = ?");
 
     statement.setInt(1, customerID);
     statement.setInt(2, subscriptionType);
@@ -268,28 +278,24 @@ public class SubscriptionService implements ParkingService {
     return item;
   }
 
-  /**
-   * CHeck if Overlap exists.
-   *
+  /** CHeck if Overlap exists.
    * @param conn
-   *          the conn
+   *        the conn
    * @param carID
-   *          the car ID
+   *        the car ID
    * @param subsType
-   *          the subs type
+   *        the subs type
    * @param lotId
-   *          the lot id
+   *        the lot id
    * @param startDate
-   *          the start date
+   *        the start date
    * @param endDate
-   *          the end date
+   *        the end date
    * @return True if exists subscription of the same type for the same car id in
    *         the same parking lot
    * @throws SQLException
-   *           the SQL exception
-   */
-  public static boolean overlapExists(Connection conn, String carID, int subsType, int lotId, LocalDate startDate,
-      LocalDate endDate) throws SQLException {
+   *         the SQL exception */
+  public static boolean overlapExists(Connection conn, String carID, int subsType, int lotId, LocalDate startDate, LocalDate endDate) throws SQLException {
     PreparedStatement stmt = null;
     boolean result = false;
     int i = 1;
@@ -307,7 +313,7 @@ public class SubscriptionService implements ParkingService {
       stmt.setInt(i++, subsType);
       stmt.setInt(i++, lotId);
     }
-    
+
     stmt.setDate(i++, Date.valueOf(startDate));
     stmt.setDate(i++, Date.valueOf(startDate));
     stmt.setDate(i++, Date.valueOf(startDate));
@@ -320,5 +326,24 @@ public class SubscriptionService implements ParkingService {
     }
 
     return result;
+  }
+
+  @Override
+  public void update(Connection conn) throws SQLException {
+    java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_SUBSCRIPTION_BY_ID);
+    int index = 1;
+    st.setInt(index++, this.subscriptionType);
+    st.setInt(index++, this.customerID);
+    st.setString(index++, this.email);
+    st.setString(index++, this.carID);
+    st.setInt(index++, this.lotID);
+    st.setDate(index++, Date.valueOf(this.startDate));
+    st.setDate(index++, Date.valueOf(this.endDate));
+    st.setTime(index++, Time.valueOf(this.dailyExitTime));
+//    st.setBoolean(index++, this.parked);
+    st.setInt(index++, this.id);
+    st.executeUpdate();
+    st.close();
+    
   }
 }

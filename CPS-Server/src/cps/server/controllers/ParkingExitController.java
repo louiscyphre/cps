@@ -14,6 +14,7 @@ import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
+import cps.entities.models.ParkingService;
 import cps.entities.models.SubscriptionService;
 import cps.server.ServerController;
 import cps.server.ServerException;
@@ -69,6 +70,9 @@ public class ParkingExitController extends RequestController {
        */
       CarTransportationController transportationController = serverController.getTransportationController();
       transportationController.retrieveCar(conn, request.getLotID(), request.getCarID());
+      ParkingService service = transportation.getParkingService(conn);
+      service.setParked(false);
+      service.update(conn);
 
       // Success
       response.setCustomerID(customer.getId());

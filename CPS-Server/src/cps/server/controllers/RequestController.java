@@ -48,6 +48,10 @@ public abstract class RequestController {
     return serverController;
   }
 
+  public void error(String message) throws ServerException {
+      throw new ServerException(message);
+  }
+
   public void errorIf(boolean condition, String message) throws ServerException {
     if (condition) {
       throw new ServerException(message);

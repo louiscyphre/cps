@@ -66,6 +66,8 @@ public class ParkingEntryController extends RequestController {
       // placed
       CarTransportationController transportationController = serverController.getTransportationController();
       transportationController.insertCar(conn, lot, carID, service.getExitTime());
+      service.setParked(true);
+      service.update(conn);
 
       // All good - create a CarTransportation table entry to record the fact
       // that a successful parking was made.

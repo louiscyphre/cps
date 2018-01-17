@@ -337,6 +337,7 @@ public class OnetimeService implements ParkingService {
    *        the conn
    * @throws SQLException
    *         the SQL exception */
+  @Override
   public void update(Connection conn) throws SQLException {
     java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_ONETIME_BY_ID);
     int index = 1;
