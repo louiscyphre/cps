@@ -1,7 +1,9 @@
 package cps.common;
 
 public interface Constants {
-  public final boolean DEBUG_MODE = true; // TODO disable on release
+  // TODO disable on release
+//  public final boolean DEBUG_MODE = true;
+  public final boolean DEBUG_MODE = false; 
 
   public final int    DEFAULT_PORT    = 5555;
   public final String DEFAULT_HOST    = "127.0.0.1";
