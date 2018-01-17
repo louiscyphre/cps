@@ -80,7 +80,7 @@ public class DatabaseController {
   }
 
   /** The Interface ResultVisitor. */
-  public interface ResultVisitor extends VisitorWithException<ResultSet, SQLException> {
+  public interface ResultVisitor<R> extends VisitorWithExceptionAndReturnType<ResultSet, SQLException, R> {
 
   }
 
@@ -296,7 +296,7 @@ public class DatabaseController {
    * @param withStatement the with statement
    * @param withResult the with result
    * @throws SQLException the SQL exception */
-  public static void statementForEach(Connection conn, String sqlCommand, StatementVisitor withStatement, ResultVisitor withResult) throws SQLException {
+  public static <R> void statementForEach(Connection conn, String sqlCommand, StatementVisitor withStatement, ResultVisitor<R> withResult) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(sqlCommand);
 
     withStatement.apply(statement);

@@ -20,6 +20,7 @@ import cps.api.response.OnetimeParkingResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
+import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
 import cps.entities.models.DailyStatistics;
 import cps.entities.models.OnetimeService;
@@ -85,6 +86,10 @@ public class OnetimeParkingController extends RequestController {
           // If this was an incidental parking, customer's will be parked automatically
           CarTransportationController transportationController = serverController.getTransportationController();
           transportationController.insertCar(conn, lot, request.getCarID(), service.getExitTime());
+          service.setParked(true);
+          service.update(conn);
+          CarTransportation.create(conn, request.getCustomerID(), request.getCarID(), service.getLicenseType(),
+              service.getId(), request.getLotID());
           break;
         default:
           error("Internal error: unknown parking type");
