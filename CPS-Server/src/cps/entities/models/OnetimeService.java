@@ -31,8 +31,8 @@ public class OnetimeService implements ParkingService {
   private boolean   parked;
   private boolean   warned;
 
-  public OnetimeService(int id, int type, int customerID, String email, String carID, int lotID, Timestamp plannedStartTime, Timestamp plannedEndTime,
-      boolean parked, boolean canceled, boolean warned) {
+  public OnetimeService(int id, int type, int customerID, String email, String carID, int lotID,
+      Timestamp plannedStartTime, Timestamp plannedEndTime, boolean parked, boolean canceled, boolean warned) {
     this.id = id;
     this.parkingType = type;
     this.customerID = customerID;
@@ -47,8 +47,8 @@ public class OnetimeService implements ParkingService {
   }
 
   public OnetimeService(ResultSet rs) throws SQLException {
-    this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getInt(6), rs.getTimestamp(7), rs.getTimestamp(8), rs.getBoolean(9),
-        rs.getBoolean(10), rs.getBoolean(11));
+    this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getInt(6), rs.getTimestamp(7),
+        rs.getTimestamp(8), rs.getBoolean(9), rs.getBoolean(10), rs.getBoolean(11));
   }
 
   public int getId() {
@@ -144,31 +144,36 @@ public class OnetimeService implements ParkingService {
     return Constants.LICENSE_TYPE_ONETIME;
   }
 
-  /** Creates Onetime Service.
+  /**
+   * Creates Onetime Service.
+   * 
    * @param conn
-   *        the Connection
+   *          the Connection
    * @param type
-   *        Constants.ServiceType
+   *          Constants.ServiceType
    * @param customerID
-   *        the customer ID
+   *          the customer ID
    * @param email
-   *        the email
+   *          the email
    * @param carID
-   *        the car ID
+   *          the car ID
    * @param lotID
-   *        the lot ID
+   *          the lot ID
    * @param plannedStartTime
-   *        the planned start time
+   *          the planned start time
    * @param plannedEndTime
-   *        the planned end time
+   *          the planned end time
    * @param canceled
-   *        If the service was canceled (default false)
+   *          If the service was canceled (default false)
    * @return the onetime service
    * @throws SQLException
-   *         the SQL exception */
-  public static OnetimeService create(Connection conn, int type, int customerID, String email, String carID, int lotID, Timestamp plannedStartTime,
-      Timestamp plannedEndTime, boolean parked, boolean canceled, boolean warned) throws SQLException {
-    PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_ONETIME_SERVICE, Statement.RETURN_GENERATED_KEYS);
+   *           the SQL exception
+   */
+  public static OnetimeService create(Connection conn, int type, int customerID, String email, String carID, int lotID,
+      Timestamp plannedStartTime, Timestamp plannedEndTime, boolean parked, boolean canceled, boolean warned)
+      throws SQLException {
+    PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_ONETIME_SERVICE,
+        Statement.RETURN_GENERATED_KEYS);
 
     int field = 1;
     stmt.setInt(field++, type);
@@ -193,16 +198,19 @@ public class OnetimeService implements ParkingService {
 
     stmt.close();
 
-    return new OnetimeService(newID, type, customerID, email, carID, lotID, plannedStartTime, plannedEndTime, parked, canceled, warned);
+    return new OnetimeService(newID, type, customerID, email, carID, lotID, plannedStartTime, plannedEndTime, parked,
+        canceled, warned);
   }
-  
+
   /**
    * A shorter version of create.
+   * 
    * @return the onetime service
-   * @throws SQLException the SQL exception
+   * @throws SQLException
+   *           the SQL exception
    */
-  public static OnetimeService create(Connection conn, int type, int customerID, String email, String carID, int lotID, Timestamp plannedStartTime,
-      Timestamp plannedEndTime) throws SQLException {
+  public static OnetimeService create(Connection conn, int type, int customerID, String email, String carID, int lotID,
+      Timestamp plannedStartTime, Timestamp plannedEndTime) throws SQLException {
     return create(conn, type, customerID, email, carID, lotID, plannedStartTime, plannedEndTime, false, false, false);
   }
 
@@ -223,7 +231,8 @@ public class OnetimeService implements ParkingService {
     return results;
   }
 
-  public static OnetimeService findForEntry(Connection conn, int customerID, String carID, int lotID) throws SQLException {
+  public static OnetimeService findForEntry(Connection conn, int customerID, String carID, int lotID)
+      throws SQLException {
     OnetimeService result = null;
 
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID);
@@ -246,7 +255,8 @@ public class OnetimeService implements ParkingService {
 
   // Return a list of all entries whose time period overlaps with the given
   // period
-  public static ArrayList<OnetimeService> findForOverlap(Connection conn, String carID, Timestamp startTime, Timestamp plannedEndTime) throws SQLException {
+  public static ArrayList<OnetimeService> findForOverlap(Connection conn, String carID, Timestamp startTime,
+      Timestamp plannedEndTime) throws SQLException {
     ArrayList<OnetimeService> result = new ArrayList<OnetimeService>();
 
     // When two time periods [a, b] [c, d] overlap, one of the following
@@ -279,7 +289,8 @@ public class OnetimeService implements ParkingService {
 
   // Return true if there is at least one entry whose time period overlaps with
   // the given period
-  public static boolean overlapExists(Connection conn, String carID, Timestamp startTime, Timestamp endTime) throws SQLException {
+  public static boolean overlapExists(Connection conn, String carID, Timestamp startTime, Timestamp endTime)
+      throws SQLException {
     boolean result = false;
 
     // When two time periods [a, b] [c, d] overlap, one of the following
@@ -331,12 +342,15 @@ public class OnetimeService implements ParkingService {
     return result;
   }
 
-  /** Finds onetime service in database by it's id and updates all fields in db
+  /**
+   * Finds onetime service in database by it's id and updates all fields in db
    * to match fields in instance.
+   * 
    * @param conn
-   *        the conn
+   *          the conn
    * @throws SQLException
-   *         the SQL exception */
+   *           the SQL exception
+   */
   @Override
   public void update(Connection conn) throws SQLException {
     java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_ONETIME_BY_ID);
@@ -387,22 +401,17 @@ public class OnetimeService implements ParkingService {
     return pricePerHour * getPlannedDuration().getSeconds() / 3600f;
   }
 
-  public static Collection<OnetimeService> findLateCustomers(Connection conn, Duration delta, boolean warned) throws SQLException {
+  public static Collection<OnetimeService> findLateCustomers(Connection conn, Duration delta, boolean warned)
+      throws SQLException {
     LinkedList<OnetimeService> items = new LinkedList<OnetimeService>();
     PreparedStatement stmt = conn.prepareStatement(String.join(" ",
         "SELECT os.*",
         "FROM onetime_service os",
-        "WHERE os.planned_start_time <= ? AND",
-        "NOT EXISTS (SELECT *",
-        "FROM car_transportation ct",
-        "WHERE ct.customer_id=os.customer_id",
-        "AND ct.auth_id=os.id",
-        "AND ct.auth_type=?",
-        "AND os.lot_id=ct.lot_id) AND os.warned=? AND os.canceled=false"));
-    // TODO replace the inner select clause with "AND not parked"
-    stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now().minus(delta)));
-    stmt.setInt(2, Constants.LICENSE_TYPE_ONETIME);
-    stmt.setBoolean(3, warned);
+        "WHERE os.planned_start_time <= ? ",
+        "AND not parked AND os.warned=? AND not os.canceled"));
+    int i = 1;
+    stmt.setTimestamp(i++, Timestamp.valueOf(LocalDateTime.now().minus(delta)));
+    stmt.setBoolean(i++, warned);
     ResultSet rs = stmt.executeQuery();
 
     while (rs.next()) {
