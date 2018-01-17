@@ -16,7 +16,7 @@ import cps.entities.models.SubscriptionService;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.ServerException;
-import cps.server.controllers.DatabaseController;
+import cps.server.database.DatabaseController;
 import cps.server.session.SessionHolder;
 
 public class TestSubscriptionOverlap {

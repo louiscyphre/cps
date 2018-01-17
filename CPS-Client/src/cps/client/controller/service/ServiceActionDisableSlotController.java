@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import cps.api.action.DisableParkingSlotsAction;
+import cps.api.action.ParkingCellSetDisabledAction;
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.DisableParkingSlotsResponse;
 import cps.api.response.ServerResponse;
@@ -79,7 +79,7 @@ public class ServiceActionDisableSlotController extends ServiceActionControllerB
       errorIf(!between(k, 0, Constants.LOT_DEPTH - 1), String.format("Row must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
       errorIf(!between(i, 0, lot.getWidth() - 1), String.format("Column must be in range [0, %s] (inclusive)", lot.getWidth() - 1));
       
-      sendRequest(new DisableParkingSlotsAction(user.getId(), lot.getId(), i, j, k));
+      sendRequest(new ParkingCellSetDisabledAction(user.getId(), lot.getId(), i, j, k));
     } catch (Exception e) {
       displayError(e.getMessage());
     }

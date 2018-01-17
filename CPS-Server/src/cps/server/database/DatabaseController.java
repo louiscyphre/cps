@@ -1,7 +1,7 @@
 /*
  * 
  */
-package cps.server.controllers;
+package cps.server.database;
 
 import java.sql.*;
 import java.util.Collection;

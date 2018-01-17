@@ -4,6 +4,7 @@ import cps.api.action.*;
 import cps.api.request.*;
 import cps.api.response.*;
 import cps.server.controllers.*;
+import cps.server.database.DatabaseController;
 import cps.server.session.*;
 
 public class ServerController implements RequestHandler<SessionHolder> {
@@ -136,7 +137,7 @@ public class ServerController implements RequestHandler<SessionHolder> {
   }
 
   @Override
-  public ServerResponse handle(DisableParkingSlotsAction action, SessionHolder context) {
+  public ServerResponse handle(ParkingCellSetDisabledAction action, SessionHolder context) {
     return lotController.handle(action, context.acquireServiceSession());
   }
 
@@ -166,7 +167,7 @@ public class ServerController implements RequestHandler<SessionHolder> {
   }
 
   @Override
-  public ServerResponse handle(ReserveParkingSlotsAction action, SessionHolder context) {
+  public ServerResponse handle(ParkingCellSetReservedAction action, SessionHolder context) {
     return lotController.handle(action, context.acquireServiceSession());
   }
 

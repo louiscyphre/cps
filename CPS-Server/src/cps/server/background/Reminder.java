@@ -9,7 +9,8 @@ import java.util.Collection;
 import cps.entities.models.OnetimeService;
 import cps.server.ServerConfig;
 import cps.server.ServerException;
-import cps.server.controllers.DatabaseController;
+import cps.server.database.DatabaseController;
+
 import static cps.common.Utilities.debugPrint;
 import static cps.common.Utilities.debugPrintln;
 
