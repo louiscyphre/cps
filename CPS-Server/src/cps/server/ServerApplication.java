@@ -3,18 +3,17 @@
  */
 package cps.server;
 
-import ocsf.server.AbstractServer;
-import ocsf.server.ConnectionToClient;
-
 import com.google.gson.Gson;
 
-import cps.common.*;
 import cps.api.request.Request;
-import cps.api.response.*;
+import cps.api.response.ServerResponse;
+import cps.api.response.SimpleResponse;
+import cps.common.Constants;
 import cps.server.background.Reminder;
-import cps.server.controllers.*;
 import cps.server.database.DatabaseController;
-import cps.server.session.*;
+import cps.server.session.SessionHolder;
+import ocsf.server.AbstractServer;
+import ocsf.server.ConnectionToClient;
 
 /**
  * The Class ServerApplication.

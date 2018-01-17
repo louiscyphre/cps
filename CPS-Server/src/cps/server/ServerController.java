@@ -15,19 +15,16 @@ public class ServerController implements RequestHandler<SessionHolder> {
   private final ParkingEntryController      entryController;
   private final ParkingExitController       exitController;
   private final SubscriptionController      subscriptionController;
-  private final UserController          userController;
+  private final UserController              userController;
   private final ComplaintController         complaintController;
   private final CarTransportationController transportationController;
-  private ReportController                  reportController;
+  private final ReportController            reportController;
 
-  /**
-   * Constructs an instance of the server controller.
-   *
+  /** Constructs an instance of the server controller.
    * @param config
-   *          the config
+   *        the config
    * @throws Exception
-   *           the exception
-   */
+   *         the exception */
   public ServerController(ServerConfig config) throws Exception {
     this.config = config;
     databaseController = new DatabaseController(config);
@@ -64,6 +61,26 @@ public class ServerController implements RequestHandler<SessionHolder> {
 
   public CarTransportationController getTransportationController() {
     return transportationController;
+  }
+
+  public ReportController getReportController() {
+    return reportController;
+  }
+
+  public ParkingEntryController getEntryController() {
+    return entryController;
+  }
+
+  public ParkingExitController getExitController() {
+    return exitController;
+  }
+
+  public UserController getUserController() {
+    return userController;
+  }
+
+  public ComplaintController getComplaintController() {
+    return complaintController;
   }
 
   public ServerResponse dispatch(Request message, SessionHolder context) {

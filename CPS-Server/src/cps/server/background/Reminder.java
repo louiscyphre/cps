@@ -4,6 +4,7 @@
 package cps.server.background;
 
 import java.sql.Connection;
+import java.time.Duration;
 import java.util.Collection;
 
 import cps.entities.models.OnetimeService;
@@ -14,8 +15,11 @@ import cps.server.database.DatabaseController;
 import static cps.common.Utilities.debugPrint;
 import static cps.common.Utilities.debugPrintln;
 
-/** The Class Reminder.
- * @author Tegra */
+/**
+ * The Class Reminder.
+ * 
+ * @author Tegra
+ */
 public class Reminder extends Thread {
   DatabaseController db = null;
 
@@ -27,8 +31,10 @@ public class Reminder extends Thread {
     db = new DatabaseController(config);
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Thread#run() */
+  /*
+   * (non-Javadoc)
+   * @see java.lang.Thread#run()
+   */
   @Override
   public void run() {
 
@@ -38,14 +44,18 @@ public class Reminder extends Thread {
         // TODO check one time services where customer has to park within 30
         // minutes
 
-        /* This function will send messages to users that are late by at least
-         * one second */
+        /*
+         * This function will send messages to users that are late by at least
+         * one second
+         */
         warnLateCustomers();
 
-        /* This function will find users that are late more than 30 minutes and
-         * has not been authorized to do that and will cancel their one time
-         * order */
-        // otpc.deleteTooLate();
+        /*
+         * This function will find users that are late more than 30 minutes and
+         * have not been authorized to do that and will cancel their one time
+         * order
+         */
+        cancelLateReservations();
 
       }
 
@@ -56,28 +66,57 @@ public class Reminder extends Thread {
     }
   }
 
-  /** Find and warn customers who reserved a parking and did not show up yet.
-   * @throws ServerException */
+  /**
+   * Find and warn customers who reserved a parking and did not show up yet.
+   * 
+   * @throws ServerException
+   */
   private void warnLateCustomers() throws ServerException {
     db.performAction(conn -> {
       debugPrint("Searching late customers ");
-      Collection<OnetimeService> items = OnetimeService.findLateUnwarnedCustomers(conn);
-      
+      Collection<OnetimeService> items = OnetimeService.findLateCustomers(conn, Duration.ofMinutes(0), false);
+
       for (OnetimeService entry : items) {
         sendWarning(conn, entry);
         entry.setWarned(true);
-        entry.update(conn); // We assume that update always works, if it doesn't, it throws an SQL exception
+        entry.update(conn); // We assume that update always works, if it
+                            // doesn't, it throws an SQL exception
       }
-      
+
       debugPrintln("...warned %s customers", items.size());
     });
-  } 
+  }
+
+  /**
+   * Find users that are late more than 30 minutes and cancel their reservation
+   * if they did not confirm that they are still interested.
+   * 
+   * @throws ServerException
+   */
+  private void cancelLateReservations() throws ServerException {
+    db.performAction(conn -> {
+      debugPrint("Searching customers who forfeited their reservation");
+      Collection<OnetimeService> items = OnetimeService.findLateCustomers(conn, Duration.ofMinutes(30), true);
+
+      for (OnetimeService entry : items) {
+        entry.setCanceled(true);
+        entry.update(conn); // We assume that update always works, if it
+                            // doesn't, it throws an SQL exception
+      }
+
+      debugPrintln("...canceled %s reservations", items.size());
+    });
+
+  }
 
   private void sendWarning(Connection conn, OnetimeService late) {
     // TODO optional - send an email to email address
-    /* I've tried to set up mailing, but unfortunately, Gmail does not allow non
-     * registered applications to use it's smtp anymore. So screw it */
-    System.out.printf("\nSending message to customer %d, to email %s.\n We are waiting for your car #%s, at %d, at %s\n", late.getCustomerID(), late.getEmail(), late.getCarID(), late.getLotID(),
-        late.getPlannedStartTime());
+    /*
+     * Email should be sent from this function when the client provides smtp
+     * server
+     */
+    System.out.printf(
+        "\nSending message to customer %d, to email %s.\n We are waiting for your car #%s, at %d, at %s\n",
+        late.getCustomerID(), late.getEmail(), late.getCarID(), late.getLotID(), late.getPlannedStartTime());
   }
 }

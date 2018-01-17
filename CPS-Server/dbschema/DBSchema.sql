@@ -188,6 +188,7 @@ CREATE TABLE `subscription_service` (
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   `daily_exit_time` time DEFAULT NULL,
+  /* `parked` bit(1) NOT NULL DEFAULT b'0', */
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
