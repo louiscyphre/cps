@@ -121,8 +121,8 @@ public class RegularSubscriptionController extends CustomerActionControllerBase 
         // DatePicker start date validation
         LocalDate plannedStartDate = getPlannedStartDate();
         // compare exit time to entry time
-        if (today.compareTo(plannedStartDate) >= 0) {
-          displayError("Start date must be future date");
+        if (today.compareTo(plannedStartDate) > 0) {
+          displayError("Start date must be today, or future date");
           return;
         }
         

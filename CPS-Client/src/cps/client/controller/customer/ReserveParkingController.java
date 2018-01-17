@@ -173,25 +173,25 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
       displayError("Invalid end time");
       return;
     }
-    // datepicker start date + ime validation
-    LocalDateTime plannedStartTime = getPlannedStartTime();
-    if (plannedStartTime == null) {
+    // DatePicker start date + time validation
+    LocalDateTime plannedStartDateTime = getPlannedStartDateTime();
+    if (plannedStartDateTime == null) {
       displayError("Invalid start date");
       return;
     }
-    // datepicker end date + ime validation
-    LocalDateTime plannedEndTime = getPlannedEndTime();
-    if (plannedEndTime == null) {
+    // DatePicker end date + time validation
+    LocalDateTime plannedEndDateTime = getPlannedEndDateTime();
+    if (plannedEndDateTime == null) {
       displayError("Invalid leave date");
       return;
     }
     // compare exit time to entry time
-    if (plannedStartTime.compareTo(plannedEndTime) >= 0) {
-      displayError("Leave date has to be before entry date");
+    if (plannedStartDateTime.compareTo(plannedEndDateTime) > 0) {
+      displayError("Leave date has to be before or equal to entry date");
       return;
     }
 
-    // TODO replace the lotid handling from the list instead
+    // TODO replace the lotID handling from the list instead
     int lotId = getLotId();
     if (lotId < 0) {
       displayError("Invalid lot ID");
@@ -208,8 +208,8 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
       ControllersClientAdapter.getCustomerContext().setPendingEmail(email);
     }
 
-    ReservedParkingRequest request = new ReservedParkingRequest(customerId, email, carId, lotId, plannedStartTime,
-        plannedEndTime);
+    ReservedParkingRequest request = new ReservedParkingRequest(customerId, email, carId, lotId, plannedStartDateTime,
+        plannedEndDateTime);
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
@@ -246,7 +246,7 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
   }
 
   // returns planned start date or null if empty
-  private LocalDateTime getPlannedStartTime() {
+  private LocalDateTime getPlannedStartDateTime() {
     if (startDatePicker.getValue() == null) {
       return null;
     }
@@ -267,7 +267,7 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
   }
 
   // returns planned end date or null if empty
-  private LocalDateTime getPlannedEndTime() {
+  private LocalDateTime getPlannedEndDateTime() {
     if (endDatePicker.getValue() == null) {
       return null;
     }
