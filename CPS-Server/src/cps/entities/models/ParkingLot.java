@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 
 import cps.common.Constants;
 import cps.server.ServerException;
+import cps.server.database.QueryBuilder;
 
 /**
  * The Class ParkingLot.
@@ -503,5 +504,11 @@ public class ParkingLot implements Serializable {
     }
 
     return lots;
+  }
+
+  public static ParkingLot findByStreetAddress(Connection conn, String streetAddress) throws SQLException {
+    return new QueryBuilder<ParkingLot>("SELECT * FROM parking_lot where street_address=?")
+        .withFields(statement -> statement.setString(1, streetAddress))
+        .fetchResult(conn, result -> new ParkingLot(result));
   }
 }

@@ -16,7 +16,7 @@ public class QueryBuilder<T> {
     this.command = command;
   }
   
-  public QueryBuilder<T> withStatement(StatementVisitor fillFields) {
+  public QueryBuilder<T> withFields(StatementVisitor fillFields) {
     this.filler = fillFields;
     return this;
   }
