@@ -41,8 +41,6 @@ public class Reminder extends Thread {
     try {
       while (true) {
         Thread.sleep(INTERVAL);
-        // TODO check one time services where customer has to park within 30
-        // minutes
 
         /*
          * This function will send messages to users that are late by at least
