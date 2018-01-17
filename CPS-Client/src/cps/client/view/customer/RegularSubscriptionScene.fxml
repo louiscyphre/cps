@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="705.0" style="-fx-background-color: E6DDD4;" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.RegularSubscriptionController">
+<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="705.0" style="-fx-background-color: E6DDD4;" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.RegularSubscriptionController">
   <center>
     <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="393.0" spacing="15.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
@@ -69,7 +69,7 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0">
               <children>
-                <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
+                <Button id="" fx:id="submitButton" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
                   <VBox.margin>
                     <Insets fx:id="x3" />
                   </VBox.margin>

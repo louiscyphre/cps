@@ -37,6 +37,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -58,6 +59,9 @@ public abstract class ClientControllerBase implements ViewController {
 
   @FXML // fx:id="infoBox"
   protected VBox infoBox; // Value injected by FXMLLoader
+
+  @FXML
+  protected BorderPane root;
 
   protected boolean processing;
 
@@ -110,10 +114,6 @@ public abstract class ClientControllerBase implements ViewController {
 
   @Override
   public void turnProcessingStateOff() {
-    try {
-      Thread.sleep(500);
-    } catch (InterruptedException e) {
-    }
     infoProgress.visibleProperty().set(false);
     infoBox.getStyleClass().clear();
     infoBox.getStyleClass().add("infoLabel");
@@ -135,7 +135,8 @@ public abstract class ClientControllerBase implements ViewController {
     assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
     assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
     assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
-    Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text Field
+    Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
+                                                     // Field
   }
 
   @Override
@@ -145,21 +146,21 @@ public abstract class ClientControllerBase implements ViewController {
     infoProgress.visibleProperty().set(false);
     infoLabel.getChildren().clear();
   }
-  
+
   public final void sendRequest(Request request, boolean waitForResponse) {
     if (waitForResponse) {
       turnProcessingStateOn();
     }
-    
+
     ControllersClientAdapter.getClient().sendRequest(request);
   }
-  
+
   public final void sendRequest(Request request) {
     sendRequest(request, true);
   }
 
   public ServerResponse handleGenericResponse(ServerResponse response) {
-    
+
     if (response.success()) {
       turnProcessingStateOff();
       displayInfo(response.getDescription());
@@ -167,8 +168,13 @@ public abstract class ClientControllerBase implements ViewController {
       turnProcessingStateOff();
       displayError(response.getDescription());
     }
-    
-    return null;
+
+    return response;
+  }
+  
+  @Override
+  public BorderPane getRoot() {
+    return root;
   }
 
   // ResponseHandler interface
@@ -292,10 +298,12 @@ public abstract class ClientControllerBase implements ViewController {
     return null;
   }
 
+  
   // Helper methods
   public String getText(TextInputControl field) {
     return field == null ? "" : field.getText();
   }
+
 
   public String requireField(String value, String parameterName) throws UserLevelClientException {
     if (value == null || value.trim().length() == 0) {
@@ -344,24 +352,24 @@ public abstract class ClientControllerBase implements ViewController {
   public float requireFloat(TextInputControl field, String parameterName) throws UserLevelClientException {
     return requireFloat(getText(field), parameterName);
   }
-  
+
   public <T> T notNull(T object, String name) throws InternalClientException {
     if (object == null) {
       throw new InternalClientException(String.format("%s must not be null", name));
     }
     return object;
   }
-  
+
   public void errorIf(boolean condition, String errorMessage) throws UserLevelClientException {
     if (condition) {
       throw new UserLevelClientException(errorMessage);
     }
   }
-  
+
   public void errorIfNull(Object object, String errorMessage) throws UserLevelClientException {
     errorIf(object == null, errorMessage);
   }
-  
+
   public void showAlert(String message) {
     new Alert(AlertType.INFORMATION, message).show();
   }

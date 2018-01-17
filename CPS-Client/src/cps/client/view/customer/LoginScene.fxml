@@ -9,18 +9,18 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.LoginController">
+<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.LoginController">
   <center>
-    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="360.0" spacing="10.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="360.0" spacing="25.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
         <TextField fx:id="emailTextField" alignment="CENTER" prefHeight="60.0" prefWidth="200.0" promptText="Enter your E-mail here" style="" styleClass="inputField" text="">
           <VBox.margin>
-            <Insets bottom="20.0" fx:id="x2" />
+            <Insets fx:id="x2" />
           </VBox.margin>
         </TextField>
         <PasswordField fx:id="passwordTextField" alignment="CENTER" prefHeight="60.0" prefWidth="200.0" promptText="Enter your password here" styleClass="passwordInputField">
           <VBox.margin>
-            <Insets bottom="20.0" fx:id="x2" />
+            <Insets fx:id="x2" />
           </VBox.margin>
         </PasswordField>
         <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="100.0" spacing="0.0" styleClass="infoLabel">
@@ -76,7 +76,7 @@
         </HBox>
       </children>
       <padding>
-        <Insets bottom="30.0" left="35.0" right="35.0" top="30.0" />
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
       </padding>
       <stylesheets>
         <URL value="@../application.css" />

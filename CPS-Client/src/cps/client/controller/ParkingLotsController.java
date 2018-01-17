@@ -12,7 +12,7 @@ import cps.entities.models.ParkingLot;
  */
 public interface ParkingLotsController extends ViewController {
   /**
-   * @param parkingLots
+   * @param list
    */
   public void setParkingLots(Collection<ParkingLot> list);
 }

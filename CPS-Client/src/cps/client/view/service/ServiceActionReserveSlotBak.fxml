@@ -9,15 +9,23 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceActionRefundController">
+<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceActionReserveSlotControllerBak">
   <top>
-    <Label text="Refund" BorderPane.alignment="CENTER" />
+    <Label text="Reserve Slot" BorderPane.alignment="CENTER" />
   </top>
    <center>
-      <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="296.0" spacing="20.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
-         <children>         
-            <TextField fx:id="complaintIdTF" alignment="CENTER" prefHeight="50.0" prefWidth="242.0" promptText="Enter complaint ID here" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="" />
-            <TextField fx:id="refundAmountTF" alignment="CENTER" prefHeight="50.0" prefWidth="242.0" promptText="Enter the amount here" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="" />
+      <VBox alignment="CENTER" layoutX="152.0" layoutY="122.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="287.0" spacing="10.0" style="-fx-background-color: #D9D9D9;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;&#10;&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="columnITF" alignment="CENTER" prefHeight="50.0" prefWidth="242.0" promptText="Column" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" />
+            <TextField fx:id="floorJTF" alignment="CENTER" prefHeight="50.0" prefWidth="242.0" promptText="Floor" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;" text="">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></TextField>
+            <TextField fx:id="rowKTF" alignment="CENTER" layoutX="35.0" layoutY="73.0" prefHeight="50.0" prefWidth="242.0" promptText="Row" style="-fx-padding: 15px;&#10;-fx-border-radius: 8 8 8 8;&#10;-fx-background-radius: 8 8 8 8;">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </TextField>
             <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">
                <children>
                   <ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />
@@ -34,14 +42,12 @@
                      <styleClass>
                         <String fx:value="cancelButton" />
                         <String fx:value="smallButton" />
-                     </styleClass>
-                  </Button>
+                     </styleClass></Button>
                   <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleOkButton" prefHeight="50.0" prefWidth="104.0" text="Ok" textAlignment="CENTER">
                      <styleClass>
                         <String fx:value="regularButton" />
                         <String fx:value="smallButton" />
-                     </styleClass>
-                  </Button>
+                     </styleClass></Button>
                </children>
             </HBox>
          </children>
@@ -50,4 +56,7 @@
          </padding>
       </VBox>
    </center>
+   <bottom>
+   
+   </bottom>
 </BorderPane>

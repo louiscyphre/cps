@@ -171,7 +171,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
   public void removeEntry(int onetimeServiceID) {
     obsEntriesList.remove(new TableOnetimeService(0, null, 0, null, null, onetimeServiceID));
   }
-
+  
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
     parkingLotsMap = new HashMap<Integer, String>();
@@ -286,5 +286,4 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
 
     obsEntriesList.addAll(entriesList);
   }
-
 }

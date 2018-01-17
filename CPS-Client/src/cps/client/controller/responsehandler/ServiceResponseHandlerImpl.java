@@ -3,6 +3,7 @@ package cps.client.controller.responsehandler;
 import cps.api.response.DisableParkingSlotsResponse;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ListComplaintsResponse;
+import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.RefundResponse;
 import cps.api.response.RequestLotStateResponse;
 import cps.api.response.RequestReportResponse;
@@ -43,20 +44,22 @@ class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 
   @Override
   public ServerResponse handle(ReserveParkingSlotsResponse response) {
-    // TODO Auto-generated method stub
-    return null;
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   @Override
   public ServerResponse handle(SetFullLotResponse response) {
-    // TODO Auto-generated method stub
-    return null;
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   @Override
+  public ServerResponse handle(ListParkingLotsResponse response) {
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  }
+  
+  @Override
   public ServerResponse handle(UpdatePricesResponse response) {
-    // TODO Auto-generated method stub
-    return null;
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   @Override

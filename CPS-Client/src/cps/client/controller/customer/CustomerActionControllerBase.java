@@ -11,14 +11,14 @@ public class CustomerActionControllerBase extends ClientControllerBase {
   @FXML
   void handleBackButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU);
+      ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU, 10);
     }
   }
 
   @FXML
   void handleCancelButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU);
+      ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU, 10);
     }
   }
 

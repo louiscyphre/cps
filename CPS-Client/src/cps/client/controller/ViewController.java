@@ -3,6 +3,7 @@ package cps.client.controller;
 import java.util.List;
 
 import cps.api.response.ResponseHandler;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
 public interface ViewController extends ResponseHandler {
@@ -32,5 +33,7 @@ public interface ViewController extends ResponseHandler {
   public void turnLoggedInStateOff();
 
   public void cleanCtrl();
+  
+  public BorderPane getRoot();
 
 }

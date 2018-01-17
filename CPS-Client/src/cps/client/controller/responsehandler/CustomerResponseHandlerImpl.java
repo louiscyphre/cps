@@ -159,7 +159,7 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       ControllersClientAdapter.turnLoggedInStateOn();
       ctrl.displayInfo(formattedMessage);
       ctrl.turnProcessingStateOff();
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU, 10);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
       ctrl.displayError(response.getDescription());
@@ -210,7 +210,7 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
   @Override
   public ServerResponse handle(ListParkingLotsResponse response) {
-    ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl(); // normally
+    ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();
     ctrl.setParkingLots(response.getData());
     ctrl.turnProcessingStateOff();
     return response;
@@ -290,7 +290,7 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       formattedMessage.add(new Text("Subscription purchased successfully!\n"));
       ctrl.displayInfo(formattedMessage);
       ctrl.turnProcessingStateOff();
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU, 1000);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       formattedMessage.add(new Text("Could not proceed with purchase!\n"));
       formattedMessage.add(new Text(response.getDescription()));
@@ -331,7 +331,7 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
       formattedMessage.add(new Text("Subscription purchased successfully!\n"));
       ctrl.displayInfo(formattedMessage);
       ctrl.turnProcessingStateOff();
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU, 1000);
 
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       formattedMessage.add(new Text("Could not proceed with purchase!\n"));

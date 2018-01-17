@@ -17,9 +17,6 @@ import cps.client.network.INetworkClient;
 import cps.client.utils.CmdParser;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class ClientApplication extends Application implements INetworkClient {
@@ -126,27 +123,9 @@ public class ClientApplication extends Application implements INetworkClient {
     }
   }
 
-  private void initializeStage(Scene scene, String title) {
-    primaryStage.setTitle(title);
-    primaryStage.setScene(scene);
-    primaryStage.setMaximized(true);
-    Screen screen = Screen.getPrimary();
-    Rectangle2D bounds = screen.getVisualBounds();
-    primaryStage.setX(bounds.getMinX());
-    primaryStage.setY(bounds.getMinY());
-    primaryStage.setWidth(bounds.getWidth());
-    primaryStage.setHeight(bounds.getHeight());
-    primaryStage.show();
-    primaryStage.setOnCloseRequest(e -> {
-      Platform.exit();
-      System.exit(0);
-    });
-
-  }
-
   private void initializeStage(SceneCode code, String title) {
     ControllersClientAdapter.getClient().getPrimaryStage().setTitle(title);
-    ControllersClientAdapter.setStage(code);
+    ControllersClientAdapter.setStage(code, 10);
     primaryStage.show();
     primaryStage.setOnCloseRequest(e -> {
       Platform.exit();

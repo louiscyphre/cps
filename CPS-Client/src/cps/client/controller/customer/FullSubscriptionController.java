@@ -55,7 +55,7 @@ public class FullSubscriptionController extends CustomerActionControllerBase {
     if (processing) {
       return;
     }
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS, 10);
   }
 
   @FXML
