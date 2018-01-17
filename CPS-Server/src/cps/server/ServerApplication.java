@@ -171,7 +171,8 @@ public class ServerApplication extends AbstractServer {
     /*
      * TODO create pooling threads here
      */
-    reminder = new Reminder(getServerController().getDatabaseController());
+    reminder = new Reminder(getServerController().getDatabaseController(),
+        getServerController().getOnetimeParkingController());
     reminder.start();
 
   }

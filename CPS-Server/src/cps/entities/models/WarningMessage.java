@@ -19,12 +19,18 @@ public class WarningMessage {
   /**
    * Instantiates a new warning message.
    *
-   * @param customerid the customerid
-   * @param email the email
-   * @param carid the carid
-   * @param lotid the lotid
-   * @param startTime the start time
-   * @param endTime the end time
+   * @param customerid
+   *          the customerid
+   * @param email
+   *          the email
+   * @param carid
+   *          the carid
+   * @param lotid
+   *          the lotid
+   * @param startTime
+   *          the start time
+   * @param endTime
+   *          the end time
    */
   public WarningMessage(int customerid, String email, String carid, int lotid, Timestamp startTime, Timestamp endTime) {
     this.customerId = customerid;
@@ -38,8 +44,10 @@ public class WarningMessage {
   /**
    * Instantiates a new warning message.
    *
-   * @param rs the rs
-   * @throws SQLException the SQL exception
+   * @param rs
+   *          the rs
+   * @throws SQLException
+   *           the SQL exception
    */
   public WarningMessage(ResultSet rs) throws SQLException {
     this.customerId = rs.getInt("customer_id");
@@ -52,14 +60,20 @@ public class WarningMessage {
 
   public void setsend(Connection conn) {
     // TODO mark current message as sent in the DB
-    
+
   }
 
   public void warn(Connection conn) {
     // TODO send an email to email adress
-    
+    /*
+     * I've tried to set up mailing, but unfortunately, Gmail does not allow non
+     * registered applications to use it's smtp anymore. So screw it
+     */
+    System.out.printf("Sending message to customer %d, to email %s.\n We are waiting for your car #%s, at %d, at %s",
+        this.customerId, this.email, this.carid, this.lotId, this.plannedStartTime.toString());
+
   }
-  
+
   public int getCustomerId() {
     return customerId;
   }
@@ -108,5 +122,4 @@ public class WarningMessage {
     this.plannedEndTime = plannedEndTime;
   }
 
-  
 }

@@ -227,7 +227,7 @@ public class OnetimeParkingController extends RequestController {
    *          the car id
    * @throws ServerException 
    */
-  public void warnCustomer(int cid, String email, String carId) throws ServerException {
+  public void warnLateCustomers() throws ServerException {
     database.performAction(conn -> {
       Collection<WarningMessage> messages = OnetimeService.findLateUnwarnedCustomers(conn);
       for (WarningMessage mess : messages) {
