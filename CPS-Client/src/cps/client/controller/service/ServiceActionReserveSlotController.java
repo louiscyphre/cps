@@ -1,6 +1,6 @@
 package cps.client.controller.service;
 
-import cps.api.action.ReserveParkingSlotsAction;
+import cps.api.action.ParkingCellSetReservedAction;
 import cps.api.response.ReserveParkingSlotsResponse;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
@@ -26,8 +26,8 @@ public class ServiceActionReserveSlotController extends ServiceActionLotStateCon
           user = requireLoggedInUser();
           ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
           turnProcessingStateOn();
-          sendRequest(new ReserveParkingSlotsAction(user.getId(), lot.getId(), selectedCell.width, selectedCell.height,
-              selectedCell.depth));
+          sendRequest(new ParkingCellSetReservedAction(user.getId(), lot.getId(), selectedCell.width,
+              selectedCell.height, selectedCell.depth, !selectedCell.isReserved()));
         } catch (Exception e) {
           displayError(e.getMessage());
         }
@@ -47,7 +47,7 @@ public class ServiceActionReserveSlotController extends ServiceActionLotStateCon
 
   @Override
   protected void onMouseClickedHandler(Rectangle currentRectangle) {
-    if(processing)
+    if (processing)
       return;
     super.onMouseClickedHandler(currentRectangle);
     if (selectedCar != null) {
@@ -60,7 +60,7 @@ public class ServiceActionReserveSlotController extends ServiceActionLotStateCon
   @Override
   public ServerResponse handle(ReserveParkingSlotsResponse response) {
     super.handleGenericResponse(response);
-    if(response.success()) {
+    if (response.success()) {
       validateAndSend();
     }
     return null;

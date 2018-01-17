@@ -1,6 +1,6 @@
 package cps.client.controller.service;
 
-import cps.api.action.DisableParkingSlotsAction;
+import cps.api.action.ParkingCellSetDisabledAction;
 import cps.api.response.DisableParkingSlotsResponse;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
@@ -26,8 +26,8 @@ public class ServiceActionDisableSlotController extends ServiceActionLotStateCon
           user = requireLoggedInUser();
           ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
           turnProcessingStateOn();
-          sendRequest(new DisableParkingSlotsAction(user.getId(), lot.getId(), selectedCell.width, selectedCell.height,
-              selectedCell.depth));
+          sendRequest(new ParkingCellSetDisabledAction(user.getId(), lot.getId(), selectedCell.width, selectedCell.height,
+              selectedCell.depth, !selectedCell.isDisabled()));
         } catch (Exception e) {
           displayError(e.getMessage());
         }

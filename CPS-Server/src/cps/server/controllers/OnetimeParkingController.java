@@ -28,7 +28,6 @@ import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.session.CustomerSession;
 import cps.server.session.UserSession;
-import cps.entities.models.WarningMessage;
 
 /** Handles OnetimeService requests. */
 public class OnetimeParkingController extends RequestController {
@@ -62,15 +61,17 @@ public class OnetimeParkingController extends RequestController {
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
 
       // Check that lot is not full
-//      session.requireLotNotFull(conn, gson, lot, response);
-      int availableCells = lot.countFreeCells(conn) - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
-      errorIf(lot.isLotFull() || availableCells <= 0, "The specified lot is full; please try one of the alternative lots");
+      // session.requireLotNotFull(conn, gson, lot, response);
+      int availableCells = lot.countFreeCells(conn)
+          - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
+      errorIf(lot.isLotFull() || availableCells <= 0,
+          "The specified lot is full; please try one of the alternative lots");
 
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
       OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
-          request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, false);
+          request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime);
       errorIfNull(service, "Failed to create OnetimeService entry");
 
       // Calculate payment for service
@@ -213,27 +214,6 @@ public class OnetimeParkingController extends RequestController {
       response.setCustomerID(request.getCustomerID());
       response.setSuccess("List of OnetimeService entries retrieved successfully");
       return response;
-    });
-  }
-
-  /**
-   * Warn customer.
-   *
-   * @param cid
-   *          the cid
-   * @param email
-   *          the email
-   * @param carId
-   *          the car id
-   * @throws ServerException 
-   */
-  public void warnCustomer(int cid, String email, String carId) throws ServerException {
-    database.performAction(conn -> {
-      Collection<WarningMessage> messages = OnetimeService.findLateUnwarnedCustomers(conn);
-      for (WarningMessage mess : messages) {
-        mess.warn(conn);
-        mess.setsend(conn);
-      }
     });
   }
 }

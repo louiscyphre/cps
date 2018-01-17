@@ -31,7 +31,7 @@ public interface RequestHandler<SessionType> {
   public ServerResponse handle(ListParkingLotsRequest request, SessionType session);
 
   // CompanyPerson actions - only CompanyPerson can use these
-  public ServerResponse handle(DisableParkingSlotsAction action, SessionType session);
+  public ServerResponse handle(ParkingCellSetDisabledAction action, SessionType session);
 
   public ServerResponse handle(InitLotAction action, SessionType session);
 
@@ -43,7 +43,7 @@ public interface RequestHandler<SessionType> {
 
   public ServerResponse handle(RequestReportAction action, SessionType session);
 
-  public ServerResponse handle(ReserveParkingSlotsAction action, SessionType session);
+  public ServerResponse handle(ParkingCellSetReservedAction action, SessionType session);
   
   public ServerResponse handle(ServiceLoginAction action, SessionType session);
 

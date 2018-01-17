@@ -13,6 +13,7 @@ import cps.api.request.Request;
 import cps.api.response.*;
 import cps.server.background.Reminder;
 import cps.server.controllers.*;
+import cps.server.database.DatabaseController;
 import cps.server.session.*;
 
 /**
@@ -159,7 +160,7 @@ public class ServerApplication extends AbstractServer {
     try {
       ServerConfig config = remote ? ServerConfig.remote() : ServerConfig.local();
       ServerApplication server = new ServerApplication(port, config);
-      server.initialize();
+      server.initialize(config);
       server.listen(); // Start listening for connections
     } catch (Exception ex) {
       System.out.println("ERROR - Could not listen for clients!");
@@ -167,13 +168,10 @@ public class ServerApplication extends AbstractServer {
     }
   }
 
-  private void initialize() {
-    /*
-     * TODO create pooling threads here
-     */
-    reminder = new Reminder(getServerController().getDatabaseController());
+  private void initialize(ServerConfig config) throws Exception {
+    // Create background thread to poll the db every minute
+    reminder = new Reminder(config);
     reminder.start();
-
   }
 
 }

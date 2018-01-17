@@ -5,15 +5,15 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import cps.api.action.DisableParkingSlotsAction;
-import cps.api.action.ReserveParkingSlotsAction;
+import cps.api.action.ParkingCellSetDisabledAction;
+import cps.api.action.ParkingCellSetReservedAction;
 import cps.api.response.ServerResponse;
 import cps.entities.models.ParkingLot;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.controllers.CarTransportationController;
-import cps.server.controllers.DatabaseController;
+import cps.server.database.DatabaseController;
 import cps.server.session.ServiceSession;
 import cps.server.session.SessionHolder;
 import cps.server.testing.utilities.ServerControllerTest;
@@ -42,7 +42,7 @@ public class TestReserveOrDisable extends ServerControllerTest {
       transportationController.insertCar(conn, lot, carId, exitTime.plusMinutes(50));
     });
     
-    DisableParkingSlotsAction disableAction = new DisableParkingSlotsAction(1, 1, 0, 2, 2);
+    ParkingCellSetDisabledAction disableAction = new ParkingCellSetDisabledAction(1, 1, 0, 2, 2);
     ServiceSession session = context.acquireServiceSession();
     session.login("sarit", "1234");
     
@@ -51,13 +51,13 @@ public class TestReserveOrDisable extends ServerControllerTest {
     assertFalse(res.success());
     
     
-    disableAction = new DisableParkingSlotsAction(1, 1, 0, 2, 1);
+    disableAction = new ParkingCellSetDisabledAction(1, 1, 0, 2, 1);
     res = server.handle(disableAction, context);
     assertTrue(res.success());
-    ReserveParkingSlotsAction reserveAction = new ReserveParkingSlotsAction(1, 1, 0, 2, 2);
+    ParkingCellSetReservedAction reserveAction = new ParkingCellSetReservedAction(1, 1, 0, 2, 2);
     res = server.handle(reserveAction, context);
     assertFalse(res.success());
-    reserveAction = new ReserveParkingSlotsAction(1, 1, 0, 2, 0);
+    reserveAction = new ParkingCellSetReservedAction(1, 1, 0, 2, 0);
     res = server.handle(reserveAction, context);
     assertTrue(res.success());
   }

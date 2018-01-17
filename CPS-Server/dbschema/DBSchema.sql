@@ -124,8 +124,9 @@ CREATE TABLE `onetime_service` (
   `lot_id` int(10) NOT NULL,
   `planned_start_time` datetime NOT NULL,
   `planned_end_time` datetime NOT NULL,
+  `parked` bit(1) NOT NULL DEFAULT b'0',
   `canceled` bit(1) NOT NULL DEFAULT b'0',
-  `warned` bit(1) DEFAULT b'0',
+  `warned` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
