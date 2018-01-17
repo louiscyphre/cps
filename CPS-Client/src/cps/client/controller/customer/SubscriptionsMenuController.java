@@ -76,8 +76,8 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     builder.append("Regular subscription:").append(Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS).append(" parking hours for ");
     builder.append(subscriptionOverallPrice).append(" NIS only!");
     regularSubscriptionInfo.setText(builder.toString());
-    fullSubscriptionInfo.setMaxWidth(Double.MAX_VALUE);
-    fullSubscriptionInfo.setAlignment(Pos.CENTER);//FIXME somehow
+    regularSubscriptionInfo.setMaxWidth(Double.MAX_VALUE);
+    regularSubscriptionInfo.setAlignment(Pos.CENTER);//FIXME somehow
   }
   
   private void  setFullSubscriptionInfo() {
