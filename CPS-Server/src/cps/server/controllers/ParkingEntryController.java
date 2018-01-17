@@ -72,6 +72,9 @@ public class ParkingEntryController extends RequestController {
   }
   
   public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service) throws SQLException, ServerException {
+    // Check that the lot does not already contain the car
+    errorIf(lot.contains(lot.constructContentArray(conn), carID), "This car is already parked in the chosen lot");
+    
     // Attempt to insert the car into the lot.
     // Optimal coordinates are calculated before insertion.
     // If the lot is full, or some other error occurs, LotController will

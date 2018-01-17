@@ -511,4 +511,18 @@ public class ParkingLot implements Serializable {
         .withFields(statement -> statement.setString(1, streetAddress))
         .fetchResult(conn, result -> new ParkingLot(result));
   }
+  
+  public boolean contains(ParkingCell[][][] content, String carID) {
+    for (ParkingCell[][] slice1 : content) {
+      for (ParkingCell[] slice2 : slice1) {
+        for (ParkingCell cell : slice2) {
+          if (cell.contains(carID)) {
+            return true;
+          }
+        }
+      }
+    }
+    
+    return false;
+  }
 }

@@ -280,7 +280,7 @@ public class CarTransportationControllerA extends RequestController implements C
    *           the car transportation exception
    */
   public void insertCar(Connection conn, ParkingLot lot, String carId, LocalDateTime exitTime)
-      throws SQLException, ServerException {
+      throws SQLException, ServerException {    
     Stack<String> carIds = new Stack<String>();
     carIds.push(carId);
 
