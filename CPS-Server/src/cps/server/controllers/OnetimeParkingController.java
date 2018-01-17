@@ -62,9 +62,11 @@ public class OnetimeParkingController extends RequestController {
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
 
       // Check that lot is not full
-//      session.requireLotNotFull(conn, gson, lot, response);
-      int availableCells = lot.countFreeCells(conn) - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
-      errorIf(lot.isLotFull() || availableCells <= 0, "The specified lot is full; please try one of the alternative lots");
+      // session.requireLotNotFull(conn, gson, lot, response);
+      int availableCells = lot.countFreeCells(conn)
+          - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
+      errorIf(lot.isLotFull() || availableCells <= 0,
+          "The specified lot is full; please try one of the alternative lots");
 
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
@@ -225,14 +227,17 @@ public class OnetimeParkingController extends RequestController {
    *          the email
    * @param carId
    *          the car id
-   * @throws ServerException 
+   * @throws ServerException
    */
   public void warnLateCustomers() throws ServerException {
     database.performAction(conn -> {
       Collection<WarningMessage> messages = OnetimeService.findLateUnwarnedCustomers(conn);
       for (WarningMessage mess : messages) {
         mess.warn(conn);
-        mess.setsend(conn);
+        if (!mess.setsend(conn)) {
+          System.out.println(String.format("Failed to update database for customer %d, car %s, entry time %s",
+              mess.getCustomerId(), mess.getCarid(), mess.getPlannedStartTime().toString()));
+        }
       }
     });
   }
