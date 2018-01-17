@@ -57,8 +57,8 @@ public class TestInsertionAlgorithm {
   public void testInsertCars() throws ServerException {
     // Create parking lot Create incidental parking request
     // Insert the car
-    int carsInLot1 = 1;
-    int carsInLot2 = 1;
+    int carsInLot1 = 36;
+    int carsInLot2 = 71;
     ParkingLot lot[] = new ParkingLot[3];
     lot[0] = initParkingLot();
     lot[1] = db.performQuery(conn -> ParkingLot.create(conn, "Rabin 14", 8, 5, 3, "13.f.t43"));
