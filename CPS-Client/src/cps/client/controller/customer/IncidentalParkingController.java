@@ -5,7 +5,6 @@ package cps.client.controller.customer;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import cps.api.request.IncidentalParkingRequest;
@@ -142,11 +141,7 @@ public class IncidentalParkingController extends CustomerActionControllerBase {
 
   // returns planned end time or null if empty
   private LocalTime getEndTime() {
-    try {
-      return LocalTime.parse(endTimeTextField.getText(), DateTimeFormatter.ISO_LOCAL_TIME);
-    } catch (DateTimeParseException e) {
-      return null;
-    }
+    return getTime(endTimeTextField, "End time");
   }
 
   // returns lot id or -1 if empty

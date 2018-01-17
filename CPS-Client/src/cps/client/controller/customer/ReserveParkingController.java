@@ -5,7 +5,6 @@ package cps.client.controller.customer;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -173,13 +172,13 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
       displayError("Invalid end time");
       return;
     }
-    // datepicker start date + ime validation
+    // datepicker start date + time validation
     LocalDateTime plannedStartTime = getPlannedStartTime();
     if (plannedStartTime == null) {
       displayError("Invalid start date");
       return;
     }
-    // datepicker end date + ime validation
+    // datepicker end date + time validation
     LocalDateTime plannedEndTime = getPlannedEndTime();
     if (plannedEndTime == null) {
       displayError("Invalid leave date");
@@ -187,13 +186,13 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
     }
     // compare exit time to entry time
     if (plannedStartTime.compareTo(plannedEndTime) >= 0) {
-      displayError("Leave date has to be before entry date");
+      displayError("Leave date has to be after entry date");
       return;
     }
 
     // TODO replace the lotid handling from the list instead
     int lotId = getLotId();
-    if (lotId < 0) {
+    if (lotId <= 0) {
       displayError("Invalid lot ID");
       return;
     }
@@ -226,13 +225,13 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
     if (cntx.isLoggedIn()) {
       return cntx.getCustomerEmail();
     } else {
-      return emailTF.getText();
+      return emailTF.getText().trim();
     }
   }
 
   // return car id or null if empty
   private String getCarId() {
-    return carIDTextField.getText();
+    return carIDTextField.getText().trim();
   }
 
   // returns lot id or -1 if empty
@@ -259,11 +258,7 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
 
   // returns planned start time or null if empty
   private LocalTime getStartTime() {
-    try {
-      return LocalTime.parse(startTimeTF.getText(), DateTimeFormatter.ISO_LOCAL_TIME);
-    } catch (DateTimeParseException e) {
-      return null;
-    }
+    return getTime(startTimeTF, "Start time");
   }
 
   // returns planned end date or null if empty
@@ -280,11 +275,7 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
 
   // returns planned end time or null if empty
   private LocalTime getEndTime() {
-    try {
-      return LocalTime.parse(endTimeTF.getText(), DateTimeFormatter.ISO_LOCAL_TIME);
-    } catch (DateTimeParseException e) {
-      return null;
-    }
+    return getTime(endTimeTF, "End time");
   }
 
   @Override
