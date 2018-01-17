@@ -109,4 +109,16 @@ public abstract class Utilities {
   public static <T> T valueOrDefault(T value, T defaultValue) {
     return value == null ? defaultValue : value;
   }
+
+  public static void debugPrintln(String message, Object... args) {
+    if (Constants.DEBUG_MODE) {
+      System.out.println(String.format(message, args));
+    }
+  }
+
+  public static void debugPrint(String message, Object... args) {
+    if (Constants.DEBUG_MODE) {
+      System.out.print(String.format(message, args));
+    }
+  }
 }

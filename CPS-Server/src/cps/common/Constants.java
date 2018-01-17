@@ -1,6 +1,8 @@
 package cps.common;
 
 public interface Constants {
+  public final boolean DEBUG_MODE = true; // TODO disable on release
+  
   public final int    DEFAULT_PORT    = 5555;
   public final String DEFAULT_HOST    = "127.0.0.1";
   public final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";

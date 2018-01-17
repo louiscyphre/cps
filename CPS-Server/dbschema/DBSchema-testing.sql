@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: softengproject.cspvcqknb3vj.eu-central-1.rds.amazonaws.com    Database: kiwi_schema
+-- Host: localhost    Database: cps_test
 -- ------------------------------------------------------
--- Server version	5.6.37-log
+-- Server version	5.7.20-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -125,8 +125,9 @@ CREATE TABLE `onetime_service` (
   `planned_start_time` datetime NOT NULL,
   `planned_end_time` datetime NOT NULL,
   `canceled` bit(1) NOT NULL DEFAULT b'0',
+  `warned` bit(1) DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=Memory DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=Memory AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -141,11 +142,11 @@ CREATE TABLE `parking_cell` (
   `i` int(10) NOT NULL,
   `j` int(10) NOT NULL,
   `k` int(10) NOT NULL,
-  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci NULL,
-  `planned_end_time` datetime NULL,
+  `car_id` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `planned_end_time` datetime DEFAULT NULL,
   `reserved` bit(1) DEFAULT b'0',
   `disabled` bit(1) DEFAULT b'0',
-  PRIMARY KEY (`lot_id`, `i`, `j`, `k`)
+  PRIMARY KEY (`lot_id`,`i`,`j`,`k`)
 ) ENGINE=Memory DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -222,4 +223,4 @@ CREATE TABLE `weekly_statistics` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-09 22:57:37
+-- Dump completed on 2018-01-16 23:31:09

@@ -28,7 +28,6 @@ import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.session.CustomerSession;
 import cps.server.session.UserSession;
-import cps.entities.models.WarningMessage;
 
 /** Handles OnetimeService requests. */
 public class OnetimeParkingController extends RequestController {
@@ -215,30 +214,6 @@ public class OnetimeParkingController extends RequestController {
       response.setCustomerID(request.getCustomerID());
       response.setSuccess("List of OnetimeService entries retrieved successfully");
       return response;
-    });
-  }
-
-  /**
-   * Warn customer.
-   *
-   * @param cid
-   *          the cid
-   * @param email
-   *          the email
-   * @param carId
-   *          the car id
-   * @throws ServerException
-   */
-  public void warnLateCustomers() throws ServerException {
-    database.performAction(conn -> {
-      Collection<WarningMessage> messages = OnetimeService.findLateUnwarnedCustomers(conn);
-      for (WarningMessage mess : messages) {
-        mess.warn(conn);
-        if (!mess.setsend(conn)) {
-          System.out.println(String.format("Failed to update database for customer %d, car %s, entry time %s",
-              mess.getCustomerId(), mess.getCarid(), mess.getPlannedStartTime().toString()));
-        }
-      }
     });
   }
 }

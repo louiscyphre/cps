@@ -29,10 +29,7 @@ public class ServerController implements RequestHandler<SessionHolder> {
    */
   public ServerController(ServerConfig config) throws Exception {
     this.config = config;
-
-    databaseController = new DatabaseController(config.get("db.host"), config.get("db.name"), config.get("db.username"),
-        config.get("db.password"));
-
+    databaseController = new DatabaseController(config);
     lotController = new LotController(this);
     onetimeParkingController = new OnetimeParkingController(this);
     entryController = new ParkingEntryController(this);

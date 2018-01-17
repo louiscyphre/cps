@@ -3,11 +3,15 @@
  */
 package cps.server.background;
 
+import java.util.Collection;
+
 import cps.entities.models.OnetimeService;
-import cps.server.ServerController;
+import cps.entities.models.WarningMessage;
+import cps.server.ServerConfig;
 import cps.server.ServerException;
 import cps.server.controllers.DatabaseController;
-import cps.server.controllers.OnetimeParkingController;
+import static cps.common.Utilities.debugPrint;
+import static cps.common.Utilities.debugPrintln;
 
 /**
  * The Class Reminder.
@@ -15,15 +19,14 @@ import cps.server.controllers.OnetimeParkingController;
  * @author Tegra
  */
 public class Reminder extends Thread {
-
   DatabaseController        db       = null;
-  OnetimeParkingController  otpc     = null;
-  /** The Constant INTERVAL. */
-  private static final long INTERVAL = 60000;
+  
+  /** Number of milliseconds to wait until the next check. */
+  private static final long INTERVAL = 60000; // Once in 1 minute
+  // private static final long INTERVAL = 6000; // Once in 6 seconds
 
-  public Reminder(DatabaseController databasecontroller, OnetimeParkingController oneTimeParkingController) {
-    db = databasecontroller;
-    otpc = oneTimeParkingController;
+  public Reminder(ServerConfig config) throws Exception {
+    db = new DatabaseController(config);
   }
 
   /*
@@ -43,7 +46,7 @@ public class Reminder extends Thread {
          * This function will send messages to users that are late by at least
          * one second
          */
-        otpc.warnLateCustomers();
+        warnLateCustomers();
 
         /*
          * This function will find users that are late more than 30 minutes and
@@ -61,4 +64,22 @@ public class Reminder extends Thread {
     }
   }
 
+  /**
+   * Find and warn customers who reserved a parking and did not show up yet.
+   * @throws ServerException
+   */
+  private void warnLateCustomers() throws ServerException {
+    db.performAction(conn -> {
+      debugPrint("Searching late customers ");
+      Collection<WarningMessage> messages = OnetimeService.findLateUnwarnedCustomers(conn);
+      for (WarningMessage mess : messages) {
+        mess.warn(conn);
+        if (!mess.setsend(conn)) {
+          System.out.println(String.format("Failed to update database for customer %d, car %s, entry time %s",
+              mess.getCustomerId(), mess.getCarid(), mess.getPlannedStartTime().toString()));
+        }
+      }
+      debugPrintln("...warned %s customers", messages.size());
+    });
+  }
 }

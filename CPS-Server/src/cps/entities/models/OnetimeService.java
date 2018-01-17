@@ -363,26 +363,25 @@ public class OnetimeService implements ParkingService {
   }
 
   public static Collection<WarningMessage> findLateUnwarnedCustomers(Connection conn) throws SQLException {
-    LinkedList<WarningMessage> mess = new LinkedList<WarningMessage>();
-    String helper = "";
-    helper += "SELECT os.customer_id,os.email,os.car_id,os.lot_id,os.planned_start_time,os.planned_end_time ";
-    helper += "FROM onetime_service os";
-    helper += "WHERE os.planned_start_time <= ? AND"; // variable 1 - current
-                                                      // time
-    helper += " NOT EXISTS (SELECT *";
-    helper += "FROM car_transportation ct";
-    helper += "WHERE ct.customer_id=os.customer_id AND";
-    helper += "ct.auth_id=os.id AND";
-    helper += "ct.auth_type=1 AND";
-    helper += "os.lot_id=ct.lot_id) AND os.warned=false AND os.canceled=false";
-    PreparedStatement stmt = conn.prepareStatement(helper);
+    LinkedList<WarningMessage> messages = new LinkedList<WarningMessage>();
+    PreparedStatement stmt = conn.prepareStatement(String.join(" ",
+      "SELECT os.customer_id,os.email,os.car_id,os.lot_id,os.planned_start_time,os.planned_end_time",
+      "FROM onetime_service os",
+      "WHERE os.planned_start_time <= ? AND", // variable 1 - current time,
+      "NOT EXISTS (SELECT *",
+      "FROM car_transportation ct",
+      "WHERE ct.customer_id=os.customer_id AND",
+      "ct.auth_id=os.id AND",
+      "ct.auth_type=? AND", // variable 2 - license type
+      "os.lot_id=ct.lot_id) AND os.warned=false AND os.canceled=false"));
     stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+    stmt.setInt(2, Constants.LICENSE_TYPE_ONETIME);
     ResultSet rs = stmt.executeQuery();
 
     while (rs.next()) {
-      mess.add(new WarningMessage(rs));
+      messages.add(new WarningMessage(rs));
     }
 
-    return mess;
+    return messages;
   }
 }

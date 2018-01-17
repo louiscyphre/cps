@@ -159,7 +159,7 @@ public class ServerApplication extends AbstractServer {
     try {
       ServerConfig config = remote ? ServerConfig.remote() : ServerConfig.local();
       ServerApplication server = new ServerApplication(port, config);
-      server.initialize();
+      server.initialize(config);
       server.listen(); // Start listening for connections
     } catch (Exception ex) {
       System.out.println("ERROR - Could not listen for clients!");
@@ -167,12 +167,10 @@ public class ServerApplication extends AbstractServer {
     }
   }
 
-  private void initialize() {
-// Create background thread to poll the db every minute
-    reminder = new Reminder(getServerController().getDatabaseController(),
-        getServerController().getOnetimeParkingController());
+  private void initialize(ServerConfig config) throws Exception {
+    // Create background thread to poll the db every minute
+    reminder = new Reminder(config);
     reminder.start();
-
   }
 
 }
