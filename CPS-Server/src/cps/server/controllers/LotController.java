@@ -81,6 +81,10 @@ public class LotController extends RequestController {
       errorIf(request.getSize() < 1, "Number of cars per row must be at least one.");
       errorIf(isEmpty(request.getStreetAddress()), "Street address must be non-empty");
       errorIf(isEmpty(request.getRobotIP()), "Robot IP address must be non-empty");
+      
+      // Check if a lot with the same Street Address already exists
+      ParkingLot duplicate = ParkingLot.findByStreetAddress(conn, request.getStreetAddress());
+      errorIf(duplicate != null, "A parking lot with the same street address already exists");
 
       // Create parking lot
       ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(), request.getPrice2(),

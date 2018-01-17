@@ -266,7 +266,7 @@ public class OnetimeService implements ParkingService {
     // 2. a <= c and c <= b -- Start time of another period is between the start
     // time and end time of the given period
     PreparedStatement stmt = conn.prepareStatement(
-        "SELECT * FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (? < planned_start_time AND planned_start_time < ?))");
+        "SELECT * FROM onetime_service WHERE car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (? < planned_start_time AND planned_start_time < ?)) AND not canceled");
 
     int i = 1;
     stmt.setString(i++, carID);
@@ -300,7 +300,7 @@ public class OnetimeService implements ParkingService {
     // 2. a <= c and c <= b -- Start time of another period is between the start
     // time and end time of the given period
     PreparedStatement stmt = conn.prepareStatement(
-        "SELECT count(*) FROM onetime_service WHERE car_id=? AND ((planned_start_time <= ? AND ? <= planned_end_time) OR (? <= planned_start_time AND planned_start_time <= ?))");
+        "SELECT count(*) FROM onetime_service WHERE car_id=? AND ((planned_start_time <= ? AND ? <= planned_end_time) OR (? <= planned_start_time AND planned_start_time <= ?)) AND not canceled");
 
     int i = 1;
     stmt.setString(i++, carID);

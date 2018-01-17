@@ -56,13 +56,8 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
   private ObservableList<TableOnetimeService>      obsEntriesList;
 
   private HashMap<Integer, String> parkingLotsMap;
-
-  @FXML
-  void handleRefreshButton(ActionEvent event) {
-    if (processing) {
-      return;
-    }
-
+  
+  private void refresh() {
     if (parkingLotsMap.isEmpty()) {
       ListParkingLotsRequest request = new ListParkingLotsRequest();
       turnProcessingStateOn();
@@ -72,6 +67,13 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
           ControllersClientAdapter.getCustomerContext().getCustomerId());
       turnProcessingStateOn();
       ControllersClientAdapter.getClient().sendRequest(request);
+    }    
+  }
+
+  @FXML
+  void handleRefreshButton(ActionEvent event) {
+    if (!processing) {
+      refresh();
     }
   }
 
@@ -151,6 +153,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
     super.cleanCtrl();
     parkingLotsMap.clear();
     obsEntriesList.clear();
+    refresh();
   }
 
   @Override
