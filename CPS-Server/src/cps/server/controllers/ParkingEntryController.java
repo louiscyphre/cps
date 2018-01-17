@@ -110,9 +110,9 @@ public class ParkingEntryController extends RequestController {
 
       // Check that an entry license exists
       OnetimeService service = OnetimeService.findForEntry(conn, customerID, carID, lotID);
-
       errorIfNull(service,
           "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      errorIf(service.isCanceled(), "This reservation was canceled");
 
       return service;
     } else {
@@ -120,6 +120,7 @@ public class ParkingEntryController extends RequestController {
       // Check if they have a SubscriptionService entry
       int subsID = request.getSubscriptionID();
       SubscriptionService service = SubscriptionService.findForEntry(conn, customerID, carID, subsID);
+      // TODO is it possible to cancel a subscription?
 
       // Check that entry an license exists
       errorIfNull(service,

@@ -19,8 +19,12 @@ public class UserController extends RequestController {
 
   public ServerResponse handle(LoginRequest request, CustomerSession session) {
     return database.performQuery(new LoginResponse(), (conn, response) -> {
+      // Check credentials
       Customer customer = Customer.findByEmailAndPassword(conn, request.getEmail(), request.getPassword());
       errorIfNull(customer, "Login failed, invalid email or password.");
+      
+      // Success
+      session.setCustomer(customer);
       response.setCustomerID(customer.getId());
       response.setSuccess("Login successful");
       return response;
