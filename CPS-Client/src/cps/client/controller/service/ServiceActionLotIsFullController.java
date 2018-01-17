@@ -1,40 +1,136 @@
 package cps.client.controller.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+
+import cps.api.action.SetFullLotAction;
+import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.ServerResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ParkingLotsController;
+import cps.entities.models.ParkingLot;
+import cps.entities.people.User;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 
-//TODO stub - requires verification regarding how the lot is full works on server-side
-public class ServiceActionLotIsFullController extends ServiceActionControllerBase {
-  @FXML // fx:id="lotId"
-  private TextField lotId; // Value injected by FXMLLoader
+public class ServiceActionLotIsFullController extends ServiceActionControllerBase implements ParkingLotsController {
+
+  @FXML
+  private CheckBox setFullStateCheckBox;
+
+  @FXML
+  private CheckBox setAlternativeLotsCheckBox;
+
+  @FXML
+  private ListView<String> alternativeLotsList;
+
+  @FXML
+  private ComboBox<String> lotsList;
+
+  private HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
+
+  @FXML
+  void handleSetAlternativeLotsCheckBox(ActionEvent event) {
+    if (!processing) {
+      alternativeLotsList.setVisible(setAlternativeLotsCheckBox.isSelected());
+    }
+  }
 
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
     super.baseInitialize();
-    assert lotId != null : "fx:id=\"lotId\" was not injected: check your FXML file 'ServiceActionLotIsFull.fxml'.";
+    assert lotsList != null : "fx:id=\"lotsList\" was not injected: check your FXML file 'ServiceActionLotIsFull.fxml'.";
+    assert setFullStateCheckBox != null : "fx:id=\"setFullStateCheckBox\" was not injected: check your FXML file 'ServiceActionLotIsFull.fxml'.";
+    assert setAlternativeLotsCheckBox != null : "fx:id=\"setAlternativeLotsCheckBox\" was not injected: check your FXML file 'ServiceActionLotIsFull.fxml'.";
+    assert alternativeLotsList != null : "fx:id=\"alternativeLotsList\" was not injected: check your FXML file 'ServiceActionLotIsFull.fxml'.";
+    alternativeLotsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.SERVICE_ACTION_LOT_IS_FULL);
   }
 
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
-    lotId.clear();
+    if (lotsList.getItems() != null) {
+      lotsList.getItems().clear();
+    }
+    if (alternativeLotsList.getItems() != null) {
+      alternativeLotsList.getItems().clear();
+    }
+    setFullStateCheckBox.setSelected(false);
+
+    // Get the list of parking lots
+    turnProcessingStateOn();
+    sendRequest(new ListParkingLotsRequest());
   }
 
   @Override
   void validateAndSend() {
-    // TODO Auto-generated method stub
-    
+    try {
+      User user = requireLoggedInUser();
+      ParkingLot lot = parkingLotsMap.get(lotsList.getValue());
+      errorIfNull(lot, "Please choose a parking lot");
+      ObservableList<String> alternativeLotNames = alternativeLotsList.getSelectionModel().getSelectedItems();
+      if (setAlternativeLotsCheckBox.isSelected()) {
+        ArrayList<Integer> alternativeLotsIds = new ArrayList<Integer>();
+        for (String name : alternativeLotNames) {
+          ParkingLot alternativeLot = parkingLotsMap.get(name);
+          if (alternativeLot.getId() != lot.getId()) {
+            alternativeLotsIds.add(alternativeLot.getId());
+          }
+        }
+      }
+      ArrayList<Integer> alternativeLotsIds = new ArrayList<Integer>();
+      for (String name : alternativeLotNames) {
+        ParkingLot alternativeLot = parkingLotsMap.get(name);
+        alternativeLotsIds.add(alternativeLot.getId());
+      }
+      int[] arrayToSend = new int[alternativeLotsIds.size()];
+      for (int i = 0; i < alternativeLotsIds.size(); i++) {
+        arrayToSend[i] = alternativeLotsIds.get(i);
+      }
+      errorIf(setAlternativeLotsCheckBox.isSelected() && alternativeLotsIds.size() < 1,
+          "Please choose alternative parking lot");
+      turnProcessingStateOn();
+      sendRequest(new SetFullLotAction(user.getId(), lot.getId(), setFullStateCheckBox.isSelected(), arrayToSend));
+    } catch (Exception e) {
+      displayError(e.getMessage());
+    }
   }
 
   @Override
   public ServerResponse handle(SetFullLotResponse response) {
-    // TODO Auto-generated method stub
-    return super.handle(response);
+    return super.handleGenericResponse(response);
+  }
+
+  @Override
+  public void setParkingLots(Collection<ParkingLot> list) {
+    List<String> tmp = new ArrayList<String>();
+
+    parkingLotsMap.clear();
+
+    for (ParkingLot i : list) {
+      String address = new String(i.getStreetAddress());
+      tmp.add(address);
+      parkingLotsMap.put(address, i);
+    }
+
+    ObservableList<String> addresses = FXCollections.observableList(tmp);
+    fillComboBoxItems(addresses);
+  }
+
+  private void fillComboBoxItems(ObservableList<String> addresses) {
+    lotsList.getItems().addAll(addresses);
+    alternativeLotsList.getItems().addAll(addresses);
   }
 }

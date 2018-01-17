@@ -33,9 +33,6 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   @FXML // fx:id="logOutButton"
   private Button logOutButton; // Value injected by FXMLLoader
 
-  @FXML // fx:id="root"
-  private BorderPane root; // Value injected by FXMLLoader
-
   @FXML // fx:id="reserveParkingButton"
   private Button reserveParkingButton; // Value injected by FXMLLoader
 
@@ -59,56 +56,56 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   @FXML
   void handleEnterParkingButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ENTER_PARKING);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ENTER_PARKING, 10);
     }
   }
 
   @FXML
   void handleExitParkingButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.EXIT_PARKING);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.EXIT_PARKING, 10);
     }
   }
 
   @FXML
   void handleViewMyReservationsButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_RESERVATION);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_RESERVATION, 10);
     }
   }
 
   @FXML
   void handleFileComplaintButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FILE_COMPLAINT);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FILE_COMPLAINT, 10);
     }
   }
 
   @FXML
   void handleLoginButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.LOGIN);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.LOGIN, 10);
     }
   }
 
   @FXML
   void handleReserveParkingButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.RESERVE_PARKING);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.RESERVE_PARKING, 10);
     }
   }
 
   @FXML
   void handleBuySubscriptionButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS, 10);
     }
   }
 
   @FXML
   void handleParkNowButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INCIDENTAL_PARKING);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INCIDENTAL_PARKING, 10);
     }
   }
 

@@ -10,12 +10,16 @@ import cps.client.context.EmployeeContext;
 import cps.client.context.EmployeeContextImpl;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.main.ClientApplication;
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class ControllersClientAdapter {
 
@@ -74,25 +78,73 @@ public class ControllersClientAdapter {
     return getInstance().cpsClient;
   }
 
-  public static void setStage(ControllerConstants.SceneCode code) {
+  public static void setStage(ControllerConstants.SceneCode code, Duration duration) {
     getInstance().currentScene = code; // indicate that this scene is current
                                        // for the future
 
-    Scene scene = ControllersClientAdapter.fetchScene(code);
-    ClientApplication clientApp = ControllersClientAdapter.getClient();
-    Stage stage = clientApp.getPrimaryStage();
-    stage.setScene(scene);
-    Screen screen = Screen.getPrimary();
-    Rectangle2D bounds = screen.getVisualBounds();
-    stage.setX(bounds.getMinX());
-    stage.setY(bounds.getMinY());
-    stage.setWidth(bounds.getWidth());
-    stage.setHeight(bounds.getHeight());
+//    FadeTransition fadeOut = new FadeTransition();
+//    fadeOut.setDuration(duration);
+//    fadeOut.setNode(getCurrentCtrl().getRoot());
+//    fadeOut.setFromValue(1.0);
+//    fadeOut.setToValue(0.0);
+//    fadeOut.play();
+    
+    PauseTransition pauseTransition = new PauseTransition();
+    pauseTransition.setDuration(duration);
+    pauseTransition.play();
+    
+    pauseTransition.setOnFinished((ActionEvent e) -> {
+      Scene scene = ControllersClientAdapter.fetchScene(code);
+      ClientApplication clientApp = ControllersClientAdapter.getClient();
+      Stage stage = clientApp.getPrimaryStage();
 
-    ViewController ctrl = fetchCtrl(code);
-    if (ctrl != null) {
-      ctrl.cleanCtrl();
-    }
+      ViewController ctrl = fetchCtrl(code);
+
+      stage.setScene(scene);
+      Screen screen = Screen.getPrimary();
+      Rectangle2D bounds = screen.getVisualBounds();
+      stage.setX(bounds.getMinX());
+      stage.setY(bounds.getMinY());
+      stage.setWidth(bounds.getWidth());
+      stage.setHeight(bounds.getHeight());
+
+      if (ctrl != null) {
+        ctrl.cleanCtrl();
+      }
+    });
+    
+//    fadeOut.setOnFinished((ActionEvent e) -> {
+//      Scene scene = ControllersClientAdapter.fetchScene(code);
+//      ClientApplication clientApp = ControllersClientAdapter.getClient();
+//      Stage stage = clientApp.getPrimaryStage();
+//
+//      ViewController ctrl = fetchCtrl(code);
+//      ctrl.getRoot().setOpacity(0);
+//      
+//      FadeTransition fadeIn = new FadeTransition();
+//      fadeIn.setDuration(Duration.millis(500));
+//      fadeIn.setNode(ctrl.getRoot());
+//      fadeIn.setFromValue(0.0);
+//      fadeIn.setToValue(1.0);
+//      fadeIn.play();
+//
+//      stage.setScene(scene);
+//      Screen screen = Screen.getPrimary();
+//      Rectangle2D bounds = screen.getVisualBounds();
+//      stage.setX(bounds.getMinX());
+//      stage.setY(bounds.getMinY());
+//      stage.setWidth(bounds.getWidth());
+//      stage.setHeight(bounds.getHeight());
+//
+//      if (ctrl != null) {
+//        ctrl.cleanCtrl();
+//      }
+//    });
+  }
+
+  
+  public static void setStage(ControllerConstants.SceneCode code, int millis) {
+    setStage(code, Duration.millis(millis));
   }
 
   public static CustomerContext getCustomerContext() {

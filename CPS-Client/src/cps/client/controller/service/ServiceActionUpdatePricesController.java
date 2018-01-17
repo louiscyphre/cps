@@ -1,9 +1,5 @@
 package cps.client.controller.service;
 
-import cps.client.controller.ControllerConstants.SceneCode;
-import cps.entities.models.ParkingLot;
-import cps.entities.people.User;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,8 +10,11 @@ import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.UpdatePricesResponse;
+import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
+import cps.entities.models.ParkingLot;
+import cps.entities.people.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -119,7 +118,7 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
   public ServerResponse handle(UpdatePricesResponse response) {
     super.handleGenericResponse(response); 
     if (response.success()) {
-      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU, 10);
     }
     return response;
   }
