@@ -55,6 +55,16 @@
     -fx-label-padding: 0 0 0 0;
 }
 
+.transitionalOkButton {
+    -fx-color: #000000;
+    -fx-background-color: #5CB85C;
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-font-size: 16;
+    -fx-font-family: 'Sans-serif';
+    -fx-label-padding: 10 10 10 10;
+}
+
 .inputField, .passwordInputField {
     -fx-padding: 15 15 15 15;
     -fx-border-radius: 8 8 8 8;
@@ -88,6 +98,8 @@
 .datePicker {
     -fx-border-radius: 8 8 8 8;
     -fx-background-radius: 8 8 8 8;
+    -fx-pref-width:320;
+    -fx-max-width:320;
 }
 
 .infoLabel {

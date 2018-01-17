@@ -63,7 +63,7 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0">
                      <children>
-                        <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x11" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
+                        <Button id="" fx:id="submitButton" alignment="CENTER" contentDisplay="LEFT" font="$x11" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
                            <stylesheets>
                               <URL value="@../application.css" />
                            </stylesheets>

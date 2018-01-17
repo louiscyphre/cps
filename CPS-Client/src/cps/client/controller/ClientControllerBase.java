@@ -126,7 +126,7 @@ public abstract class ClientControllerBase implements ViewController {
   public void turnLoggedInStateOff() {
     // Does nothing for base controller
   }
-
+  
   protected void baseInitialize() {
     assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
     assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
