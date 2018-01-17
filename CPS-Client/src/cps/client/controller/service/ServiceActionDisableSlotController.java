@@ -26,8 +26,8 @@ public class ServiceActionDisableSlotController extends ServiceActionLotStateCon
           user = requireLoggedInUser();
           ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
           turnProcessingStateOn();
-          sendRequest(new ParkingCellSetDisabledAction(user.getId(), lot.getId(), selectedCell.width, selectedCell.height,
-              selectedCell.depth, !selectedCell.isDisabled()));
+          sendRequest(new ParkingCellSetDisabledAction(user.getId(), lot.getId(), selectedCell.width,
+              selectedCell.height, selectedCell.depth, (!selectedCell.isDisabled())));
         } catch (Exception e) {
           displayError(e.getMessage());
         }
@@ -46,24 +46,24 @@ public class ServiceActionDisableSlotController extends ServiceActionLotStateCon
   }
 
   @Override
-  public ServerResponse handle(DisableParkingSlotsResponse response) {
-    super.handleGenericResponse(response);
-    if(response.success()) {
-      validateAndSend();
+  protected void onMouseClickedHandler(Rectangle currentRectangle) {
+    if (processing)
+      return;
+    super.onMouseClickedHandler(currentRectangle);
+    if (selectedCar != null) {
+      disableSlotButton.setDisable(false);
+    } else {
+      disableSlotButton.setDisable(true);
     }
-    return null;
   }
 
   @Override
-  protected void onMouseClickedHandler(Rectangle currentRectangle) {
-    if(processing)
-      return;
-    super.onMouseClickedHandler(currentRectangle);
-    if(selectedCar != null) {
-      disableSlotButton.setDisable(false);
-    }
-    else {
+  public ServerResponse handle(DisableParkingSlotsResponse response) {
+    super.handleGenericResponse(response);
+    if (response.success()) {
+      validateAndSend();
       disableSlotButton.setDisable(true);
     }
+    return null;
   }
 }

@@ -27,7 +27,7 @@ public class ServiceActionReserveSlotController extends ServiceActionLotStateCon
           ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
           turnProcessingStateOn();
           sendRequest(new ParkingCellSetReservedAction(user.getId(), lot.getId(), selectedCell.width,
-              selectedCell.height, selectedCell.depth, !selectedCell.isReserved()));
+              selectedCell.height, selectedCell.depth, (!selectedCell.isReserved())));
         } catch (Exception e) {
           displayError(e.getMessage());
         }
@@ -62,6 +62,7 @@ public class ServiceActionReserveSlotController extends ServiceActionLotStateCon
     super.handleGenericResponse(response);
     if (response.success()) {
       validateAndSend();
+      reserveSlotButton.setDisable(true);
     }
     return null;
   }

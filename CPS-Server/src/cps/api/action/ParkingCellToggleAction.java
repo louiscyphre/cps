@@ -12,6 +12,7 @@ public abstract class ParkingCellToggleAction extends LotAction {
     this.locationI = locationI;
     this.locationJ = locationJ;
     this.locationK = locationK;
+    this.value = value;
   }
 
   public ParkingCellToggleAction(int userID, int lotID, int locationI, int locationJ, int locationK) {
