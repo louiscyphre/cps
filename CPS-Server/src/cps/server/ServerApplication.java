@@ -168,9 +168,7 @@ public class ServerApplication extends AbstractServer {
   }
 
   private void initialize() {
-    /*
-     * TODO create pooling threads here
-     */
+// Create background thread to poll the db every minute
     reminder = new Reminder(getServerController().getDatabaseController(),
         getServerController().getOnetimeParkingController());
     reminder.start();

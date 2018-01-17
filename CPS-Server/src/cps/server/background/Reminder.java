@@ -38,14 +38,25 @@ public class Reminder extends Thread {
         Thread.sleep(INTERVAL);
         // TODO check one time services where customer has to park within 30
         // minutes
+
+        /*
+         * This function will send messages to users that are late by at least
+         * one second
+         */
         otpc.warnLateCustomers();
+
+        /*
+         * This function will find users that are late more than 30 minutes and
+         * has not been authorized to do that and will cancel their one time
+         * order
+         */
+        // otpc.deleteTooLate();
 
       }
 
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (ServerException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }

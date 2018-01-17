@@ -12,7 +12,6 @@ import cps.server.ServerException;
 import cps.common.Utilities.VisitorWithException;
 import cps.common.Utilities.VisitorWithExceptionAndReturnType;
 
-// TODO: Auto-generated Javadoc
 /** Manages database-related operations. */
 public class DatabaseController {
 

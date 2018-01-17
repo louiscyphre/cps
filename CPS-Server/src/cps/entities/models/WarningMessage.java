@@ -60,7 +60,6 @@ public class WarningMessage {
   }
 
   public boolean setsend(Connection conn) throws SQLException {
-    // TODO mark current message as sent in the DB
     // TODO test this
     String helper = "";
     helper += "UPDATE onetime_service SET warned=true WHERE warned=false AND lot_id=? AND ";

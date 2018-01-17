@@ -290,7 +290,6 @@ public class SubscriptionService implements ParkingService {
    */
   public static boolean overlapExists(Connection conn, String carID, int subsType, int lotId, LocalDate startDate,
       LocalDate endDate) throws SQLException {
-    //TODO:Test this properly
     PreparedStatement stmt = null;
     boolean result = false;
     int i = 1;
