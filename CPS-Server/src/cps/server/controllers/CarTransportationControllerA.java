@@ -433,6 +433,9 @@ public class CarTransportationControllerA extends RequestController implements C
         // robbie.retrieveCar(carIds.peek(), eSize, iHeight, iDepth);
       }
     }
+    
+    // Update lot content
+    lot.updateContent(conn, content);
 
     // robbie.retrieveCar(carID, eSize, iHeight, iDepth);
     if (!insertCars(conn, lot, carIds, exitTimes)) {
