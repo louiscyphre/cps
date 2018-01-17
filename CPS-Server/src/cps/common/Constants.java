@@ -1,6 +1,8 @@
 package cps.common;
 
 public interface Constants {
+  public final boolean DEBUG_MODE = true; // TODO disable on release
+  
   public final int    DEFAULT_PORT    = 5555;
   public final String DEFAULT_HOST    = "127.0.0.1";
   public final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
@@ -38,11 +40,11 @@ public interface Constants {
   public final int LOT_DEPTH  = 3;
 
   // SQL queries - OnetimeService
-  public final String SQL_CREATE_ONETIME_SERVICE                    = "INSERT INTO onetime_service values(default, ?, ?, ?, ?, ?, ?, ?, ?)";
+  public final String SQL_CREATE_ONETIME_SERVICE                    = "INSERT INTO onetime_service values(default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   public final String SQL_GET_ONETIME_SERVICE_BY_CUSTOMER_ID        = "SELECT * FROM onetime_service WHERE customer_id=? ORDER BY id";
   public final String SQL_GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID = "SELECT * FROM onetime_service WHERE customer_id=? AND car_id=? AND lot_id=? ORDER BY id DESC LIMIT 1";
   public final String SQL_GET_ONETIME_SERVICE_BY_ID                 = "SELECT * FROM onetime_service WHERE id=?";
-  public final String SQL_UPDATE_ONETIME_BY_ID                      = "UPDATE onetime_service SET parking_type=?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, canceled=? WHERE id=?";
+  public final String SQL_UPDATE_ONETIME_BY_ID                      = "UPDATE onetime_service SET parking_type=?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, parked=?, canceled=?, warned=? WHERE id=?";
 
   // SQL queries - CarTransportation
   public final String SQL_CREATE_CAR_TRANSPORTATION             = "INSERT INTO car_transportation values(?, ?, ?, ?, ?, default, default)";

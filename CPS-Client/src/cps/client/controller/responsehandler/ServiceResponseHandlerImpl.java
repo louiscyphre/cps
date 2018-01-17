@@ -44,8 +44,7 @@ class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 
   @Override
   public ServerResponse handle(ReserveParkingSlotsResponse response) {
-    // TODO Auto-generated method stub
-    return null;
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   @Override

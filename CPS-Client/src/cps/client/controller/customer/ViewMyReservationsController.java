@@ -272,8 +272,8 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
 
     List<OnetimeService> list = new LinkedList<OnetimeService>();
     for (int i = 0; i < 10; i++) {
-      list.add((new OnetimeService(0, 1 + (i % 2), 0, "email" + i, "carid" + i, 1,
-          Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()), false)));
+      list.add(new OnetimeService(0, 1 + (i % 2), 0, "email" + i, "carid" + i, 1,
+          Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()), false, false, false));
     }
 
     List<TableOnetimeService> entriesList = new LinkedList<TableOnetimeService>();

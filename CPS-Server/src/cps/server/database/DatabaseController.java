@@ -1,18 +1,18 @@
 /*
  * 
  */
-package cps.server.controllers;
+package cps.server.database;
 
 import java.sql.*;
 import java.util.Collection;
 import java.util.LinkedList;
 
 import cps.api.response.ServerResponse;
+import cps.server.ServerConfig;
 import cps.server.ServerException;
 import cps.common.Utilities.VisitorWithException;
 import cps.common.Utilities.VisitorWithExceptionAndReturnType;
 
-// TODO: Auto-generated Javadoc
 /** Manages database-related operations. */
 public class DatabaseController {
 
@@ -96,6 +96,11 @@ public class DatabaseController {
     this.dbName = dbName;
     this.username = username;
     this.password = password;
+  }
+  
+  public DatabaseController(ServerConfig config) throws Exception {
+    this(config.get("db.host"), config.get("db.name"), config.get("db.username"),
+        config.get("db.password"));
   }
 
   /**

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import cps.server.ServerController;
 import cps.server.ServerException;
+import cps.server.database.DatabaseController;
 
 /**
  * The Class RequestController.

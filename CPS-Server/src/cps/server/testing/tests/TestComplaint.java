@@ -9,7 +9,7 @@ import java.util.Collection;
 
 import cps.server.ServerController;
 import cps.server.ServerException;
-import cps.server.controllers.DatabaseController;
+import cps.server.database.DatabaseController;
 import cps.server.session.CustomerSession;
 import cps.server.session.ServiceSession;
 import cps.server.session.SessionHolder;

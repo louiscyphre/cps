@@ -6,10 +6,10 @@ import static cps.common.Utilities.valueOrDefault;
 
 import java.util.Collection;
 
-import cps.api.action.DisableParkingSlotsAction;
+import cps.api.action.ParkingCellSetDisabledAction;
 import cps.api.action.InitLotAction;
 import cps.api.action.RequestLotStateAction;
-import cps.api.action.ReserveParkingSlotsAction;
+import cps.api.action.ParkingCellSetReservedAction;
 import cps.api.action.SetFullLotAction;
 import cps.api.action.UpdatePricesAction;
 import cps.api.request.ListParkingLotsRequest;
@@ -209,12 +209,13 @@ public class LotController extends RequestController {
    * @param action the action
    * @param session the session
    * @return success or error */
-  public ServerResponse handle(ReserveParkingSlotsAction action, ServiceSession session) {
+  public ServerResponse handle(ParkingCellSetReservedAction action, ServiceSession session) {
     return reserveOrDisable(session, new ReserveParkingSlotsResponse(), action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK(),
         cell -> {
           // If a cell was already disabled, then it can't be reserved
-          if (!cell.isDisabled()) {
-            cell.setReserved(true);
+          // If we want to cancel reservation, then it can be done even if the cell is disabled
+          if (!cell.isDisabled() || !action.getValue()) {
+            cell.setReserved(action.getValue());
           }
         }, "Parking cell reserved successfully");
   }
@@ -223,8 +224,8 @@ public class LotController extends RequestController {
    * @param action the action
    * @param session the session
    * @return the server response */
-  public ServerResponse handle(DisableParkingSlotsAction action, ServiceSession session) {
+  public ServerResponse handle(ParkingCellSetDisabledAction action, ServiceSession session) {
     return reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK(),
-        cell -> cell.setDisabled(true), "Parking cell disabled successfully");
+        cell -> cell.setDisabled(action.getValue()), "Parking cell disabled successfully");
   }
 }

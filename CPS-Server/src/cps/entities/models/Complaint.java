@@ -12,7 +12,7 @@ import java.util.LinkedList;
 
 import cps.common.Constants;
 import cps.server.ServerException;
-import cps.server.controllers.DatabaseController;
+import cps.server.database.DatabaseController;
 
 public class Complaint implements Serializable {
   private static final long serialVersionUID = 1L;
