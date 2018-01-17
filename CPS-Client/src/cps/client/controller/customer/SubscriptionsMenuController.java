@@ -133,7 +133,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     }
     int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
     ControllersClientAdapter.getCustomerContext().setChosenLotID(userChosenLotID);
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REGULAR_SUBSCRIPTION, 0);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REGULAR_SUBSCRIPTION, 10);
   }
 
   @FXML
