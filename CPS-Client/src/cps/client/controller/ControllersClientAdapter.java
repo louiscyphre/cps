@@ -10,7 +10,6 @@ import cps.client.context.EmployeeContext;
 import cps.client.context.EmployeeContextImpl;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.main.ClientApplication;
-import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
