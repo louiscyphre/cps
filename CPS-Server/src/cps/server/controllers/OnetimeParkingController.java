@@ -20,7 +20,6 @@ import cps.api.response.OnetimeParkingResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
-import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
 import cps.entities.models.DailyStatistics;
 import cps.entities.models.OnetimeService;
@@ -66,8 +65,12 @@ public class OnetimeParkingController extends RequestController {
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
+      // If the customer requested an Incidental Parking, they want to park right now
+      boolean setParked = request.getParkingType() == Constants.PARKING_TYPE_INCIDENTAL;
+      
+      // Create the service
       OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(), request.getEmail(), request.getCarID(),
-          request.getLotID(), startTime, plannedEndTime);
+          request.getLotID(), startTime, plannedEndTime, setParked, false, false);
       errorIfNull(service, "Failed to create OnetimeService entry");
 
       // Calculate payment for service
@@ -84,12 +87,8 @@ public class OnetimeParkingController extends RequestController {
           break;
         case Constants.PARKING_TYPE_INCIDENTAL:
           // If this was an incidental parking, customer's will be parked automatically
-          CarTransportationController transportationController = serverController.getTransportationController();
-          transportationController.insertCar(conn, lot, request.getCarID(), service.getExitTime());
-          service.setParked(true);
-          service.update(conn);
-          CarTransportation.create(conn, customer.getId(), request.getCarID(), service.getLicenseType(),
-              service.getId(), request.getLotID());
+          ParkingEntryController entryController = serverController.getEntryController();
+          entryController.registerEntry(conn, lot, customer.getId(), request.getCarID(), service);
           break;
         default:
           error("Internal error: unknown parking type");

@@ -12,6 +12,7 @@ import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
 import cps.entities.models.CarTransportation;
+import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
@@ -45,8 +46,9 @@ public class ParkingEntryController extends RequestController {
    */
   public ServerResponse handle(ParkingEntryRequest request, CustomerSession session) {
     return database.performQuery(new ParkingEntryResponse(), (conn, response) -> {
+      Customer customer = session.requireCustomer();
       // Shortcuts for commonly used properties
-      int customerID = request.getCustomerID();
+      int customerID = customer.getId();
       String carID = request.getCarID();
       int lotID = request.getLotID();
 
@@ -59,31 +61,39 @@ public class ParkingEntryController extends RequestController {
       CarTransportation transportation = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
           request.getLotID());
       errorIf(transportation != null, "The car with the specified ID is currently parked");
-
-      // Attempt to insert the car into the lot.
-      // Optimal coordinates are calculated before insertion.
-      // If the lot is full, or some other error occurs, LotController will
-      // return an appropriate error response, which we will send back to the
-      // user.
-      // The function will create table entry to record where the car was
-      // placed
-      CarTransportationController transportationController = serverController.getTransportationController();
-      transportationController.insertCar(conn, lot, carID, service.getExitTime());
-      service.setParked(true);
-      service.update(conn);
-
-      // All good - create a CarTransportation table entry to record the fact
-      // that a successful parking was made.
-      // Throws exception on failure, which will be automatically handled up in
-      // the control chain.
-      CarTransportation.create(conn, request.getCustomerID(), request.getCarID(), service.getLicenseType(),
-          service.getId(), request.getLotID());
+      
+      registerEntry(conn, lot, customer.getId(), carID, service);
 
       response.setLotID(lotID);
       response.setCustomerID(customerID);
       response.setSuccess("ParkingEntry request completed successfully");
       return response;
     });
+  }
+  
+  public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service) throws SQLException, ServerException {
+    // Attempt to insert the car into the lot.
+    // Optimal coordinates are calculated before insertion.
+    // If the lot is full, or some other error occurs, LotController will
+    // return an appropriate error response, which we will send back to the
+    // user.
+    // The function will create table entry to record where the car was
+    // placed
+    CarTransportationController transportationController = serverController.getTransportationController();
+    transportationController.insertCar(conn, lot, carID, service.getExitTime());
+    
+    if (!service.isParked()) {
+      service.setParked(true);
+      service.update(conn);
+    }
+
+    // All good - create a CarTransportation table entry to record the fact
+    // that a successful parking was made.
+    // Throws exception on failure, which will be automatically handled up in
+    // the control chain.
+    CarTransportation.create(conn, customerID, carID, service.getLicenseType(),
+        service.getId(), lot.getId());
+    
   }
 
   private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request)

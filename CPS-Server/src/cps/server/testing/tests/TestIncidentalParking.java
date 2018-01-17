@@ -53,7 +53,30 @@ public class TestIncidentalParking extends ServerControllerTest {
 
     initParkingLot();
     requestIncidentalParking(data, getContext());
-    requestParkingEntry(data, getContext());
+    requestParkingExit(data, getContext());
+  }
+  
+  @Test
+  public void testDuplicateParking() throws ServerException {
+    /*
+     * Scenario: 1. Create Parking Lot 2. Send Incidental Parking request 3.
+     * Send Parking Entry request - license: IncidentalParking 4. Send Parking
+     * Exit request
+     */
+
+    header("testDuplicateParking -- incidental");
+    CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+
+    initParkingLot();
+    requestIncidentalParking(data, getContext());
+
+
+    ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, data.subsID, data.lotID, data.carID);
+    ServerResponse response = server.dispatch(request, getContext());
+    assertNotNull(response);
+    printObject(response);
+    assertFalse(response.success());
+
     requestParkingExit(data, getContext());
   }
 }
