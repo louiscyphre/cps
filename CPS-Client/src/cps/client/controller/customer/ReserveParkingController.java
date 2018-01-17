@@ -186,8 +186,8 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
       return;
     }
     // compare exit time to entry time
-    if (plannedStartDateTime.compareTo(plannedEndDateTime) > 0) {
-      displayError("Leave date has to be before or equal to entry date");
+    if (plannedStartDateTime.compareTo(plannedEndDateTime) >= 0) {
+      displayError("Leave date has to be after or equal to entry date");
       return;
     }
 
