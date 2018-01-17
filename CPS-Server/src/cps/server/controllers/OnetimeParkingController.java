@@ -85,6 +85,7 @@ public class OnetimeParkingController extends RequestController {
           // If this was an incidental parking, customer's will be parked automatically
           CarTransportationController transportationController = serverController.getTransportationController();
           transportationController.insertCar(conn, lot, request.getCarID(), service.getExitTime());
+          service.setParked(true);
           break;
         default:
           error("Internal error: unknown parking type");
