@@ -56,6 +56,9 @@ public class ParkingEntryController extends RequestController {
       // Entry license exists - continue
       // Find the parking lot that the customer wants to enter
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, lotID);
+      CarTransportation transportation = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
+          request.getLotID());
+      errorIf(transportation != null, "The car with the specified ID is currently parked");
 
       // Attempt to insert the car into the lot.
       // Optimal coordinates are calculated before insertion.

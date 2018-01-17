@@ -88,7 +88,7 @@ public class OnetimeParkingController extends RequestController {
           transportationController.insertCar(conn, lot, request.getCarID(), service.getExitTime());
           service.setParked(true);
           service.update(conn);
-          CarTransportation.create(conn, request.getCustomerID(), request.getCarID(), service.getLicenseType(),
+          CarTransportation.create(conn, customer.getId(), request.getCarID(), service.getLicenseType(),
               service.getId(), request.getLotID());
           break;
         default:
