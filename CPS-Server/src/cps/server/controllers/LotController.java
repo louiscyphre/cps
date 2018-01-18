@@ -24,7 +24,7 @@ import cps.api.response.UpdatePricesResponse;
 import cps.common.Constants;
 import cps.entities.models.DisabledCellsStatistics;
 import cps.entities.models.ParkingCell;
-import cps.entities.models.ParkingCell.ParkingCellVisitor;
+import cps.entities.models.ParkingCell.ParkingCellVisitorWithException;
 import cps.entities.models.ParkingLot;
 import cps.entities.people.User;
 import cps.server.ServerController;
@@ -212,7 +212,7 @@ public class LotController extends RequestController {
   }
 
   private ServerResponse reserveOrDisable(ServiceSession session, ServerResponse serverResponse, int lotID, int i,
-      int j, int k, ParkingCellVisitor visitor, String successMessage) {
+      int j, int k, ParkingCellVisitorWithException visitor, String successMessage) {
     return database.performQuery(serverResponse, (conn, response) -> {
       // Require a logged in employee
       User user = session.requireUser();
@@ -256,15 +256,15 @@ public class LotController extends RequestController {
    * @return success or error
    */
   public ServerResponse handle(ParkingCellSetReservedAction action, ServiceSession session) {
+    String successMessage = action.getValue() ? "Parking cell reserved successfully" : "Parking cell reservation canceled successfully";
     return reserveOrDisable(session, new ReserveParkingSlotsResponse(), action.getLotID(), action.getLocationI(),
         action.getLocationJ(), action.getLocationK(), cell -> {
           // If a cell was already disabled, then it can't be reserved
-          // If we want to cancel reservation, then it can be done even if the
-          // cell is disabled
-          if (!cell.isDisabled() || !action.getValue()) {
-            cell.setReserved(action.getValue());
-          }
-        }, "Parking cell reserved successfully");
+          errorIf(cell.isDisabled() && action.getValue() == true, "A disabled cell cannot be reserved");
+          
+          // If we want to cancel reservation, then it can be done even if the cell is disabled
+          cell.setReserved(action.getValue());
+        }, successMessage);
   }
 
   /**
@@ -278,9 +278,11 @@ public class LotController extends RequestController {
    * @throws ServerException
    */
   public ServerResponse handle(ParkingCellSetDisabledAction action, ServiceSession session) throws ServerException {
+    String successMessage = action.getValue() ? "Parking cell disabled successfully" : "Parking cell enabled successfully";
     ServerResponse toRet = reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(),
         action.getLocationI(), action.getLocationJ(), action.getLocationK(),
-        cell -> cell.setDisabled(action.getValue()), "Parking cell disabled successfully");
+        cell -> cell.setDisabled(action.getValue()), successMessage);
+    
     if (toRet.success()) {
       // TODO Tegra DONE add the cell to list of statistics disabled cells 
       database.performAction(conn -> {
