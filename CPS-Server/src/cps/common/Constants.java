@@ -42,11 +42,14 @@ public interface Constants {
   public final int LOT_DEPTH  = 3;
 
   // SQL queries - OnetimeService
-  public final String SQL_CREATE_ONETIME_SERVICE                    = "INSERT INTO onetime_service values(default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  public final String SQL_GET_ONETIME_SERVICE_BY_CUSTOMER_ID        = "SELECT * FROM onetime_service WHERE customer_id=? ORDER BY id";
-  public final String SQL_GET_ONETIME_SERVICE_BY_CUSTID_CARID_LOTID = "SELECT * FROM onetime_service WHERE customer_id=? AND car_id=? AND lot_id=? ORDER BY id DESC LIMIT 1";
-  public final String SQL_GET_ONETIME_SERVICE_BY_ID                 = "SELECT * FROM onetime_service WHERE id=?";
-  public final String SQL_UPDATE_ONETIME_BY_ID                      = "UPDATE onetime_service SET parking_type=?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, parked=?, canceled=?, warned=? WHERE id=?";
+  public final String SQL_CREATE_ONETIME_SERVICE             = "INSERT INTO onetime_service values(default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  public final String SQL_GET_ONETIME_SERVICE_BY_CUSTOMER_ID = "SELECT * FROM onetime_service WHERE customer_id=? ORDER BY id";
+  public final String SQL_FIND_ONETIME_SERVICE_FOR_ENTRY     = "SELECT * FROM onetime_service WHERE customer_id=? AND car_id=? AND lot_id=? AND not canceled AND not completed ORDER BY id DESC LIMIT 1";
+  public final String SQL_GET_ONETIME_SERVICE_BY_ID          = "SELECT * FROM onetime_service WHERE id=?";
+  public final String SQL_OVERLAPPING_ONETIME_SERVICE_CLAUSE = "car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (? < planned_start_time AND planned_start_time < ?)) AND not canceled AND not completed";
+  public final String SQL_FIND_OVERLAPPING_ONETIME_SERVICE   = "SELECT * FROM onetime_service WHERE " + SQL_OVERLAPPING_ONETIME_SERVICE_CLAUSE;
+  public final String SQL_COUNT_OVERLAPPING_ONETIME_SERVICE  = "SELECT count(*) FROM onetime_service WHERE " + SQL_OVERLAPPING_ONETIME_SERVICE_CLAUSE;
+  public final String SQL_UPDATE_ONETIME_BY_ID               = "UPDATE onetime_service SET parking_type=?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, parked=?, canceled=?, warned=? WHERE id=?";
 
   // SQL queries - SubscriptionService
   // TODO: add `parked` field to `subscription_service` table

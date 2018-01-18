@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: cps_test
+-- Host: 127.0.0.1    Database: cps
 -- ------------------------------------------------------
 -- Server version	5.7.20-log
 
@@ -90,6 +90,23 @@ CREATE TABLE `daily_statistics` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `disabled_slots_table`
+--
+
+DROP TABLE IF EXISTS `disabled_slots_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `disabled_slots_table` (
+  `lotid` int(11) NOT NULL,
+  `date_disabled` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `width` int(11) NOT NULL,
+  `height` int(11) NOT NULL,
+  `depth` int(11) NOT NULL,
+  PRIMARY KEY (`lotid`,`depth`,`height`,`width`,`date_disabled`)
+) ENGINE=Memory DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `employee`
 --
 
@@ -125,6 +142,7 @@ CREATE TABLE `onetime_service` (
   `planned_start_time` datetime NOT NULL,
   `planned_end_time` datetime NOT NULL,
   `parked` bit(1) NOT NULL DEFAULT b'0',
+  `completed` bit(1) NOT NULL DEFAULT b'0',
   `canceled` bit(1) NOT NULL DEFAULT b'0',
   `warned` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
@@ -169,6 +187,27 @@ CREATE TABLE `parking_lot` (
   `lot_full` bit(1) DEFAULT b'0',
   PRIMARY KEY (`id`)
 ) ENGINE=Memory DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `quarterly_report`
+--
+
+DROP TABLE IF EXISTS `quarterly_report`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `quarterly_report` (
+  `year` int(11) NOT NULL,
+  `quarter` int(11) NOT NULL,
+  `lot_id` int(11) NOT NULL,
+  `ordered_onetimes` int(11) DEFAULT '0',
+  `ordered_incidental` int(11) DEFAULT '0',
+  `ordered_regular` int(11) DEFAULT '0',
+  `ordered_full` int(11) DEFAULT '0',
+  `complaints_count` int(11) DEFAULT '0',
+  `disabled_slots` int(11) DEFAULT '0',
+  PRIMARY KEY (`year`,`quarter`,`lot_id`)
+) ENGINE=Memory DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,4 +263,4 @@ CREATE TABLE `weekly_statistics` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-16 23:31:09
+-- Dump completed on 2018-01-18  0:34:38

@@ -106,6 +106,7 @@ public class ParkingEntryController extends RequestController {
       // Check that an entry license exists
       OnetimeService service = OnetimeService.findForEntry(conn, customerID, carID, lotID);
       errorIfNull(service, "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      errorIf(service.isCompleted(), "This reservation was already completed");
       errorIf(service.isCanceled(), "This reservation was canceled");
       errorIf(service.getPlannedStartTime().toLocalDateTime().isAfter(LocalDateTime.now()),
           "Trying to enter before the starting time that was specified for this reservation");

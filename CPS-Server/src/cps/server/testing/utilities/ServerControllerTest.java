@@ -233,7 +233,7 @@ public abstract class ServerControllerTest extends TestCase {
   }
 
   protected void requestReservedParking(CustomerData data, SessionHolder context) throws ServerException {
-    requestReservedParking(data, Duration.ofHours(1), context);
+    requestReservedParking(data, Duration.ofMillis(1500), context);
   }
 
   protected ParkingLot initParkingLot() throws ServerException {
