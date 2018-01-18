@@ -119,15 +119,15 @@ public class ParkingEntryController extends RequestController {
       SubscriptionService service = SubscriptionService.findForEntry(conn, customerID, carID, subsID);
       // TODO is it possible to cancel a subscription?
 
+      // Check that entry an license exists
+      errorIfNull(service, "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
+
       // TODO allow entry only once a day for regular subscription
       if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
         CarTransportation transportation = CarTransportation.findCompletedSubscriptionEntryByDate(
             conn, customerID, carID, lotID, service.getId(), LocalDate.now());
         errorIf(transportation != null, "This subscription was already used today");
       }
-
-      // Check that entry an license exists
-      errorIfNull(service, "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
 
       // Check that the lot ID is correct for regular subscription
       errorIf(service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && lotID != service.getLotID(),
