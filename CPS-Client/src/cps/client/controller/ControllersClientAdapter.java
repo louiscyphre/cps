@@ -42,7 +42,7 @@ public class ControllersClientAdapter {
   }
 
   private static ControllersClientAdapter getInstance() {
-    instance = instance == null ? new ControllersClientAdapter() : instance;
+    instance = (instance == null) ? (new ControllersClientAdapter()) : (instance);
     return instance;
   }
 
@@ -81,17 +81,9 @@ public class ControllersClientAdapter {
     getInstance().currentScene = code; // indicate that this scene is current
                                        // for the future
 
-//    FadeTransition fadeOut = new FadeTransition();
-//    fadeOut.setDuration(duration);
-//    fadeOut.setNode(getCurrentCtrl().getRoot());
-//    fadeOut.setFromValue(1.0);
-//    fadeOut.setToValue(0.0);
-//    fadeOut.play();
-    
     PauseTransition pauseTransition = new PauseTransition();
     pauseTransition.setDuration(duration);
     pauseTransition.play();
-    
     pauseTransition.setOnFinished((ActionEvent e) -> {
       Scene scene = ControllersClientAdapter.fetchScene(code);
       ClientApplication clientApp = ControllersClientAdapter.getClient();
@@ -111,37 +103,8 @@ public class ControllersClientAdapter {
         ctrl.cleanCtrl();
       }
     });
-    
-//    fadeOut.setOnFinished((ActionEvent e) -> {
-//      Scene scene = ControllersClientAdapter.fetchScene(code);
-//      ClientApplication clientApp = ControllersClientAdapter.getClient();
-//      Stage stage = clientApp.getPrimaryStage();
-//
-//      ViewController ctrl = fetchCtrl(code);
-//      ctrl.getRoot().setOpacity(0);
-//      
-//      FadeTransition fadeIn = new FadeTransition();
-//      fadeIn.setDuration(Duration.millis(500));
-//      fadeIn.setNode(ctrl.getRoot());
-//      fadeIn.setFromValue(0.0);
-//      fadeIn.setToValue(1.0);
-//      fadeIn.play();
-//
-//      stage.setScene(scene);
-//      Screen screen = Screen.getPrimary();
-//      Rectangle2D bounds = screen.getVisualBounds();
-//      stage.setX(bounds.getMinX());
-//      stage.setY(bounds.getMinY());
-//      stage.setWidth(bounds.getWidth());
-//      stage.setHeight(bounds.getHeight());
-//
-//      if (ctrl != null) {
-//        ctrl.cleanCtrl();
-//      }
-//    });
   }
 
-  
   public static void setStage(ControllerConstants.SceneCode code, int millis) {
     setStage(code, Duration.millis(millis));
   }

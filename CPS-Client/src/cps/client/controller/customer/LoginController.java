@@ -18,6 +18,7 @@ import cps.client.utils.FormatValidation.InputFormats;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
@@ -32,6 +33,12 @@ public class LoginController extends CustomerActionControllerBase {
   @FXML // fx:id="passwordTextField"
   private PasswordField passwordTextField;
 
+  @FXML
+  private Button cancelButton;
+
+  @FXML
+  private Button submitButton;
+  
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -88,6 +95,8 @@ public class LoginController extends CustomerActionControllerBase {
     // input fields clear
     emailTextField.clear();
     passwordTextField.clear();
+    submitButton.setDisable(false);
+    cancelButton.setDisable(false);
   }
   
   @Override
@@ -115,8 +124,8 @@ public class LoginController extends CustomerActionControllerBase {
       context.acceptPendingEmail();
       ControllersClientAdapter.turnLoggedInStateOn();
       ctrl.displayInfo(formattedMessage);
-      ctrl.turnProcessingStateOff();
       ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU, 10);
+      ctrl.turnProcessingStateOff();
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
       ctrl.displayError(response.getDescription());
