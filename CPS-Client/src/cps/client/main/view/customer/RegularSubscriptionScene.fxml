@@ -34,14 +34,9 @@
                   <Insets />
                </VBox.margin>
         </TextField>
-            <DatePicker fx:id="startDatePicker" onAction="#handlePickStartDate" prefHeight="40.0" prefWidth="280.0" promptText="Choose subscription start date">
-               <styleClass>
-                  <String fx:value="dateTimePicker" />
-                  <String fx:value="timePicker" />
-               </styleClass>
-            </DatePicker>
+            <DatePicker fx:id="startDatePicker" onAction="#handlePickStartDate" prefHeight="40.0" prefWidth="280.0" promptText="Choose subscription start date" styleClass="datePicker" />
             <TextField fx:id="endTimeTextField" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter daily exit time (HH:MM)" styleClass="inputField" />
-        <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">
+        <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="320.0" spacing="0.0" styleClass="infoLabel">
           <children>
             <ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />
                   <TextFlow fx:id="infoLabel" prefHeight="77.0" prefWidth="280.0" textAlignment="CENTER">
@@ -53,11 +48,11 @@
                   <Insets />
                </VBox.margin>
         </VBox>
-        <HBox alignment="CENTER" maxWidth="280.0" prefHeight="60.0" prefWidth="280.0" spacing="0.0" style="-fx-padding:0 0 0 0;">
+        <HBox alignment="CENTER" maxWidth="280.0" prefHeight="60.0" prefWidth="280.0" spacing="0.0" style="-fx-padding:0 0 0 0;" styleClass="buttonGroupHBox">
           <children>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="0.0" style="&#10;">
               <children>
-                <Button id="" alignment="CENTER" cancelButton="true" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="cancelButton" text="Back" textAlignment="CENTER">
+                <Button id="" alignment="CENTER" cancelButton="true" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="cancelButton" text="Back" textAlignment="CENTER">
                   <font>
                     <Font size="16.0" fx:id="x1" />
                   </font>
@@ -71,7 +66,7 @@
               <children>
                         <StackPane>
                            <children>
-                      <Button id="" fx:id="submitButton" alignment="CENTER" contentDisplay="LEFT" defaultButton="true" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
+                      <Button id="" fx:id="submitButton" alignment="CENTER" contentDisplay="LEFT" defaultButton="true" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
                         <VBox.margin>
                           <Insets fx:id="x3" />
                         </VBox.margin>

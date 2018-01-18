@@ -23,19 +23,14 @@
 
 <BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="705.0" style="-fx-background-color: E6DDD4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.IncidentalParkingController">
   <center>
-    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="628.0" prefWidth="360.0" spacing="15.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="400.0" spacing="20.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
         <TextField fx:id="carIDTextField" alignment="BASELINE_LEFT" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter your Car ID here" style="" styleClass="inputField" text="">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
         </TextField>
-            <DatePicker fx:id="endDatePicker" onAction="#handlePickEndDate" prefHeight="40.0" prefWidth="280.0" promptText="Choose planning end date">
-               <styleClass>
-                  <String fx:value="dateTimePicker" />
-                  <String fx:value="timePicker" />
-               </styleClass>
-            </DatePicker>
+            <DatePicker fx:id="endDatePicker" onAction="#handlePickEndDate" prefHeight="40.0" prefWidth="280.0" promptText="Choose planning end date" styleClass="datePicker" />
             <TextField fx:id="endTimeTextField" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter planned end time (HH:MM)" styleClass="inputField">
                <VBox.margin>
                   <Insets />
@@ -44,7 +39,7 @@
                <VBox.margin>
                   <Insets />
                </VBox.margin></TextField>
-        <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">
+        <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="320.0" spacing="0.0" styleClass="infoLabel">
           <children>
             <ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />
                   <TextFlow fx:id="infoLabel" prefHeight="77.0" prefWidth="280.0" textAlignment="CENTER">
@@ -56,7 +51,7 @@
                   <Insets />
                </VBox.margin>
         </VBox>
-        <HBox alignment="CENTER" maxWidth="280.0" prefHeight="60.0" prefWidth="280.0" spacing="0.0" style="-fx-padding:0 0 0 0;">
+        <HBox alignment="CENTER" maxWidth="280.0" prefHeight="60.0" prefWidth="280.0" spacing="0.0" style="-fx-padding:0 0 0 0;" styleClass="buttonGroupHBox">
           <children>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="0.0" style="&#10;">
               <children>
@@ -97,6 +92,12 @@
                </VBox.margin>
         </HBox>
       </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <padding>
+            <Insets bottom="30.0" left="35.0" right="35.0" top="30.0" />
+         </padding>
     </VBox>
   </center>
   <padding>
