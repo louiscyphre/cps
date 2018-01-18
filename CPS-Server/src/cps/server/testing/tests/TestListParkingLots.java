@@ -47,7 +47,7 @@ public class TestListParkingLots extends ServerControllerTest {
     // Create lots
     for (int i = 1; i <= 3; i++) {
       getContext().acquireServiceSession().login("malki", "1234");
-      InitLotAction request = new InitLotAction(1000, "Lot " + i + " Address", 3, 5, 4, "113.0.1.1" + i);
+      InitLotAction request = new InitLotAction(1000, "Lot " + i + " Address", 4, 5, 4, "113.0.1.1" + i);
       ServerResponse response = server.dispatch(request, getContext());
       assertNotNull(response);
       printObject(response);

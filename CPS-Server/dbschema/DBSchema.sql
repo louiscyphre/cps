@@ -144,6 +144,7 @@ CREATE TABLE `onetime_service` (
   `planned_start_time` datetime NOT NULL,
   `planned_end_time` datetime NOT NULL,
   `parked` bit(1) NOT NULL DEFAULT b'0',
+  `completed` bit(1) NOT NULL DEFAULT b'0',
   `canceled` bit(1) NOT NULL DEFAULT b'0',
   `warned` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)

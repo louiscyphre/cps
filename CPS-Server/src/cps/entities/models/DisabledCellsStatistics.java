@@ -49,7 +49,7 @@ public class DisabledCellsStatistics {
 
   public static void markfixed(Connection conn, int _lotid, int _width, int _height, int _depth) throws SQLException {
     PreparedStatement stmt = conn.prepareStatement(
-        "UPDATE disabled_slots_table SET date_enabled='?' WHERE lotid=? AND width=? AND height=? AND depth=? AND date_enabled is null");
+        "UPDATE disabled_slots_table SET date_enabled=? WHERE lotid=? AND width=? AND height=? AND depth=? AND date_enabled is null");
     int i = 1;
     stmt.setTimestamp(i++, Timestamp.valueOf(LocalDateTime.now()));
     stmt.setInt(i++, _lotid);
