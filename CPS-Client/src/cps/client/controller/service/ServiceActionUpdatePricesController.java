@@ -36,7 +36,7 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
   @FXML
   private ComboBox<String> parkingLotsList;
 
-  HashMap<String, ParkingLot> parkingLotsMap = null;
+  HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
   
   String userLotChoice = null;
   
@@ -77,12 +77,14 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
+    
+    if (parkingLotsList.getItems() != null) {
+      parkingLotsList.getItems().clear();
+    }
+
     newReservedPriceTextField.clear();
     newIncidentalPriceTextField.clear();
 
-    if (parkingLotsMap != null) {
-      return;
-    }
     ListParkingLotsRequest request = new ListParkingLotsRequest();
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
@@ -108,7 +110,7 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
    */
   public void setParkingLots(Collection <ParkingLot> list) {
     List<String> tmp = new ArrayList<String> ();
-    parkingLotsMap = new HashMap<String, ParkingLot>();
+    parkingLotsMap.clear();
     for (ParkingLot i: list) {
       String address = new String(i.getStreetAddress());
       tmp.add(address);
