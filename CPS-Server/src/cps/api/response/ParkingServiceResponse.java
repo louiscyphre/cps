@@ -33,9 +33,4 @@ public abstract class ParkingServiceResponse extends CustomerPasswordResponse {
   public void setAlternativeLots(Collection<ParkingLot> alternativeLots) {
     this.alternativeLots = alternativeLots;
   }
-
-  @Override
-  public ServerResponse handle(ResponseHandler handler) {
-    return handler.handle(this);
-  }
 }

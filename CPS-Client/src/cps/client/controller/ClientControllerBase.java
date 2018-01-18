@@ -22,6 +22,7 @@ import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
 import cps.api.response.RefundResponse;
 import cps.api.response.RegularSubscriptionResponse;
+import cps.api.response.RejectComplaintResponse;
 import cps.api.response.RequestLotStateResponse;
 import cps.api.response.RequestReportResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
@@ -30,6 +31,7 @@ import cps.api.response.Response;
 import cps.api.response.ServerResponse;
 import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
+import cps.api.response.SimpleResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.client.utils.InternalClientException;
 import cps.client.utils.UserLevelClientException;
@@ -252,11 +254,6 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   @Override
-  public ServerResponse handle(ServerResponse response) {
-    return null;
-  }
-
-  @Override
   public ServerResponse handle(DisableParkingSlotsResponse response) {
     return null;
   }
@@ -298,6 +295,16 @@ public abstract class ClientControllerBase implements ViewController {
 
   @Override
   public ServerResponse handle(ServiceLoginResponse response) {
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(SimpleResponse simpleResponse) {
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(RejectComplaintResponse response) {
     return null;
   }
 

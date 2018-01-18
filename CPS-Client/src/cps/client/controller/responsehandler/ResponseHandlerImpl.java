@@ -15,6 +15,7 @@ import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
 import cps.api.response.RefundResponse;
 import cps.api.response.RegularSubscriptionResponse;
+import cps.api.response.RejectComplaintResponse;
 import cps.api.response.RequestLotStateResponse;
 import cps.api.response.RequestReportResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
@@ -24,6 +25,7 @@ import cps.api.response.ResponseHandler;
 import cps.api.response.ServerResponse;
 import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
+import cps.api.response.SimpleResponse;
 import cps.api.response.UpdatePricesResponse;
 import javafx.application.Platform;
 //import cps.client.controller.ControllersClientAdapter;
@@ -52,7 +54,7 @@ public class ResponseHandlerImpl implements ResponseHandler {
   }
 
   @Override
-  public ServerResponse handle(ServerResponse response) {
+  public ServerResponse handle(SimpleResponse response) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -168,6 +170,11 @@ public class ResponseHandlerImpl implements ResponseHandler {
 
   @Override
   public ServerResponse handle(ListMyComplaintsResponse response) {
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(RejectComplaintResponse response) {
     return null;
   }
 
