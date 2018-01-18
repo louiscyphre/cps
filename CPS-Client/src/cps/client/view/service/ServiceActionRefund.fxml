@@ -30,7 +30,7 @@
             </VBox>
             <HBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="20.0" style="-fx-padding:0 0 0 0;">
                <children>
-                  <Button id="" alignment="CENTER" cancelButton="true" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="50.0" prefWidth="100.0" text="Cancel" textAlignment="CENTER">
+                  <Button id="" alignment="CENTER" cancelButton="true" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="50.0" prefWidth="100.0" text="Back" textAlignment="CENTER">
                      <styleClass>
                         <String fx:value="cancelButton" />
                         <String fx:value="smallButton" />
