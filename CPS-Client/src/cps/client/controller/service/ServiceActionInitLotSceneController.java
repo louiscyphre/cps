@@ -5,6 +5,7 @@ import cps.api.response.InitLotResponse;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ControllerConstants.SceneCode;
 import cps.entities.people.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -44,6 +45,9 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
 
   @Override
   public ServerResponse handle(InitLotResponse response) {
+    if(response.success()) {
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU, 10);
+    }
     return super.handleGenericResponse(response);
   }
 
