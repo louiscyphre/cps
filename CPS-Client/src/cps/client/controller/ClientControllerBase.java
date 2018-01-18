@@ -144,6 +144,7 @@ public abstract class ClientControllerBase implements ViewController {
   @Override
   public void cleanCtrl() {
     // info box clear
+    infoBox.getStyleClass().clear();
     infoBox.getStyleClass().add("infoLabel");
     infoProgress.visibleProperty().set(false);
     infoLabel.getChildren().clear();
