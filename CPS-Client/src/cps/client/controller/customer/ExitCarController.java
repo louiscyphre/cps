@@ -16,7 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
-public class ExitCarController extends CustomerActionControllerBase {
+public class ExitCarController extends CustomerActionControllerBaseSubmitAndFinish {
 
   @FXML // fx:id="carIdTextField"
   private TextField carIdTextField; // Value injected by FXMLLoader
@@ -105,7 +105,7 @@ public class ExitCarController extends CustomerActionControllerBase {
       formattedMessage.add(new Text("The car retrieval is granted!\nRobot will retrieve your car shortly.\n"));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
-
+      setFinishInsteadOfSubmit(true);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       formattedMessage.add(new Text("The car retrieval is denied!\n"));
       formattedMessage.add(new Text(response.getDescription()));

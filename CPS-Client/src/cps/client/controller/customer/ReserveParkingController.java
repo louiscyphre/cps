@@ -39,8 +39,7 @@ import javafx.scene.text.Text;
 /**
  * Created on: 2018-01-09 8:26:06 PM
  */
-// TODO some pc displays kryakozyabry in month
-public class ReserveParkingController extends CustomerActionControllerBase implements ParkingLotsController {
+public class ReserveParkingController extends CustomerActionControllerBaseSubmitAndFinish implements ParkingLotsController {
 
   @FXML
   private DatePicker endDatePicker;
@@ -344,7 +343,7 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
       formattedMessage.add(new Text("Succesfully reserved parking per request!\n"));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
-
+      setFinishInsteadOfSubmit(true);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       formattedMessage.add(new Text("Could not reserve parking!\n"));
       formattedMessage.add(new Text(response.getDescription()));

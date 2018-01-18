@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class EnterCarController extends CustomerActionControllerBase {
+public class EnterCarController extends CustomerActionControllerBaseSubmitAndFinish {
 
   @FXML // ResourceBundle that was given to the FXMLLoader
   private ResourceBundle resources;
@@ -143,7 +143,7 @@ public class EnterCarController extends CustomerActionControllerBase {
       formattedMessage.add(new Text("The parking entry is granted!\nRobot will collect your car shortly.\n"));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
-
+      setFinishInsteadOfSubmit(true);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       formattedMessage.add(new Text("The parking entry is denied!\n"));
       formattedMessage.add(new Text(response.getDescription()));

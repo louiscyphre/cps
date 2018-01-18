@@ -30,7 +30,7 @@ import javafx.scene.text.Text;
 /**
  * Created on: 2018-01-13 1:01:03 AM
  */
-public class IncidentalParkingController extends CustomerActionControllerBase {
+public class IncidentalParkingController extends CustomerActionControllerBaseSubmitAndFinish {
   @FXML
   private TextField carIDTextField;
 
@@ -248,12 +248,17 @@ public class IncidentalParkingController extends CustomerActionControllerBase {
     }
     // logged in customer
     if (response.success()) {
-      formattedMessage.add(new Text("Your incidental parking reserved!\n"));
-      formattedMessage.add(new Text("Use your password in 'Enter Parking' to fill this reservation.\n"));
+      formattedMessage.add(new Text("Entry granted\n"));
+      formattedMessage.add(new Text("Robot will collect your car shortly\n"));
+      Text warning = new Text("Don't forget: Password is required to collect the Car");
+      Font defaultFont = warning.getFont();
+      warning.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(new Text("\n"));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
+      setFinishInsteadOfSubmit(true);
     } else { // request failed
-      formattedMessage.add(new Text("Could not reserve parking at this moment!\n"));
+      formattedMessage.add(new Text("Could not grant parking at this moment!\n"));
       formattedMessage.add(new Text(response.getDescription()));
       ctrl.turnProcessingStateOff();
       ctrl.displayError(formattedMessage);

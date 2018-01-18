@@ -23,7 +23,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
@@ -33,7 +32,7 @@ import javafx.scene.text.Text;
 /**
  * Created on: 2018-01-15 6:02:42 AM
  */
-public class RegularSubscriptionController extends CustomerActionControllerBase {
+public class RegularSubscriptionController extends CustomerActionControllerBaseSubmitAndFinish {
 
   @FXML
   private TextField endTimeTextField;
@@ -52,12 +51,6 @@ public class RegularSubscriptionController extends CustomerActionControllerBase 
 
   @FXML
   private TextField carIDTextField;
-
-  @FXML
-  private Button submitButton;
-
-  @FXML
-  private Button finishButton;
 
   @FXML
   void handlePickStartDate(ActionEvent event) {
@@ -80,11 +73,6 @@ public class RegularSubscriptionController extends CustomerActionControllerBase 
       return;
     }
     validateAndSend();
-  }
-
-  @FXML
-  void handleFinishButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU, 10);
   }
 
   @Override
@@ -247,19 +235,11 @@ public class RegularSubscriptionController extends CustomerActionControllerBase 
     return response;
   }
 
-  private void setFinishInsteadOfSubmit(boolean value) {
-    submitButton.setDefaultButton(!value);
-    finishButton.setDefaultButton(value);
-    submitButton.setVisible(!value);
-    finishButton.setVisible(value);
-  }
-
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
     carIDTextField.clear();
     emailTextField.clear();
     startDatePicker.getEditor().clear();
-    setFinishInsteadOfSubmit(false);
   }
 }

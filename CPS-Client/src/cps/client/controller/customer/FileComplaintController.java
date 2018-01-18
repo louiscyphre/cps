@@ -8,7 +8,7 @@ import cps.client.controller.ControllersClientAdapter;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
-public class FileComplaintController extends CustomerActionControllerBase {
+public class FileComplaintController extends CustomerActionControllerBaseSubmitAndFinish {
   @FXML // fx:id="complaintContent"
   private TextArea complaintContent; // Value injected by FXMLLoader
 
@@ -33,7 +33,11 @@ public class FileComplaintController extends CustomerActionControllerBase {
   
   @Override
   public ServerResponse handle(ComplaintResponse response) {
-    return super.handleGenericResponse(response);
+    super.handleGenericResponse(response);
+    if(response.success()) {
+      setFinishInsteadOfSubmit(true);
+    }
+    return null;
   }
 
   @Override
