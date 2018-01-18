@@ -9,14 +9,18 @@ import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.request.ReservedParkingRequest;
+import cps.api.response.ReservedParkingResponse;
+import cps.api.response.ServerResponse;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
+import cps.client.controller.ViewController;
 import cps.client.utils.FormatValidation.InputFormats;
 import cps.entities.models.ParkingLot;
 import javafx.application.Platform;
@@ -29,6 +33,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 /**
  * Created on: 2018-01-09 8:26:06 PM
@@ -304,5 +310,48 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
     parkingLotsList.getItems().clear();
     parkingLotsMap.clear();
     loadParkingLots();
+  }
+  
+  @Override
+  public ServerResponse handle(ReservedParkingResponse response) {
+    CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    int responseCustomerId = response.getCustomerID();
+    List<Text> formattedMessage = new LinkedList<Text>();
+    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
+      context.setCustomerId(responseCustomerId);
+      formattedMessage.add(new Text("Your Customer ID:"));
+      Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      Font defaultFont = customerIdText.getFont();
+      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(customerIdText);
+      formattedMessage.add(new Text("\n"));
+
+      formattedMessage.add(new Text("Your Password:"));
+      Text password = new Text(response.getPassword());
+      defaultFont = password.getFont();
+      password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(password);
+      formattedMessage.add(new Text("\n"));
+
+      context.setCustomerId(responseCustomerId);
+      context.acceptPendingEmail();
+      ControllersClientAdapter.turnLoggedInStateOn();
+    }
+
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("Succesfully reserved parking per request!\n"));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("Could not reserve parking!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+
+    return response;
   }
 }

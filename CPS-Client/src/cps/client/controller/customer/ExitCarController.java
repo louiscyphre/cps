@@ -1,10 +1,14 @@
 package cps.client.controller.customer;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import cps.api.request.ParkingExitRequest;
+import cps.api.response.ParkingExitResponse;
+import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ViewController;
 import cps.client.utils.FormatValidation.InputFormats;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -84,20 +88,30 @@ public class ExitCarController extends CustomerActionControllerBase {
   }
 
   @Override
-  public void displayInfo(List<Text> formattedText) {
-    infoBox.getStyleClass().clear();
-    infoBox.getStyleClass().add("infoLabel");
-    infoLabel.getChildren().clear();
-    for (Text ft : formattedText) {
-      infoLabel.getChildren().add(ft);
-    }
-  }
-
-  @Override
   public void cleanCtrl() {
     // info box clear
     super.cleanCtrl();
     // input fields clear
     carIdTextField.clear();
+  }
+  
+  @Override
+  public ServerResponse handle(ParkingExitResponse response) {
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    List<Text> formattedMessage = new LinkedList<Text>();
+
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("The car retrieval is granted!\nRobot will retrieve your car shortly.\n"));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("The car retrieval is denied!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+    return response;
   }
 }

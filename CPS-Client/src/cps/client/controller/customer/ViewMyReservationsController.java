@@ -10,10 +10,14 @@ import java.util.List;
 import cps.api.request.CancelOnetimeParkingRequest;
 import cps.api.request.ListOnetimeEntriesRequest;
 import cps.api.request.ListParkingLotsRequest;
+import cps.api.response.CancelOnetimeParkingResponse;
+import cps.api.response.ListOnetimeEntriesResponse;
+import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.OnetimeEntriesController;
 import cps.client.controller.ParkingLotsController;
+import cps.client.controller.ViewController;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import javafx.application.Platform;
@@ -27,6 +31,9 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 public class ViewMyReservationsController extends CustomerActionControllerBase
@@ -288,5 +295,58 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
     });
 
     obsEntriesList.addAll(entriesList);
+  }
+  
+  @Override
+  public ServerResponse handle(ListOnetimeEntriesResponse response) {
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    List<Text> formattedMessage = new LinkedList<Text>();
+
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+
+      formattedMessage.add(new Text("Onetime Entries for customer with id : "));
+      Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      Font defaultFont = customerIdText.getFont();
+      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(customerIdText);
+
+      OnetimeEntriesController casted = (OnetimeEntriesController) ctrl;
+      casted.setOnetimeEntries(response.getData());
+
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("The parking entry is denied!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+
+    return null;
+  }
+  
+  @Override
+  public ServerResponse handle(CancelOnetimeParkingResponse response) {
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    List<Text> formattedMessage = new LinkedList<Text>();
+
+    if (response.success()) {
+      formattedMessage.add(new Text("The following reservation had been canceled!\n"));
+      formattedMessage.add(new Text("The account had been refunded for: " + response.getRefundAmount()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+      OnetimeEntriesController casted = (OnetimeEntriesController) ctrl;
+      casted.removeEntry(response.getOnetimeServiceID());
+    } else { // request failed
+      formattedMessage.add(new Text("Could not cancel this reservation!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+
+    return response;
   }
 }

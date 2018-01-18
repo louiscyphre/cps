@@ -6,11 +6,16 @@ package cps.client.controller.customer;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.util.LinkedList;
+import java.util.List;
 
 import cps.api.request.IncidentalParkingRequest;
+import cps.api.response.IncidentalParkingResponse;
+import cps.api.response.ServerResponse;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ViewController;
 import cps.client.utils.FormatValidation.InputFormats;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -19,6 +24,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 /**
  * Created on: 2018-01-13 1:01:03 AM
@@ -208,5 +215,52 @@ public class IncidentalParkingController extends CustomerActionControllerBase {
     endDatePicker.getEditor().clear();
     endTimeTextField.clear();
   }
+  
+  public ServerResponse handle(IncidentalParkingResponse response) {
+    CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    int responseCustomerId = response.getCustomerID();
+    List<Text> formattedMessage = new LinkedList<Text>();
+
+    // if request fails customer id is 0 TODO
+    // new customer
+    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
+      // outputting the customer id on screen
+      context.setCustomerId(responseCustomerId);
+      formattedMessage.add(new Text("Your Customer ID:"));
+      Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      Font defaultFont = customerIdText.getFont();
+      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(customerIdText);
+      formattedMessage.add(new Text("\n"));
+      // password part
+      formattedMessage.add(new Text("Your Password:"));
+      Text password = new Text(response.getPassword());
+      defaultFont = password.getFont();
+      password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(password);
+      formattedMessage.add(new Text("\n"));
+      // binding new user to application context
+      context.setCustomerId(responseCustomerId);
+      context.acceptPendingEmail();
+      ControllersClientAdapter.turnLoggedInStateOn();
+    }
+    // logged in customer
+    if (response.success()) {
+      formattedMessage.add(new Text("Your incidental parking reserved!\n"));
+      formattedMessage.add(new Text("Use your password in 'Enter Parking' to fill this reservation.\n"));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+    } else { // request failed
+      formattedMessage.add(new Text("Could not reserve parking at this moment!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+
+    return response;
+  }
+
 
 }

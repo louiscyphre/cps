@@ -1,11 +1,16 @@
 package cps.client.controller.customer;
 
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import cps.api.request.ParkingEntryRequest;
+import cps.api.response.ParkingEntryResponse;
+import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ViewController;
 import cps.client.utils.FormatValidation.InputFormats;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -13,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 public class EnterCarController extends CustomerActionControllerBase {
@@ -127,4 +133,23 @@ public class EnterCarController extends CustomerActionControllerBase {
     subscriptionIdTextField.clear();
   }
 
+  @Override
+  public ServerResponse handle(ParkingEntryResponse response) {
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    List<Text> formattedMessage = new LinkedList<Text>();
+
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("The parking entry is granted!\nRobot will collect your car shortly.\n"));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("The parking entry is denied!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+    return response;
+  }
 }
