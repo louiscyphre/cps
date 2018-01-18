@@ -57,9 +57,9 @@
             <HBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="20.0" style="-fx-padding:0 0 0 0;">
                <children>
                   <Button id="" alignment="CENTER" cancelButton="true" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="50.0" prefWidth="130.0" styleClass="cancelButton" text="Back" textAlignment="CENTER" />
-                  <Button id="" fx:id="disableButton" alignment="CENTER" cancelButton="true" contentDisplay="LEFT" layoutX="403.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleDisableSlot" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: red;" styleClass="regularButton" text="Disable" textAlignment="CENTER" />
-                  <Button id="" fx:id="reserveButton" alignment="CENTER" cancelButton="true" contentDisplay="LEFT" layoutX="463.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleReserveSlot" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: green;" styleClass="regularButton" text="Reserve" textAlignment="CENTER" />
-                  <Button id="" fx:id="overviewButton" alignment="CENTER" cancelButton="true" contentDisplay="LEFT" layoutX="523.0" layoutY="10.0" mnemonicParsing="false" onAction="#showOverview" prefHeight="50.0" prefWidth="130.0" styleClass="regularButton" text="Overview" textAlignment="CENTER" />
+                  <Button id="" fx:id="disableButton" alignment="CENTER" contentDisplay="LEFT" layoutX="403.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleDisableSlot" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: red;" styleClass="regularButton" text="Disable" textAlignment="CENTER" />
+                  <Button id="" fx:id="reserveButton" alignment="CENTER" contentDisplay="LEFT" layoutX="463.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleReserveSlot" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: green;" styleClass="regularButton" text="Reserve" textAlignment="CENTER" />
+                  <Button id="" fx:id="overviewButton" alignment="CENTER" contentDisplay="LEFT" layoutX="523.0" layoutY="10.0" mnemonicParsing="false" onAction="#showOverview" prefHeight="50.0" prefWidth="130.0" styleClass="regularButton" text="Overview" textAlignment="CENTER" />
                </children>
             </HBox>
          </children>

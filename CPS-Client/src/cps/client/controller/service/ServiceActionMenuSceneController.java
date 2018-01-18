@@ -27,11 +27,12 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   }
 
   @FXML
-  void handleDisableSlotButton(ActionEvent event) {
-    // ACCESS_DOMAIN_PARKING_LOT , ACCESS_LEVEL_LOCAL_WORKER
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_DISABLE_SLOT, 10);
+  void handleManageLotButton(ActionEvent event) {
+    // ACCESS_DOMAIN_PARKING_LOT, (ACCESS_LEVEL_LOCAL_WORKER)
+    // ACCESS_LEVEL_GLOBAL_MANAGER
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MANAGE_LOT, 10);
   }
-
+  
   @FXML
   void handleRefundButton(ActionEvent event) {
     // ACCESS_DOMAIN_CUSTOMER_SERVICE, ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER
@@ -45,23 +46,9 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   }
 
   @FXML
-  void handleReserveSlotButton(ActionEvent event) {
-    // ACCESS_DOMAIN_PARKING_LOT, ACCESS_LEVEL_LOCAL_WORKER
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_RESERVE_SLOT, 10);
-  }
-
-  @FXML
   void handleUpdatePricesButton(ActionEvent event) {
     // ACCESS_DOMAIN_PARKING_LOT, ACCESS_LEVEL_LOCAL_MANAGER
     ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_UPDATE_PRICES, 10);
-  }
-
-  @FXML
-  void handleLotStateButton(ActionEvent event) {
-    // ACCESS_DOMAIN_PARKING_LOT, (ACCESS_LEVEL_LOCAL_WORKER)
-    // ACCESS_LEVEL_GLOBAL_MANAGER
-//    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOT_STATE, 10); // TODO delete when manage lots is done
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MANAGE_LOT, 10);
   }
 
   @FXML
@@ -72,7 +59,6 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
 
   @FXML
   void handleLogoutButton(ActionEvent event) {
-    // TODO check if logout is done correctly
     ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOGIN, 10);
     ControllersClientAdapter.getEmployeeContext().logContextOut();
   }

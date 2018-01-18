@@ -48,7 +48,6 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
       ControllersClientAdapter.registerScene(SceneCode.FILE_COMPLAINT);
       ControllersClientAdapter.turnLoggedInStateOff();
-      // initializeStage(scene, "CPS Kiosk Client");
       initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Kiosk Client");
 
     } catch (IOException e) {
@@ -59,17 +58,13 @@ public class ClientApplication extends Application implements INetworkClient {
   private void loadService() {
     try {
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOGIN);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_DISABLE_SLOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_INIT_LOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MENU);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOT_IS_FULL);
-//      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOT_STATE); // TODO delete this when manage lot is done
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MANAGE_LOT); 
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_REFUND);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_RESERVE_SLOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
       ControllersClientAdapter.turnLoggedInStateOff();
-      // initializeStage(scene, "CPS Service Client");
       initializeStage(SceneCode.SERVICE_ACTION_LOGIN, "CPS Service Client");
     } catch (IOException e) {
       e.printStackTrace();

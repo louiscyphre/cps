@@ -22,8 +22,6 @@ import cps.common.Constants;
 import cps.entities.models.ParkingCell;
 import cps.entities.models.ParkingLot;
 import cps.entities.people.User;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

@@ -30,8 +30,6 @@ public class ControllerConstants {
     FILE_COMPLAINT("../view/customer/FileComplaintScene.fxml"), 
 
     // service views
-    SERVICE_ACTION_DISABLE_SLOT("../view/service/ServiceActionDisableSlot.fxml"),
-
     SERVICE_ACTION_INIT_LOT("../view/service/ServiceActionInitLotScene.fxml"),
 
     SERVICE_ACTION_LOT_IS_FULL("../view/service/ServiceActionLotIsFull.fxml"),
@@ -41,8 +39,6 @@ public class ControllerConstants {
     SERVICE_ACTION_MENU("../view/service/ServiceActionMenuScene.fxml"),
 
     SERVICE_ACTION_REFUND("../view/service/ServiceActionRefund.fxml"),
-
-    SERVICE_ACTION_RESERVE_SLOT("../view/service/ServiceActionReserveSlot.fxml"),
 
     SERVICE_ACTION_UPDATE_PRICES("../view/service/ServiceActionUpdatePrices.fxml"),
 
