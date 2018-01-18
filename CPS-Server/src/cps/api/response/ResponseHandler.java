@@ -4,8 +4,6 @@ public interface ResponseHandler {
 
   // Dispatch
   public ServerResponse dispatch(Response response);
-  
-  // TODO add SimpleResponse handler
 
   // Customer Responses
   public ServerResponse handle(CancelOnetimeParkingResponse response);
@@ -32,7 +30,8 @@ public interface ResponseHandler {
 
   public ServerResponse handle(LoginResponse response);
 
-  public ServerResponse handle(ServerResponse response);
+  // Common responses - can be sent to Customers and Employees
+  public ServerResponse handle(SimpleResponse simpleResponse);
 
   // CompanyPerson responses
   public ServerResponse handle(DisableParkingSlotsResponse response);
@@ -42,6 +41,8 @@ public interface ResponseHandler {
   public ServerResponse handle(ListComplaintsResponse response);
 
   public ServerResponse handle(RefundResponse response);
+  
+  public ServerResponse handle(RejectComplaintResponse response);
 
   public ServerResponse handle(RequestReportResponse response);
 

@@ -6,12 +6,14 @@ import java.util.Collection;
 
 import cps.api.action.ListComplaintsAction;
 import cps.api.action.RefundAction;
+import cps.api.action.RejectComplaintAction;
 import cps.api.request.ComplaintRequest;
 import cps.api.request.ListMyComplaintsRequest;
 import cps.api.response.ComplaintResponse;
 import cps.api.response.ListComplaintsResponse;
 import cps.api.response.ListMyComplaintsResponse;
 import cps.api.response.RefundResponse;
+import cps.api.response.RejectComplaintResponse;
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
 import cps.entities.models.Complaint;
@@ -63,6 +65,30 @@ public class ComplaintController extends RequestController {
       response.setCustomerID(customer.getId());
       response.setAmount(action.getAmount());
       response.setSuccess("Refund completed successfully");
+      return response;
+    });
+  }
+
+  public ServerResponse handle(RejectComplaintAction action, ServiceSession session) {
+    return database.performQuery(new RejectComplaintResponse(), (conn, response) -> {
+      User employee = session.requireUser();
+
+      errorIf(!employee.canAccessDomain(Constants.ACCESS_DOMAIN_CUSTOMER_SERVICE), "You cannot perform this action");
+      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER, "You cannot perform this action");
+
+      Complaint complaint = Complaint.findByIDNotNull(conn, action.getComplaintID());
+
+      Customer customer = Customer.findByIDNotNull(conn, complaint.getCustomerID());
+
+      complaint.setEmployeeID(employee.getId());
+      complaint.setResolvedAt(Timestamp.valueOf(LocalDateTime.now()));
+      complaint.setStatus(Constants.COMPLAINT_STATUS_REJECTED);
+      complaint.update(conn);
+
+      response.setComplaintID(complaint.getId());
+      response.setCustomerID(customer.getId());
+      response.setReason(action.getReason());
+      response.setSuccess("Complaint rejected successfully");
       return response;
     });
   }

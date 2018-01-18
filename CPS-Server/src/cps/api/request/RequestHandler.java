@@ -39,6 +39,8 @@ public interface RequestHandler<SessionType> {
 
   public ServerResponse handle(RefundAction action, SessionType session);
 
+  public ServerResponse handle(RejectComplaintAction action, SessionType session);
+
   public ServerResponse handle(RequestLotStateAction action, SessionType session);
 
   public ServerResponse handle(RequestReportAction action, SessionType session);
