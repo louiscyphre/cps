@@ -4,6 +4,7 @@
 package cps.client.main;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.apache.commons.cli.ParseException;
 
@@ -91,6 +92,8 @@ public class ClientApplication extends Application implements INetworkClient {
         System.exit(1);
       }
 
+      Locale.setDefault(Locale.Category.FORMAT, Locale.ENGLISH);
+      
       this.client = new CPSNetworkClient(parser.getHost(), parser.getPort(), this);
 
       ControllersClientAdapter.registerClient(this);

@@ -133,7 +133,7 @@ public class ReserveParkingController extends CustomerActionControllerBase imple
     assert endDatePicker != null : "fx:id=\"endDatePicker\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
     assert emailTF != null : "fx:id=\"emailTF\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
     assert startDatePicker != null : "fx:id=\"startDatePicker\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
-    startDatePicker.setOnShowing(e -> Locale.setDefault(Locale.Category.FORMAT, Locale.ENGLISH));
+//    startDatePicker.setOnShowing(e -> Locale.setDefault(Locale.Category.FORMAT, Locale.ENGLISH)); // TODO maybe not needed
     assert carIDTextField != null : "fx:id=\"carIDTextField\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
 
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.RESERVE_PARKING);
