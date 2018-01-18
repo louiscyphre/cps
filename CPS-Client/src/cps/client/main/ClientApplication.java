@@ -19,7 +19,6 @@ import cps.client.network.INetworkClient;
 import cps.client.utils.CmdParser;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
 public class ClientApplication extends Application implements INetworkClient {
@@ -38,20 +37,18 @@ public class ClientApplication extends Application implements INetworkClient {
 
   private void loadWebClient() throws IOException {
     try {
-      
-      
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
       ControllersClientAdapter.registerScene(SceneCode.LOGIN);
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
       ControllersClientAdapter.registerScene(SceneCode.FULL_SUBSCRIPTION);
       ControllersClientAdapter.registerScene(SceneCode.REGULAR_SUBSCRIPTION);
       ControllersClientAdapter.registerScene(SceneCode.RESERVE_PARKING);
-      ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
       ControllersClientAdapter.registerScene(SceneCode.FILE_COMPLAINT);
       ControllersClientAdapter.turnLoggedInStateOff();
       initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Web Client");
-
+      setMainMenuControllerForWeb();
+      
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -116,7 +113,6 @@ public class ClientApplication extends Application implements INetworkClient {
 
       ControllersClientAdapter.registerClient(this);
 
-      System.out.println((SceneCode.CUSTOMER_INITIAL_MENU));
       switch (parser.getMode()) {
         case "webclient":
            loadWebClient();
@@ -157,9 +153,7 @@ public class ClientApplication extends Application implements INetworkClient {
   }
   
   private void setMainMenuControllerForWeb() {
-    (SceneCode.CUSTOMER_INITIAL_MENU).toString();
-    FXMLLoader loader = new FXMLLoader(getClass().getResource((SceneCode.CUSTOMER_INITIAL_MENU).toString()));
-    CustomerMainMenuController controller = loader.getController();
+    ((CustomerMainMenuController) ControllersClientAdapter.fetchCtrl(SceneCode.CUSTOMER_INITIAL_MENU)).setAsWebClient();
   }
 
   public static void main(String[] args) {
