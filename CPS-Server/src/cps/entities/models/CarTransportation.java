@@ -12,6 +12,7 @@ import java.util.LinkedList;
 
 import cps.common.Constants;
 import cps.server.ServerException;
+import cps.server.database.QueryBuilder;
 
 public class CarTransportation implements Serializable {
 
@@ -148,7 +149,7 @@ public class CarTransportation implements Serializable {
     // First - find the insertion of the car
 
     CarTransportation result = null;
-    PreparedStatement query = conn.prepareStatement(Constants.SQL_FIND_CAR_TRANSPORTATION);
+    PreparedStatement query = conn.prepareStatement(Constants.SQL_FIND_CAR_TRANSPORTATION_FOR_EXIT);
 
     int index = 1;
     query.setInt(index++, customerID);
@@ -166,6 +167,15 @@ public class CarTransportation implements Serializable {
     insertionSet.close();
     query.close();
     return result;
+  }
+
+  public static CarTransportation findForEntry(Connection conn, int customerID, String carID, int lotID) throws SQLException {
+    return new QueryBuilder<CarTransportation>(Constants.SQL_FIND_CAR_TRANSPORTATION_FOR_ENTRY)
+        .withFields(statement -> {
+          statement.setInt(1, customerID);
+          statement.setString(2, carID);
+          statement.setInt(3, lotID);
+        }).fetchResult(conn, result -> new CarTransportation(result));
   }
 
   public void updateRemovedAt(Connection conn, Timestamp removedAt) throws SQLException {

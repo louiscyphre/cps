@@ -57,11 +57,7 @@ public class ParkingEntryController extends RequestController {
 
       // Entry license exists - continue
       // Find the parking lot that the customer wants to enter
-      ParkingLot lot = ParkingLot.findByIDNotNull(conn, lotID);
-      CarTransportation transportation = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
-          request.getLotID());
-      errorIf(transportation != null, "The car with the specified ID is currently parked");
-      
+      ParkingLot lot = ParkingLot.findByIDNotNull(conn, lotID);      
       registerEntry(conn, lot, customer.getId(), carID, service);
 
       response.setLotID(lotID);
@@ -72,6 +68,10 @@ public class ParkingEntryController extends RequestController {
   }
   
   public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service) throws SQLException, ServerException {
+    // Check that this car is allowed to enter
+    CarTransportation transportation = CarTransportation.findForEntry(conn, customerID, carID, lot.getId());
+    errorIf(transportation != null, "The car with the specified ID is currently parked");
+    
     // Check that the lot does not already contain the car
     errorIf(lot.contains(lot.constructContentArray(conn), carID), "This car is already parked in the chosen lot");
     

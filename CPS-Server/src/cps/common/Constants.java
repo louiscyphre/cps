@@ -2,8 +2,8 @@ package cps.common;
 
 public interface Constants {
   // TODO disable on release
-//  public final boolean DEBUG_MODE = true;
-  public final boolean DEBUG_MODE = false; 
+  // public final boolean DEBUG_MODE = true;
+  public final boolean DEBUG_MODE = false;
 
   public final int    DEFAULT_PORT    = 5555;
   public final String DEFAULT_HOST    = "127.0.0.1";
@@ -60,7 +60,8 @@ public interface Constants {
   public final String SQL_CREATE_CAR_TRANSPORTATION             = "INSERT INTO car_transportation values(?, ?, ?, ?, ?, default, default)";
   public final String SQL_FIND_CAR_TRANSPORTATION_BY_LOT_ID     = "SELECT * FROM car_transportation WHERE lot_id=?";
   public final String SQL_UPDATE_REMOVED_AT                     = "UPDATE car_transportation SET removed_at=? WHERE customer_id=? AND car_id=? AND lot_id=? AND inserted_at=?";
-  public final String SQL_FIND_CAR_TRANSPORTATION               = "SELECT * FROM car_transportation WHERE customer_id=? AND car_id=? AND lot_id=? AND removed_at IS NULL ORDER BY inserted_at DESC LIMIT 1";
+  public final String SQL_FIND_CAR_TRANSPORTATION_FOR_ENTRY     = "SELECT * FROM car_transportation WHERE customer_id=? AND car_id=? AND lot_id=? LIMIT 1";
+  public final String SQL_FIND_CAR_TRANSPORTATION_FOR_EXIT      = "SELECT * FROM car_transportation WHERE customer_id=? AND car_id=? AND lot_id=? AND removed_at IS NULL ORDER BY inserted_at DESC LIMIT 1";
   public final String SQL_FIND_CAR_TRANSPORTATION_BY_CAR_NUMBER = "SELECT * FROM car_transportation WHERE car_id=? AND lot_id=? AND removed_at IS NULL ORDER BY inserted_at DESC LIMIT 1";
 
   // SQL queries - DailyStatistics

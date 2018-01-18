@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import cps.api.action.SetFullLotAction;
 import cps.api.request.ListParkingLotsRequest;
@@ -14,6 +16,7 @@ import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
 import cps.entities.models.ParkingLot;
 import cps.entities.people.User;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -43,6 +46,18 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
   void handleSetAlternativeLotsCheckBox(ActionEvent event) {
     if (!processing) {
       alternativeLotsList.setVisible(setAlternativeLotsCheckBox.isSelected());
+
+      if (setAlternativeLotsCheckBox.isSelected()) {
+        refreshAlternativeLots();
+      }
+    }
+  }
+
+  void refreshAlternativeLots() {
+    ParkingLot selectedLot = parkingLotsMap.get(lotsList.getValue());
+    if (selectedLot != null) {
+      alternativeLotsList.getItems().setAll(
+          parkingLotsMap.entrySet().stream().filter(e -> e.getValue().getId() != selectedLot.getId()).map(e -> e.getKey()).collect(Collectors.toList()));
     }
   }
 
@@ -56,6 +71,11 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
     assert alternativeLotsList != null : "fx:id=\"alternativeLotsList\" was not injected: check your FXML file 'ServiceActionLotIsFull.fxml'.";
     alternativeLotsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.SERVICE_ACTION_LOT_IS_FULL);
+
+    // Update the list of alternative lots when the current lot changes
+    lotsList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+      refreshAlternativeLots();
+    });
   }
 
   @Override
@@ -99,8 +119,7 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
       for (int i = 0; i < alternativeLotsIds.size(); i++) {
         arrayToSend[i] = alternativeLotsIds.get(i);
       }
-      errorIf(setAlternativeLotsCheckBox.isSelected() && alternativeLotsIds.size() < 1,
-          "Please choose alternative parking lot");
+      errorIf(setAlternativeLotsCheckBox.isSelected() && alternativeLotsIds.size() < 1, "Please choose alternative parking lot");
       turnProcessingStateOn();
       sendRequest(new SetFullLotAction(user.getId(), lot.getId(), setFullStateCheckBox.isSelected(), arrayToSend));
     } catch (Exception e) {
@@ -131,6 +150,5 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
 
   private void fillComboBoxItems(ObservableList<String> addresses) {
     lotsList.getItems().addAll(addresses);
-    alternativeLotsList.getItems().addAll(addresses);
   }
 }
