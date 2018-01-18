@@ -279,7 +279,7 @@ public class LotController extends RequestController {
         action.getLocationI(), action.getLocationJ(), action.getLocationK(),
         cell -> cell.setDisabled(action.getValue()), "Parking cell disabled successfully");
     if (toRet.success()) {
-      // TODO add the cell to list of statistics disabled cells
+      // TODO Tegra add the cell to list of statistics disabled cells
     }
 
     return toRet;

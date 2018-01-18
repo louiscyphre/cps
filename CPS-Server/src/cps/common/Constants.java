@@ -68,8 +68,8 @@ public interface Constants {
   public final String SQL_FIND_CAR_TRANSPORTATION_BY_CAR_NUMBER = "SELECT * FROM car_transportation WHERE car_id=? AND lot_id=? AND removed_at IS NULL ORDER BY inserted_at DESC LIMIT 1";
 
   // SQL queries - DailyStatistics
-  public final String SQL_CREATE_NEW_DAY          = "INSERT INTO daily_statistics values(? ,? ,default ,default ,default ,default)";
-  public final String SQL_CHECK_DATE              = "SELECT * FROM daily_statistics DS WHERE day=?";
+  public final String SQL_CREATE_NEW_DAY          = "INSERT INTO daily_statistics values(? ,? ,default ,default ,default ,default,default)";
+  public final String SQL_CHECK_DATE              = "SELECT * FROM daily_statistics WHERE day=? AND lot_id=?";
   public final String SQL_INCREASE_REALIZED_ORDER = "UPDATE daily_statistics SET realized_orders=? WHERE day=? AND lot_id=?";
   public final String SQL_INCREASE_CANCELED_ORDER = "UPDATE daily_statistics SET canceled_orders=? WHERE day=? AND lot_id=?";
   public final String SQL_INCREASE_LATE_ARRIVAL   = "UPDATE daily_statistics SET late_arrivals=? WHERE day=? AND lot_id=?";
