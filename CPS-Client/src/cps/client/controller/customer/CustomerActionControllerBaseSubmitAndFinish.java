@@ -24,6 +24,7 @@ public class CustomerActionControllerBaseSubmitAndFinish extends CustomerActionC
     finishButton.setDefaultButton(value);
     submitButton.setVisible(!value);
     finishButton.setVisible(value);
+    finishButton.setStyle("-fx-background-color: #5CB85C");
   }  
   
   public void cleanCtrl() {
