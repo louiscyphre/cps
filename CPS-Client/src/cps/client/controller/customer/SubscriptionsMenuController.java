@@ -73,18 +73,18 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     float reservedParkingPrice = parkingLotsMap.get(choice).getPriceForService(Constants.PARKING_TYPE_RESERVED);
     float subscriptionOverallPrice = reservedParkingPrice * Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS;
     StringBuilder builder = new StringBuilder();
-    builder.append("Regular subscription:").append(Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS).append(" parking hours for ");
-    builder.append(subscriptionOverallPrice).append(" NIS only!");
+    builder.append("Park in specified lot all week daily except weekends for ");
+    builder.append(subscriptionOverallPrice).append(" ILS only!");
     regularSubscriptionInfo.setText(builder.toString());
-    fullSubscriptionInfo.setMaxWidth(Double.MAX_VALUE);
-    fullSubscriptionInfo.setAlignment(Pos.CENTER);//FIXME somehow
+    regularSubscriptionInfo.setMaxWidth(Double.MAX_VALUE);
+    regularSubscriptionInfo.setAlignment(Pos.CENTER);//FIXME somehow
   }
   
   private void  setFullSubscriptionInfo() {
     float subscriptionOverallPrice = Constants.PRICE_PER_HOUR_RESERVED * Constants.SUBSCRIPTION_TYPE_FULL_HOURS;
     StringBuilder builder = new StringBuilder();
-    builder.append("Full subscription:").append(Constants.SUBSCRIPTION_TYPE_FULL_HOURS).append(" parking hours in any parking lot for ");
-    builder.append(subscriptionOverallPrice).append(" NIS only!");
+    builder.append("Park any day, any time, in any parking lot for ");
+    builder.append(subscriptionOverallPrice).append(" ILS only!");
     fullSubscriptionInfo.setText(builder.toString());
     fullSubscriptionInfo.setMaxWidth(Double.MAX_VALUE);
     fullSubscriptionInfo.setAlignment(Pos.CENTER);//FIXME somehow

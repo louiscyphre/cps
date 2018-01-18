@@ -88,7 +88,7 @@ public class IncidentalParkingController extends CustomerActionControllerBase {
     // compare exit time to entry time
     LocalDateTime time = LocalDateTime.now();
     if (time.compareTo(plannedEndDateTime) >= 0) {
-      displayError("Leave date has to be future date");
+      displayError("Start date must be today, or future date");
       return;
     }
 

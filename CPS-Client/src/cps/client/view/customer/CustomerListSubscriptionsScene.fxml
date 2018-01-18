@@ -52,7 +52,7 @@
         </GridPane>
             <HBox alignment="CENTER" layoutX="30.0" layoutY="461.0" prefHeight="64.0" prefWidth="320.0" spacing="60.0">
                <children>
-                  <ComboBox fx:id="parkingLotsList" disable="true" promptText="Please choose parking lot" styleClass="comboBox" />
+                  <ComboBox fx:id="parkingLotsList" disable="true" onAction="#showSubscriptionsForLot" promptText="Please choose parking lot" styleClass="comboBox" />
                </children>
             </HBox>
             <VBox fx:id="infoBox" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">

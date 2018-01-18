@@ -88,7 +88,6 @@ public class CustomerSession extends BasicSession {
   }
   
   public void requireLotNotFull(Connection conn, Gson gson, ParkingLot lot, ParkingServiceResponse response) throws SQLException, ServerException {
-    // TODO find a more reliable way to check if lot is full
     if (lot.isLotFull() || lot.countFreeCells(conn) < 1) {
       response.setAlternativeLots(lot.retrieveAlternativeLots(conn, gson));
       throw new ServerException("The specified lot is full; please try one of the alternative lots");

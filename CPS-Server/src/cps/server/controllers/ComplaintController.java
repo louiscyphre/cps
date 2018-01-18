@@ -36,6 +36,7 @@ public class ComplaintController extends RequestController {
 
       response.setComplaintID(complaint.getId());
       response.setSuccess("Complaint created successfully");
+      //TODO add complaint to statistics 
       return response;
     });
   }

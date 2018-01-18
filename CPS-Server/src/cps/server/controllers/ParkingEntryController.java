@@ -63,6 +63,7 @@ public class ParkingEntryController extends RequestController {
       response.setLotID(lotID);
       response.setCustomerID(customerID);
       response.setSuccess("ParkingEntry request completed successfully");
+      
       return response;
     });
   }
