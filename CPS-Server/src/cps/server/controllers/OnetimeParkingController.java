@@ -32,15 +32,18 @@ import cps.server.session.UserSession;
 /** Handles OnetimeService requests. */
 public class OnetimeParkingController extends RequestController {
 
-  /** Instantiates a new one-time parking controller.
+  /**
+   * Instantiates a new one-time parking controller.
+   * 
    * @param serverController
-   *        the server application */
+   *          the server application
+   */
   public OnetimeParkingController(ServerController serverController) {
     super(serverController);
   }
 
-  private ServerResponse handle(OnetimeParkingRequest request, CustomerSession session, OnetimeParkingResponse serverResponse, Timestamp startTime,
-      Timestamp plannedEndTime, LocalDateTime now) {
+  private ServerResponse handle(OnetimeParkingRequest request, CustomerSession session,
+      OnetimeParkingResponse serverResponse, Timestamp startTime, Timestamp plannedEndTime, LocalDateTime now) {
     return database.performQuery(serverResponse, (conn, response) -> {
       // Check that the same car is not going to be parked in different
       // locations at the same time
@@ -59,8 +62,10 @@ public class OnetimeParkingController extends RequestController {
 
       // Check that lot is not full
       // session.requireLotNotFull(conn, gson, lot, response);
-      int availableCells = lot.countFreeCells(conn) - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
-      errorIf(lot.isLotFull() || availableCells <= 0, "The specified lot is full; please try one of the alternative lots");
+      int availableCells = lot.countFreeCells(conn)
+          - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
+      errorIf(lot.isLotFull() || availableCells <= 0,
+          "The specified lot is full; please try one of the alternative lots");
 
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
@@ -70,8 +75,9 @@ public class OnetimeParkingController extends RequestController {
       boolean setParked = request.getParkingType() == Constants.PARKING_TYPE_INCIDENTAL;
 
       // Create the service
-      OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(), request.getEmail(), request.getCarID(),
-          request.getLotID(), startTime, plannedEndTime, setParked, false, false, false);
+      OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
+          request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, setParked, false,
+          false, false);
       errorIfNull(service, "Failed to create OnetimeService entry");
 
       // Calculate payment for service
@@ -104,29 +110,46 @@ public class OnetimeParkingController extends RequestController {
     });
   }
 
-  /** Handle IncidentalParkingRequest.
+  /**
+   * Handle IncidentalParkingRequest.
+   * 
    * @param request
-   *        the request
+   *          the request
    * @param session
-   *        the session
-   * @return the server response */
+   *          the session
+   * @return the server response
+   */
   public ServerResponse handle(IncidentalParkingRequest request, CustomerSession session) {
     Timestamp startTime = new Timestamp(System.currentTimeMillis());
     Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
     IncidentalParkingResponse response = new IncidentalParkingResponse();
     ServerResponse toRet = handle(request, session, response, startTime, plannedEndTime, startTime.toLocalDateTime());
     if (toRet.success()) {
-      // TODO increase IncidentalParkingRequest statistics
+      // TODO increase incidental parking - daily - DONE
+      try {
+        database.performAction(conn -> {
+          DailyStatistics.increaseRealizedOrder(conn, request.getLotID());
+        });
+      } catch (ServerException e) {
+        // TODO Cauchy Auto-generated catch block
+        // should something be here?
+        e.printStackTrace();
+      }
+      // TODO increase IncidentalParkingRequest statistics - quarterly
+
     }
     return toRet;
   }
 
-  /** Handle ReservedParkingRequest.
+  /**
+   * Handle ReservedParkingRequest.
+   * 
    * @param request
-   *        the request
+   *          the request
    * @param session
-   *        the session
-   * @return the server response */
+   *          the session
+   * @return the server response
+   */
   public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {
     Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
     Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
@@ -139,12 +162,15 @@ public class OnetimeParkingController extends RequestController {
     return toRet;
   }
 
-  /** Handle CancelOnetimeParkingRequest.
+  /**
+   * Handle CancelOnetimeParkingRequest.
+   * 
    * @param request
-   *        the request
+   *          the request
    * @param session
-   *        the session
-   * @return the server response */
+   *          the session
+   * @return the server response
+   */
   public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
     ServerResponse toRet = database.performQuery(new CancelOnetimeParkingResponse(), (conn, response) -> {
       // Mark Order as canceled
@@ -201,18 +227,18 @@ public class OnetimeParkingController extends RequestController {
       response.setSuccess("OnetimeService order canceled successfully");
       return response;
     });
-    if (toRet.success()) {
-      // TODO increase cancel statistics
-    }
     return toRet;
   }
 
-  /** Handle List One Time Entries Request.
+  /**
+   * Handle List One Time Entries Request.
+   * 
    * @param request
-   *        the request
+   *          the request
    * @param session
-   *        the session
-   * @return the server response */
+   *          the session
+   * @return the server response
+   */
   public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {
     return database.performQuery(new ListOnetimeEntriesResponse(), (conn, response) -> {
       Collection<OnetimeService> result = OnetimeService.findByCustomerID(conn, request.getCustomerID());

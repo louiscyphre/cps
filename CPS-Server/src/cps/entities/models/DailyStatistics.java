@@ -14,19 +14,13 @@ import cps.server.ServerException;
  * The Class DailyStatistics.
  */
 public class DailyStatistics implements Serializable {
-  // `day` date NOT NULL,
-  // `realized_orders` int(11) DEFAULT NULL,
-  // `canceled_orders` int(11) DEFAULT NULL,
-  // `late_arrivals` int(11) DEFAULT NULL,
-  // `complaints` int(11) DEFAULT NULL,
-  // `inactive_slots` int(10) DEFAULT '0',
-  // PRIMARY KEY (`day`)
-
-  /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 1L;
 
   /** The day. */
   private LocalDate day;
+
+  /** The lot id. */
+  private int lotId;
 
   /** The number of realized orders. */
   private int realizedOrders;
@@ -39,9 +33,6 @@ public class DailyStatistics implements Serializable {
 
   /** The number of complaints. */
   private int complaints;
-
-  /** The number of inactive slots. */
-  private int inactiveSlots;
 
   /**
    * Instantiates a new daily statistics.
@@ -57,15 +48,15 @@ public class DailyStatistics implements Serializable {
    * @param complaints
    *          the complaints
    */
-  public DailyStatistics(LocalDate day, int realizedOrders, int canceledOrders, int lateArrivals, int complaints,
-      int inactiveSlots) {
+  public DailyStatistics(LocalDate day, int lotId, int realizedOrders, int canceledOrders, int lateArrivals,
+      int complaints) {
     super();
     this.day = day;
+    this.lotId = lotId;
     this.realizedOrders = realizedOrders;
     this.canceledOrders = canceledOrders;
     this.lateArrivals = lateArrivals;
     this.complaints = complaints;
-    this.setInactiveSlots(inactiveSlots);
   }
 
   /**
@@ -77,110 +68,56 @@ public class DailyStatistics implements Serializable {
    *           the SQL exception
    */
   public DailyStatistics(ResultSet rs) throws SQLException {
-    this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6));
+    this(rs.getDate("day").toLocalDate(), rs.getInt("lot_id"), rs.getInt("realized_orders"),
+        rs.getInt("canceled_orders"), rs.getInt("late_arrivals"), rs.getInt("complaints"));
   }
 
-  /**
-   * Gets the day.
-   *
-   * @return the day
-   */
   public LocalDate getDay() {
     return day;
   }
 
-  /**
-   * Sets the day.
-   *
-   * @param day
-   *          the new day
-   */
   public void setDay(LocalDate day) {
     this.day = day;
   }
 
-  /**
-   * Gets the realized orders.
-   *
-   * @return the realized orders
-   */
+  public int getLotId() {
+    return lotId;
+  }
+
+  public void setLotId(int lotId) {
+    this.lotId = lotId;
+  }
+
   public int getRealizedOrders() {
     return realizedOrders;
   }
 
-  /**
-   * Sets the realized orders.
-   *
-   * @param realizedOrders
-   *          the new realized orders
-   */
   public void setRealizedOrders(int realizedOrders) {
     this.realizedOrders = realizedOrders;
   }
 
-  /**
-   * Gets the canceled orders.
-   *
-   * @return the canceled orders
-   */
   public int getCanceledOrders() {
     return canceledOrders;
   }
 
-  /**
-   * Sets the canceled orders.
-   *
-   * @param canceledOrders
-   *          the new canceled orders
-   */
   public void setCanceledOrders(int canceledOrders) {
     this.canceledOrders = canceledOrders;
   }
 
-  /**
-   * Gets the late arrivals.
-   *
-   * @return the late arrivals
-   */
   public int getLateArrivals() {
     return lateArrivals;
   }
 
-  /**
-   * Sets the late arrivals.
-   *
-   * @param lateArrivals
-   *          the new late arrivals
-   */
   public void setLateArrivals(int lateArrivals) {
     this.lateArrivals = lateArrivals;
   }
 
-  /**
-   * Gets the complaints.
-   *
-   * @return the complaints
-   */
   public int getComplaints() {
     return complaints;
   }
 
-  /**
-   * Sets the complaints.
-   *
-   * @param complaints
-   *          the new complaints
-   */
   public void setComplaints(int complaints) {
     this.complaints = complaints;
-  }
-
-  public int getInactiveSlots() {
-    return inactiveSlots;
-  }
-
-  public void setInactiveSlots(int inactiveSlots) {
-    this.inactiveSlots = inactiveSlots;
   }
 
   /**
@@ -232,11 +169,12 @@ public class DailyStatistics implements Serializable {
 
     PreparedStatement st = conn.prepareStatement(Constants.SQL_CHECK_DATE);
     st.setDate(1, Date.valueOf(_date));
+    st.setInt(2, lotId);
     ResultSet rs = st.executeQuery();
 
     if (rs.wasNull()) {
-      item = create(conn, _date, lotId);// if doesn't exists - create empty line
-                                        // with zeroes
+      item = create(conn, _date, lotId);
+      // if doesn't exists - create empty line with zeroes
     }
 
     rs.close();
@@ -281,7 +219,7 @@ public class DailyStatistics implements Serializable {
     if (entry != null) {
       int index = 1;
       PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_REALIZED_ORDER);
-      
+
       // Increase the number of realized orders
       stmt.setInt(index++, entry.getRealizedOrders() + 1);
       stmt.setDate(index++, Date.valueOf(_date));
@@ -330,7 +268,7 @@ public class DailyStatistics implements Serializable {
     if (entry != null) {
       int index = 1;
       PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_CANCELED_ORDER);
-      
+
       // Increase the number of canceled orders
       stmt.setInt(index++, entry.getCanceledOrders() + 1);
       stmt.setDate(index++, Date.valueOf(_date));
@@ -379,7 +317,7 @@ public class DailyStatistics implements Serializable {
     if (entry != null) {
       int index = 1;
       PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_LATE_ARRIVAL);
-      
+
       // Increase the number of late arrivals
       stmt.setInt(index++, entry.getLateArrivals() + 1);
       stmt.setDate(index++, Date.valueOf(_date));
@@ -391,52 +329,5 @@ public class DailyStatistics implements Serializable {
     }
   }
 
-  /**
-   * Increase Inactive Slots count by one for today in specific parking lot.
-   *
-   * @param conn
-   *          the conn
-   * @param lotId
-   *          the lot id
-   * @throws SQLException
-   *           the SQL exception
-   * @throws ServerException
-   */
-  public static void increaseInactiveSlots(Connection conn, int lotId) throws SQLException, ServerException {
-    increaseInactiveSlots(conn, LocalDate.now(), lotId);
-  }
-
-  /**
-   * Increase Inactive Slots count by one in specific parking lot at specific
-   * date.
-   *
-   * @param conn
-   *          the conn
-   * @param _date
-   *          the date
-   * @param lotId
-   *          the lot id
-   * @throws SQLException
-   *           the SQL exception
-   * @throws ServerException
-   */
-  public static void increaseInactiveSlots(Connection conn, LocalDate _date, int lotId)
-      throws SQLException, ServerException {
-    // Check if line exists in database
-    DailyStatistics entry = createIfNotExists(conn, _date, lotId);
-
-    if (entry != null) {
-      int index = 1;
-      PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_INACTIVE_SLOTS);
-      
-      // Increase the number of inactive slots
-      stmt.setInt(index++, entry.getInactiveSlots() + 1);
-      stmt.setDate(index++, Date.valueOf(_date));
-      stmt.setInt(index++, lotId);
-
-      stmt.executeUpdate();
-
-      stmt.close();
-    }
-  }
+ 
 }
