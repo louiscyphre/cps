@@ -75,6 +75,32 @@
     -fx-max-width:320;
 }
 
+.datePicker {
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-pref-width:320;
+    -fx-pref-height:40;
+    -fx-max-width:320;
+}
+
+.datePicker > .text-field {
+    -fx-padding: 15 15 15 15;
+    -fx-border-radius: 8 0 0 8;
+    -fx-background-radius: 8 0 0 8;
+    -fx-pref-width:320;
+    -fx-pref-height:40;
+    -fx-max-width:320;
+}
+
+.datePicker > .arrow-button {
+    -fx-padding: 15 15 15 15;
+    -fx-border-radius: 0 8 8 0;
+    -fx-background-radius: 0 8 8 0;
+    -fx-pref-width:320;
+    -fx-pref-height:40;
+    -fx-max-width:320;
+}
+
 .buttonGroupHBox {
     -fx-pref-width:320;
     -fx-max-width:320;
@@ -105,13 +131,6 @@
     -fx-margin: 0 0 0 0;
 }
 
-.datePicker {
-    -fx-border-radius: 8 8 8 8;
-    -fx-background-radius: 8 8 8 8;
-    -fx-pref-width:320;
-    -fx-max-width:320;
-}
-
 .infoLabel {
 	-fx-background-color : #d9edf7;
 	-fx-background-radius :  8 8 8 8;
@@ -121,8 +140,6 @@
 	-fx-margin-top:20;
 	-fx-font-size:14;
 }
-
-
 
 .errorLabel {
 	-fx-background-color : #f2dede;
