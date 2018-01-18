@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import cps.api.request.ParkingEntryRequest;
 import cps.api.response.ParkingEntryResponse;
@@ -21,29 +22,21 @@ import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.session.CustomerSession;
 
-/**
- * The Class EntryExitController.
- */
+/** The Class EntryExitController. */
 public class ParkingEntryController extends RequestController {
 
-  /**
-   * Instantiates a new entry exit controller.
-   *
+  /** Instantiates a new entry exit controller.
    * @param serverController
-   *          the server application
-   */
+   *        the server application */
   public ParkingEntryController(ServerController serverController) {
     super(serverController);
   }
 
-  /**
-   * Handle ParkingEntryRequest.
-   *
+  /** Handle ParkingEntryRequest.
    * @param request
-   *          the request
+   *        the request
    * @param session
-   * @return the server response
-   */
+   * @return the server response */
   public ServerResponse handle(ParkingEntryRequest request, CustomerSession session) {
     return database.performQuery(new ParkingEntryResponse(), (conn, response) -> {
       Customer customer = session.requireCustomer();
@@ -57,25 +50,25 @@ public class ParkingEntryController extends RequestController {
 
       // Entry license exists - continue
       // Find the parking lot that the customer wants to enter
-      ParkingLot lot = ParkingLot.findByIDNotNull(conn, lotID);      
+      ParkingLot lot = ParkingLot.findByIDNotNull(conn, lotID);
       registerEntry(conn, lot, customer.getId(), carID, service);
 
       response.setLotID(lotID);
       response.setCustomerID(customerID);
       response.setSuccess("ParkingEntry request completed successfully");
-      
+
       return response;
     });
   }
-  
+
   public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service) throws SQLException, ServerException {
     // Check that this car is allowed to enter
     CarTransportation transportation = CarTransportation.findForEntry(conn, customerID, carID, lot.getId());
     errorIf(transportation != null, "The car with the specified ID was already parked");
-    
+
     // Check that the lot does not already contain the car
     errorIf(lot.contains(lot.constructContentArray(conn), carID), "This car is already parked in the chosen lot");
-    
+
     // Attempt to insert the car into the lot.
     // Optimal coordinates are calculated before insertion.
     // If the lot is full, or some other error occurs, LotController will
@@ -85,7 +78,7 @@ public class ParkingEntryController extends RequestController {
     // placed
     CarTransportationController transportationController = serverController.getTransportationController();
     transportationController.insertCar(conn, lot, carID, service.getExitTime());
-    
+
     if (!service.isParked()) {
       service.setParked(true);
       service.update(conn);
@@ -95,13 +88,11 @@ public class ParkingEntryController extends RequestController {
     // that a successful parking was made.
     // Throws exception on failure, which will be automatically handled up in
     // the control chain.
-    CarTransportation.create(conn, customerID, carID, service.getLicenseType(),
-        service.getId(), lot.getId());
-    
+    CarTransportation.create(conn, customerID, carID, service.getLicenseType(), service.getId(), lot.getId());
+
   }
 
-  private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request)
-      throws SQLException, ServerException {
+  private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request) throws SQLException, ServerException {
     int customerID = request.getCustomerID();
     String carID = request.getCarID();
     int lotID = request.getLotID();
@@ -114,9 +105,10 @@ public class ParkingEntryController extends RequestController {
 
       // Check that an entry license exists
       OnetimeService service = OnetimeService.findForEntry(conn, customerID, carID, lotID);
-      errorIfNull(service,
-          "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      errorIfNull(service, "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
       errorIf(service.isCanceled(), "This reservation was canceled");
+      errorIf(service.getPlannedStartTime().toLocalDateTime().isAfter(LocalDateTime.now()),
+          "Trying to enter before the starting time that was specified for this reservation");
 
       return service;
     } else {
@@ -127,13 +119,11 @@ public class ParkingEntryController extends RequestController {
       // TODO is it possible to cancel a subscription?
 
       // Check that entry an license exists
-      errorIfNull(service,
-          "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      errorIfNull(service, "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
 
       // Check that the lot ID is correct for regular subscription
       errorIf(service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && lotID != service.getLotID(),
-          String.format("Requested parking in lotID = %s, but subscription is for lotID = %s", lotID,
-              service.getLotID()));
+          String.format("Requested parking in lotID = %s, but subscription is for lotID = %s", lotID, service.getLotID()));
 
       // Check that the user is not trying to enter with a regular subscription
       // on a weekend
