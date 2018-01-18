@@ -35,6 +35,15 @@ CREATE TABLE `car_transportation` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `car_transportation`
+--
+
+LOCK TABLES `car_transportation` WRITE;
+/*!40000 ALTER TABLE `car_transportation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `car_transportation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `complaint`
 --
 
@@ -55,6 +64,15 @@ CREATE TABLE `complaint` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `complaint`
+--
+
+LOCK TABLES `complaint` WRITE;
+/*!40000 ALTER TABLE `complaint` DISABLE KEYS */;
+/*!40000 ALTER TABLE `complaint` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `customer`
 --
 
@@ -70,6 +88,15 @@ CREATE TABLE `customer` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer`
+--
+
+LOCK TABLES `customer` WRITE;
+/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `daily_statistics`
@@ -90,6 +117,15 @@ CREATE TABLE `daily_statistics` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `daily_statistics`
+--
+
+LOCK TABLES `daily_statistics` WRITE;
+/*!40000 ALTER TABLE `daily_statistics` DISABLE KEYS */;
+/*!40000 ALTER TABLE `daily_statistics` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `disabled_slots_table`
 --
 
@@ -106,6 +142,16 @@ CREATE TABLE `disabled_slots_table` (
   PRIMARY KEY (`lotid`,`depth`,`height`,`width`,`date_disabled`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `disabled_slots_table`
+--
+
+LOCK TABLES `disabled_slots_table` WRITE;
+/*!40000 ALTER TABLE `disabled_slots_table` DISABLE KEYS */;
+INSERT INTO `disabled_slots_table` VALUES (1,'2018-01-18 15:56:21',1,1,1,'2018-01-18 17:45:00'),(1,'2018-01-18 16:06:31',1,1,1,'2018-01-18 17:45:00'),(1,'2018-01-18 17:00:00',1,2,1,NULL);
+/*!40000 ALTER TABLE `disabled_slots_table` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `employee`
@@ -127,25 +173,13 @@ CREATE TABLE `employee` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `monthly_report`
+-- Dumping data for table `employee`
 --
 
-DROP TABLE IF EXISTS `monthly_report`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `monthly_report` (
-  `year` int(11) NOT NULL,
-  `month` int(11) NOT NULL,
-  `lot_id` int(11) NOT NULL,
-  `ordered_reserved` int(11) DEFAULT '0',
-  `ordered_incidental` int(11) DEFAULT '0',
-  `ordered_regular` int(11) DEFAULT '0',
-  `ordered_full` int(11) DEFAULT '0',
-  `complaints_count` int(11) DEFAULT '0',
-  `disabled_slots` int(11) DEFAULT '0',
-  PRIMARY KEY (`year`,`month`,`lot_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `employee` WRITE;
+/*!40000 ALTER TABLE `employee` DISABLE KEYS */;
+/*!40000 ALTER TABLE `employee` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `onetime_service`
@@ -164,12 +198,21 @@ CREATE TABLE `onetime_service` (
   `planned_start_time` datetime NOT NULL,
   `planned_end_time` datetime NOT NULL,
   `parked` bit(1) NOT NULL DEFAULT b'0',
-  `completed` bit(1) NOT NULL DEFAULT b'0',
   `canceled` bit(1) NOT NULL DEFAULT b'0',
   `warned` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `onetime_service`
+--
+
+LOCK TABLES `onetime_service` WRITE;
+/*!40000 ALTER TABLE `onetime_service` DISABLE KEYS */;
+INSERT INTO `onetime_service` VALUES (1,2,0,'jlauaju@gmail.com','TT-442535',1,'2018-01-17 17:06:52','2018-01-19 09:01:52','\0','\0','\0'),(2,2,0,'jgalaln@gmail.com','IT-446550',2,'2018-01-17 17:06:52','2018-01-17 19:01:52','\0','\0','\0');
+/*!40000 ALTER TABLE `onetime_service` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `parking_cell`
@@ -192,6 +235,16 @@ CREATE TABLE `parking_cell` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `parking_cell`
+--
+
+LOCK TABLES `parking_cell` WRITE;
+/*!40000 ALTER TABLE `parking_cell` DISABLE KEYS */;
+INSERT INTO `parking_cell` VALUES (1,0,0,0,NULL,NULL,'\0','\0'),(1,0,0,1,NULL,NULL,'\0','\0'),(1,0,0,2,NULL,NULL,'\0','\0'),(1,0,1,0,NULL,NULL,'\0','\0'),(1,0,1,1,NULL,NULL,'\0','\0'),(1,0,1,2,NULL,NULL,'\0','\0'),(1,0,2,0,NULL,NULL,'\0','\0'),(1,0,2,1,NULL,NULL,'\0','\0'),(1,0,2,2,NULL,NULL,'\0','\0'),(1,1,0,0,NULL,NULL,'\0','\0'),(1,1,0,1,NULL,NULL,'\0','\0'),(1,1,0,2,NULL,NULL,'\0','\0'),(1,1,1,0,NULL,NULL,'\0','\0'),(1,1,1,1,NULL,NULL,'\0','\0'),(1,1,1,2,NULL,NULL,'\0','\0'),(1,1,2,0,NULL,NULL,'\0','\0'),(1,1,2,1,NULL,NULL,'\0','\0'),(1,1,2,2,NULL,NULL,'\0','\0'),(1,2,0,0,NULL,NULL,'\0','\0'),(1,2,0,1,NULL,NULL,'\0','\0'),(1,2,0,2,NULL,NULL,'\0','\0'),(1,2,1,0,NULL,NULL,'\0','\0'),(1,2,1,1,NULL,NULL,'\0','\0'),(1,2,1,2,NULL,NULL,'\0','\0'),(1,2,2,0,NULL,NULL,'\0','\0'),(1,2,2,1,NULL,NULL,'\0','\0'),(1,2,2,2,NULL,NULL,'\0','\0'),(1,3,0,0,NULL,NULL,'\0','\0'),(1,3,0,1,NULL,NULL,'\0','\0'),(1,3,0,2,NULL,NULL,'\0','\0'),(1,3,1,0,NULL,NULL,'\0','\0'),(1,3,1,1,NULL,NULL,'\0','\0'),(1,3,1,2,NULL,NULL,'\0','\0'),(1,3,2,0,NULL,NULL,'\0','\0'),(1,3,2,1,NULL,NULL,'\0','\0'),(1,3,2,2,'TT-442535','2018-01-19 09:01:52','\0','\0'),(2,0,0,0,NULL,NULL,'\0','\0'),(2,0,0,1,NULL,NULL,'\0','\0'),(2,0,0,2,NULL,NULL,'\0','\0'),(2,0,1,0,NULL,NULL,'\0','\0'),(2,0,1,1,NULL,NULL,'\0','\0'),(2,0,1,2,NULL,NULL,'\0','\0'),(2,0,2,0,NULL,NULL,'\0','\0'),(2,0,2,1,NULL,NULL,'\0','\0'),(2,0,2,2,'IT-446550','2018-01-17 19:01:52','\0','\0'),(2,1,0,0,NULL,NULL,'\0','\0'),(2,1,0,1,NULL,NULL,'\0','\0'),(2,1,0,2,NULL,NULL,'\0','\0'),(2,1,1,0,NULL,NULL,'\0','\0'),(2,1,1,1,NULL,NULL,'\0','\0'),(2,1,1,2,NULL,NULL,'\0','\0'),(2,1,2,0,NULL,NULL,'\0','\0'),(2,1,2,1,NULL,NULL,'\0','\0'),(2,1,2,2,NULL,NULL,'\0','\0'),(2,2,0,0,NULL,NULL,'\0','\0'),(2,2,0,1,NULL,NULL,'\0','\0'),(2,2,0,2,NULL,NULL,'\0','\0'),(2,2,1,0,NULL,NULL,'\0','\0'),(2,2,1,1,NULL,NULL,'\0','\0'),(2,2,1,2,NULL,NULL,'\0','\0'),(2,2,2,0,NULL,NULL,'\0','\0'),(2,2,2,1,NULL,NULL,'\0','\0'),(2,2,2,2,NULL,NULL,'\0','\0'),(2,3,0,0,NULL,NULL,'\0','\0'),(2,3,0,1,NULL,NULL,'\0','\0'),(2,3,0,2,NULL,NULL,'\0','\0'),(2,3,1,0,NULL,NULL,'\0','\0'),(2,3,1,1,NULL,NULL,'\0','\0'),(2,3,1,2,NULL,NULL,'\0','\0'),(2,3,2,0,NULL,NULL,'\0','\0'),(2,3,2,1,NULL,NULL,'\0','\0'),(2,3,2,2,NULL,NULL,'\0','\0'),(2,4,0,0,NULL,NULL,'\0','\0'),(2,4,0,1,NULL,NULL,'\0','\0'),(2,4,0,2,NULL,NULL,'\0','\0'),(2,4,1,0,NULL,NULL,'\0','\0'),(2,4,1,1,NULL,NULL,'\0','\0'),(2,4,1,2,NULL,NULL,'\0','\0'),(2,4,2,0,NULL,NULL,'\0','\0'),(2,4,2,1,NULL,NULL,'\0','\0'),(2,4,2,2,NULL,NULL,'\0','\0'),(2,5,0,0,NULL,NULL,'\0','\0'),(2,5,0,1,NULL,NULL,'\0','\0'),(2,5,0,2,NULL,NULL,'\0','\0'),(2,5,1,0,NULL,NULL,'\0','\0'),(2,5,1,1,NULL,NULL,'\0','\0'),(2,5,1,2,NULL,NULL,'\0','\0'),(2,5,2,0,NULL,NULL,'\0','\0'),(2,5,2,1,NULL,NULL,'\0','\0'),(2,5,2,2,NULL,NULL,'\0','\0'),(2,6,0,0,NULL,NULL,'\0','\0'),(2,6,0,1,NULL,NULL,'\0','\0'),(2,6,0,2,NULL,NULL,'\0','\0'),(2,6,1,0,NULL,NULL,'\0','\0'),(2,6,1,1,NULL,NULL,'\0','\0'),(2,6,1,2,NULL,NULL,'\0','\0'),(2,6,2,0,NULL,NULL,'\0','\0'),(2,6,2,1,NULL,NULL,'\0','\0'),(2,6,2,2,NULL,NULL,'\0','\0'),(2,7,0,0,NULL,NULL,'\0','\0'),(2,7,0,1,NULL,NULL,'\0','\0'),(2,7,0,2,NULL,NULL,'\0','\0'),(2,7,1,0,NULL,NULL,'\0','\0'),(2,7,1,1,NULL,NULL,'\0','\0'),(2,7,1,2,NULL,NULL,'\0','\0'),(2,7,2,0,NULL,NULL,'\0','\0'),(2,7,2,1,NULL,NULL,'\0','\0'),(2,7,2,2,NULL,NULL,'\0','\0'),(3,0,0,0,NULL,NULL,'\0','\0'),(3,0,0,1,NULL,NULL,'\0','\0'),(3,0,0,2,NULL,NULL,'\0','\0'),(3,0,1,0,NULL,NULL,'\0','\0'),(3,0,1,1,NULL,NULL,'\0','\0'),(3,0,1,2,NULL,NULL,'\0','\0'),(3,0,2,0,NULL,NULL,'\0','\0'),(3,0,2,1,NULL,NULL,'\0','\0'),(3,0,2,2,NULL,NULL,'\0','\0'),(3,1,0,0,NULL,NULL,'\0','\0'),(3,1,0,1,NULL,NULL,'\0','\0'),(3,1,0,2,NULL,NULL,'\0','\0'),(3,1,1,0,NULL,NULL,'\0','\0'),(3,1,1,1,NULL,NULL,'\0','\0'),(3,1,1,2,NULL,NULL,'\0','\0'),(3,1,2,0,NULL,NULL,'\0','\0'),(3,1,2,1,NULL,NULL,'\0','\0'),(3,1,2,2,NULL,NULL,'\0','\0'),(3,2,0,0,NULL,NULL,'\0','\0'),(3,2,0,1,NULL,NULL,'\0','\0'),(3,2,0,2,NULL,NULL,'\0','\0'),(3,2,1,0,NULL,NULL,'\0','\0'),(3,2,1,1,NULL,NULL,'\0','\0'),(3,2,1,2,NULL,NULL,'\0','\0'),(3,2,2,0,NULL,NULL,'\0','\0'),(3,2,2,1,NULL,NULL,'\0','\0'),(3,2,2,2,NULL,NULL,'\0','\0'),(3,3,0,0,NULL,NULL,'\0','\0'),(3,3,0,1,NULL,NULL,'\0','\0'),(3,3,0,2,NULL,NULL,'\0','\0'),(3,3,1,0,NULL,NULL,'\0','\0'),(3,3,1,1,NULL,NULL,'\0','\0'),(3,3,1,2,NULL,NULL,'\0','\0'),(3,3,2,0,NULL,NULL,'\0','\0'),(3,3,2,1,NULL,NULL,'\0','\0'),(3,3,2,2,NULL,NULL,'\0','\0'),(3,4,0,0,NULL,NULL,'\0','\0'),(3,4,0,1,NULL,NULL,'\0','\0'),(3,4,0,2,NULL,NULL,'\0','\0'),(3,4,1,0,NULL,NULL,'\0','\0'),(3,4,1,1,NULL,NULL,'\0','\0'),(3,4,1,2,NULL,NULL,'\0','\0'),(3,4,2,0,NULL,NULL,'\0','\0'),(3,4,2,1,NULL,NULL,'\0','\0'),(3,4,2,2,NULL,NULL,'\0','\0'),(3,5,0,0,NULL,NULL,'\0','\0'),(3,5,0,1,NULL,NULL,'\0','\0'),(3,5,0,2,NULL,NULL,'\0','\0'),(3,5,1,0,NULL,NULL,'\0','\0'),(3,5,1,1,NULL,NULL,'\0','\0'),(3,5,1,2,NULL,NULL,'\0','\0'),(3,5,2,0,NULL,NULL,'\0','\0'),(3,5,2,1,NULL,NULL,'\0','\0'),(3,5,2,2,NULL,NULL,'\0','\0'),(3,6,0,0,NULL,NULL,'\0','\0'),(3,6,0,1,NULL,NULL,'\0','\0'),(3,6,0,2,NULL,NULL,'\0','\0'),(3,6,1,0,NULL,NULL,'\0','\0'),(3,6,1,1,NULL,NULL,'\0','\0'),(3,6,1,2,NULL,NULL,'\0','\0'),(3,6,2,0,NULL,NULL,'\0','\0'),(3,6,2,1,NULL,NULL,'\0','\0'),(3,6,2,2,NULL,NULL,'\0','\0'),(3,7,0,0,NULL,NULL,'\0','\0'),(3,7,0,1,NULL,NULL,'\0','\0'),(3,7,0,2,NULL,NULL,'\0','\0'),(3,7,1,0,NULL,NULL,'\0','\0'),(3,7,1,1,NULL,NULL,'\0','\0'),(3,7,1,2,NULL,NULL,'\0','\0'),(3,7,2,0,NULL,NULL,'\0','\0'),(3,7,2,1,NULL,NULL,'\0','\0'),(3,7,2,2,NULL,NULL,'\0','\0'),(3,8,0,0,NULL,NULL,'\0','\0'),(3,8,0,1,NULL,NULL,'\0','\0'),(3,8,0,2,NULL,NULL,'\0','\0'),(3,8,1,0,NULL,NULL,'\0','\0'),(3,8,1,1,NULL,NULL,'\0','\0'),(3,8,1,2,NULL,NULL,'\0','\0'),(3,8,2,0,NULL,NULL,'\0','\0'),(3,8,2,1,NULL,NULL,'\0','\0'),(3,8,2,2,NULL,NULL,'\0','\0'),(3,9,0,0,NULL,NULL,'\0','\0'),(3,9,0,1,NULL,NULL,'\0','\0'),(3,9,0,2,NULL,NULL,'\0','\0'),(3,9,1,0,NULL,NULL,'\0','\0'),(3,9,1,1,NULL,NULL,'\0','\0'),(3,9,1,2,NULL,NULL,'\0','\0'),(3,9,2,0,NULL,NULL,'\0','\0'),(3,9,2,1,NULL,NULL,'\0','\0'),(3,9,2,2,NULL,NULL,'\0','\0'),(3,10,0,0,NULL,NULL,'\0','\0'),(3,10,0,1,NULL,NULL,'\0','\0'),(3,10,0,2,NULL,NULL,'\0','\0'),(3,10,1,0,NULL,NULL,'\0','\0'),(3,10,1,1,NULL,NULL,'\0','\0'),(3,10,1,2,NULL,NULL,'\0','\0'),(3,10,2,0,NULL,NULL,'\0','\0'),(3,10,2,1,NULL,NULL,'\0','\0'),(3,10,2,2,NULL,NULL,'\0','\0'),(3,11,0,0,NULL,NULL,'\0','\0'),(3,11,0,1,NULL,NULL,'\0','\0'),(3,11,0,2,NULL,NULL,'\0','\0'),(3,11,1,0,NULL,NULL,'\0','\0'),(3,11,1,1,NULL,NULL,'\0','\0'),(3,11,1,2,NULL,NULL,'\0','\0'),(3,11,2,0,NULL,NULL,'\0','\0'),(3,11,2,1,NULL,NULL,'\0','\0'),(3,11,2,2,NULL,NULL,'\0','\0');
+/*!40000 ALTER TABLE `parking_cell` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `parking_lot`
 --
 
@@ -210,6 +263,16 @@ CREATE TABLE `parking_lot` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `parking_lot`
+--
+
+LOCK TABLES `parking_lot` WRITE;
+/*!40000 ALTER TABLE `parking_lot` DISABLE KEYS */;
+INSERT INTO `parking_lot` VALUES (1,'Sesam 2',4,5,3,NULL,'12.f.t43','\0'),(2,'Rabin 14',8,5,3,NULL,'13.f.t43','\0'),(3,'Big 16',12,5,3,NULL,'14.f.t43','\0');
+/*!40000 ALTER TABLE `parking_lot` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `quarterly_report`
@@ -233,6 +296,15 @@ CREATE TABLE `quarterly_report` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `quarterly_report`
+--
+
+LOCK TABLES `quarterly_report` WRITE;
+/*!40000 ALTER TABLE `quarterly_report` DISABLE KEYS */;
+/*!40000 ALTER TABLE `quarterly_report` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `subscription_service`
 --
 
@@ -252,6 +324,15 @@ CREATE TABLE `subscription_service` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `subscription_service`
+--
+
+LOCK TABLES `subscription_service` WRITE;
+/*!40000 ALTER TABLE `subscription_service` DISABLE KEYS */;
+/*!40000 ALTER TABLE `subscription_service` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `weekly_statistics`
@@ -275,6 +356,15 @@ CREATE TABLE `weekly_statistics` (
   PRIMARY KEY (`start`,`lot_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `weekly_statistics`
+--
+
+LOCK TABLES `weekly_statistics` WRITE;
+/*!40000 ALTER TABLE `weekly_statistics` DISABLE KEYS */;
+/*!40000 ALTER TABLE `weekly_statistics` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -285,4 +375,4 @@ CREATE TABLE `weekly_statistics` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-18 20:54:14
+-- Dump completed on 2018-01-18 19:24:39
