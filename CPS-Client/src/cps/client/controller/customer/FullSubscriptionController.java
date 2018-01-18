@@ -221,6 +221,5 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     super.cleanCtrl();
     carIDTextField.clear();
     emailTextField.clear();
-    startDatePicker.getEditor().clear();
   }
 }
