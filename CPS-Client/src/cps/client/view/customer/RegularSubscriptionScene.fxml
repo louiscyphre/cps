@@ -69,11 +69,16 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0">
               <children>
-                <Button id="" fx:id="submitButton" alignment="CENTER" contentDisplay="LEFT" defaultButton="true" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
-                  <VBox.margin>
-                    <Insets fx:id="x3" />
-                  </VBox.margin>
-                </Button>
+                        <StackPane>
+                           <children>
+                      <Button id="" fx:id="submitButton" alignment="CENTER" contentDisplay="LEFT" defaultButton="true" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
+                        <VBox.margin>
+                          <Insets fx:id="x3" />
+                        </VBox.margin>
+                      </Button>
+                              <Button id="" fx:id="finishButton" alignment="CENTER" contentDisplay="LEFT" defaultButton="true" font="$x1" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleFinishButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="regularButton" text="Finish" textAlignment="CENTER" visible="false" />
+                           </children>
+                        </StackPane>
               </children>
               <HBox.margin>
                 <Insets left="20.0" />

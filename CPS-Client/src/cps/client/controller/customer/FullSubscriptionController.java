@@ -6,27 +6,32 @@ package cps.client.controller.customer;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
 
 import cps.api.request.FullSubscriptionRequest;
+import cps.api.response.FullSubscriptionResponse;
+import cps.api.response.ServerResponse;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.ViewController;
 import cps.client.utils.FormatValidation.InputFormats;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 /**
  * Created on: 2018-01-15 2:34:23 AM 
  */
 public class FullSubscriptionController extends CustomerActionControllerBase {
-
-  @FXML
-  private TextField customerIDTextField;
 
   @FXML
   private DatePicker startDatePicker;
@@ -43,6 +48,12 @@ public class FullSubscriptionController extends CustomerActionControllerBase {
   @FXML
   private TextField carIDTextField;
 
+  @FXML
+  private Button submitButton;
+
+  @FXML
+  private Button finishButton;
+  
   @FXML
   void handlePickStartDate(ActionEvent event) {
     if (processing) {
@@ -66,6 +77,10 @@ public class FullSubscriptionController extends CustomerActionControllerBase {
     validateAndSend();
   }
 
+  @FXML
+  void handleFinishButton(ActionEvent event) {
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU, 10);
+  }
 
   @Override
   public void turnLoggedInStateOn() {
@@ -165,10 +180,64 @@ public class FullSubscriptionController extends CustomerActionControllerBase {
     assert carIDTextField != null : "fx:id=\"carIDTextField\" was not injected: check your FXML file 'FullSubscriptionScene.fxml'.";
     assert startDatePicker != null : "fx:id=\"startDatePicker\" was not injected: check your FXML file 'FullSubscriptionScene.fxml'.";
     assert emailTextField != null : "fx:id=\"emailTextField\" was not injected: check your FXML file 'FullSubscriptionScene.fxml'.";
-    assert customerIDTextField != null : "fx:id=\"customerIDTextField\" was not injected: check your FXML file 'FullSubscriptionScene.fxml'.";
 
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.FULL_SUBSCRIPTION);
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
+  }
+  
+  public ServerResponse handle(FullSubscriptionResponse response) {
+    CustomerContext context = ControllersClientAdapter.getCustomerContext();
+    ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
+
+    int responseCustomerId = response.getCustomerID();
+    List<Text> formattedMessage = new LinkedList<Text>();
+    if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
+      context.setCustomerId(responseCustomerId);
+      formattedMessage.add(new Text("Your Customer ID:"));
+      Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      Font defaultFont = customerIdText.getFont();
+      customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(customerIdText);
+      formattedMessage.add(new Text("\n"));
+
+      formattedMessage.add(new Text("Your Password:"));
+      Text password = new Text(response.getPassword());
+      defaultFont = password.getFont();
+      password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(password);
+      formattedMessage.add(new Text("\n"));
+
+      context.setCustomerId(responseCustomerId);
+      context.acceptPendingEmail();
+      ControllersClientAdapter.turnLoggedInStateOn();
+    }
+    if (response.getStatus() == ServerResponse.STATUS_OK) {
+      formattedMessage.add(new Text("Subscription purchased successfully!\n"));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
+      setFinishInsteadOfSubmit(true);
+    } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      formattedMessage.add(new Text("Could not proceed with purchase!\n"));
+      formattedMessage.add(new Text(response.getDescription()));
+      ctrl.turnProcessingStateOff();
+      ctrl.displayError(formattedMessage);
+    }
+    return response;
+  }
+
+  private void setFinishInsteadOfSubmit(boolean value) {
+    submitButton.setDefaultButton(!value);
+    finishButton.setDefaultButton(value);
+    submitButton.setVisible(!value);
+    finishButton.setVisible(value);
+  }
+  @Override
+  public void cleanCtrl() {
+    super.cleanCtrl();
+    carIDTextField.clear();
+    emailTextField.clear();
+    startDatePicker.getEditor().clear();
+    setFinishInsteadOfSubmit(false);
   }
 }

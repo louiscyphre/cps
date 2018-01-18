@@ -31,10 +31,10 @@ import javafx.scene.text.TextFlow;
  * Created on: 2018-01-09 1:04:02 AM
  */
 public class SubscriptionsMenuController extends CustomerActionControllerBase implements ParkingLotsController {
-  
+
   @FXML
   private TextFlow regularSubscriptionInfo;
-  
+
   @FXML
   private TextFlow fullSubscriptionInfo;
 
@@ -56,13 +56,13 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
    * @param list
    */
   @Override
-  public void setParkingLots(Collection <ParkingLot> list) {
-    List<String> tmp = new ArrayList<String> ();
+  public void setParkingLots(Collection<ParkingLot> list) {
+    List<String> tmp = new ArrayList<String>();
     parkingLotsMap = new HashMap<String, ParkingLot>();
-    for (ParkingLot i: list) {
+    for (ParkingLot i : list) {
       String address = new String(i.getStreetAddress());
       tmp.add(address);
-      parkingLotsMap.put(address,  i);
+      parkingLotsMap.put(address, i);
     }
     ObservableList<String> addresses = FXCollections.observableList(tmp);
     fillComboBoxItems(addresses);
@@ -81,15 +81,15 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     builder.append(subscriptionOverallPrice).append(" ILS only!");
     setInfo(regularSubscriptionInfo, builder.toString());
   }
-  
-  private void  setFullSubscriptionInfo() {
+
+  private void setFullSubscriptionInfo() {
     float subscriptionOverallPrice = Constants.PRICE_PER_HOUR_RESERVED * Constants.SUBSCRIPTION_TYPE_FULL_HOURS;
     StringBuilder builder = new StringBuilder();
     builder.append("Park any day, any time, in any parking lot for ");
     builder.append(subscriptionOverallPrice).append(" ILS only!");
     setInfo(fullSubscriptionInfo, builder.toString());
   }
-  
+
   @FXML
   void showSubscriptionsForLot(ActionEvent event) {
     if (processing) {
@@ -131,6 +131,9 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
       ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FULL_SUBSCRIPTION, 10);
       return;
     }
+    if (parkingLotsList.getValue() == null) {
+      displayError("Please choose a parking lot");
+    }
     int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
     ControllersClientAdapter.getCustomerContext().setChosenLotID(userChosenLotID);
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REGULAR_SUBSCRIPTION, 10);
@@ -142,10 +145,10 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     assert subscriptionRadioButtons != null : "fx:id=\"subscriptionRadioButtons\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
     assert regularSubscriptionInfo != null : "fx:id=\"regularSubscriptionInfo\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
     assert fullSubscriptionInfo != null : "fx:id=\"fullSubscriptionInfo\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
-    
+
     setInfo(regularSubscriptionInfo, "Choose option to see specific lot's prices");
     setFullSubscriptionInfo();
-    
+
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
   }
 
@@ -156,7 +159,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     // toggles clear
     subscriptionRadioButtons.getToggles().clear();
   }
-  
+
   private void setInfo(TextFlow textBox, String info) {
     textBox.getChildren().clear();
     textBox.getChildren().add(new Text(info));
