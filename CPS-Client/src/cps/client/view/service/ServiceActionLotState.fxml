@@ -65,8 +65,8 @@
             </VBox>
             <HBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="20.0" style="-fx-padding:0 0 0 0;">
                <children>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="50.0" prefWidth="100.0" styleClass="cancelButton" text="Back" textAlignment="CENTER" />
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleRefreshButton" prefHeight="50.0" prefWidth="104.0" styleClass="regularButton" text="Refresh" textAlignment="CENTER" />
+                  <Button id="" alignment="CENTER" cancelButton="true" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="50.0" prefWidth="100.0" styleClass="cancelButton" text="Back" textAlignment="CENTER" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" defaultButton="true" mnemonicParsing="false" onAction="#handleRefreshButton" prefHeight="50.0" prefWidth="104.0" styleClass="regularButton" text="Refresh" textAlignment="CENTER" />
                </children>
             </HBox>
          </children>

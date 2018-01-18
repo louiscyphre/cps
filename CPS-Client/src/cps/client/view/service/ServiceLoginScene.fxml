@@ -25,7 +25,7 @@
                   </TextFlow>
                </children>
             </VBox>
-            <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleOkButton" prefHeight="50.0" prefWidth="104.0" text="Log In" textAlignment="CENTER">
+            <Button id="" alignment="CENTER" contentDisplay="LEFT" defaultButton="true" mnemonicParsing="false" onAction="#handleOkButton" prefHeight="50.0" prefWidth="104.0" text="Log In" textAlignment="CENTER">
                <styleClass>
                   <String fx:value="regularButton" />
                   <String fx:value="mediumButton" />

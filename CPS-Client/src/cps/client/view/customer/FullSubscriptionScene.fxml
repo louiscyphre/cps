@@ -56,7 +56,7 @@
           <children>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="0.0" style="&#10;">
               <children>
-                <Button id="" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="cancelButton" text="Back" textAlignment="CENTER">
+                <Button id="" alignment="CENTER" cancelButton="true" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="cancelButton" text="Back" textAlignment="CENTER">
                   <font>
                     <Font size="16.0" fx:id="x1" />
                   </font>
@@ -68,7 +68,7 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0">
               <children>
-                <Button id="" alignment="CENTER" contentDisplay="LEFT" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
+                <Button id="" alignment="CENTER" contentDisplay="LEFT" defaultButton="true" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="50.0" prefWidth="180.0" style="" styleClass="regularButton" text="Submit" textAlignment="CENTER">
                   <VBox.margin>
                     <Insets fx:id="x3" />
                   </VBox.margin>
