@@ -87,16 +87,18 @@ public class ParkingEntryController extends RequestController {
     CarTransportationController transportationController = serverController.getTransportationController();
     transportationController.insertCar(conn, lot, carID, service.getExitTime());
 
+    //FIXME I'm here
     // Statistics
     if (service.getLicenseType() == Constants.LICENSE_TYPE_ONETIME) {
       // TODO Tegra increase daily statistics for realised orders - only onetime
       // counts
       DailyStatistics.increaseRealizedOrder(conn, lot.getId());
       if (((OnetimeService) service).getParkingType() == Constants.PARKING_TYPE_INCIDENTAL) {
-        // TODO increase quarterly statistics for incidental and reserved orders
+        // TODO increase quarterly statistics for incidental
         // Quarter statistics
+        
       } else {
-        // TODO increase quarterly statistics for incidental and reserved orders
+        // TODO increase quarterly statistics for reserved orders
         // Quarter statistics
       }
     }
