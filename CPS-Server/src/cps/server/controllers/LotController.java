@@ -145,9 +145,10 @@ public class LotController extends RequestController {
 
       lot.setPrice1(action.getPrice1());
       lot.setPrice2(action.getPrice2());
-
       lot.update(conn);
-      response.setSuccess("Prices updates succsessfully");
+      
+      response.setLotData(lot);
+      response.setSuccess("Prices updated succsessfully");
       return response;
     });
   }
