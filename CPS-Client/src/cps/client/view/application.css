@@ -143,11 +143,11 @@
 }
 
 .processingLabel {
-	-fx-background-color : #dff442;
+	-fx-background-color : #affff4;
 	-fx-background-radius :  8 8 8 8;
 	-fx-text-fill :  #8a6d3b;
 	-fx-border-radius :  8 8 8 8;
-	-fx-border-color : #f4f441;
+	-fx-border-color : #97dbd1;
 	-fx-font-size:14;
 }
 
