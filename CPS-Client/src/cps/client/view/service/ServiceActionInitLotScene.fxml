@@ -50,11 +50,28 @@
                         <String fx:value="cancelButton" />
                         <String fx:value="smallButton" />
                      </styleClass></Button>
-                  <Button id="" alignment="CENTER" contentDisplay="LEFT" defaultButton="true" mnemonicParsing="false" onAction="#handleOkButton" prefHeight="50.0" prefWidth="104.0" text="Ok" textAlignment="CENTER">
-                     <styleClass>
-                        <String fx:value="regularButton" />
-                        <String fx:value="smallButton" />
-                     </styleClass></Button>
+                  <StackPane>
+                     <children>
+                        <Button id="" fx:id="submitButton" alignment="CENTER" contentDisplay="LEFT" defaultButton="true" font="$x1" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="60.0" prefWidth="100.0" style="" text="Submit" textAlignment="CENTER">
+                           <stylesheets>
+                              <URL value="@../application.css" />
+                           </stylesheets>
+                           <styleClass>
+                              <String fx:value="regularButton" />
+                              <String fx:value="smallButton" />
+                           </styleClass>
+                        </Button>
+                        <Button id="" fx:id="finishButton" alignment="CENTER" contentDisplay="LEFT" font="$x1" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleFinishButton" prefHeight="60.0" prefWidth="100.0" style="" text="Finish" textAlignment="CENTER" visible="false">
+                           <stylesheets>
+                              <URL value="@../application.css" />
+                           </stylesheets>
+                           <styleClass>
+                              <String fx:value="regularButton" />
+                              <String fx:value="smallButton" />
+                           </styleClass>
+                        </Button>
+                     </children>
+                  </StackPane>
                </children>
             </HBox>
          </children>

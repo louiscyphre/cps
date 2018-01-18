@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 //TODO stub - need to implement the initialization request and all
-public class ServiceActionInitLotSceneController extends ServiceActionControllerBase {
+public class ServiceActionInitLotSceneController extends ServiceActionControllerBaseSubmitAndFinish {
   @FXML // fx:id="streetAddressTF"
   private TextField streetAddressTF; // Value injected by FXMLLoader
 
@@ -46,7 +46,7 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
   @Override
   public ServerResponse handle(InitLotResponse response) {
     if(response.success()) {
-      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU, 10);
+      setFinishInsteadOfSubmit(true);
     }
     return super.handleGenericResponse(response);
   }

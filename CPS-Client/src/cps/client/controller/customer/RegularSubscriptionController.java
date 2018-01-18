@@ -240,6 +240,5 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     super.cleanCtrl();
     carIDTextField.clear();
     emailTextField.clear();
-    startDatePicker.getEditor().clear();
   }
 }
