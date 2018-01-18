@@ -26,18 +26,17 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class LoginController extends CustomerActionControllerBase {
+  @FXML
+  protected Button cancelButton;
+  
+  @FXML
+  protected Button submitButton;
 
   @FXML // fx:id="emailTextField"
   private TextField emailTextField; // Value injected by FXMLLoader
 
   @FXML // fx:id="passwordTextField"
   private PasswordField passwordTextField;
-
-  @FXML
-  private Button cancelButton;
-
-  @FXML
-  private Button submitButton;
   
   @FXML
   void handleSubmitButton(ActionEvent event) {
