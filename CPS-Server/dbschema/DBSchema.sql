@@ -208,7 +208,7 @@ CREATE TABLE `parking_lot` (
   `robot_ip` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `lot_full` bit(1) DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
