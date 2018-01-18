@@ -12,6 +12,7 @@ import cps.api.response.Response;
 import cps.api.response.ResponseHandler;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.controller.customer.CustomerMainMenuController;
 import cps.client.controller.responsehandler.ResponseHandlerImpl;
 import cps.client.network.CPSNetworkClient;
 import cps.client.network.INetworkClient;
@@ -34,6 +35,24 @@ public class ClientApplication extends Application implements INetworkClient {
   public ClientApplication() {
   }
 
+  private void loadWebClient() throws IOException {
+    try {
+      ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
+      ControllersClientAdapter.registerScene(SceneCode.LOGIN);
+      ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
+      ControllersClientAdapter.registerScene(SceneCode.FULL_SUBSCRIPTION);
+      ControllersClientAdapter.registerScene(SceneCode.REGULAR_SUBSCRIPTION);
+      ControllersClientAdapter.registerScene(SceneCode.RESERVE_PARKING);
+      ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
+      ControllersClientAdapter.registerScene(SceneCode.FILE_COMPLAINT);
+      ControllersClientAdapter.turnLoggedInStateOff();
+      initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Web Client");
+      setMainMenuControllerForWeb();
+      
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
   private void loadKiosk() throws IOException {
     try {
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
@@ -96,7 +115,7 @@ public class ClientApplication extends Application implements INetworkClient {
 
       switch (parser.getMode()) {
         case "webclient":
-          // loadWebclient();
+           loadWebClient();
           break;
         case "service":
           loadService();
@@ -131,6 +150,10 @@ public class ClientApplication extends Application implements INetworkClient {
       System.exit(0);
     });
 
+  }
+  
+  private void setMainMenuControllerForWeb() {
+    ((CustomerMainMenuController) ControllersClientAdapter.fetchCtrl(SceneCode.CUSTOMER_INITIAL_MENU)).setAsWebClient();
   }
 
   public static void main(String[] args) {

@@ -47,6 +47,8 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   @FXML // fx:id="logInButton"
   private Button logInButton; // Value injected by FXMLLoader
 
+  private boolean isRunnedAsWebClient = false;
+  
   @FXML
   void handleLogoutButton(ActionEvent event) {
     ControllersClientAdapter.turnLoggedInStateOff();
@@ -187,10 +189,15 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   public void turnLoggedInStateOn() {
     buttonsVbox.getChildren().remove(logInButton);
     buttonsVbox.getChildren().add(0, logOutButton);
-    buttonsVbox.getChildren().add(4, enterParkingButton);
-    buttonsVbox.getChildren().add(5, exitParkingButton);
-    buttonsVbox.getChildren().add(6, viewMyReservationsButton);
-    buttonsVbox.getChildren().add(7, fileComplaintButton);
+    if (isRunnedAsWebClient) {
+      buttonsVbox.getChildren().add(3, viewMyReservationsButton);
+      buttonsVbox.getChildren().add(4, fileComplaintButton);
+    } else {
+      buttonsVbox.getChildren().add(4, enterParkingButton);
+      buttonsVbox.getChildren().add(5, exitParkingButton);
+      buttonsVbox.getChildren().add(6, viewMyReservationsButton);
+      buttonsVbox.getChildren().add(7, fileComplaintButton);
+    }
     //buttonsVbox.getChildren().forEach(node -> {
     //  node.getStyleClass().add("smallButton");
     //});
@@ -204,10 +211,15 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
       buttonsVbox.getChildren().add(0, logInButton);
     }
     buttonsVbox.getChildren().remove(logOutButton);
-    buttonsVbox.getChildren().remove(enterParkingButton);
-    buttonsVbox.getChildren().remove(exitParkingButton);
-    buttonsVbox.getChildren().remove(viewMyReservationsButton);
-    buttonsVbox.getChildren().remove(fileComplaintButton);
+    if (isRunnedAsWebClient) {
+      buttonsVbox.getChildren().remove(viewMyReservationsButton);
+      buttonsVbox.getChildren().remove(fileComplaintButton);
+    } else {
+      buttonsVbox.getChildren().remove(enterParkingButton);
+      buttonsVbox.getChildren().remove(exitParkingButton);
+      buttonsVbox.getChildren().remove(viewMyReservationsButton);
+      buttonsVbox.getChildren().remove(fileComplaintButton);
+    }
     //buttonsVbox.getChildren().forEach(node -> {
     //  node.getStyleClass().remove("smallButton");
     //});
@@ -222,5 +234,11 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
       infoLabel.getChildren().add(new Text("Logged in as : " + context.getCustomerEmail()));
     }
   }
-
+  
+  public void setAsWebClient() {
+    isRunnedAsWebClient = true;
+    buttonsVbox.getChildren().remove(enterParkingButton);
+    buttonsVbox.getChildren().remove(exitParkingButton);
+    buttonsVbox.getChildren().remove(parkNowButton);
+  }
 }

@@ -34,7 +34,7 @@ public class CmdParser {
     mode.setRequired(false);
     options.addOption(mode);
 
-    Option lotId = new Option("l", "lot-id", true, "Parking lot id");
+    Option lotId = new Option("l", "lot-id", true, "Parking lot id (0 for web client)");
     lotId.setRequired(false);
     options.addOption(lotId);
 
@@ -65,6 +65,9 @@ public class CmdParser {
 
   public int getLotId() throws NumberFormatException {
     String option = cmd.getOptionValue("lot-id");
+    if (option == null) {
+      return cps.common.Constants.DEFAULT_LOT_NUMBER;
+    }
     return Integer.parseInt(option);
   }
 
