@@ -16,8 +16,8 @@
       <children>
         <GridPane alignment="CENTER" disable="false" hgap="10.0" prefHeight="198.0" prefWidth="320.0" vgap="0.0">
           <children>
-                  <TextFlow prefHeight="200.0" prefWidth="200.0" styleClass="subscriptionDetailsSquare" />
-                  <TextFlow prefHeight="200.0" prefWidth="200.0" styleClass="subscriptionDetailsSquare" textAlignment="CENTER" GridPane.columnIndex="1" />
+                  <TextFlow fx:id="regularSubscriptionInfo" prefHeight="200.0" prefWidth="200.0" styleClass="subscriptionDetailsSquare" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <TextFlow fx:id="fullSubscriptionInfo" prefHeight="200.0" prefWidth="200.0" styleClass="subscriptionDetailsSquare" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
             <RadioButton fx:id="regularSubscriptionRadioButton" mnemonicParsing="false" onAction="#toggleRegularSubscriptionChoice" text="" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="BOTTOM">
                      <toggleGroup>
                         <ToggleGroup fx:id="subscriptionRadioButtons" />
