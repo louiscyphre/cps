@@ -212,7 +212,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     // text fields clear
     emailTextField.clear();
     carIDTextField.clear();
-    endDatePicker.getEditor().clear();
+    endDatePicker.getEditor();
     endTimeTextField.clear();
   }
   
