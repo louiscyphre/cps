@@ -26,6 +26,7 @@ import cps.entities.models.DisabledCellsStatistics;
 import cps.entities.models.ParkingCell;
 import cps.entities.models.ParkingCell.ParkingCellVisitorWithException;
 import cps.entities.models.ParkingLot;
+import cps.entities.people.CompanyPerson;
 import cps.entities.people.User;
 import cps.server.ServerController;
 import cps.server.ServerException;
@@ -85,7 +86,7 @@ public class LotController extends RequestController {
   public InitLotResponse handle(InitLotAction request, ServiceSession session) {
     return database.performQuery(new InitLotResponse(), (conn, response) -> {
       // Require a logged in employee
-      User user = session.requireUser();
+      CompanyPerson user = session.requireCompanyPerson();
 
       // Require the employee to have access rights to this action
       errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
@@ -94,7 +95,7 @@ public class LotController extends RequestController {
       // Check request parameters
       errorIf(request.getPrice1() < 0f, "Price cannot be negative");
       errorIf(request.getPrice2() < 0f, "Price cannot be negative");
-      errorIf(request.getSize() < 1, "Number of cars per row must be at least one.");
+      errorIf(!between(request.getSize(), 4, 8), "Number of cars per row must be at least 4 and at most 8.");
       errorIf(isEmpty(request.getStreetAddress()), "Street address must be non-empty");
       errorIf(isEmpty(request.getRobotIP()), "Robot IP address must be non-empty");
 
@@ -105,6 +106,11 @@ public class LotController extends RequestController {
       // Create parking lot
       ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(),
           request.getPrice2(), request.getRobotIP());
+
+      // Set lot id for LocalEmployee
+      if (user.getAccessLevel() <= Constants.ACCESS_LEVEL_LOCAL_MANAGER) {
+        user.setDepartmentID(result.getId());
+      }
 
       errorIfNull(result, "Failed to create parking lot");
 
@@ -141,9 +147,10 @@ public class LotController extends RequestController {
 
       lot.setPrice1(action.getPrice1());
       lot.setPrice2(action.getPrice2());
-
       lot.update(conn);
-      response.setSuccess("Prices updates succsessfully");
+      
+      response.setLotData(lot);
+      response.setSuccess("Prices updated succsessfully");
       return response;
     });
   }

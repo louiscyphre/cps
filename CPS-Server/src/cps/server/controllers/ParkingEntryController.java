@@ -71,10 +71,8 @@ public class ParkingEntryController extends RequestController {
   public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service)
       throws SQLException, ServerException {
     // Check that this car is allowed to enter
-    // CarTransportation transportation = CarTransportation.findForEntry(conn,
-    // customerID, carID, lot.getId());
-    // errorIf(transportation != null, "The car with the specified ID was
-    // already parked");
+    // CarTransportation transportation = CarTransportation.findForEntry(conn, customerID, carID, lot.getId());
+    // errorIf(transportation != null, "The car with the specified ID was already parked");
 
     // Check that the lot does not already contain the car
     errorIf(lot.contains(lot.constructContentArray(conn), carID), "This car is already parked in the chosen lot");
@@ -117,8 +115,7 @@ public class ParkingEntryController extends RequestController {
 
   }
 
-  private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request)
-      throws SQLException, ServerException {
+  private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request) throws SQLException, ServerException {
     int customerID = request.getCustomerID();
     String carID = request.getCarID();
     int lotID = request.getLotID();
@@ -131,8 +128,7 @@ public class ParkingEntryController extends RequestController {
 
       // Check that an entry license exists
       OnetimeService service = OnetimeService.findForEntry(conn, customerID, carID, lotID);
-      errorIfNull(service,
-          "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      errorIfNull(service, "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
       errorIf(service.isCompleted(), "This reservation was already completed");
       errorIf(service.isCanceled(), "This reservation was canceled");
       errorIf(service.getPlannedStartTime().toLocalDateTime().isAfter(LocalDateTime.now()),
