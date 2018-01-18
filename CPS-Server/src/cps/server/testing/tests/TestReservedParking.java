@@ -41,7 +41,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @SuppressWarnings("unused")
 public class TestReservedParking extends ServerControllerTest {
   @Test
-  public void testReservedParking() throws ServerException {
+  public void testReservedParking() throws ServerException, InterruptedException {
     /*
      * Scenario: 1. Create Parking Lot 2. Send Reserved Parking request 3. Send
      * Parking Entry request - license: ReservedParking 4. Send Parking Exit
@@ -53,12 +53,14 @@ public class TestReservedParking extends ServerControllerTest {
 
     initParkingLot();
     requestReservedParking(data, getContext());
+    Thread.sleep(1500); // TODO find a better way to adjust time
+    
     requestParkingEntry(data, getContext());
     requestParkingExit(data, getContext());
   }
   
   @Test
-  public void testDuplicateParking() throws ServerException {
+  public void testDuplicateParking() throws ServerException, InterruptedException {
     /*
      * Scenario: 1. Create Parking Lot 2. Send Incidental Parking request 3.
      * Send Parking Entry request - license: IncidentalParking 4. Send Parking
@@ -70,6 +72,8 @@ public class TestReservedParking extends ServerControllerTest {
 
     initParkingLot();
     requestReservedParking(data, getContext());
+    Thread.sleep(1500);
+    
     requestParkingEntry(data, getContext());
 
     ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, data.subsID, data.lotID, data.carID);
