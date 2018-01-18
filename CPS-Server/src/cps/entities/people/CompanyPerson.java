@@ -122,4 +122,8 @@ public abstract class CompanyPerson implements User, Serializable {
   public int getLotID() {
     return 0;
   }
+
+  public void setDepartmentID(int id) {
+    
+  }
 }

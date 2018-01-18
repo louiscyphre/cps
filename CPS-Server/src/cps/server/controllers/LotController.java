@@ -25,6 +25,7 @@ import cps.common.Constants;
 import cps.entities.models.ParkingCell;
 import cps.entities.models.ParkingCell.ParkingCellVisitorWithException;
 import cps.entities.models.ParkingLot;
+import cps.entities.people.CompanyPerson;
 import cps.entities.people.User;
 import cps.server.ServerController;
 import cps.server.session.ServiceSession;
@@ -83,7 +84,7 @@ public class LotController extends RequestController {
   public InitLotResponse handle(InitLotAction request, ServiceSession session) {
     return database.performQuery(new InitLotResponse(), (conn, response) -> {
       // Require a logged in employee
-      User user = session.requireUser();
+      CompanyPerson user = session.requireCompanyPerson();
 
       // Require the employee to have access rights to this action
       errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
@@ -103,6 +104,11 @@ public class LotController extends RequestController {
       // Create parking lot
       ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(),
           request.getPrice2(), request.getRobotIP());
+
+      // Set lot id for LocalEmployee
+      if (user.getAccessLevel() <= Constants.ACCESS_LEVEL_LOCAL_MANAGER) {
+        user.setDepartmentID(result.getId());
+      }
 
       errorIfNull(result, "Failed to create parking lot");
 
