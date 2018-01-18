@@ -63,8 +63,8 @@ public class ParkingEntryController extends RequestController {
 
   public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service) throws SQLException, ServerException {
     // Check that this car is allowed to enter
-    CarTransportation transportation = CarTransportation.findForEntry(conn, customerID, carID, lot.getId());
-    errorIf(transportation != null, "The car with the specified ID was already parked");
+    // CarTransportation transportation = CarTransportation.findForEntry(conn, customerID, carID, lot.getId());
+    // errorIf(transportation != null, "The car with the specified ID was already parked");
 
     // Check that the lot does not already contain the car
     errorIf(lot.contains(lot.constructContentArray(conn), carID), "This car is already parked in the chosen lot");
@@ -121,6 +121,13 @@ public class ParkingEntryController extends RequestController {
 
       // Check that entry an license exists
       errorIfNull(service, "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
+
+      // TODO allow entry only once a day for regular subscription
+      if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
+        CarTransportation transportation = CarTransportation.findCompletedSubscriptionEntryByDate(
+            conn, customerID, carID, lotID, service.getId(), LocalDate.now());
+        errorIf(transportation != null, "This subscription was already used today");
+      }
 
       // Check that the lot ID is correct for regular subscription
       errorIf(service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && lotID != service.getLotID(),

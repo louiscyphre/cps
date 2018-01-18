@@ -3,6 +3,7 @@ package cps.client.controller.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import cps.api.action.UpdatePricesAction;
@@ -15,12 +16,14 @@ import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
 import cps.entities.models.ParkingLot;
 import cps.entities.people.User;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 
 public class ServiceActionUpdatePricesController extends ServiceActionControllerBase implements ParkingLotsController {
 
@@ -54,8 +57,22 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     assert parkingLotsList != null : "fx:id=\"parkingLotsList\" was not injected: check your FXML file 'ServiceActionUpdatePrices.fxml'.";
 
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_UPDATE_PRICES);
+    
+    // Update the price information when the current lot changes
+    parkingLotsList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+      refreshPrices();
+    });
   }
-
+  
+  private void refreshPrices() {
+    ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
+    if (lot != null) {
+      List<Text> formattedMessage = new LinkedList<Text>();
+      formattedMessage.add(new Text(String.format("Incidental price: %s ILS per hour\n", lot.getPrice1())));
+      formattedMessage.add(new Text(String.format("Reserved price: %s ILS per hour", lot.getPrice2())));
+      displayInfo(formattedMessage);      
+    }
+  }
   
   @Override
   public void cleanCtrl() {
@@ -78,8 +95,8 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
       float newIncidentalParkingPrice = requireFloat(newIncidentalPriceTextField, "New incidental parking price");
   
       User user = ControllersClientAdapter.getEmployeeContext().requireCompanyPerson();
-      int lotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
-      UpdatePricesAction action = new UpdatePricesAction(user.getId(), lotID, newReservedParkingPrice, newIncidentalParkingPrice);
+      ParkingLot lot = notNull(parkingLotsMap.get(parkingLotsList.getValue()), "Please choose a parking lot");
+      UpdatePricesAction action = new UpdatePricesAction(user.getId(), lot.getId(), newIncidentalParkingPrice, newReservedParkingPrice);
       ControllersClientAdapter.getClient().sendRequest(action);
     } catch (Exception e) {
       displayError(e.getMessage());
@@ -116,7 +133,17 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
   
   @Override
   public ServerResponse handle(UpdatePricesResponse response) {
-    super.handleGenericResponse(response); 
+    if (response.success()) {
+      // cleanCtrl(); // FIXME doing this doesn't update the prices for some reason
+      ParkingLot lot = parkingLotsMap.get(response.getStreetAddress());
+      
+      if (lot != null) {
+        lot.setPrice1(response.getPrice1());
+        lot.setPrice2(response.getPrice2());
+      }      
+    }
+    
+    super.handleGenericResponse(response);
     return response;
   }
 }

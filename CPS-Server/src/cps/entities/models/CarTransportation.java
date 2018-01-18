@@ -2,11 +2,13 @@ package cps.entities.models;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -80,8 +82,7 @@ public class CarTransportation implements Serializable {
     this.removedAt = removedAt;
   }
 
-  public CarTransportation(int customerID, String carID, int authType, int authID, int lotID, Timestamp insertedAt,
-      Timestamp removedAt) {
+  public CarTransportation(int customerID, String carID, int authType, int authID, int lotID, Timestamp insertedAt, Timestamp removedAt) {
     this.customerID = customerID;
     this.carID = carID;
     this.authType = authType;
@@ -95,15 +96,13 @@ public class CarTransportation implements Serializable {
   private Timestamp removedAt;
 
   public CarTransportation(ResultSet rs) throws SQLException {
-    this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getTimestamp(6),
-        rs.getTimestamp(7));
+    this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getTimestamp(6), rs.getTimestamp(7));
   }
 
   // Creates a new CarTransportation entry in the SQL table
-  public static CarTransportation create(Connection conn, int customerID, String carID, int authType, int authID,
-      int lotID) throws SQLException, ServerException {
-    PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_CAR_TRANSPORTATION,
-        Statement.RETURN_GENERATED_KEYS);
+  public static CarTransportation create(Connection conn, int customerID, String carID, int authType, int authID, int lotID)
+      throws SQLException, ServerException {
+    PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_CAR_TRANSPORTATION, Statement.RETURN_GENERATED_KEYS);
 
     int field = 1;
     statement.setInt(field++, customerID);
@@ -131,21 +130,17 @@ public class CarTransportation implements Serializable {
     return new CarTransportation(customerID, carID, authType, authID, lotID, insertedAt, removedAt);
   }
 
-  /**
-   * Find a car of the customer when he wants to exit parking.
-   *
+  /** Find a car of the customer when he wants to exit parking.
    * @param customerID
-   *          the customer ID
+   *        the customer ID
    * @param carID
-   *          the car ID
+   *        the car ID
    * @param lotID
-   *          the lot ID
+   *        the lot ID
    * @return the car transportation
    * @throws SQLException
-   *           the SQL exception
-   */
-  public static CarTransportation findForExit(Connection conn, int customerID, String carID, int lotID)
-      throws SQLException {
+   *         the SQL exception */
+  public static CarTransportation findForExit(Connection conn, int customerID, String carID, int lotID) throws SQLException {
     // First - find the insertion of the car
 
     CarTransportation result = null;
@@ -170,12 +165,11 @@ public class CarTransportation implements Serializable {
   }
 
   public static CarTransportation findForEntry(Connection conn, int customerID, String carID, int lotID) throws SQLException {
-    return new QueryBuilder<CarTransportation>(Constants.SQL_FIND_CAR_TRANSPORTATION_FOR_ENTRY)
-        .withFields(statement -> {
-          statement.setInt(1, customerID);
-          statement.setString(2, carID);
-          statement.setInt(3, lotID);
-        }).fetchResult(conn, result -> new CarTransportation(result));
+    return new QueryBuilder<CarTransportation>(Constants.SQL_FIND_CAR_TRANSPORTATION_FOR_ENTRY).withFields(statement -> {
+      statement.setInt(1, customerID);
+      statement.setString(2, carID);
+      statement.setInt(3, lotID);
+    }).fetchResult(conn, result -> new CarTransportation(result));
   }
 
   public void updateRemovedAt(Connection conn, Timestamp removedAt) throws SQLException {
@@ -249,4 +243,17 @@ public class CarTransportation implements Serializable {
     }
   }
 
+  public static CarTransportation findCompletedSubscriptionEntryByDate(Connection conn, int customerID, String carID, int lotID, int subsID, LocalDate day) throws SQLException {
+    return new QueryBuilder<CarTransportation>(
+      "SELECT * FROM car_transportation WHERE customer_id = ? AND car_id = ? AND lot_id = ? AND auth_type = ? AND auth_id = ? AND date(inserted_at) = ? AND removed_at IS NOT NULL"
+      ).withFields(statement -> {
+        int index = 1;
+        statement.setInt(index++, customerID);
+        statement.setString(index++, carID);
+        statement.setInt(index++, lotID);
+        statement.setInt(index++, Constants.LICENSE_TYPE_SUBSCRIPTION);
+        statement.setInt(index++, subsID);
+        statement.setDate(index++, Date.valueOf(day));
+      }).fetchResult(conn, result -> new CarTransportation(result));
+  }
 }

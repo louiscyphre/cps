@@ -15,6 +15,18 @@ public interface ParkingService extends Serializable {
   public boolean isParked();
 
   public void setParked(boolean parked);
+  
+  public boolean isCompleted();
+
+  public void setCompleted(boolean completed);
+  
+  public boolean isCanceled();
+  
+  public void setCanceled(boolean canceled);
+  
+  public boolean isWarned();
+  
+  public void setWarned(boolean warned);
 
   public void update(Connection conn) throws SQLException;
 }

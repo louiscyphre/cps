@@ -27,6 +27,7 @@ public abstract class Employee extends CompanyPerson {
     return departmentID;
   }
 
+  @Override
   public void setDepartmentID(int departmentID) {
     this.departmentID = departmentID;
   }
