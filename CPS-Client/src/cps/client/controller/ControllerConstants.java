@@ -48,6 +48,7 @@ public class ControllerConstants {
 
     SERVICE_ACTION_LOGIN("../view/service/ServiceLoginScene.fxml"),
     
+    SERVICE_ACTION_MANAGE_LOT("../view/service/ServiceActionManageLot.fxml"),
     ;
 
     String myRelativePath;

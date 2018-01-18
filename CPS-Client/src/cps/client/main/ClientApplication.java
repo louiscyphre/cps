@@ -63,7 +63,8 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_INIT_LOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MENU);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOT_IS_FULL);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOT_STATE);
+//      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOT_STATE); // TODO delete this when manage lot is done
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MANAGE_LOT); 
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_REFUND);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_RESERVE_SLOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_UPDATE_PRICES);

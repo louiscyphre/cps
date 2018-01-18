@@ -60,7 +60,8 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   void handleLotStateButton(ActionEvent event) {
     // ACCESS_DOMAIN_PARKING_LOT, (ACCESS_LEVEL_LOCAL_WORKER)
     // ACCESS_LEVEL_GLOBAL_MANAGER
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOT_STATE, 10);
+//    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOT_STATE, 10); // TODO delete when manage lots is done
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MANAGE_LOT, 10);
   }
 
   @FXML

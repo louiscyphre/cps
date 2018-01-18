@@ -7,9 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import cps.api.action.ParkingCellSetDisabledAction;
+import cps.api.action.ParkingCellSetReservedAction;
 import cps.api.action.RequestLotStateAction;
 import cps.api.request.ListParkingLotsRequest;
+import cps.api.response.DisableParkingSlotsResponse;
 import cps.api.response.RequestLotStateResponse;
+import cps.api.response.ReserveParkingSlotsResponse;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
@@ -18,6 +22,8 @@ import cps.common.Constants;
 import cps.entities.models.ParkingCell;
 import cps.entities.models.ParkingLot;
 import cps.entities.people.User;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,7 +31,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
@@ -48,10 +53,16 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
   protected ComboBox<String> parkingLotsList; // Value injected by FXMLLoader
 
   @FXML // fx:id="levelIndicator"
-  protected Label levelIndicator; // Value injected by FXMLLoader
+  protected int levelIndicator; // Value injected by FXMLLoader
 
   @FXML
   protected Button overviewButton;
+
+  @FXML
+  private Button disableButton;
+
+  @FXML
+  private Button reserveButton;
 
   protected ArrayList<GridPane> carsGrids;
 
@@ -65,35 +76,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
   protected ArrayList<Text> cellInfo;
 
   protected Rectangle selectedCar;
-  
+
   protected ParkingCell selectedCell;
-
-  @FXML
-  void addDummyData(ActionEvent event) {
-
-  }
-
-  @FXML
-  void upperPressed(ActionEvent event) {
-    if (!processing) {
-      int levelInt = Integer.parseInt(levelIndicator.getText());
-      if (levelInt < 3) {
-        levelIndicator.setText(Integer.toString(levelInt + 1));
-        updateView();
-      }
-    }
-  }
-
-  @FXML
-  void lowerPressed(ActionEvent event) {
-    if (!processing) {
-      int levelInt = Integer.parseInt(levelIndicator.getText());
-      if (levelInt > 1) {
-        levelIndicator.setText(Integer.toString(levelInt - 1));
-        updateView();
-      }
-    }
-  }
 
   private void updateView() {
     gridAnchor.getChildren().forEach(carsGrid -> carsGrid.setVisible(false));
@@ -101,9 +85,62 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
   }
 
   @FXML
-  void handleRefreshButton(ActionEvent event) {
+  void handleDisableSlot(ActionEvent event) {
     if (!processing) {
-      validateAndSend();
+      if (selectedCar != null && !reserveButton.isDisabled()) {
+        User user;
+        try {
+          user = requireLoggedInUser();
+          ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
+          turnProcessingStateOn();
+          sendRequest(new ParkingCellSetReservedAction(user.getId(), lot.getId(), selectedCell.width,
+              selectedCell.height, selectedCell.depth, (!selectedCell.isReserved())));
+        } catch (Exception e) {
+          displayError(e.getMessage());
+        }
+      }
+    }
+  }
+
+  @FXML
+  void handleReserveSlot(ActionEvent event) {
+    if (!processing) {
+      if (selectedCar != null && !disableButton.isDisabled()) {
+        User user;
+        try {
+          user = requireLoggedInUser();
+          ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
+          turnProcessingStateOn();
+          sendRequest(new ParkingCellSetDisabledAction(user.getId(), lot.getId(), selectedCell.width,
+              selectedCell.height, selectedCell.depth, (!selectedCell.isDisabled())));
+        } catch (Exception e) {
+          displayError(e.getMessage());
+        }
+      }
+    }
+  }
+
+  @FXML
+  void handle1pressed(ActionEvent event) {
+    if (!processing) {
+      levelIndicator = 1;
+      updateView();
+    }
+  }
+
+  @FXML
+  void handle2pressed(ActionEvent event) {
+    if (!processing) {
+      levelIndicator = 2;
+      updateView();
+    }
+  }
+
+  @FXML
+  void handle3pressed(ActionEvent event) {
+    if (!processing) {
+      levelIndicator = 3;
+      updateView();
     }
   }
 
@@ -114,12 +151,18 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  @FXML
+  void handleChooseParkingLot(ActionEvent event) {
+    if (!processing) {
+      validateAndSend();
+    }
+  }
+
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
     super.baseInitialize();
     assert parkingLotsList != null : "fx:id=\"parkingLotsList\" was not injected: check your FXML file 'ServiceActionLotState.fxml'.";
-    assert levelIndicator != null : "fx:id=\"levelIndicator\" was not injected: check your FXML file 'ServiceActionLotState.fxml'.";
     assert overviewButton != null : "fx:id=\"overviewButton\" was not injected: check your FXML file 'ServiceActionLotState.fxml'.";
     initParkingCells();
     initCarsGrids();
@@ -127,7 +170,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     initCellInfo();
     registerCtrl();
   }
-  
+
   protected void registerCtrl() {
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_MANAGE_LOT);
   }
@@ -137,9 +180,14 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     super.cleanCtrl();
     clearCarsGrids();
     overviewButton.setDisable(true);
-    parkingLotsList.getItems().clear();
+    disableButton.setDisable(true);
+    reserveButton.setDisable(true);
+    if (parkingLotsList.getItems() != null) {
+      parkingLotsList.getItems().clear();
+    }
     parkingLotsList.setDisable(false);
     parkingLotsMap.clear();
+    levelIndicator = 1;
     // Get the list of parking lots
     turnProcessingStateOn();
     sendRequest(new ListParkingLotsRequest());
@@ -293,7 +341,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
   }
 
   private int getCurrentLevelIndex() {
-    return Integer.parseInt(levelIndicator.getText()) - 1;
+    return levelIndicator - 1;
   }
 
   @Override
@@ -303,6 +351,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
       ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
       errorIfNull(lot, "Please choose a parking lot");
       turnProcessingStateOn();
+      clearCarsGrids();
       sendRequest(new RequestLotStateAction(user.getId(), lot.getId()));
     } catch (Exception e) {
       displayError(e.getMessage());
@@ -329,7 +378,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
   }
- 
+
   @Override
   public ServerResponse handle(RequestLotStateResponse response) {
 
@@ -343,7 +392,6 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
       updateView();
       updateOverviewInfo();
       overviewButton.setDisable(false);
-      parkingLotsList.setDisable(true);
       turnProcessingStateOff();
       displayInfo(overviewInfo);
     } else {
@@ -426,7 +474,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
   }
 
   protected void onMouseEnteredHandler(Rectangle currentRectangle) {
-    if(processing)
+    if (processing)
       return;
     if (selectedCar == null) {
       int rowInd = GridPane.getRowIndex(currentRectangle);
@@ -437,9 +485,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
       displayInfo(cellInfo);
     }
   }
-  
+
   protected void onMouseClickedHandler(Rectangle currentRectangle) {
-    if(processing)
+    if (processing)
       return;
     int rowInd = GridPane.getRowIndex(currentRectangle);
     int colInd = GridPane.getColumnIndex(currentRectangle);
@@ -449,6 +497,36 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     if (selectedCar != null) {
       updateCellInfo(selectedCell);
       displayInfo(cellInfo);
+      setSlotButtonsDisabled(false);
+    } else {
+      setSlotButtonsDisabled(true);
     }
+  }
+
+  private void setSlotButtonsDisabled(boolean value) {
+    reserveButton.setDisable(value);
+    disableButton.setDisable(value);
+  }
+
+  @Override
+  public ServerResponse handle(ReserveParkingSlotsResponse response) {
+    super.handleGenericResponse(response);
+    if (response.success()) {
+      validateAndSend();
+      reserveButton.setDisable(true);
+      disableButton.setDisable(true);
+    }
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(DisableParkingSlotsResponse response) {
+    super.handleGenericResponse(response);
+    if (response.success()) {
+      validateAndSend();
+      reserveButton.setDisable(true);
+      disableButton.setDisable(true);
+    }
+    return null;
   }
 }
