@@ -71,7 +71,7 @@ public class ParkingEntryController extends RequestController {
   public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service) throws SQLException, ServerException {
     // Check that this car is allowed to enter
     CarTransportation transportation = CarTransportation.findForEntry(conn, customerID, carID, lot.getId());
-    errorIf(transportation != null, "The car with the specified ID is currently parked");
+    errorIf(transportation != null, "The car with the specified ID was already parked");
     
     // Check that the lot does not already contain the car
     errorIf(lot.contains(lot.constructContentArray(conn), carID), "This car is already parked in the chosen lot");
