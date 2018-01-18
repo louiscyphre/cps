@@ -22,11 +22,14 @@ import cps.api.response.ServerResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.common.Constants;
+import cps.entities.models.DisabledCellsStatistics;
 import cps.entities.models.ParkingCell;
-import cps.entities.models.ParkingCell.ParkingCellVisitor;
+import cps.entities.models.ParkingCell.ParkingCellVisitorWithException;
 import cps.entities.models.ParkingLot;
+import cps.entities.people.CompanyPerson;
 import cps.entities.people.User;
 import cps.server.ServerController;
+import cps.server.ServerException;
 import cps.server.session.ServiceSession;
 import cps.server.session.UserSession;
 
@@ -83,7 +86,7 @@ public class LotController extends RequestController {
   public InitLotResponse handle(InitLotAction request, ServiceSession session) {
     return database.performQuery(new InitLotResponse(), (conn, response) -> {
       // Require a logged in employee
-      User user = session.requireUser();
+      CompanyPerson user = session.requireCompanyPerson();
 
       // Require the employee to have access rights to this action
       errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
@@ -92,7 +95,7 @@ public class LotController extends RequestController {
       // Check request parameters
       errorIf(request.getPrice1() < 0f, "Price cannot be negative");
       errorIf(request.getPrice2() < 0f, "Price cannot be negative");
-      errorIf(request.getSize() < 1, "Number of cars per row must be at least one.");
+      errorIf(!between(request.getSize(), 4, 8), "Number of cars per row must be at least 4 and at most 8.");
       errorIf(isEmpty(request.getStreetAddress()), "Street address must be non-empty");
       errorIf(isEmpty(request.getRobotIP()), "Robot IP address must be non-empty");
 
@@ -103,6 +106,11 @@ public class LotController extends RequestController {
       // Create parking lot
       ParkingLot result = ParkingLot.create(conn, request.getStreetAddress(), request.getSize(), request.getPrice1(),
           request.getPrice2(), request.getRobotIP());
+
+      // Set lot id for LocalEmployee
+      if (user.getAccessLevel() <= Constants.ACCESS_LEVEL_LOCAL_MANAGER) {
+        user.setDepartmentID(result.getId());
+      }
 
       errorIfNull(result, "Failed to create parking lot");
 
@@ -139,9 +147,10 @@ public class LotController extends RequestController {
 
       lot.setPrice1(action.getPrice1());
       lot.setPrice2(action.getPrice2());
-
       lot.update(conn);
-      response.setSuccess("Prices updates succsessfully");
+      
+      response.setLotData(lot);
+      response.setSuccess("Prices updated succsessfully");
       return response;
     });
   }
@@ -210,7 +219,7 @@ public class LotController extends RequestController {
   }
 
   private ServerResponse reserveOrDisable(ServiceSession session, ServerResponse serverResponse, int lotID, int i,
-      int j, int k, ParkingCellVisitor visitor, String successMessage) {
+      int j, int k, ParkingCellVisitorWithException visitor, String successMessage) {
     return database.performQuery(serverResponse, (conn, response) -> {
       // Require a logged in employee
       User user = session.requireUser();
@@ -254,15 +263,15 @@ public class LotController extends RequestController {
    * @return success or error
    */
   public ServerResponse handle(ParkingCellSetReservedAction action, ServiceSession session) {
+    String successMessage = action.getValue() ? "Parking cell reserved successfully" : "Parking cell reservation canceled successfully";
     return reserveOrDisable(session, new ReserveParkingSlotsResponse(), action.getLotID(), action.getLocationI(),
         action.getLocationJ(), action.getLocationK(), cell -> {
           // If a cell was already disabled, then it can't be reserved
-          // If we want to cancel reservation, then it can be done even if the
-          // cell is disabled
-          if (!cell.isDisabled() || !action.getValue()) {
-            cell.setReserved(action.getValue());
-          }
-        }, "Parking cell reserved successfully");
+          errorIf(cell.isDisabled() && action.getValue() == true, "A disabled cell cannot be reserved");
+          
+          // If we want to cancel reservation, then it can be done even if the cell is disabled
+          cell.setReserved(action.getValue());
+        }, successMessage);
   }
 
   /**
@@ -273,15 +282,28 @@ public class LotController extends RequestController {
    * @param session
    *          the session
    * @return the server response
+   * @throws ServerException
    */
   public ServerResponse handle(ParkingCellSetDisabledAction action, ServiceSession session) {
+    String successMessage = action.getValue() ? "Parking cell disabled successfully" : "Parking cell enabled successfully";
     ServerResponse toRet = reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(),
         action.getLocationI(), action.getLocationJ(), action.getLocationK(),
-        cell -> cell.setDisabled(action.getValue()), "Parking cell disabled successfully");
+        cell -> cell.setDisabled(action.getValue()), successMessage);
+    
     if (toRet.success()) {
-      // TODO add the cell to list of statistics disabled cells
+      // TODO Tegra DONE add the cell to list of statistics disabled cells 
+      return database.performQuery(toRet, (conn, response) -> {
+        if (action.getValue()) {
+          DisabledCellsStatistics.create(conn, action.getLotID(), action.getLocationI(), action.getLocationJ(),
+              action.getLocationK());
+        } else {
+          DisabledCellsStatistics.markfixed(conn, action.getLotID(), action.getLocationI(), action.getLocationJ(),
+              action.getLocationK());
+        }
+        return response;
+      });
     }
-
+    
     return toRet;
   }
 }

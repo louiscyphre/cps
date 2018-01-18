@@ -361,6 +361,7 @@ public class OnetimeService implements ParkingService {
     st.setTimestamp(index++, this.plannedStartTime);
     st.setTimestamp(index++, this.plannedEndTime);
     st.setBoolean(index++, this.parked);
+    st.setBoolean(index++, this.completed);
     st.setBoolean(index++, this.canceled);
     st.setBoolean(index++, this.warned);
     st.setInt(index++, this.id);
@@ -402,7 +403,7 @@ public class OnetimeService implements ParkingService {
   public static Collection<OnetimeService> findLateCustomers(Connection conn, Duration delta, boolean warned) throws SQLException {
     LinkedList<OnetimeService> items = new LinkedList<OnetimeService>();
     PreparedStatement stmt = conn.prepareStatement(
-        String.join(" ", "SELECT os.*", "FROM onetime_service os", "WHERE os.planned_start_time <= ? ", "AND not parked AND os.warned=? AND not os.canceled"));
+        String.join(" ", "SELECT os.*", "FROM onetime_service os", "WHERE os.planned_start_time <= ? ", "AND not parked AND not completed AND os.warned=? AND not os.canceled"));
     int i = 1;
     stmt.setTimestamp(i++, Timestamp.valueOf(LocalDateTime.now().minus(delta)));
     stmt.setBoolean(i++, warned);

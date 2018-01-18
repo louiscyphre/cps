@@ -18,9 +18,4 @@ public abstract class CustomerPasswordResponse extends CustomerResponse {
     setCustomerID(customer.getId());
     setPassword(customer.getPassword());
   }
-
-  @Override
-  public ServerResponse handle(ResponseHandler handler) {
-    return handler.handle(this);
-  }
 }

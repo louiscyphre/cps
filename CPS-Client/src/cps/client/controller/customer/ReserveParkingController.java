@@ -299,9 +299,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     // info box clear
     super.cleanCtrl();
     // input fields clear
-    startDatePicker.getEditor().clear();
     startTimeTF.clear();
-    endDatePicker.getEditor().clear();
     endTimeTF.clear();
     carIDTextField.clear();
     emailTF.clear();

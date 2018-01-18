@@ -68,7 +68,7 @@ CREATE TABLE `customer` (
   `debit` float NOT NULL DEFAULT '0',
   `credit` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,6 +102,7 @@ CREATE TABLE `disabled_slots_table` (
   `width` int(11) NOT NULL,
   `height` int(11) NOT NULL,
   `depth` int(11) NOT NULL,
+  `date_enabled` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`lotid`,`depth`,`height`,`width`,`date_disabled`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -126,6 +127,27 @@ CREATE TABLE `employee` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `monthly_report`
+--
+
+DROP TABLE IF EXISTS `monthly_report`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `monthly_report` (
+  `year` int(11) NOT NULL,
+  `month` int(11) NOT NULL,
+  `lot_id` int(11) NOT NULL,
+  `ordered_reserved` int(11) DEFAULT '0',
+  `ordered_incidental` int(11) DEFAULT '0',
+  `ordered_regular` int(11) DEFAULT '0',
+  `ordered_full` int(11) DEFAULT '0',
+  `complaints_count` int(11) DEFAULT '0',
+  `disabled_slots` int(11) DEFAULT '0',
+  PRIMARY KEY (`year`,`month`,`lot_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `onetime_service`
 --
 
@@ -146,7 +168,7 @@ CREATE TABLE `onetime_service` (
   `canceled` bit(1) NOT NULL DEFAULT b'0',
   `warned` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -186,7 +208,7 @@ CREATE TABLE `parking_lot` (
   `robot_ip` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `lot_full` bit(1) DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -263,4 +285,4 @@ CREATE TABLE `weekly_statistics` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-18  0:34:38
+-- Dump completed on 2018-01-18 20:54:14

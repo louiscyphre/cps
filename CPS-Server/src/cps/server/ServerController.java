@@ -174,6 +174,11 @@ public class ServerController implements RequestHandler<SessionHolder> {
   }
 
   @Override
+  public ServerResponse handle(RejectComplaintAction action, SessionHolder context) {
+    return complaintController.handle(action, context.acquireServiceSession());
+  }
+
+  @Override
   public ServerResponse handle(RequestLotStateAction action, SessionHolder context) {
     return lotController.handle(action, context.acquireServiceSession());
   }
