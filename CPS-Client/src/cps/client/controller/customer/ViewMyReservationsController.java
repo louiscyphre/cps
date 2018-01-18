@@ -334,8 +334,8 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
     List<Text> formattedMessage = new LinkedList<Text>();
 
     if (response.success()) {
-      formattedMessage.add(new Text("The following reservation had been canceled!\n"));
-      formattedMessage.add(new Text("The account had been refunded for: " + response.getRefundAmount()));
+      formattedMessage.add(new Text("Reservation canceled successfully.\n"));
+      formattedMessage.add(new Text("Your have been credited " + response.getRefundAmount() + " ILS"));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
       OnetimeEntriesController casted = (OnetimeEntriesController) ctrl;
