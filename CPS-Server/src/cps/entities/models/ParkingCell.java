@@ -244,6 +244,10 @@ public class ParkingCell implements Serializable {
     public void call(ParkingCell argument);
   }
 
+  public interface ParkingCellVisitorWithException {
+    public void call(ParkingCell argument) throws ServerException;
+  }
+
   /**
    * Lot for each.
    *
