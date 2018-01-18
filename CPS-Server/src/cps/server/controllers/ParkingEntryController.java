@@ -14,6 +14,7 @@ import cps.api.response.ServerResponse;
 import cps.common.Constants;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
+import cps.entities.models.DailyStatistics;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
@@ -25,18 +26,24 @@ import cps.server.session.CustomerSession;
 /** The Class EntryExitController. */
 public class ParkingEntryController extends RequestController {
 
-  /** Instantiates a new entry exit controller.
+  /**
+   * Instantiates a new entry exit controller.
+   * 
    * @param serverController
-   *        the server application */
+   *          the server application
+   */
   public ParkingEntryController(ServerController serverController) {
     super(serverController);
   }
 
-  /** Handle ParkingEntryRequest.
+  /**
+   * Handle ParkingEntryRequest.
+   * 
    * @param request
-   *        the request
+   *          the request
    * @param session
-   * @return the server response */
+   * @return the server response
+   */
   public ServerResponse handle(ParkingEntryRequest request, CustomerSession session) {
     return database.performQuery(new ParkingEntryResponse(), (conn, response) -> {
       Customer customer = session.requireCustomer();
@@ -61,10 +68,13 @@ public class ParkingEntryController extends RequestController {
     });
   }
 
-  public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service) throws SQLException, ServerException {
+  public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service)
+      throws SQLException, ServerException {
     // Check that this car is allowed to enter
-//    CarTransportation transportation = CarTransportation.findForEntry(conn, customerID, carID, lot.getId());
-//    errorIf(transportation != null, "The car with the specified ID was already parked");
+    // CarTransportation transportation = CarTransportation.findForEntry(conn,
+    // customerID, carID, lot.getId());
+    // errorIf(transportation != null, "The car with the specified ID was
+    // already parked");
 
     // Check that the lot does not already contain the car
     errorIf(lot.contains(lot.constructContentArray(conn), carID), "This car is already parked in the chosen lot");
@@ -79,6 +89,21 @@ public class ParkingEntryController extends RequestController {
     CarTransportationController transportationController = serverController.getTransportationController();
     transportationController.insertCar(conn, lot, carID, service.getExitTime());
 
+    // Statistics
+    if (service.getLicenseType() == Constants.LICENSE_TYPE_ONETIME) {
+      // TODO Tegra increase daily statistics for realised orders - only onetime
+      // counts
+      DailyStatistics.increaseRealizedOrder(conn, lot.getId());
+      if (((OnetimeService) service).getParkingType() == Constants.PARKING_TYPE_INCIDENTAL) {
+        // TODO increase quarterly statistics for incidental and reserved orders
+        // Quarter statistics
+      } else {
+        // TODO increase quarterly statistics for incidental and reserved orders
+        // Quarter statistics
+      }
+    }
+    // TODO increase quarterly statistics for incidental and reserved orders
+
     if (!service.isParked()) {
       service.setParked(true);
       service.update(conn);
@@ -92,7 +117,8 @@ public class ParkingEntryController extends RequestController {
 
   }
 
-  private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request) throws SQLException, ServerException {
+  private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request)
+      throws SQLException, ServerException {
     int customerID = request.getCustomerID();
     String carID = request.getCarID();
     int lotID = request.getLotID();
@@ -105,7 +131,8 @@ public class ParkingEntryController extends RequestController {
 
       // Check that an entry license exists
       OnetimeService service = OnetimeService.findForEntry(conn, customerID, carID, lotID);
-      errorIfNull(service, "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      errorIfNull(service,
+          "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
       errorIf(service.isCompleted(), "This reservation was already completed");
       errorIf(service.isCanceled(), "This reservation was canceled");
       errorIf(service.getPlannedStartTime().toLocalDateTime().isAfter(LocalDateTime.now()),
@@ -118,15 +145,17 @@ public class ParkingEntryController extends RequestController {
       int subsID = request.getSubscriptionID();
       SubscriptionService service = SubscriptionService.findForEntry(conn, customerID, carID, subsID);
       // TODO is it possible to cancel a subscription?
-      
+
       // FIXME allow entry only once a day for regular subscription
 
       // Check that entry an license exists
-      errorIfNull(service, "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      errorIfNull(service,
+          "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
 
       // Check that the lot ID is correct for regular subscription
       errorIf(service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && lotID != service.getLotID(),
-          String.format("Requested parking in lotID = %s, but subscription is for lotID = %s", lotID, service.getLotID()));
+          String.format("Requested parking in lotID = %s, but subscription is for lotID = %s", lotID,
+              service.getLotID()));
 
       // Check that the user is not trying to enter with a regular subscription
       // on a weekend
