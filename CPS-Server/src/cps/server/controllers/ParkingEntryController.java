@@ -119,7 +119,7 @@ public class ParkingEntryController extends RequestController {
       SubscriptionService service = SubscriptionService.findForEntry(conn, customerID, carID, subsID);
       // TODO is it possible to cancel a subscription?
       
-      // TODO allow entry only once a day for regular subscription
+      // FIXME allow entry only once a day for regular subscription
 
       // Check that entry an license exists
       errorIfNull(service, "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);

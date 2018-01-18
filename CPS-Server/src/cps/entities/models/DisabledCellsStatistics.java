@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+@SuppressWarnings("unused")
 public class DisabledCellsStatistics {
+
   private int           lotId;
   private LocalDateTime dateDisabled;
   private int           width;

@@ -125,7 +125,7 @@ public class OnetimeParkingController extends RequestController {
     IncidentalParkingResponse response = new IncidentalParkingResponse();
     ServerResponse toRet = handle(request, session, response, startTime, plannedEndTime, startTime.toLocalDateTime());
     if (toRet.success()) {
-      // TODO increase incidental parking - daily - DONE
+      // TODO Tegra DONE increase incidental parking - daily
       try {
         database.performAction(conn -> {
           DailyStatistics.increaseRealizedOrder(conn, request.getLotID());
@@ -135,7 +135,7 @@ public class OnetimeParkingController extends RequestController {
         // should something be here?
         e.printStackTrace();
       }
-      // TODO increase IncidentalParkingRequest statistics - quarterly
+      // TODO Tegra increase IncidentalParkingRequest statistics - quarterly
 
     }
     return toRet;

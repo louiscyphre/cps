@@ -36,7 +36,7 @@ public class ComplaintController extends RequestController {
 
       response.setComplaintID(complaint.getId());
       response.setSuccess("Complaint created successfully");
-      //TODO Tegra add complaint to statistics 
+      //TODO Tegra add complaint to daily statistics 
       return response;
     });
   }
