@@ -55,9 +55,11 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
 
   @Override
   public ServerResponse handle(ListParkingLotsResponse response) {
-    ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();
-    ctrl.setParkingLots(response.getData());
-    ctrl.turnProcessingStateOff();
+    if (ControllersClientAdapter.getCurrentCtrl() instanceof ParkingLotsController) {
+      ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();
+      ctrl.setParkingLots(response.getData());
+      ctrl.turnProcessingStateOff();
+    }
     return response;
   }
 

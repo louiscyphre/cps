@@ -1,14 +1,17 @@
 package cps.client.controller.service;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import cps.api.action.InitLotAction;
 import cps.api.response.InitLotResponse;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
-import cps.client.controller.ControllerConstants.SceneCode;
 import cps.entities.people.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 
 //TODO stub - need to implement the initialization request and all
 public class ServiceActionInitLotSceneController extends ServiceActionControllerBaseSubmitAndFinish {
@@ -45,10 +48,18 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
 
   @Override
   public ServerResponse handle(InitLotResponse response) {
+    ServerResponse value = super.handleGenericResponse(response);
+    
     if(response.success()) {
+      List<Text> formattedMessage = new LinkedList<Text>();
+      formattedMessage.add(new Text(response.getDescription() + "\n"));
+      formattedMessage.add(new Text(String.format("New Lot ID: %s", response.getLotID())));
+      turnProcessingStateOff();
+      displayInfo(formattedMessage);
       setFinishInsteadOfSubmit(true);
     }
-    return super.handleGenericResponse(response);
+    
+    return value;
   }
 
   @FXML // This method is called by the FXMLLoader when initialization is

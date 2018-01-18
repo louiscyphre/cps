@@ -25,7 +25,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
-public class ServiceActionUpdatePricesController extends ServiceActionControllerBase implements ParkingLotsController {
+public class ServiceActionUpdatePricesController extends ServiceActionControllerBaseSubmitAndFinish implements ParkingLotsController {
 
   @FXML // fx:id="newReservedPriceTextField"
   private TextField newReservedPriceTextField; // Value injected by FXMLLoader
@@ -136,11 +136,19 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     if (response.success()) {
       // cleanCtrl(); // FIXME doing this doesn't update the prices for some reason
       ParkingLot lot = parkingLotsMap.get(response.getStreetAddress());
+      newReservedPriceTextField.clear();
+      newIncidentalPriceTextField.clear();
       
       if (lot != null) {
         lot.setPrice1(response.getPrice1());
         lot.setPrice2(response.getPrice2());
-      }      
+      }
+      
+      super.handleGenericResponse(response);
+      infoLabel.getChildren().add(new Text("\nNew incidental parking price: " + response.getPrice1() + " ILS"));
+      infoLabel.getChildren().add(new Text("\nNew reserved parking price: " + response.getPrice2() + " ILS"));
+      setFinishInsteadOfSubmit(true);
+      return response;
     }
     
     super.handleGenericResponse(response);

@@ -338,6 +338,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
 
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       formattedMessage.add(new Text("Succesfully reserved parking per request!\n"));
+      formattedMessage.add(new Text(String.format("Your account was debited %s ILS.", response.getPayment())));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
       setFinishInsteadOfSubmit(true);
