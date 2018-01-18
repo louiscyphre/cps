@@ -85,7 +85,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
   }
 
   @FXML
-  void handleDisableSlot(ActionEvent event) {
+  void handleReserveSlot(ActionEvent event) {
     if (!processing) {
       if (selectedCar != null && !reserveButton.isDisabled()) {
         User user;
@@ -103,7 +103,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
   }
 
   @FXML
-  void handleReserveSlot(ActionEvent event) {
+  void handleDisableSlot(ActionEvent event) {
     if (!processing) {
       if (selectedCar != null && !disableButton.isDisabled()) {
         User user;
