@@ -275,13 +275,13 @@ INSERT INTO `parking_lot` VALUES (1,'Sesam 2',4,5,3,NULL,'12.f.t43','\0'),(2,'Ra
 UNLOCK TABLES;
 
 --
--- Table structure for table `quarterly_report`
+-- Table structure for table `monthly_report`
 --
 
-DROP TABLE IF EXISTS `quarterly_report`;
+DROP TABLE IF EXISTS `monthly_report`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `quarterly_report` (
+CREATE TABLE `monthly_report` (
   `year` int(11) NOT NULL,
   `quarter` int(11) NOT NULL,
   `lot_id` int(11) NOT NULL,
@@ -299,9 +299,9 @@ CREATE TABLE `quarterly_report` (
 -- Dumping data for table `quarterly_report`
 --
 
-LOCK TABLES `quarterly_report` WRITE;
-/*!40000 ALTER TABLE `quarterly_report` DISABLE KEYS */;
-/*!40000 ALTER TABLE `quarterly_report` ENABLE KEYS */;
+LOCK TABLES `monthly_report` WRITE;
+/*!40000 ALTER TABLE `monthly_report` DISABLE KEYS */;
+/*!40000 ALTER TABLE `monthly_report` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
