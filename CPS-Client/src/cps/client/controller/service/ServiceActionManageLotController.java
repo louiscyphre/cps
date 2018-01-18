@@ -414,16 +414,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
         for (int width = 0; width < content.length; width++) {
           ParkingCell currentParkingCell = content[width][level][depth];
           parkingCell.get(level).get(depth).add(width, currentParkingCell);
-          if (currentParkingCell.isFree() || currentParkingCell == null) {
-            rectPaint = (Paint.valueOf("WHITE"));
-          } else if (currentParkingCell.isDisabled()) {
-            rectPaint = (Paint.valueOf("RED"));
-          } else if (currentParkingCell.isReserved()) {
-            rectPaint = (Paint.valueOf("GREEN"));
-          } else {
-            rectPaint = (Paint.valueOf("BLUE"));
-          }
-          Rectangle currentRectangle = new Rectangle(rectWidth, rectHeight, rectPaint);
+          Rectangle currentRectangle = new Rectangle(rectWidth, rectHeight);
+          paintRectAccordingToCell(currentParkingCell, currentRectangle);
           currentRectangle.setArcHeight(rectWidth * 0.2);
           currentRectangle.setArcWidth(rectHeight * 0.2);
           currentRectangle.setStroke(Paint.valueOf("BLACK"));
@@ -510,9 +502,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
   public ServerResponse handle(ReserveParkingSlotsResponse response) {
     super.handleGenericResponse(response);
     if (response.success()) {
-      validateAndSend();
-      reserveButton.setDisable(true);
-      disableButton.setDisable(true);
+      selectedCell.setReserved(!selectedCell.isReserved());
+      paintRectAccordingToCell(selectedCell, selectedCar);
     }
     return null;
   }
@@ -521,10 +512,25 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
   public ServerResponse handle(DisableParkingSlotsResponse response) {
     super.handleGenericResponse(response);
     if (response.success()) {
-      validateAndSend();
-      reserveButton.setDisable(true);
-      disableButton.setDisable(true);
+      selectedCell.setDisabled(!selectedCell.isDisabled());
+      paintRectAccordingToCell(selectedCell, selectedCar);
     }
     return null;
+  }
+
+  void paintRectAccordingToCell(ParkingCell currentParkingCell, Rectangle rect) {
+    Paint rectPaint;
+    if (currentParkingCell.isFree() || currentParkingCell == null) {
+      rectPaint = (Paint.valueOf("WHITE"));
+    } else if (currentParkingCell.isDisabled() && currentParkingCell.isReserved()) {
+      rectPaint = (Paint.valueOf("YELLOW"));
+    } else if (currentParkingCell.isDisabled()) {
+      rectPaint = (Paint.valueOf("RED"));
+    } else if (currentParkingCell.isReserved()) {
+      rectPaint = (Paint.valueOf("GREEN"));
+    } else {
+      rectPaint = (Paint.valueOf("BLUE"));
+    }
+    rect.setFill(rectPaint);
   }
 }
