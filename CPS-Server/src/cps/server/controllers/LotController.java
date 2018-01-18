@@ -92,7 +92,7 @@ public class LotController extends RequestController {
       // Check request parameters
       errorIf(request.getPrice1() < 0f, "Price cannot be negative");
       errorIf(request.getPrice2() < 0f, "Price cannot be negative");
-      errorIf(request.getSize() < 1, "Number of cars per row must be at least one.");
+      errorIf(!between(request.getSize(), 4, 8), "Number of cars per row must be at least 4 and at most 8.");
       errorIf(isEmpty(request.getStreetAddress()), "Street address must be non-empty");
       errorIf(isEmpty(request.getRobotIP()), "Robot IP address must be non-empty");
 
