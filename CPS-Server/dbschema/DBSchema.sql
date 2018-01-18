@@ -68,7 +68,7 @@ CREATE TABLE `customer` (
   `debit` float NOT NULL DEFAULT '0',
   `credit` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -85,6 +85,7 @@ CREATE TABLE `daily_statistics` (
   `canceled_orders` int(10) DEFAULT '0',
   `late_arrivals` int(10) DEFAULT '0',
   `inactive_slots` int(10) DEFAULT '0',
+  `complaints` int(10) DEFAULT '0',
   PRIMARY KEY (`day`,`lot_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -102,6 +103,7 @@ CREATE TABLE `disabled_slots_table` (
   `width` int(11) NOT NULL,
   `height` int(11) NOT NULL,
   `depth` int(11) NOT NULL,
+  `date_enabled` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`lotid`,`depth`,`height`,`width`,`date_disabled`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -142,11 +144,10 @@ CREATE TABLE `onetime_service` (
   `planned_start_time` datetime NOT NULL,
   `planned_end_time` datetime NOT NULL,
   `parked` bit(1) NOT NULL DEFAULT b'0',
-  `completed` bit(1) NOT NULL DEFAULT b'0',
   `canceled` bit(1) NOT NULL DEFAULT b'0',
   `warned` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -263,4 +264,4 @@ CREATE TABLE `weekly_statistics` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-18  0:34:38
+-- Dump completed on 2018-01-18 18:47:47

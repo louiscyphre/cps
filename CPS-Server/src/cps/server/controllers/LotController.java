@@ -6,10 +6,10 @@ import static cps.common.Utilities.valueOrDefault;
 
 import java.util.Collection;
 
-import cps.api.action.InitLotAction;
 import cps.api.action.ParkingCellSetDisabledAction;
-import cps.api.action.ParkingCellSetReservedAction;
+import cps.api.action.InitLotAction;
 import cps.api.action.RequestLotStateAction;
+import cps.api.action.ParkingCellSetReservedAction;
 import cps.api.action.SetFullLotAction;
 import cps.api.action.UpdatePricesAction;
 import cps.api.request.ListParkingLotsRequest;
@@ -22,12 +22,14 @@ import cps.api.response.ServerResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.common.Constants;
+import cps.entities.models.DisabledCellsStatistics;
 import cps.entities.models.ParkingCell;
 import cps.entities.models.ParkingCell.ParkingCellVisitorWithException;
 import cps.entities.models.ParkingLot;
 import cps.entities.people.CompanyPerson;
 import cps.entities.people.User;
 import cps.server.ServerController;
+import cps.server.ServerException;
 import cps.server.session.ServiceSession;
 import cps.server.session.UserSession;
 
@@ -280,15 +282,26 @@ public class LotController extends RequestController {
    * @param session
    *          the session
    * @return the server response
+   * @throws ServerException
    */
-  public ServerResponse handle(ParkingCellSetDisabledAction action, ServiceSession session) {
+  public ServerResponse handle(ParkingCellSetDisabledAction action, ServiceSession session) throws ServerException {
     String successMessage = action.getValue() ? "Parking cell disabled successfully" : "Parking cell enabled successfully";
     ServerResponse toRet = reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(),
         action.getLocationI(), action.getLocationJ(), action.getLocationK(),
         cell -> cell.setDisabled(action.getValue()), successMessage);
     
     if (toRet.success()) {
-      // TODO Tegra add the cell to list of statistics disabled cells
+      // TODO Tegra DONE add the cell to list of statistics disabled cells 
+      database.performAction(conn -> {
+        if (action.getValue()) {
+          DisabledCellsStatistics.create(conn, action.getLotID(), action.getLocationI(), action.getLocationJ(),
+              action.getLocationK());
+        } else {
+          DisabledCellsStatistics.markfixed(conn, action.getLotID(), action.getLocationI(), action.getLocationJ(),
+              action.getLocationK());
+        }
+      });
+
     }
 
     return toRet;
