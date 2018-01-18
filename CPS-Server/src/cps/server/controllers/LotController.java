@@ -284,7 +284,7 @@ public class LotController extends RequestController {
    * @return the server response
    * @throws ServerException
    */
-  public ServerResponse handle(ParkingCellSetDisabledAction action, ServiceSession session) throws ServerException {
+  public ServerResponse handle(ParkingCellSetDisabledAction action, ServiceSession session) {
     String successMessage = action.getValue() ? "Parking cell disabled successfully" : "Parking cell enabled successfully";
     ServerResponse toRet = reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(),
         action.getLocationI(), action.getLocationJ(), action.getLocationK(),
@@ -292,7 +292,7 @@ public class LotController extends RequestController {
     
     if (toRet.success()) {
       // TODO Tegra DONE add the cell to list of statistics disabled cells 
-      database.performAction(conn -> {
+      return database.performQuery(toRet, (conn, response) -> {
         if (action.getValue()) {
           DisabledCellsStatistics.create(conn, action.getLotID(), action.getLocationI(), action.getLocationJ(),
               action.getLocationK());
@@ -300,10 +300,10 @@ public class LotController extends RequestController {
           DisabledCellsStatistics.markfixed(conn, action.getLotID(), action.getLocationI(), action.getLocationJ(),
               action.getLocationK());
         }
+        return response;
       });
-
     }
-
+    
     return toRet;
   }
 }
