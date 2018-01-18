@@ -33,6 +33,7 @@
     -fx-font-size: 16;
     -fx-font-family: 'Sans-serif';
     -fx-alignment:center;
+    -fx-padding: 50 20 20 20;
 }
 
 .regularButton {
@@ -91,6 +92,15 @@
     -fx-background-radius: 8 8 8 8;
     -fx-pref-width:300;
     -fx-min-width:300;
+    -fx-pref-height:40;
+    -fx-margin: 0 0 0 0;
+}
+
+.subscriptionsComboBox {
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-pref-width:420;
+    -fx-min-width:420;
     -fx-pref-height:40;
     -fx-margin: 0 0 0 0;
 }

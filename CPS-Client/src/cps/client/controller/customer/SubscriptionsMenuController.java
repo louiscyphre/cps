@@ -23,6 +23,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 
 /**
  * Created on: 2018-01-09 1:04:02 AM
@@ -30,9 +33,10 @@ import javafx.scene.control.ToggleGroup;
 public class SubscriptionsMenuController extends CustomerActionControllerBase implements ParkingLotsController {
   
   @FXML
-  private Label             regularSubscriptionInfo;
+  private TextFlow regularSubscriptionInfo;
+  
   @FXML
-  private Label             fullSubscriptionInfo;
+  private TextFlow fullSubscriptionInfo;
 
   @FXML
   private ToggleGroup subscriptionRadioButtons;
@@ -75,9 +79,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     StringBuilder builder = new StringBuilder();
     builder.append("Park in specified lot all week daily except weekends for ");
     builder.append(subscriptionOverallPrice).append(" ILS only!");
-    regularSubscriptionInfo.setText(builder.toString());
-    regularSubscriptionInfo.setMaxWidth(Double.MAX_VALUE);
-    regularSubscriptionInfo.setAlignment(Pos.CENTER);//FIXME somehow
+    setInfo(regularSubscriptionInfo, builder.toString());
   }
   
   private void  setFullSubscriptionInfo() {
@@ -85,9 +87,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     StringBuilder builder = new StringBuilder();
     builder.append("Park any day, any time, in any parking lot for ");
     builder.append(subscriptionOverallPrice).append(" ILS only!");
-    fullSubscriptionInfo.setText(builder.toString());
-    fullSubscriptionInfo.setMaxWidth(Double.MAX_VALUE);
-    fullSubscriptionInfo.setAlignment(Pos.CENTER);//FIXME somehow
+    setInfo(fullSubscriptionInfo, builder.toString());
   }
   
   @FXML
@@ -140,8 +140,10 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
   void initialize() {
     super.baseInitialize();
     assert subscriptionRadioButtons != null : "fx:id=\"subscriptionRadioButtons\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
-
-    regularSubscriptionInfo.setText("Choose option to see specific lot's prices");
+    assert regularSubscriptionInfo != null : "fx:id=\"regularSubscriptionInfo\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
+    assert fullSubscriptionInfo != null : "fx:id=\"fullSubscriptionInfo\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
+    
+    setInfo(regularSubscriptionInfo, "Choose option to see specific lot's prices");
     setFullSubscriptionInfo();
     
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
@@ -153,5 +155,10 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     super.cleanCtrl();
     // toggles clear
     subscriptionRadioButtons.getToggles().clear();
+  }
+  
+  private void setInfo(TextFlow textBox, String info) {
+    textBox.getChildren().clear();
+    textBox.getChildren().add(new Text(info));
   }
 }
