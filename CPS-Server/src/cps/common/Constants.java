@@ -49,7 +49,7 @@ public interface Constants {
   public final String SQL_OVERLAPPING_ONETIME_SERVICE_CLAUSE = "car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (? < planned_start_time AND planned_start_time < ?)) AND not canceled AND not completed";
   public final String SQL_FIND_OVERLAPPING_ONETIME_SERVICE   = "SELECT * FROM onetime_service WHERE " + SQL_OVERLAPPING_ONETIME_SERVICE_CLAUSE;
   public final String SQL_COUNT_OVERLAPPING_ONETIME_SERVICE  = "SELECT count(*) FROM onetime_service WHERE " + SQL_OVERLAPPING_ONETIME_SERVICE_CLAUSE;
-  public final String SQL_UPDATE_ONETIME_BY_ID               = "UPDATE onetime_service SET parking_type=?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, parked=?, canceled=?, warned=? WHERE id=?";
+  public final String SQL_UPDATE_ONETIME_BY_ID               = "UPDATE onetime_service SET parking_type=?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, parked=?, completed=?, canceled=?, warned=? WHERE id=?";
 
   // SQL queries - SubscriptionService
   // TODO: add `parked` field to `subscription_service` table

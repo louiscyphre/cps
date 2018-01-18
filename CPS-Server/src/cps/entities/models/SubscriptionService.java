@@ -346,4 +346,34 @@ public class SubscriptionService implements ParkingService {
     st.close();
     
   }
+
+  @Override
+  public boolean isCompleted() {
+    return LocalDateTime.of(endDate, dailyExitTime).isBefore(LocalDateTime.now()) && !parked;
+  }
+
+  @Override
+  public void setCompleted(boolean completed) {
+    
+  }
+
+  @Override
+  public boolean isCanceled() {
+    return false;
+  }
+
+  @Override
+  public void setCanceled(boolean canceled) {
+    
+  }
+
+  @Override
+  public boolean isWarned() {
+    return false;
+  }
+
+  @Override
+  public void setWarned(boolean warned) {
+    
+  }
 }
