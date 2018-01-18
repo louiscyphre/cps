@@ -95,6 +95,15 @@
     -fx-margin: 0 0 0 0;
 }
 
+.subscriptionsComboBox {
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-pref-width:420;
+    -fx-min-width:420;
+    -fx-pref-height:40;
+    -fx-margin: 0 0 0 0;
+}
+
 .datePicker {
     -fx-border-radius: 8 8 8 8;
     -fx-background-radius: 8 8 8 8;
