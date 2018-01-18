@@ -21,6 +21,8 @@
     -fx-font-size: 16;
     -fx-font-family: 'Sans-serif';
     -fx-label-padding: 10 10 10 10;
+    -fx-pref-width:180;
+    -fx-pref-height:60;
 }
 
 .subscriptionDetailsSquare {
@@ -44,6 +46,8 @@
     -fx-font-size: 16;
     -fx-font-family: 'Sans-serif';
     -fx-label-padding: 10 10 10 10;
+    -fx-pref-width:180;
+    -fx-pref-height:60;
 }
 
 .mediumButton {
@@ -54,16 +58,6 @@
 .smallButton {
 	-fx-font-size: 12;
     -fx-label-padding: 0 0 0 0;
-}
-
-.transitionalOkButton {
-    -fx-color: #000000;
-    -fx-background-color: #5CB85C;
-    -fx-border-radius: 8 8 8 8;
-    -fx-background-radius: 8 8 8 8;
-    -fx-font-size: 16;
-    -fx-font-family: 'Sans-serif';
-    -fx-label-padding: 10 10 10 10;
 }
 
 .inputField, .passwordInputField {
@@ -83,15 +77,21 @@
 .vbox {
     -fx-padding: 15 20 20 20;
     -fx-spacing:15px;
-    -fx-pref-width:360;
+    -fx-pref-width:400;
     -fx-pref-height:650;
+}
+
+.vboxSmall {
+    -fx-padding: 15 20 20 20;
+    -fx-spacing:15px;
+    -fx-pref-width:400;
 }
 
 .comboBox {
     -fx-border-radius: 8 8 8 8;
     -fx-background-radius: 8 8 8 8;
-    -fx-pref-width:300;
-    -fx-min-width:300;
+    -fx-pref-width:320;
+    -fx-min-width:320;
     -fx-pref-height:40;
     -fx-margin: 0 0 0 0;
 }
@@ -120,6 +120,22 @@
 	-fx-border-color : #bce8f1;
 	-fx-margin-top:20;
 	-fx-font-size:14;
+    -fx-pref-width:320;
+    -fx-max-width:320;
+    -fx-min-width:320;
+}
+
+.bigInfoLabel {
+	-fx-background-color : #d9edf7;
+	-fx-background-radius :  8 8 8 8;
+	-fx-text-fill :  #31708f;
+	-fx-border-radius :  8 8 8 8;
+	-fx-border-color : #bce8f1;
+	-fx-margin-top:20;
+	-fx-font-size:14;
+    -fx-pref-width:420;
+    -fx-max-width:420;
+    -fx-min-width:420;
 }
 
 

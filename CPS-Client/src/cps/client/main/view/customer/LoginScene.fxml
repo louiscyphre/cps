@@ -11,7 +11,7 @@
 
 <BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.LoginController">
   <center>
-    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="360.0" spacing="25.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="401.0" spacing="20.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
         <TextField fx:id="emailTextField" alignment="CENTER" prefHeight="60.0" prefWidth="200.0" promptText="Enter your E-mail here" style="" styleClass="inputField" text="">
           <VBox.margin>
@@ -40,7 +40,7 @@
             <Insets bottom="-1.0" left="10.0" right="10.0" top="10.0" />
           </padding>
         </VBox>
-        <HBox alignment="CENTER" prefHeight="60.0" prefWidth="263.0" spacing="0.0" style="-fx-padding:0 0 0 0;">
+        <HBox alignment="CENTER" prefHeight="60.0" prefWidth="263.0" spacing="0.0" style="-fx-padding:0 0 0 0;" styleClass="buttonGroupHBox">
           <children>
             <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="0.0" style="&#10;">
               <children>
@@ -76,7 +76,7 @@
         </HBox>
       </children>
       <padding>
-        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+        <Insets bottom="30.0" left="35.0" right="35.0" top="30.0" />
       </padding>
       <stylesheets>
         <URL value="@application.css" />
