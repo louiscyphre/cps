@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.CustomerMainMenuController">
+  <center>
+    <VBox fx:id="buttonsVbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="360.0" spacing="15.0" style="&#10;" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+      <children>
+        <Button id="" fx:id="logInButton" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Login" textAlignment="CENTER">
+          <stylesheets>
+            <URL value="@application.css" />
+          </stylesheets>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+        </Button>
+            <Button id="" fx:id="logOutButton" alignment="CENTER" contentDisplay="LEFT" layoutX="100.0" layoutY="34.0" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Logout" textAlignment="CENTER">
+               <stylesheets>
+                  <URL value="@application.css" />
+               </stylesheets>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Button>
+        <Button id="" fx:id="reserveParkingButton" alignment="CENTER" contentDisplay="LEFT" graphicTextGap="4.0" mnemonicParsing="false" onAction="#handleReserveParkingButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Reserve parking" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></Button>
+        <Button id="" fx:id="buySubscriptionButton" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleBuySubscriptionButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Buy subscription" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></Button>
+        <Button id="" fx:id="parkNowButton" alignment="CENTER" contentDisplay="LEFT" mnemonicParsing="false" onAction="#handleParkNowButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Park now" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></Button>
+            <Button id="" fx:id="enterParkingButton" alignment="CENTER" contentDisplay="LEFT" layoutX="100.0" layoutY="284.0" mnemonicParsing="false" onAction="#handleEnterParkingButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Enter Parking" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Button>
+            <Button id="" fx:id="exitParkingButton" alignment="CENTER" contentDisplay="LEFT" layoutX="100.0" layoutY="410.0" mnemonicParsing="false" onAction="#handleExitParkingButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Exit Parking" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Button>
+            <Button id="" fx:id="viewMyReservationsButton" alignment="CENTER" contentDisplay="LEFT" layoutX="100.0" layoutY="316.0" mnemonicParsing="false" onAction="#handleViewMyReservationsButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="View my orders" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Button>
+            <Button id="" fx:id="fileComplaintButton" alignment="CENTER" contentDisplay="LEFT" layoutX="100.0" layoutY="316.0" mnemonicParsing="false" onAction="#handleFileComplaintButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="File Complaint" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Button>
+            <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="299.0" spacing="0.0" styleClass="infoLabel">
+               <children>
+                  <ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />
+                  <TextFlow fx:id="infoLabel" prefHeight="77.0" prefWidth="280.0" textAlignment="CENTER">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </TextFlow>
+               </children>
+            </VBox>
+      </children>
+      <stylesheets>
+        <URL value="@application.css" />
+      </stylesheets>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+    </VBox>
+  </center>
+</BorderPane>

@@ -1,0 +1,158 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.shadowedBox {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 40, 0, 0,0);
+    -fx-background-color: #D9D9D9;
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+}
+
+.loggedInButtonsBox {
+    -fx-min-height:750;
+    -fx-pref-height:780;
+    -fx-pref-width:460;
+}
+
+.backButton, .cancelButton {
+    -fx-background-color: #F3F3F3;
+    -fx-color: #ffffff;
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-font-size: 16;
+    -fx-font-family: 'Sans-serif';
+    -fx-label-padding: 10 10 10 10;
+}
+
+.subscriptionDetailsSquare {
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-background-color: #FEFEFE;
+    -fx-border-color: #B4B4B4;
+    -fx-border-width: 2;
+    -fx-text-fill: #555753;
+    -fx-font-size: 16;
+    -fx-font-family: 'Sans-serif';
+    -fx-alignment:center;
+    -fx-padding: 50 20 20 20;
+}
+
+.regularButton {
+    -fx-color: #000000;
+    -fx-background-color: #337AB7;
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-font-size: 16;
+    -fx-font-family: 'Sans-serif';
+    -fx-label-padding: 10 10 10 10;
+}
+
+.mediumButton {
+	-fx-font-size: 14;
+    -fx-label-padding: 2 2 2 2;
+}
+
+.smallButton {
+	-fx-font-size: 12;
+    -fx-label-padding: 0 0 0 0;
+}
+
+.transitionalOkButton {
+    -fx-color: #000000;
+    -fx-background-color: #5CB85C;
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-font-size: 16;
+    -fx-font-family: 'Sans-serif';
+    -fx-label-padding: 10 10 10 10;
+}
+
+.inputField, .passwordInputField {
+    -fx-padding: 15 15 15 15;
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-pref-width:320;
+    -fx-pref-height:40;
+    -fx-max-width:320;
+}
+
+.buttonGroupHBox {
+    -fx-pref-width:320;
+    -fx-max-width:320;
+}
+
+.vbox {
+    -fx-padding: 15 20 20 20;
+    -fx-spacing:15px;
+    -fx-pref-width:360;
+    -fx-pref-height:650;
+}
+
+.comboBox {
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-pref-width:300;
+    -fx-min-width:300;
+    -fx-pref-height:40;
+    -fx-margin: 0 0 0 0;
+}
+
+.subscriptionsComboBox {
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-pref-width:420;
+    -fx-min-width:420;
+    -fx-pref-height:40;
+    -fx-margin: 0 0 0 0;
+}
+
+.datePicker {
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-pref-width:320;
+    -fx-max-width:320;
+}
+
+.infoLabel {
+	-fx-background-color : #d9edf7;
+	-fx-background-radius :  8 8 8 8;
+	-fx-text-fill :  #31708f;
+	-fx-border-radius :  8 8 8 8;
+	-fx-border-color : #bce8f1;
+	-fx-margin-top:20;
+	-fx-font-size:14;
+}
+
+
+
+.errorLabel {
+	-fx-background-color : #f2dede;
+	-fx-background-radius :  8 8 8 8;
+	-fx-text-fill :  #a94442;
+	-fx-border-radius :  8 8 8 8;
+	-fx-border-color : #ebccd1;
+	-fx-font-size:14;
+}
+
+.successLabel {
+	-fx-background-color : #dff0d8;
+	-fx-background-radius :  8 8 8 8;
+	-fx-text-fill :  #3c763d;
+	-fx-border-radius :  8 8 8 8;
+	-fx-border-color : #d6e9c6;
+	-fx-font-size:14;
+}
+
+.processingLabel {
+	-fx-background-color : #affff4;
+	-fx-background-radius :  8 8 8 8;
+	-fx-text-fill :  #8a6d3b;
+	-fx-border-radius :  8 8 8 8;
+	-fx-border-color : #97dbd1;
+	-fx-font-size:14;
+}
+
+.textFont{
+	-fx-font-size: 14;
+	-fx-text-alignment : left;
+    -fx-font-family: 'Sans-serif';
+}
