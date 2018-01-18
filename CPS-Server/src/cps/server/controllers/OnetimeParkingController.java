@@ -193,8 +193,9 @@ public class OnetimeParkingController extends RequestController {
       } else if (duration.compareTo(Duration.ofHours(1)) >= 0) {
         refundValue = 0.5f;
       } else {
-        response.setError("The service order cannot be canceled at this time.");
-        return response;
+//        response.setError("The service order cannot be canceled at this time.");
+//        return response;
+        refundValue = 0f;
       }
 
       float refundAmount = 0f;
