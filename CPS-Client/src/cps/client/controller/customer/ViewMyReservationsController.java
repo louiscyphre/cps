@@ -168,7 +168,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
     List<TableOnetimeService> newEntriesList = new LinkedList<TableOnetimeService>();
     Timestamp now = Timestamp.valueOf(LocalDateTime.now());
     list.forEach(e -> {
-      if(e.getPlannedEndTime().compareTo(now) > 0 && !e.isCanceled()) {
+      if(e.getPlannedEndTime().compareTo(now) > 0 && !e.isCanceled() && !e.isCompleted()) {
         TableOnetimeService toAdd = new TableOnetimeService((e.getParkingType()), e.getCarID(), e.getLotID(),
             e.getPlannedStartTime().toString(), e.getPlannedEndTime().toString(), e.getId());
         newEntriesList.add(toAdd);

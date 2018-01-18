@@ -176,10 +176,10 @@ public class OnetimeParkingController extends RequestController {
       // Mark Order as canceled
       OnetimeService service = OnetimeService.findByID(conn, request.getOnetimeServiceID());
 
-      if (service == null) {
-        response.setError(String.format("OnetimeService with id %s not found", request.getOnetimeServiceID()));
-        return response;
-      }
+      errorIfNull(service, String.format("OnetimeService with id %s not found", request.getOnetimeServiceID()));
+      errorIf(service.isCompleted(), "This service was already completed");
+      errorIf(service.isCanceled(), "This service was already canceled");
+      errorIf(service.isParked(), "This service is currently being used for parking");
 
       // Calculate refund amount based on how late the cancel request was
       // submitted
