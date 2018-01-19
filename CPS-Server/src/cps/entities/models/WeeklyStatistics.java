@@ -6,11 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.mysql.jdbc.Connection;
 
 import cps.common.Constants;
 
+// TODO: Auto-generated Javadoc
+/** The Class WeeklyStatistics. */
 public class WeeklyStatistics implements Serializable {
   private static final long serialVersionUID = 1L;
   // `start` date NOT NULL,
@@ -36,8 +39,21 @@ public class WeeklyStatistics implements Serializable {
   private String    canceledOrdersDist;
   private String    lateArrivalsDist;
 
-  public WeeklyStatistics(LocalDate start, int lotID, float realizedOrdersMean, float canceledOrdersMean, float lateArrivalsMean, float realizedOrdersMedian,
-      float canceledOrdersMedian, float lateArrivalsMedian, String realizedOrdersDist, String canceledOrdersDist, String lateArrivalsDist) {
+  /** Instantiates a new weekly statistics.
+   * @param start the start
+   * @param lotID the lot ID
+   * @param realizedOrdersMean the realized orders mean
+   * @param canceledOrdersMean the canceled orders mean
+   * @param lateArrivalsMean the late arrivals mean
+   * @param realizedOrdersMedian the realized orders median
+   * @param canceledOrdersMedian the canceled orders median
+   * @param lateArrivalsMedian the late arrivals median
+   * @param realizedOrdersDist the realized orders dist
+   * @param canceledOrdersDist the canceled orders dist
+   * @param lateArrivalsDist the late arrivals dist */
+  public WeeklyStatistics(LocalDate start, int lotID, float realizedOrdersMean, float canceledOrdersMean,
+      float lateArrivalsMean, float realizedOrdersMedian, float canceledOrdersMedian, float lateArrivalsMedian,
+      String realizedOrdersDist, String canceledOrdersDist, String lateArrivalsDist) {
     super();
     this.start = start;
     this.setLotID(lotID);
@@ -52,14 +68,33 @@ public class WeeklyStatistics implements Serializable {
     this.lateArrivalsDist = lateArrivalsDist;
   }
 
+  /** Instantiates a new weekly statistics.
+   * @param rs the rs
+   * @throws SQLException the SQL exception */
   public WeeklyStatistics(ResultSet rs) throws SQLException {
-    this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getFloat(3), rs.getFloat(4), rs.getFloat(5), rs.getFloat(6), rs.getFloat(7), rs.getFloat(8),
-        rs.getString(9), rs.getString(10), rs.getString(11));
+    this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getFloat(3), rs.getFloat(4), rs.getFloat(5), rs.getFloat(6),
+        rs.getFloat(7), rs.getFloat(8), rs.getString(9), rs.getString(10), rs.getString(11));
   }
 
-  public static WeeklyStatistics create(Connection conn, LocalDate start, int lotID, float realizedOrdersMean, float canceledOrdersMean, float lateArrivalsMean,
-      float realizedOrdersMedian, float canceledOrdersMedian, float lateArrivalsMedian, String realizedOrdersDist, String canceledOrdersDist,
-      String lateArrivalsDist) throws SQLException {
+  /** Creates the.
+   * @param conn the conn
+   * @param start the start
+   * @param lotID the lot ID
+   * @param realizedOrdersMean the realized orders mean
+   * @param canceledOrdersMean the canceled orders mean
+   * @param lateArrivalsMean the late arrivals mean
+   * @param realizedOrdersMedian the realized orders median
+   * @param canceledOrdersMedian the canceled orders median
+   * @param lateArrivalsMedian the late arrivals median
+   * @param realizedOrdersDist the realized orders dist
+   * @param canceledOrdersDist the canceled orders dist
+   * @param lateArrivalsDist the late arrivals dist
+   * @return the weekly statistics
+   * @throws SQLException the SQL exception */
+  public static WeeklyStatistics create(Connection conn, LocalDate start, int lotID, float realizedOrdersMean,
+      float canceledOrdersMean, float lateArrivalsMean, float realizedOrdersMedian, float canceledOrdersMedian,
+      float lateArrivalsMedian, String realizedOrdersDist, String canceledOrdersDist, String lateArrivalsDist)
+      throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_WEEKLY_STATISTICS);
 
     int field = 0;
@@ -79,10 +114,26 @@ public class WeeklyStatistics implements Serializable {
     statement.executeUpdate();
     statement.close();
 
-    return new WeeklyStatistics(start, lotID, realizedOrdersMean, canceledOrdersMean, lateArrivalsMean, realizedOrdersMedian, canceledOrdersMedian,
-        lateArrivalsMedian, realizedOrdersDist, canceledOrdersDist, lateArrivalsDist);
+    return new WeeklyStatistics(start, lotID, realizedOrdersMean, canceledOrdersMean, lateArrivalsMean,
+        realizedOrdersMedian, canceledOrdersMedian, lateArrivalsMedian, realizedOrdersDist, canceledOrdersDist,
+        lateArrivalsDist);
   }
 
+  /** Creates the for.
+   * @param conn the conn
+   * @param day the day
+   * @param lotid the lotid */
+  public static void createFor(Connection conn, LocalDateTime day, int lotid) {
+    // XXX I'm here
+
+  }
+
+  /** Find.
+   * @param conn the conn
+   * @param start the start
+   * @param lotID the lot ID
+   * @return the weekly statistics
+   * @throws SQLException the SQL exception */
   public static WeeklyStatistics find(Connection conn, LocalDate start, int lotID) throws SQLException {
     WeeklyStatistics item = null;
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_WEEKLY_STATISTICS);
@@ -105,13 +156,14 @@ public class WeeklyStatistics implements Serializable {
 
   }
 
+  /** Update.
+   * @param conn the conn
+   * @throws SQLException the SQL exception */
   public void update(Connection conn) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_UPDATE_WEEKLY_STATISTICS);
 
     int field = 0;
 
-    statement.setDate(field++, Date.valueOf(start));
-    statement.setInt(field++, lotID);
     statement.setFloat(field++, realizedOrdersMean);
     statement.setFloat(field++, canceledOrdersMean);
     statement.setFloat(field++, lateArrivalsMean);
@@ -121,6 +173,8 @@ public class WeeklyStatistics implements Serializable {
     statement.setString(field++, realizedOrdersDist);
     statement.setString(field++, canceledOrdersDist);
     statement.setString(field++, lateArrivalsDist);
+    statement.setDate(field++, Date.valueOf(start));
+    statement.setInt(field++, lotID);
 
     statement.executeUpdate();
 

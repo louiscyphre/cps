@@ -119,20 +119,17 @@ public class ParkingExitController extends RequestController {
     long inside = service.getPlannedEndTime().getTime() - service.getPlannedStartTime().getTime();
     inside = inside / (60 * 1000);
 
-    // Has the customer left late or early? negative means early positive means
-    // late
+    // Has the customer left late or early? negative means early positive means late
     long endedLate = carTransportation.getRemovedAt().getTime() - service.getPlannedEndTime().getTime();
     endedLate = endedLate / (60 * 1000);
 
     // If the customer running late less than 30 minutes - discard being late
-    // and
-    // charge full ordered time
+    // and charge full ordered time
     if (startedLate < 30) {
       startedLate = 0;
     } else {
       // if the customer came in early simply add minutes to total time and
-      // charge
-      // normal
+      // charge normal rate
       if (startedLate < 0) {
         inside -= startedLate;
       }
@@ -168,9 +165,8 @@ public class ParkingExitController extends RequestController {
         return lateMinutes * parkingLot.getPrice1() / 60;
       }
     } else if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_FULL) {
-      // Charge a fine if customer stays parked continuously for longer than 14
-      // days
-      // with a full subscription
+      // Charge a fine if customer stays parked continuously for longer than
+      // 14 days with a full subscription
       long maxMinutes = 14 * 24 * 60; // 14 days
       long removedAt = carTransportation.getRemovedAt().getTime();
       long insertedAt = carTransportation.getInsertedAt().getTime();

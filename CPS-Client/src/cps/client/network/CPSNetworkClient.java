@@ -2,6 +2,8 @@ package cps.client.network;
 
 import java.io.IOException;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import ocsf.client.AbstractClient;
 
 /**
@@ -62,6 +64,12 @@ public class CPSNetworkClient extends AbstractClient {
     } finally {
       System.exit(0);
     }
+  }
+
+  @Override
+  protected void connectionException(Exception exception) {
+    System.err.format("Connection exception: %s\n", exception.getMessage());
+    // TODO show message "lost connection to server"
   }
 
 }

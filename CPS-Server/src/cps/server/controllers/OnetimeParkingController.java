@@ -32,12 +32,9 @@ import cps.server.session.UserSession;
 /** Handles OnetimeService requests. */
 public class OnetimeParkingController extends RequestController {
 
-  /**
-   * Instantiates a new one-time parking controller.
-   * 
+  /** Instantiates a new one-time parking controller.
    * @param serverController
-   *          the server application
-   */
+   *        the server application */
   public OnetimeParkingController(ServerController serverController) {
     super(serverController);
   }
@@ -110,46 +107,25 @@ public class OnetimeParkingController extends RequestController {
     });
   }
 
-  /**
-   * Handle IncidentalParkingRequest.
-   * 
+  /** Handle IncidentalParkingRequest.
    * @param request
-   *          the request
+   *        the request
    * @param session
-   *          the session
-   * @return the server response
-   */
+   *        the session
+   * @return the server response */
   public ServerResponse handle(IncidentalParkingRequest request, CustomerSession session) {
     Timestamp startTime = new Timestamp(System.currentTimeMillis());
     Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
     IncidentalParkingResponse response = new IncidentalParkingResponse();
-    ServerResponse toRet = handle(request, session, response, startTime, plannedEndTime, startTime.toLocalDateTime());
-    if (toRet.success()) {
-      // FIXME Tegra DONE increase incidental parking - daily
-      try {
-        database.performAction(conn -> {
-          DailyStatistics.increaseRealizedOrder(conn, request.getLotID());
-        });
-      } catch (ServerException e) {
-        // TODO Cauchy Auto-generated catch block
-        // should something be here?
-        e.printStackTrace();
-      }
-      // TODO Tegra increase IncidentalParkingRequest statistics - quarterly
-
-    }
-    return toRet;
+    return handle(request, session, response, startTime, plannedEndTime, startTime.toLocalDateTime());
   }
 
-  /**
-   * Handle ReservedParkingRequest.
-   * 
+  /** Handle ReservedParkingRequest.
    * @param request
-   *          the request
+   *        the request
    * @param session
-   *          the session
-   * @return the server response
-   */
+   *        the session
+   * @return the server response */
   public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {
     Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
     Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
@@ -162,24 +138,21 @@ public class OnetimeParkingController extends RequestController {
     return toRet;
   }
 
-  /**
-   * Handle CancelOnetimeParkingRequest.
-   * 
+  /** Handle CancelOnetimeParkingRequest.
    * @param request
-   *          the request
+   *        the request
    * @param session
-   *          the session
-   * @return the server response
-   */
+   *        the session
+   * @return the server response */
   public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
     ServerResponse toRet = database.performQuery(new CancelOnetimeParkingResponse(), (conn, response) -> {
       // Mark Order as canceled
       OnetimeService service = OnetimeService.findByID(conn, request.getOnetimeServiceID());
 
-      if (service == null) {
-        response.setError(String.format("OnetimeService with id %s not found", request.getOnetimeServiceID()));
-        return response;
-      }
+      errorIfNull(service, String.format("OnetimeService with id %s not found", request.getOnetimeServiceID()));
+      errorIf(service.isCompleted(), "This service was already completed");
+      errorIf(service.isCanceled(), "This service was already canceled");
+      errorIf(service.isParked(), "This service is currently being used for parking");
 
       // Calculate refund amount based on how late the cancel request was
       // submitted
@@ -193,8 +166,9 @@ public class OnetimeParkingController extends RequestController {
       } else if (duration.compareTo(Duration.ofHours(1)) >= 0) {
         refundValue = 0.5f;
       } else {
-//        response.setError("The service order cannot be canceled at this time.");
-//        return response;
+        // response.setError("The service order cannot be canceled at this
+        // time.");
+        // return response;
         refundValue = 0f;
       }
 
@@ -210,6 +184,7 @@ public class OnetimeParkingController extends RequestController {
         service.setCanceled(true);
         service.update(conn); // sync with database
 
+        // XXX Statistics
         // Increase daily counter of canceled orders
         DailyStatistics.increaseCanceledOrder(conn, service.getLotID());
 
@@ -231,15 +206,12 @@ public class OnetimeParkingController extends RequestController {
     return toRet;
   }
 
-  /**
-   * Handle List One Time Entries Request.
-   * 
+  /** Handle List One Time Entries Request.
    * @param request
-   *          the request
+   *        the request
    * @param session
-   *          the session
-   * @return the server response
-   */
+   *        the session
+   * @return the server response */
   public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {
     return database.performQuery(new ListOnetimeEntriesResponse(), (conn, response) -> {
       Collection<OnetimeService> result = OnetimeService.findByCustomerID(conn, request.getCustomerID());
