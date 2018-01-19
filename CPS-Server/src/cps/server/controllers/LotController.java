@@ -36,26 +36,17 @@ import cps.server.session.UserSession;
 /** Handles requests that deal with Parking Lots. */
 public class LotController extends RequestController {
 
-  /**
-   * Instantiates a new Parking Lot controller.
-   * 
-   * @param serverController
-   *          the server controller
-   */
+  /** Instantiates a new Parking Lot controller.
+   * @param serverController the server controller */
   public LotController(ServerController serverController) {
     super(serverController);
   }
 
-  /**
-   * Retrieve a list of all Parking Lots in the system.
+  /** Retrieve a list of all Parking Lots in the system.
    * Can be performed by both Customers and Employees.
-   * 
-   * @param request
-   *          the client request
-   * @param session
-   *          the user session
-   * @return a list of Parking Lots
-   */
+   * @param request the client request
+   * @param session the user session
+   * @return a list of Parking Lots */
   public ServerResponse handle(ListParkingLotsRequest request, UserSession session) {
     return database.performQuery(new ListParkingLotsResponse(), (conn, response) -> {
       Collection<ParkingLot> result = ParkingLot.findAll(conn);
@@ -75,15 +66,10 @@ public class LotController extends RequestController {
     });
   }
 
-  /**
-   * Create and initialize a new Parking Lot.
-   * 
-   * @param request
-   *          the service action request
-   * @param session
-   *          the service user session
-   * @return success or error
-   */
+  /** Create and initialize a new Parking Lot.
+   * @param request the service action request
+   * @param session the service user session
+   * @return success or error */
   public InitLotResponse handle(InitLotAction request, ServiceSession session) {
     return database.performQuery(new InitLotResponse(), (conn, response) -> {
       // Require a logged in employee
@@ -122,15 +108,10 @@ public class LotController extends RequestController {
     });
   }
 
-  /**
-   * Update the local service prices for the specified Parking Lot.
-   * 
-   * @param action
-   *          the service action request
-   * @param session
-   *          the service user session
-   * @return success or error
-   */
+  /** Update the local service prices for the specified Parking Lot.
+   * @param action the service action request
+   * @param session the service user session
+   * @return success or error */
   public UpdatePricesResponse handle(UpdatePricesAction action, ServiceSession session) {
     return database.performQuery(new UpdatePricesResponse(), (conn, response) -> {
       // Require a logged in employee
@@ -156,16 +137,11 @@ public class LotController extends RequestController {
     });
   }
 
-  /**
-   * Set the alternative lots for redirecting users if the lot is full, and
-   * optionally set a `lot is full` flag.
-   * 
-   * @param action
-   *          the service action request
-   * @param session
-   *          the service user session
-   * @return success or error
-   */
+  /** Set the alternative lots for redirecting users if the lot is full,
+   * and optionally set a `lot is full` flag.
+   * @param action the service action request
+   * @param session the service user session
+   * @return success or error */
   public SetFullLotResponse handle(SetFullLotAction action, ServiceSession session) {
     return database.performQuery(new SetFullLotResponse(), (conn, response) -> {
       // Require a logged in employee
@@ -193,16 +169,11 @@ public class LotController extends RequestController {
     });
   }
 
-  /**
-   * Return all the information about the specified Parking Lot, including the
+  /** Return all the information about the specified Parking Lot, including the
    * content of the Parking Cells inside of the lot.
-   * 
-   * @param action
-   *          the service action request
-   * @param session
-   *          the service user session
-   * @return Parking Lot data
-   */
+   * @param action the service action request
+   * @param session the service user session
+   * @return Parking Lot data */
   public RequestLotStateResponse handle(RequestLotStateAction action, ServiceSession session) {
     return database.performQuery(new RequestLotStateResponse(), (conn, response) -> {
       // Require a logged in employee
@@ -253,16 +224,11 @@ public class LotController extends RequestController {
     });
   }
 
-  /**
-   * Reserve a Parking Cell inside of the Lot for future use - cars cannot park
+  /** Reserve a Parking Cell inside of the Lot for future use - cars cannot park
    * here via the normal process.
-   * 
-   * @param action
-   *          the service action request
-   * @param session
-   *          the service user session
-   * @return success or error
-   */
+   * @param action the service action request
+   * @param session the service user session
+   * @return success or error */
   public ServerResponse handle(ParkingCellSetReservedAction action, ServiceSession session) {
     String successMessage = action.getValue() ? "Parking cell reserved successfully" : "Parking cell reservation canceled successfully";
     return reserveOrDisable(session, new ReserveParkingSlotsResponse(), action.getLotID(), action.getLocationI(),
@@ -275,16 +241,11 @@ public class LotController extends RequestController {
         }, successMessage);
   }
 
-  /**
-   * Disable a Parking Cell inside of the lot - cars cannot be parked here.
-   * 
-   * @param action
-   *          the service action request
-   * @param session
-   *          the service user session
+  /** Disable a Parking Cell inside of the lot - cars cannot be parked here.
+   * @param action the service action request
+   * @param session the service user session
    * @return the server response
-   * @throws ServerException
-   */
+   * @throws ServerException */
   public ServerResponse handle(ParkingCellSetDisabledAction action, ServiceSession session) {
     String successMessage = action.getValue() ? "Parking cell disabled successfully" : "Parking cell enabled successfully";
     ServerResponse toRet = reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(),
