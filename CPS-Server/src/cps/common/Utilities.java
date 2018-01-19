@@ -110,6 +110,10 @@ public abstract class Utilities {
     return value == null ? defaultValue : value;
   }
 
+  public static String emptyIfNull(String value) {
+    return value == null ? "" : value;
+  }
+
   public static void debugPrintln(String message, Object... args) {
     if (Constants.DEBUG_MODE) {
       System.out.println(String.format(message, args));

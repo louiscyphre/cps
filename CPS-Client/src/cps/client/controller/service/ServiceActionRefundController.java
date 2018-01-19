@@ -14,6 +14,7 @@ import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import cps.common.Constants;
+import cps.common.Utilities;
 import cps.entities.models.Complaint;
 import cps.entities.people.User;
 import javafx.collections.FXCollections;
@@ -127,6 +128,9 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
           formattedText.add(new Text("Refund amount: "));
           formattedText.add(new Text(Float.toString(selectedComplaint.getRefundAmount())));
           formattedText.add(new Text("\n"));
+          formattedText.add(new Text("Reason: "));
+          formattedText.add(new Text(Utilities.emptyIfNull(selectedComplaint.getReason())));
+          formattedText.add(new Text("\n"));
         } else if (status == Constants.COMPLAINT_STATUS_REJECTED) {
           rejectButton.setDisable(true);
           refundButton.setDisable(true);
@@ -134,6 +138,9 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
           formattedText.add(new Text("\n"));
           formattedText.add(new Text("Resolved at: "));
           formattedText.add(new Text(selectedComplaint.getResolvedAt().toString()));
+          formattedText.add(new Text("\n"));
+          formattedText.add(new Text("Reason: "));
+          formattedText.add(new Text(Utilities.emptyIfNull(selectedComplaint.getReason())));
           formattedText.add(new Text("\n"));
         }
         displayInfo(formattedText);
@@ -189,7 +196,8 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
         sendRequest(new RejectComplaintAction(user.getId(), complaintId, reason));
       } else {
         float refundAmount = requireFloat(refundTF, "Refund Amount");
-        sendRequest(new RefundAction(user.getId(), refundAmount, complaintId));
+        String reason = getText(reasonTF).trim(); // reason is not required
+        sendRequest(new RefundAction(user.getId(), complaintId, refundAmount, reason));
       }
     } catch (Exception e) {
       displayError(e.getMessage());
