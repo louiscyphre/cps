@@ -3,6 +3,7 @@ package cps.client.controller.service;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import cps.entities.people.CompanyPerson;
+import cps.entities.people.LocalEmployee;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -116,7 +117,12 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
     CompanyPerson companyPerson = ControllersClientAdapter.getEmployeeContext().getCompanyPerson();
     if (companyPerson != null) {
       usernameLabel.setText(companyPerson.getFirstName() + " " + companyPerson.getLastName());
-      jobTitleLabel.setText(companyPerson.getJobTitle());
+
+      if (companyPerson instanceof LocalEmployee) {
+        jobTitleLabel.setText(String.format("%s - lotID: %s", companyPerson.getJobTitle(), companyPerson.getDepartmentID()));
+      } else {
+        jobTitleLabel.setText(companyPerson.getJobTitle());
+      }
     }
   }
 }
