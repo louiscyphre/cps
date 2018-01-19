@@ -156,4 +156,17 @@ public class MonthlyReport {
     rep.update(conn);
   }
   
+  public static void countDisabledCells(Connection conn, int year, int month, int lotid) throws SQLException {
+    createIfNotExists(conn, year, month, lotid);
+    MonthlyReport rep = getReport(conn, year, month, lotid);
+    if (rep == null) {
+      throw new SQLException(
+          String.format("Failed to get report from Monthly report. year=%d,month=%d,lot=%d", year, month, lotid));
+    }
+
+
+    
+    rep.update(conn);
+  }
+  
 }
