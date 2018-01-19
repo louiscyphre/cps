@@ -1,18 +1,16 @@
 package cps.entities.models;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
-import com.mysql.jdbc.Connection;
-
 import cps.common.Constants;
+import cps.common.Utilities;
 
 // TODO: Auto-generated Javadoc
 /** The Class WeeklyStatistics. */
@@ -121,15 +119,10 @@ public class WeeklyStatistics implements Serializable {
         lateArrivalsDist);
   }
 
-  public static WeeklyStatistics createUpdateWeeklyReport(Connection conn, LocalDateTime date, int lotid)
+  public static WeeklyStatistics createUpdateWeeklyReport(Connection conn, LocalDate start, int lotid)
       throws SQLException {
-    // FIXME Cauchy - when should we call this?
-
     // Find this week's Sunday
-    LocalDate start = date.toLocalDate();
-    while (!start.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-      start = start.minusDays(1);
-    }
+    start = Utilities.findWeekStart(start);
     WeeklyStatistics result = findOrCreate(conn, start, lotid);
 
     DailyStatistics[] days = DailyStatistics.getSevenDays(conn, start, lotid);

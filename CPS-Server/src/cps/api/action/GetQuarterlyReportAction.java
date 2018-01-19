@@ -1,14 +1,15 @@
 package cps.api.action;
 
+import java.time.LocalDate;
+
 import cps.api.request.RequestHandler;
 import cps.api.response.ServerResponse;
-import cps.common.Constants;
 
 public class GetQuarterlyReportAction extends RequestReportAction {
   private static final long serialVersionUID = 1L;
-
-  public GetQuarterlyReportAction(int userID) {
-    super(userID, Constants.REPORT_TYPE_QUARTERLY);
+  
+  public GetQuarterlyReportAction(int userID, int reportType, LocalDate periodStart, LocalDate periodEnd) {
+    super(userID, reportType, periodStart, periodEnd);
   }
 
   @Override
