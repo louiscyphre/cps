@@ -17,24 +17,44 @@ import cps.client.controller.responsehandler.ResponseHandlerImpl;
 import cps.client.network.CPSNetworkClient;
 import cps.client.network.INetworkClient;
 import cps.client.utils.CmdParser;
+import cps.client.utils.UserLevelClientException;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+/**
+ * @author firl
+ *
+ */
 public class ClientApplication extends Application implements INetworkClient {
 
+  /**
+   * 
+   */
   private CPSNetworkClient client;
 
+  /**
+   * 
+   */
   private Stage primaryStage;
 
+  /**
+   * 
+   */
   private ResponseHandler responseHandler = new ResponseHandlerImpl();
 
   /**
    *
    */
+  /**
+   * 
+   */
   public ClientApplication() {
   }
 
+  /**
+   * @throws IOException
+   */
   private void loadWebClient() throws IOException {
     try {
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
@@ -48,11 +68,15 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.turnLoggedInStateOff();
       initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Web Client");
       setMainMenuControllerForWeb();
-      
+
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
+
+  /**
+   * @throws IOException
+   */
   private void loadKiosk() throws IOException {
     try {
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
@@ -74,13 +98,16 @@ public class ClientApplication extends Application implements INetworkClient {
     }
   }
 
+  /**
+   * 
+   */
   private void loadService() {
     try {
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOGIN);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_INIT_LOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MENU);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOT_IS_FULL);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MANAGE_LOT); 
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MANAGE_LOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_REFUND);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
       ControllersClientAdapter.turnLoggedInStateOff();
@@ -90,11 +117,9 @@ public class ClientApplication extends Application implements INetworkClient {
     }
   }
 
-  private void loadTest() throws IOException {
-    ControllersClientAdapter.registerScene(SceneCode.TEST_SCENE);
-    initializeStage(SceneCode.TEST_SCENE, "CPS Tests");
-  }
-
+  /* (non-Javadoc)
+   * @see javafx.application.Application#start(javafx.stage.Stage)
+   */
   @Override
   public void start(Stage primaryStage) {
     try {
@@ -108,20 +133,17 @@ public class ClientApplication extends Application implements INetworkClient {
       }
 
       Locale.setDefault(Locale.Category.FORMAT, Locale.ENGLISH);
-      
+
       this.client = new CPSNetworkClient(parser.getHost(), parser.getPort(), this);
 
       ControllersClientAdapter.registerClient(this);
 
       switch (parser.getMode()) {
         case "webclient":
-           loadWebClient();
+          loadWebClient();
           break;
         case "service":
           loadService();
-          break;
-        case "test":
-          loadTest(); // TODO kill it with fire before release (useful now)
           break;
         case "kiosk":
           loadKiosk();
@@ -141,6 +163,10 @@ public class ClientApplication extends Application implements INetworkClient {
     }
   }
 
+  /**
+   * @param code
+   * @param title
+   */
   private void initializeStage(SceneCode code, String title) {
     ControllersClientAdapter.getClient().getPrimaryStage().setTitle(title);
     ControllersClientAdapter.setStage(code, 10);
@@ -151,29 +177,52 @@ public class ClientApplication extends Application implements INetworkClient {
     });
 
   }
-  
+
+  /**
+   * 
+   */
   private void setMainMenuControllerForWeb() {
     ((CustomerMainMenuController) ControllersClientAdapter.fetchCtrl(SceneCode.CUSTOMER_INITIAL_MENU)).setAsWebClient();
   }
 
+  /**
+   * @param args
+   */
   public static void main(String[] args) {
     launch(args);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.network.INetworkClient#sendRequest(java.lang.Object)
+   */
   @Override
   public void sendRequest(Object rqst) {
-    client.handleMessageFromClientUI(rqst);
+    try {
+      client.handleMessageFromClientUI(rqst);
+    } catch (IOException e) {
+      // TODO throw new UserLevelClientException, and every client has to either resend or something
+      e.printStackTrace(); 
+    }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.network.INetworkClient#receiveResponse(java.lang.Object)
+   */
   @Override
   public void receiveResponse(Object resp) {
     responseHandler.dispatch((Response) resp);
   }
 
+  /**
+   * @return
+   */
   public Stage getPrimaryStage() {
     return primaryStage;
   }
 
+  /**
+   * @param primaryStage
+   */
   public void setPrimaryStage(Stage primaryStage) {
     this.primaryStage = primaryStage;
   }

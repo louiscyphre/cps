@@ -14,5 +14,8 @@ public interface ParkingLotsController extends ViewController {
   /**
    * @param list
    */
+  /**
+   * @param list
+   */
   public void setParkingLots(Collection<ParkingLot> list);
 }

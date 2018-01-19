@@ -23,29 +23,56 @@ import javafx.scene.text.TextFlow;
 
 public class EnterCarController extends CustomerActionControllerBaseSubmitAndFinish {
 
+  /**
+   * 
+   */
   @FXML // ResourceBundle that was given to the FXMLLoader
   private ResourceBundle resources;
 
+  /**
+   * 
+   */
   @FXML // URL location of the FXML file that was given to the FXMLLoader
   private URL location;
 
+  /**
+   * 
+   */
   @FXML // fx:id="infoLabel"
   private TextFlow infoLabel; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="infoProgress"
   private ProgressIndicator infoProgress; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="subscriptionIdTextField"
   private TextField subscriptionIdTextField; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="infoBox"
   private VBox infoBox; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="carIdTextField"
   private TextField carIdTextField; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   private boolean processing = false;
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
+   */
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -54,6 +81,9 @@ public class EnterCarController extends CustomerActionControllerBaseSubmitAndFin
     validateAndSend();
   }
 
+  /**
+   * 
+   */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
@@ -64,6 +94,9 @@ public class EnterCarController extends CustomerActionControllerBaseSubmitAndFin
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
   }
 
+  /**
+   * 
+   */
   private void validateAndSend() {
     // validation in same order as order in the form
     // out of form
@@ -94,17 +127,26 @@ public class EnterCarController extends CustomerActionControllerBaseSubmitAndFin
   }
 
   // returns customer context - >=1 if logged in, 0 otherwise
+  /**
+   * @return
+   */
   private int getCustomerId() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
   // return car id or null if empty
+  /**
+   * @return
+   */
   private String getCarId() {
     return carIdTextField.getText();
   }
 
   // returns lot id or 0 if empty
+  /**
+   * @return
+   */
   private int getLotId() {
     if (ControllersClientAdapter.getLotID() == 0) {
       return 0;
@@ -113,6 +155,9 @@ public class EnterCarController extends CustomerActionControllerBaseSubmitAndFin
   }
 
   // returns lot id or 0 if empty or 0 if not a number
+  /**
+   * @return
+   */
   private int getSubscriptionId() {
     if (subscriptionIdTextField.getText() == null) {
       return 0;
@@ -124,6 +169,9 @@ public class EnterCarController extends CustomerActionControllerBaseSubmitAndFin
     }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     // info box clear
@@ -133,6 +181,9 @@ public class EnterCarController extends CustomerActionControllerBaseSubmitAndFin
     subscriptionIdTextField.clear();
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ParkingEntryResponse)
+   */
   @Override
   public ServerResponse handle(ParkingEntryResponse response) {
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();

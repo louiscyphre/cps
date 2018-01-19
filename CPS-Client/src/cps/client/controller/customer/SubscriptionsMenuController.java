@@ -27,30 +27,58 @@ import javafx.scene.text.TextFlow;
 /**
  * Created on: 2018-01-09 1:04:02 AM
  */
+/**
+ * @author firl
+ *
+ */
 public class SubscriptionsMenuController extends CustomerActionControllerBase implements ParkingLotsController {
 
+  /**
+   * 
+   */
   @FXML
   private TextFlow regularSubscriptionInfo;
 
+  /**
+   * 
+   */
   @FXML
   private TextFlow fullSubscriptionInfo;
 
+  /**
+   * 
+   */
   @FXML
   private ToggleGroup subscriptionRadioButtons;
 
+  /**
+   * 
+   */
   @FXML
   private RadioButton regularSubscriptionRadioButton;
 
+  /**
+   * 
+   */
   @FXML
   private RadioButton fullSubscriptionRadioButton;
 
+  /**
+   * 
+   */
   @FXML
   private ComboBox<String> parkingLotsList;
 
+  /**
+   * 
+   */
   HashMap<String, ParkingLot> parkingLotsMap = null;
 
   /**
    * @param list
+   */
+  /* (non-Javadoc)
+   * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.Collection)
    */
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
@@ -65,11 +93,17 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     fillComboBoxItems(addresses);
   }
 
+  /**
+   * @param addresses
+   */
   private void fillComboBoxItems(ObservableList<String> addresses) {
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
   }
 
+  /**
+   * @param choice
+   */
   private void setRegularSubscriptionInfoForLot(String choice) {
     float reservedParkingPrice = parkingLotsMap.get(choice).getPriceForService(Constants.PARKING_TYPE_RESERVED);
     float subscriptionOverallPrice = reservedParkingPrice * Constants.SUBSCRIPTION_TYPE_REGULAR_ONE_CAR_HOURS;
@@ -79,6 +113,9 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     setInfo(regularSubscriptionInfo, builder.toString());
   }
 
+  /**
+   * 
+   */
   private void setFullSubscriptionInfo() {
     float subscriptionOverallPrice = Constants.PRICE_PER_HOUR_RESERVED * Constants.SUBSCRIPTION_TYPE_FULL_HOURS;
     StringBuilder builder = new StringBuilder();
@@ -87,15 +124,20 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     setInfo(fullSubscriptionInfo, builder.toString());
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void showSubscriptionsForLot(ActionEvent event) {
     if (processing) {
       return;
     }
-    // TODO SubscriptionsMenuController::showSubscriptionsForLot
     setRegularSubscriptionInfoForLot(parkingLotsList.getValue());
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void toggleRegularSubscriptionChoice(ActionEvent event) {
     if (processing) {
@@ -110,6 +152,9 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void toggleFullSubscriptionChoice(ActionEvent event) {
     if (processing) {
@@ -118,12 +163,14 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     parkingLotsList.setDisable(true);
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleNextButton(ActionEvent event) {
     if (processing) {
       return;
     }
-    // TODO SubscriptionsMenuController::handleNextButton
     if (fullSubscriptionRadioButton.isSelected()) {
       ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FULL_SUBSCRIPTION, 10);
       return;
@@ -136,6 +183,9 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REGULAR_SUBSCRIPTION, 10);
   }
 
+  /**
+   * 
+   */
   @FXML
   void initialize() {
     super.baseInitialize();
@@ -149,6 +199,9 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     // info box clear
@@ -157,6 +210,10 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     subscriptionRadioButtons.getToggles().clear();
   }
 
+  /**
+   * @param textBox
+   * @param info
+   */
   private void setInfo(TextFlow textBox, String info) {
     textBox.getChildren().clear();
     textBox.getChildren().add(new Text(info));

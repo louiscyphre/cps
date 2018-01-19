@@ -25,22 +25,44 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 
+/**
+ * @author firl
+ *
+ */
 public class ServiceActionLotIsFullController extends ServiceActionControllerBase implements ParkingLotsController {
 
+  /**
+   * 
+   */
   @FXML
   private CheckBox setFullStateCheckBox;
 
+  /**
+   * 
+   */
   @FXML
   private CheckBox setAlternativeLotsCheckBox;
 
+  /**
+   * 
+   */
   @FXML
   private ListView<String> alternativeLotsList;
 
+  /**
+   * 
+   */
   @FXML
   private ComboBox<String> lotsList;
 
+  /**
+   * 
+   */
   private HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
 
+  /**
+   * @param event
+   */
   @FXML
   void handleSetAlternativeLotsCheckBox(ActionEvent event) {
     if (!processing) {
@@ -52,14 +74,20 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * 
+   */
   void refreshAlternativeLots() {
     ParkingLot selectedLot = parkingLotsMap.get(lotsList.getValue());
     if (selectedLot != null) {
-      alternativeLotsList.getItems().setAll(
-          parkingLotsMap.entrySet().stream().filter(e -> e.getValue().getId() != selectedLot.getId()).map(e -> e.getKey()).collect(Collectors.toList()));
+      alternativeLotsList.getItems().setAll(parkingLotsMap.entrySet().stream()
+          .filter(e -> e.getValue().getId() != selectedLot.getId()).map(e -> e.getKey()).collect(Collectors.toList()));
     }
   }
 
+  /**
+   * 
+   */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
@@ -72,11 +100,15 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.SERVICE_ACTION_LOT_IS_FULL);
 
     // Update the list of alternative lots when the current lot changes
-    lotsList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-      refreshAlternativeLots();
-    });
+    lotsList.getSelectionModel().selectedItemProperty()
+        .addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+          refreshAlternativeLots();
+        });
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
@@ -93,6 +125,9 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
     sendRequest(new ListParkingLotsRequest());
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.service.ServiceActionControllerBase#validateAndSend()
+   */
   @Override
   void validateAndSend() {
     try {
@@ -118,7 +153,8 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
       for (int i = 0; i < alternativeLotsIds.size(); i++) {
         arrayToSend[i] = alternativeLotsIds.get(i);
       }
-      errorIf(setAlternativeLotsCheckBox.isSelected() && alternativeLotsIds.size() < 1, "Please choose alternative parking lot");
+      errorIf(setAlternativeLotsCheckBox.isSelected() && alternativeLotsIds.size() < 1,
+          "Please choose alternative parking lot");
       turnProcessingStateOn();
       sendRequest(new SetFullLotAction(user.getId(), lot.getId(), setFullStateCheckBox.isSelected(), arrayToSend));
     } catch (Exception e) {
@@ -126,11 +162,17 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
     }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.SetFullLotResponse)
+   */
   @Override
   public ServerResponse handle(SetFullLotResponse response) {
     return super.handleGenericResponse(response);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.Collection)
+   */
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
     List<String> tmp = new ArrayList<String>();
@@ -147,6 +189,9 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
     fillComboBoxItems(addresses);
   }
 
+  /**
+   * @param addresses
+   */
   private void fillComboBoxItems(ObservableList<String> addresses) {
     lotsList.getItems().addAll(addresses);
   }

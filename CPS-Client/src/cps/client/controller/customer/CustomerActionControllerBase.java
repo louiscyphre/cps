@@ -8,6 +8,9 @@ import javafx.fxml.FXML;
 
 public class CustomerActionControllerBase extends ClientControllerBase {
 
+  /**
+   * @param event
+   */
   @FXML
   void handleBackButton(ActionEvent event) {
     if (!processing) {
@@ -15,6 +18,9 @@ public class CustomerActionControllerBase extends ClientControllerBase {
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleCancelButton(ActionEvent event) {
     if (!processing) {
@@ -22,6 +28,9 @@ public class CustomerActionControllerBase extends ClientControllerBase {
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (!processing) {
@@ -29,6 +38,9 @@ public class CustomerActionControllerBase extends ClientControllerBase {
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleOkButton(ActionEvent event) {
     if (!processing) {
@@ -36,8 +48,11 @@ public class CustomerActionControllerBase extends ClientControllerBase {
     }
   }
 
+  /**
+   * 
+   */
   void sendMainRequest() {
-    
+
   }
 
 }

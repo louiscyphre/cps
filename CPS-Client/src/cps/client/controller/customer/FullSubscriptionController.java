@@ -3,7 +3,6 @@
  */
 package cps.client.controller.customer;
 
-
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -28,27 +27,47 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Created on: 2018-01-15 2:34:23 AM 
+ * Created on: 2018-01-15 2:34:23 AM
+ */
+/**
+ * @author firl
+ *
  */
 public class FullSubscriptionController extends CustomerActionControllerBaseSubmitAndFinish {
 
+  /**
+   * 
+   */
   @FXML
   private DatePicker startDatePicker;
 
+  /**
+   * 
+   */
   @FXML
   private TextField emailTextField;
 
+  /**
+   * 
+   */
   @FXML
   private Font x1;
 
+  /**
+   * 
+   */
   @FXML
   private Insets x3;
 
+  /**
+   * 
+   */
   @FXML
   private TextField carIDTextField;
 
-
-  
+  /**
+   * @param event
+   */
   @FXML
   void handlePickStartDate(ActionEvent event) {
     if (processing) {
@@ -56,6 +75,9 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#handleBackButton(javafx.event.ActionEvent)
+   */
   @FXML
   void handleBackButton(ActionEvent event) {
     if (processing) {
@@ -64,6 +86,9 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS, 10);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
+   */
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -72,18 +97,27 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     validateAndSend();
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn()
+   */
   @Override
   public void turnLoggedInStateOn() {
     super.turnLoggedInStateOn();
     emailTextField.setVisible(false);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff()
+   */
   @Override
   public void turnLoggedInStateOff() {
     super.turnLoggedInStateOff();
     emailTextField.setVisible(true);
   }
 
+  /**
+   * 
+   */
   private void validateAndSend() {
     // validation in same order as order in the form
     // out of form
@@ -129,15 +163,20 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
-  
 
   // returns customer context - >=1 if logged in, 0 otherwise
+  /**
+   * @return
+   */
   private int getCustomerID() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
   // returns email if logged in from customer context,
+  /**
+   * @return
+   */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
     if (cntx.isLoggedIn()) {
@@ -146,13 +185,19 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
       return emailTextField.getText();
     }
   }
-  
+
   // return car id or null if empty
+  /**
+   * @return
+   */
   private String getCarID() {
     return carIDTextField.getText();
   }
-  
+
   // returns planned start date or null if empty
+  /**
+   * @return
+   */
   private LocalDate getPlannedStartDate() {
     if (startDatePicker.getValue() == null) {
       return null;
@@ -163,7 +208,10 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
       return null;
     }
   }
-  
+
+  /**
+   * 
+   */
   @FXML
   void initialize() {
     super.baseInitialize();
@@ -175,7 +223,10 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
   }
-  
+
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.FullSubscriptionResponse)
+   */
   public ServerResponse handle(FullSubscriptionResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
@@ -216,6 +267,9 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     return response;
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
