@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="705.0" style="-fx-background-color: E6DDD4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<center>
+		<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="654.0" spacing="20.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+			<padding>
+				<Insets bottom="20.0" left="20.0" right="20.0" top="15.0" />
+			</padding>
+			<children>
+            <Label alignment="CENTER" styleClass="statisticsLabelUnderTables" text="Claims status" />
+            <TableView fx:id="tableView1" minWidth="613.0" prefHeight="401.0" prefWidth="613.0" styleClass="statisticsTable">
+               <columns>
+                  <TableColumn fx:id="colYear" editable="false" prefWidth="72.0" text="Year" />
+                  <TableColumn fx:id="colQuarter" editable="false" prefWidth="83.0" text="Quarter" />
+                  <TableColumn fx:id="colLotID" editable="false" minWidth="0.0" prefWidth="78.0" text="Lot ID" />
+                  <TableColumn fx:id="colOpenedClaims" editable="false" minWidth="0.0" prefWidth="153.0" text="Opened claims" />
+                  <TableColumn fx:id="colRejected" editable="false" minWidth="0.0" prefWidth="141.0" text="Rejected claims" />
+                  <TableColumn fx:id="colRefunded" editable="false" minWidth="0.0" prefWidth="87.0" text="Refunded" />
+               </columns>
+            </TableView>
+				<VBox fx:id="infoBox" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="113.0" prefWidth="299.0" spacing="0.0" styleClass="bigInfoLabel">
+					<children>
+						<ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />
+						<TextFlow fx:id="infoLabel" prefHeight="77.0" prefWidth="280.0" textAlignment="CENTER">
+							<VBox.margin>
+								<Insets />
+							</VBox.margin>
+						</TextFlow>
+					</children>
+				</VBox>
+				<HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="90.0" prefWidth="614.0" spacing="60.0">
+					<children>
+						<Button id="" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="backButton" text="Close" textAlignment="CENTER" />
+					</children>
+				</HBox>
+			</children>
+		</VBox>
+	</center>
+	<padding>
+		<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+	</padding>
+</BorderPane>
