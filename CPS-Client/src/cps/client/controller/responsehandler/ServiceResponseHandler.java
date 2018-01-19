@@ -5,6 +5,7 @@ import cps.api.response.InitLotResponse;
 import cps.api.response.ListComplaintsResponse;
 import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.RefundResponse;
+import cps.api.response.RejectComplaintResponse;
 import cps.api.response.RequestLotStateResponse;
 import cps.api.response.RequestReportResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
@@ -36,4 +37,7 @@ public interface ServiceResponseHandler {
   public ServerResponse handle(ServiceLoginResponse response);
 
   public ServerResponse handle(ListComplaintsResponse response);
+  
+  public ServerResponse handle(RejectComplaintResponse response);
+  
 }
