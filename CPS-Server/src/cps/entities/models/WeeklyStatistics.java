@@ -164,8 +164,6 @@ public class WeeklyStatistics implements Serializable {
 
     int field = 0;
 
-    statement.setDate(field++, Date.valueOf(start));
-    statement.setInt(field++, lotID);
     statement.setFloat(field++, realizedOrdersMean);
     statement.setFloat(field++, canceledOrdersMean);
     statement.setFloat(field++, lateArrivalsMean);
@@ -175,6 +173,8 @@ public class WeeklyStatistics implements Serializable {
     statement.setString(field++, realizedOrdersDist);
     statement.setString(field++, canceledOrdersDist);
     statement.setString(field++, lateArrivalsDist);
+    statement.setDate(field++, Date.valueOf(start));
+    statement.setInt(field++, lotID);
 
     statement.executeUpdate();
 
