@@ -228,7 +228,7 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
 //      String complaintMeta = new String(
 //          "[id: " + i.getId() + "]" + "[Employee: " + i.getEmployeeID() + "]" + "[Customer: " + i.getCustomerID() + "]");
 
-      String complaintMeta = String.format("id: %s, Employee: %s, Customer: %s, Status: %s", i.getId(), i.getEmployeeID(), i.getCustomerID(), i.getStatus());
+      String complaintMeta = String.format("id: %s, Employee: %s, Customer: %s, Status: %s", i.getId(), i.getEmployeeID(), i.getCustomerID(), i.getStatusText());
 
       tmp.add(complaintMeta);
       complaintsMap.put(complaintMeta, i);

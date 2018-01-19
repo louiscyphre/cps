@@ -102,8 +102,8 @@ public interface Constants {
   public final String SQL_FIND_CUSTOMER_BY_EMAIL_AND_PASSWORD = "SELECT * FROM customer WHERE email=? AND password=?";
 
   // SQL queries - Complaint
-  public final String SQL_CREATE_COMPLAINT       = "INSERT INTO complaint values(default, ?, default, ?, ?, ?, ?, default)";
+  public final String SQL_CREATE_COMPLAINT       = "INSERT INTO complaint values(default, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   public final String SQL_FIND_COMPLAINT_BY_ID   = "SELECT * FROM complaint WHERE id=?";
-  public final String SQL_UPDATE_COMPLAINT_LIGHT = "UPDATE complaint SET customer_id=?, employee_id=?, status=?, resolved_at=?, refund_amount=? WHERE id=?";
-  public final String SQL_UPDATE_COMPLAINT       = "UPDATE complaint SET customer_id=?, employee_id=?, status=?, resolved_at=?, refund_amount=?, description=? WHERE id=?";
+  public final String SQL_UPDATE_COMPLAINT_LIGHT = "UPDATE complaint SET customer_id=?, employee_id=?, lot_id=?, status=?, reason=?, created_at=?, resolved_at=?, refund_amount=? WHERE id=?";
+  public final String SQL_UPDATE_COMPLAINT       = "UPDATE complaint SET customer_id=?, employee_id=?, lot_id=?, status=?, description=?, reason=?, created_at=?, resolved_at=?, refund_amount=? WHERE id=?";
 }

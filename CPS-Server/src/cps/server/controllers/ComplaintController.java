@@ -41,7 +41,7 @@ public class ComplaintController extends RequestController {
    * @return the server response */
   public ServerResponse handle(ComplaintRequest request, UserSession session) {
     return database.performQuery(new ComplaintResponse(), (conn, response) -> {
-      Complaint complaint = Complaint.create(conn, request.getCustomerID(), request.getContent(), Timestamp.valueOf(LocalDateTime.now()), null);
+      Complaint complaint = Complaint.create(conn, request.getCustomerID(), request.getLotID(), request.getContent(), Timestamp.valueOf(LocalDateTime.now()), null);
 
       errorIfNull(complaint, "Failed to create complaint");
 
@@ -75,6 +75,7 @@ public class ComplaintController extends RequestController {
 
       complaint.setEmployeeID(employee.getId());
       complaint.setRefundAmount(action.getAmount());
+      complaint.setReason(action.getReason());
       complaint.setResolvedAt(Timestamp.valueOf(LocalDateTime.now()));
       complaint.setStatus(Constants.COMPLAINT_STATUS_ACCEPTED);
       complaint.update(conn);
@@ -103,7 +104,7 @@ public class ComplaintController extends RequestController {
       Customer customer = Customer.findByIDNotNull(conn, complaint.getCustomerID());
 
       complaint.setEmployeeID(employee.getId());
-//      complaint.setReason(action.getReason());
+      complaint.setReason(action.getReason());
       complaint.setResolvedAt(Timestamp.valueOf(LocalDateTime.now()));
       complaint.setStatus(Constants.COMPLAINT_STATUS_REJECTED);
       complaint.update(conn);
