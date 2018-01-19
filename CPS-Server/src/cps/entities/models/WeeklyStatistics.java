@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -119,13 +120,17 @@ public class WeeklyStatistics implements Serializable {
         lateArrivalsDist);
   }
 
-  /** Creates the for.
-   * @param conn the conn
-   * @param day the day
-   * @param lotid the lotid */
-  public static void createFor(Connection conn, LocalDateTime day, int lotid) {
+  public static WeeklyStatistics createWeeklyReport(Connection conn, LocalDateTime day, int lotid) throws SQLException {
     // XXX I'm here
 
+    // Find this week Sunday
+    LocalDate start = day.toLocalDate();
+    while (!start.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+      start.minusDays(1);
+    }
+    WeeklyStatistics result = find(conn, start, lotid);
+
+    return result;
   }
 
   /** Find.
@@ -147,6 +152,8 @@ public class WeeklyStatistics implements Serializable {
 
     if (result.next()) {
       item = new WeeklyStatistics(result);
+    } else {
+      item = create(conn, start, lotID, 0, 0, 0, 0, 0, 0, "", "", "");
     }
 
     result.close();
