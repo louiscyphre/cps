@@ -24,6 +24,7 @@ public class Complaint implements Serializable {
   private Timestamp         createdAt;
   private Timestamp         resolvedAt;
   private float             refundAmount;
+  // TODO add reason and lotID fields
 
   public Complaint(int id, int customerID, int employeeID, int status, String description, Timestamp createdAt, Timestamp resolvedAt, float refundAmount) {
     this.id = id;
@@ -184,14 +185,13 @@ public class Complaint implements Serializable {
     st.setInt(field++, status);
     st.setTimestamp(field++, resolvedAt);
     st.setFloat(field++, refundAmount);
-    st.setInt(field++, id);
 
     if (!light) {
       st.setString(field++, description);
     }
-
+    
+    st.setInt(field++, id);
     st.executeUpdate();
-
     st.close();
   }
 

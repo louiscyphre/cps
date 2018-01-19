@@ -103,6 +103,7 @@ public class ComplaintController extends RequestController {
       Customer customer = Customer.findByIDNotNull(conn, complaint.getCustomerID());
 
       complaint.setEmployeeID(employee.getId());
+//      complaint.setReason(action.getReason());
       complaint.setResolvedAt(Timestamp.valueOf(LocalDateTime.now()));
       complaint.setStatus(Constants.COMPLAINT_STATUS_REJECTED);
       complaint.update(conn);

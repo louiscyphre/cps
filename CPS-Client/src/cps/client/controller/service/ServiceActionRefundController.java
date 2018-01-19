@@ -185,7 +185,7 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
       requireLoggedInUser();
       User user = ControllersClientAdapter.getEmployeeContext().requireCompanyPerson();
       if (reject) {
-        String reason = requireField(reasonTF, "Reason");
+        String reason = requireFieldTrim(reasonTF, "Reason");
         sendRequest(new RejectComplaintAction(user.getId(), complaintId, reason));
       } else {
         float refundAmount = requireFloat(refundTF, "Refund Amount");
@@ -225,8 +225,10 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     List<String> tmp = new ArrayList<String>();
     complaintsMap.clear();
     for (Complaint i : response.getData()) {
-      String complaintMeta = new String(
-          "[ID" + i.getId() + ": ]" + "[E: " + i.getEmployeeID() + "]" + "[C: " + i.getCustomerID() + "]");
+//      String complaintMeta = new String(
+//          "[id: " + i.getId() + "]" + "[Employee: " + i.getEmployeeID() + "]" + "[Customer: " + i.getCustomerID() + "]");
+
+      String complaintMeta = String.format("id: %s, Employee: %s, Customer: %s, Status: %s", i.getId(), i.getEmployeeID(), i.getCustomerID(), i.getStatus());
 
       tmp.add(complaintMeta);
       complaintsMap.put(complaintMeta, i);
