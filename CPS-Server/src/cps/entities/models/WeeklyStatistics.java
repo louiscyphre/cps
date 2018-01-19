@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import com.mysql.jdbc.Connection;
 
@@ -120,15 +121,60 @@ public class WeeklyStatistics implements Serializable {
         lateArrivalsDist);
   }
 
-  public static WeeklyStatistics createWeeklyReport(Connection conn, LocalDateTime day, int lotid) throws SQLException {
-    // XXX I'm here
+  public static WeeklyStatistics createUpdateWeeklyReport(Connection conn, LocalDateTime date, int lotid)
+      throws SQLException {
+    // FIXME Cauchy - when should we call this?
 
-    // Find this week Sunday
-    LocalDate start = day.toLocalDate();
+    // Find this week's Sunday
+    LocalDate start = date.toLocalDate();
     while (!start.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
       start.minusDays(1);
     }
-    WeeklyStatistics result = find(conn, start, lotid);
+    WeeklyStatistics result = findOrCreate(conn, start, lotid);
+
+    DailyStatistics[] days = DailyStatistics.getSevenDays(conn, start, lotid);
+
+    /* Calculate median and mean */
+    int[][] medianHelper = new int[2][7];
+
+    float ro = 0f;
+    float co = 0f;
+    float la = 0f;
+
+    for (int i = 0; i < 7; i++) {
+      medianHelper[0][i] = days[i].getRealizedOrders();
+      medianHelper[1][i] = days[i].getCanceledOrders();
+      medianHelper[2][i] = days[i].getLateArrivals();
+      ro += (float) days[i].getRealizedOrders();
+      co += (float) days[i].getCanceledOrders();
+      la += (float) days[i].getLateArrivals();
+    }
+    for (int i = 0; i < 2; i++) {
+      Arrays.sort(medianHelper[i]);
+    }
+    result.realizedOrdersMean = ro / 7;
+    result.canceledOrdersMean = co / 7;
+    result.lateArrivalsMean = la / 7;
+    result.realizedOrdersMedian = medianHelper[0][3];
+    result.canceledOrdersMedian = medianHelper[1][3];
+    result.lateArrivalsMedian = medianHelper[2][3];
+
+    /* Calculate distribution */
+
+    result.canceledOrdersDist = "";
+    result.lateArrivalsDist = "";
+    result.realizedOrdersDist = "";
+    for (int i = 0; i < 6; i++) {
+      result.realizedOrdersDist += String.format("%f,", days[i].getRealizedOrders() / ro);
+      result.canceledOrdersDist += String.format("%f,", days[i].getCanceledOrders() / co);
+      result.lateArrivalsDist += String.format("%f,", days[i].getLateArrivals() / la);
+    }
+    result.realizedOrdersDist += String.format("%f", days[6].getRealizedOrders() / ro);
+    result.canceledOrdersDist += String.format("%f", days[6].getCanceledOrders() / co);
+    result.lateArrivalsDist += String.format("%f", days[6].getLateArrivals() / la);
+
+    /* Distributions now recorded as comma separated values from sunday to saturday */
+    result.update(conn);
 
     return result;
   }
@@ -139,7 +185,7 @@ public class WeeklyStatistics implements Serializable {
    * @param lotID the lot ID
    * @return the weekly statistics
    * @throws SQLException the SQL exception */
-  public static WeeklyStatistics find(Connection conn, LocalDate start, int lotID) throws SQLException {
+  public static WeeklyStatistics findOrCreate(Connection conn, LocalDate start, int lotID) throws SQLException {
     WeeklyStatistics item = null;
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_WEEKLY_STATISTICS);
 
