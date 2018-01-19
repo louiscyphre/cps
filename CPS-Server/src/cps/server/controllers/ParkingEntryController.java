@@ -15,6 +15,7 @@ import cps.common.Constants;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
 import cps.entities.models.DailyStatistics;
+import cps.entities.models.MonthlyReport;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
@@ -71,8 +72,10 @@ public class ParkingEntryController extends RequestController {
   public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service)
       throws SQLException, ServerException {
     // Check that this car is allowed to enter
-    // CarTransportation transportation = CarTransportation.findForEntry(conn, customerID, carID, lot.getId());
-    // errorIf(transportation != null, "The car with the specified ID was already parked");
+    // CarTransportation transportation = CarTransportation.findForEntry(conn,
+    // customerID, carID, lot.getId());
+    // errorIf(transportation != null, "The car with the specified ID was
+    // already parked");
 
     // Check that the lot does not already contain the car
     errorIf(lot.contains(lot.constructContentArray(conn), carID), "This car is already parked in the chosen lot");
@@ -87,22 +90,20 @@ public class ParkingEntryController extends RequestController {
     CarTransportationController transportationController = serverController.getTransportationController();
     transportationController.insertCar(conn, lot, carID, service.getExitTime());
 
-    //FIXME I'm here
     // Statistics
     if (service.getLicenseType() == Constants.LICENSE_TYPE_ONETIME) {
-      // TODO Tegra increase daily statistics for realised orders - only onetime
-      // counts
+      // Update daily statistics - realized orders
       DailyStatistics.increaseRealizedOrder(conn, lot.getId());
       if (((OnetimeService) service).getParkingType() == Constants.PARKING_TYPE_INCIDENTAL) {
-        // TODO increase quarterly statistics for incidental
-        // Quarter statistics
-        
+        // Monthly statistics
+        MonthlyReport.increaseIncidental(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
+            lot.getId());
       } else {
-        // TODO increase quarterly statistics for reserved orders
-        // Quarter statistics
+        // Monthly statistics
+        MonthlyReport.increaseReserved(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
+            lot.getId());
       }
     }
-    // TODO increase quarterly statistics for incidental and reserved orders
 
     if (!service.isParked()) {
       service.setParked(true);
@@ -117,7 +118,8 @@ public class ParkingEntryController extends RequestController {
 
   }
 
-  private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request) throws SQLException, ServerException {
+  private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request)
+      throws SQLException, ServerException {
     int customerID = request.getCustomerID();
     String carID = request.getCarID();
     int lotID = request.getLotID();
@@ -130,7 +132,8 @@ public class ParkingEntryController extends RequestController {
 
       // Check that an entry license exists
       OnetimeService service = OnetimeService.findForEntry(conn, customerID, carID, lotID);
-      errorIfNull(service, "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      errorIfNull(service,
+          "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
       errorIf(service.isCompleted(), "This reservation was already completed");
       errorIf(service.isCanceled(), "This reservation was canceled");
       errorIf(service.getPlannedStartTime().toLocalDateTime().isAfter(LocalDateTime.now()),
