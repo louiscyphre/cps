@@ -27,24 +27,18 @@ import cps.server.session.CustomerSession;
 /** The Class EntryExitController. */
 public class ParkingEntryController extends RequestController {
 
-  /**
-   * Instantiates a new entry exit controller.
-   * 
+  /** Instantiates a new entry exit controller.
    * @param serverController
-   *          the server application
-   */
+   *        the server application */
   public ParkingEntryController(ServerController serverController) {
     super(serverController);
   }
 
-  /**
-   * Handle ParkingEntryRequest.
-   * 
+  /** Handle ParkingEntryRequest.
    * @param request
-   *          the request
+   *        the request
    * @param session
-   * @return the server response
-   */
+   * @return the server response */
   public ServerResponse handle(ParkingEntryRequest request, CustomerSession session) {
     return database.performQuery(new ParkingEntryResponse(), (conn, response) -> {
       Customer customer = session.requireCustomer();
@@ -90,7 +84,7 @@ public class ParkingEntryController extends RequestController {
     CarTransportationController transportationController = serverController.getTransportationController();
     transportationController.insertCar(conn, lot, carID, service.getExitTime());
 
-    // Statistics
+    // XXX Statistics
     if (service.getLicenseType() == Constants.LICENSE_TYPE_ONETIME) {
       // Update daily statistics - realized orders
       DailyStatistics.increaseRealizedOrder(conn, lot.getId());
@@ -99,6 +93,10 @@ public class ParkingEntryController extends RequestController {
         MonthlyReport.increaseIncidental(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
             lot.getId());
       } else {
+        // Daily statistics - late arrival
+        if (((OnetimeService) service).isWarned()) {
+          DailyStatistics.increaseLateArrival(conn, service.getId());
+        }
         // Monthly statistics
         MonthlyReport.increaseReserved(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
             lot.getId());

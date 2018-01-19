@@ -3,6 +3,7 @@ package cps.server.controllers;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import cps.api.request.FullSubscriptionRequest;
@@ -14,6 +15,7 @@ import cps.api.response.ServerResponse;
 import cps.api.response.SubscriptionResponse;
 import cps.common.Constants;
 import cps.entities.models.Customer;
+import cps.entities.models.MonthlyReport;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
 import cps.server.ServerController;
@@ -41,8 +43,8 @@ public class SubscriptionController extends RequestController {
     return handle(request, session, response, startDate, endDate, dailyExitTime);
   }
 
-  public ServerResponse handle(SubscriptionRequest request, CustomerSession session, SubscriptionResponse serverResponse, LocalDate startDate,
-      LocalDate endDate, LocalTime dailyExitTime) {
+  public ServerResponse handle(SubscriptionRequest request, CustomerSession session,
+      SubscriptionResponse serverResponse, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
     return database.performQuery(serverResponse, (conn, response) -> {
 
       // Check that the start date is not in the past
@@ -58,18 +60,29 @@ public class SubscriptionController extends RequestController {
 
       // check overlapping subscriptions with the same car ID
       if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
-        errorIf(SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(), request.getLotID(), startDate, endDate),
+        errorIf(
+            SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(),
+                request.getLotID(), startDate, endDate),
             "Subscription for this car for this parking lot already exists in this timeframe");
       } else {
-        errorIf(SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(), 0, startDate, endDate),
-            "Subscription for this car already exists in this timeframe");
+        errorIf(SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(), 0, startDate,
+            endDate), "Subscription for this car already exists in this timeframe");
       }
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
-      SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(), request.getEmail(), request.getCarID(),
-          request.getLotID(), startDate, endDate, dailyExitTime);
+      SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(),
+          request.getEmail(), request.getCarID(), request.getLotID(), startDate, endDate, dailyExitTime);
       errorIfNull(service, "Failed to create SubscriptionService entry");
+
+      // XXX Statistics
+      if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
+        MonthlyReport.increaseRegular(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
+            request.getLotID());
+      } else {
+        // FIXME Tegra what to do with full subscription lot id?
+        MonthlyReport.increaseFull(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), 0);
+      }
 
       // Calculate payment
       float payment = paymentForSubscription(conn, customer, service);
@@ -87,7 +100,8 @@ public class SubscriptionController extends RequestController {
     });
   }
 
-  private float paymentForSubscription(Connection conn, Customer customer, SubscriptionService service) throws SQLException {
+  private float paymentForSubscription(Connection conn, Customer customer, SubscriptionService service)
+      throws SQLException {
     if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
       // Regular monthly subscription
       ParkingLot lot = ParkingLot.findByID(conn, service.getLotID());

@@ -7,9 +7,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 // TODO: Auto-generated Javadoc
-/**
- * The Class MonthlyReport.
- */
+/** The Class MonthlyReport. */
 @SuppressWarnings("unused")
 public class MonthlyReport {
 
@@ -40,28 +38,25 @@ public class MonthlyReport {
   /** The disabled slots. */
   private int disabledSlots;
 
-  /**
-   * Instantiates a new monthly report.
-   *
+  /** Instantiates a new monthly report.
    * @param _year
-   *          the year
+   *        the year
    * @param _month
-   *          the month
+   *        the month
    * @param _lotid
-   *          the lotid
+   *        the lotid
    * @param _ordreserved
-   *          the ordreserved
+   *        the ordreserved
    * @param _ordincidental
-   *          the ordincidental
+   *        the ordincidental
    * @param _ordregular
-   *          the ordregular
+   *        the ordregular
    * @param _ordfull
-   *          the ordfull
+   *        the ordfull
    * @param _coplaintscount
-   *          the coplaintscount
+   *        the coplaintscount
    * @param _disabledslots
-   *          the disabledslots
-   */
+   *        the disabledslots */
   public MonthlyReport(int _year, int _month, int _lotid, int _ordreserved, int _ordincidental, int _ordregular,
       int _ordfull, int _coplaintscount, int _disabledslots) {
     this.year = _year;
@@ -75,14 +70,11 @@ public class MonthlyReport {
     this.disabledSlots = _disabledslots;
   }
 
-  /**
-   * Instantiates a new monthly report.
-   *
+  /** Instantiates a new monthly report.
    * @param rs
-   *          the rs
+   *        the rs
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public MonthlyReport(ResultSet rs) throws SQLException {
     this.year = rs.getInt("year");
     this.month = rs.getInt("month");
@@ -95,20 +87,17 @@ public class MonthlyReport {
     this.disabledSlots = rs.getInt("disabled_slots");
   }
 
-  /**
-   * Creates the.
-   *
+  /** Creates the.
    * @param conn
-   *          the conn
+   *        the conn
    * @param year
-   *          the year
+   *        the year
    * @param month
-   *          the month
+   *        the month
    * @param lotid
-   *          the lotid
+   *        the lotid
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public static void create(Connection conn, int year, int month, int lotid) throws SQLException {
     PreparedStatement stmt = conn
         .prepareStatement("INSERT INTO monthly_report VALUES (?,?,?,default,default,default,default,default,default)");
@@ -117,22 +106,20 @@ public class MonthlyReport {
     stmt.setInt(i++, month);
     stmt.setInt(i++, lotid);
     stmt.executeUpdate();
+    stmt.close();
   }
 
-  /**
-   * Creates the if not exists.
-   *
+  /** Creates the if not exists.
    * @param conn
-   *          the conn
+   *        the conn
    * @param year
-   *          the year
+   *        the year
    * @param month
-   *          the month
+   *        the month
    * @param lotid
-   *          the lotid
+   *        the lotid
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public static void createIfNotExists(Connection conn, int year, int month, int lotid) throws SQLException {
     PreparedStatement stmt = conn
         .prepareStatement("SELECT count(*) FROM monthly_report WHERE year=? AND month=? AND lot_id=?");
@@ -144,23 +131,21 @@ public class MonthlyReport {
     if (!rs.next()) {
       create(conn, year, month, lotid);
     }
+    stmt.close();
   }
 
-  /**
-   * Find report.
-   *
+  /** Find report.
    * @param conn
-   *          the conn
+   *        the conn
    * @param year
-   *          the year
+   *        the year
    * @param month
-   *          the month
+   *        the month
    * @param lotid
-   *          the lotid
+   *        the lotid
    * @return the monthly report
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public static MonthlyReport findReport(Connection conn, int year, int month, int lotid) throws SQLException {
     PreparedStatement stmt = conn
         .prepareStatement("SELECT count(*) FROM monthly_report WHERE year=? AND month=? AND lot_id=?");
@@ -169,17 +154,20 @@ public class MonthlyReport {
     stmt.setInt(i++, month);
     stmt.setInt(i++, lotid);
     ResultSet rs = stmt.executeQuery();
-    return new MonthlyReport(rs);
+    MonthlyReport result=new MonthlyReport(rs);
+    
+    rs.close();
+    stmt.close();
+    
+    return result;
+    
   }
 
-  /**
-   * Update.
-   *
+  /** Update.
    * @param conn
-   *          the conn
+   *        the conn
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public void update(Connection conn) throws SQLException {
     String helper = "UPDATE monthly_report SET ordered_reserved=?, ordered_incidental=?, ordered_regular=?, ";
     helper += "ordered_full=?, complaints_count=?, disabled_slots=?";
@@ -200,22 +188,20 @@ public class MonthlyReport {
           String.format("Failed to update the required field in MonthReport. Year=%d, month=%d, lot=%d", this.year,
               this.month, this.lotId));
     }
+    stmt.close();
   }
 
-  /**
-   * Increase reserved.
-   *
+  /** Increase reserved.
    * @param conn
-   *          the conn
+   *        the conn
    * @param year
-   *          the year
+   *        the year
    * @param month
-   *          the month
+   *        the month
    * @param lotid
-   *          the lotid
+   *        the lotid
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public static void increaseReserved(Connection conn, int year, int month, int lotid) throws SQLException {
     createIfNotExists(conn, year, month, lotid);
     MonthlyReport rep = findReport(conn, year, month, lotid);
@@ -227,20 +213,17 @@ public class MonthlyReport {
     rep.update(conn);
   }
 
-  /**
-   * Increase incidental.
-   *
+  /** Increase incidental.
    * @param conn
-   *          the conn
+   *        the conn
    * @param year
-   *          the year
+   *        the year
    * @param month
-   *          the month
+   *        the month
    * @param lotid
-   *          the lotid
+   *        the lotid
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public static void increaseIncidental(Connection conn, int year, int month, int lotid) throws SQLException {
     createIfNotExists(conn, year, month, lotid);
     MonthlyReport rep = findReport(conn, year, month, lotid);
@@ -252,20 +235,17 @@ public class MonthlyReport {
     rep.update(conn);
   }
 
-  /**
-   * Increase regular.
-   *
+  /** Increase regular.
    * @param conn
-   *          the conn
+   *        the conn
    * @param year
-   *          the year
+   *        the year
    * @param month
-   *          the month
+   *        the month
    * @param lotid
-   *          the lotid
+   *        the lotid
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public static void increaseRegular(Connection conn, int year, int month, int lotid) throws SQLException {
     createIfNotExists(conn, year, month, lotid);
     MonthlyReport rep = findReport(conn, year, month, lotid);
@@ -277,20 +257,17 @@ public class MonthlyReport {
     rep.update(conn);
   }
 
-  /**
-   * Increase full.
-   *
+  /** Increase full.
    * @param conn
-   *          the conn
+   *        the conn
    * @param year
-   *          the year
+   *        the year
    * @param month
-   *          the month
+   *        the month
    * @param lotid
-   *          the lotid
+   *        the lotid
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public static void increaseFull(Connection conn, int year, int month, int lotid) throws SQLException {
     createIfNotExists(conn, year, month, lotid);
     MonthlyReport rep = findReport(conn, year, month, lotid);
@@ -302,20 +279,17 @@ public class MonthlyReport {
     rep.update(conn);
   }
 
-  /**
-   * Increase complaints.
-   *
+  /** Increase complaints.
    * @param conn
-   *          the conn
+   *        the conn
    * @param year
-   *          the year
+   *        the year
    * @param month
-   *          the month
+   *        the month
    * @param lotid
-   *          the lotid
+   *        the lotid
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public static void increaseComplaints(Connection conn, int year, int month, int lotid) throws SQLException {
     createIfNotExists(conn, year, month, lotid);
     MonthlyReport rep = findReport(conn, year, month, lotid);
@@ -327,20 +301,17 @@ public class MonthlyReport {
     rep.update(conn);
   }
 
-  /**
-   * Count disabled cells.
-   *
+  /** Count disabled cells.
    * @param conn
-   *          the conn
+   *        the conn
    * @param year
-   *          the year
+   *        the year
    * @param month
-   *          the month
+   *        the month
    * @param lotid
-   *          the lotid
+   *        the lotid
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public static void countDisabledCells(Connection conn, int year, int month, int lotid) throws SQLException {
     createIfNotExists(conn, year, month, lotid);
     MonthlyReport rep = findReport(conn, year, month, lotid);
@@ -353,25 +324,21 @@ public class MonthlyReport {
     rep.update(conn);
   }
 
-  /**
-   * Gets the monthly report. It includes all the required data for one month.
-   * 
+  /** Gets the monthly report. It includes all the required data for one month.
    * @author Tegra
-   *
    * @param conn
-   *          the conn
+   *        the conn
    * @param year
-   *          the year
+   *        the year
    * @param month
-   *          the month
+   *        the month
    * @param lotid
-   *          the lot id
+   *        the lot id
    * @return the monthly report MonthlyReport type
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         the SQL exception */
   public static MonthlyReport getMonthlyReport(Connection conn, int year, int month, int lotid) throws SQLException {
-    createIfNotExists(conn, year, month, lotid);
+    countDisabledCells(conn, year, month, lotid);
     MonthlyReport rep = findReport(conn, year, month, lotid);
     if (rep == null) {
       throw new SQLException(

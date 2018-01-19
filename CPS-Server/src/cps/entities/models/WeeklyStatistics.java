@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.mysql.jdbc.Connection;
 
@@ -83,6 +84,11 @@ public class WeeklyStatistics implements Serializable {
         lateArrivalsMedian, realizedOrdersDist, canceledOrdersDist, lateArrivalsDist);
   }
 
+  public static void createFor(Connection conn,LocalDateTime day,int lotid) {
+    //XXX I'm here
+    
+  }
+  
   public static WeeklyStatistics find(Connection conn, LocalDate start, int lotID) throws SQLException {
     WeeklyStatistics item = null;
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_WEEKLY_STATISTICS);
