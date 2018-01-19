@@ -139,7 +139,8 @@ public class DisabledCellsStatistics {
       end = rs.getTimestamp("date_enabled").toLocalDateTime();
       helper += start.until(end, ChronoUnit.MINUTES);
     }
-
+    rs.close();
+    stmt.close();
     return (double) (helper / 60);
   }
 
