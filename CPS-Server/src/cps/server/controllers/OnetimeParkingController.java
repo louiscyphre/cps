@@ -123,22 +123,7 @@ public class OnetimeParkingController extends RequestController {
     Timestamp startTime = new Timestamp(System.currentTimeMillis());
     Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
     IncidentalParkingResponse response = new IncidentalParkingResponse();
-    ServerResponse toRet = handle(request, session, response, startTime, plannedEndTime, startTime.toLocalDateTime());
-    if (toRet.success()) {
-      // FIXME Tegra DONE increase incidental parking - daily
-      try {
-        database.performAction(conn -> {
-          DailyStatistics.increaseRealizedOrder(conn, request.getLotID());
-        });
-      } catch (ServerException e) {
-        // TODO Cauchy Auto-generated catch block
-        // should something be here?
-        e.printStackTrace();
-      }
-      // TODO Tegra increase IncidentalParkingRequest statistics - quarterly
-
-    }
-    return toRet;
+    return handle(request, session, response, startTime, plannedEndTime, startTime.toLocalDateTime());
   }
 
   /**
@@ -193,8 +178,9 @@ public class OnetimeParkingController extends RequestController {
       } else if (duration.compareTo(Duration.ofHours(1)) >= 0) {
         refundValue = 0.5f;
       } else {
-//        response.setError("The service order cannot be canceled at this time.");
-//        return response;
+        // response.setError("The service order cannot be canceled at this
+        // time.");
+        // return response;
         refundValue = 0f;
       }
 
