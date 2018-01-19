@@ -20,11 +20,11 @@ import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.LoginResponse;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
+import cps.api.response.QuarterlyReportResponse;
 import cps.api.response.RefundResponse;
 import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.RejectComplaintResponse;
 import cps.api.response.RequestLotStateResponse;
-import cps.api.response.RequestReportResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.Response;
@@ -33,6 +33,7 @@ import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.SimpleResponse;
 import cps.api.response.UpdatePricesResponse;
+import cps.api.response.WeeklyReportResponse;
 import cps.client.utils.InternalClientException;
 import cps.client.utils.UserLevelClientException;
 import javafx.application.Platform;
@@ -46,7 +47,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public abstract class ClientControllerBase implements ViewController {
+public class ClientControllerBase implements ViewController {
   /**
    * 
    */
@@ -389,14 +390,6 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /* (non-Javadoc)
-   * @see cps.api.response.ResponseHandler#handle(cps.api.response.RequestReportResponse)
-   */
-  @Override
-  public ServerResponse handle(RequestReportResponse response) {
-    return null;
-  }
-
-  /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ReserveParkingSlotsResponse)
    */
   @Override
@@ -632,6 +625,24 @@ public abstract class ClientControllerBase implements ViewController {
     } catch (Exception e) {
       return null;
     }
+  }
+
+  /* (non-Javadoc)
+   * @see cps.api.response.ResponseHandler#handle(cps.api.response.WeeklyReportResponse)
+   */
+  @Override
+  public ServerResponse handle(WeeklyReportResponse response) {
+    return null;
+  }
+
+
+  /* (non-Javadoc)
+   * @see cps.api.response.ResponseHandler#handle(cps.api.response.QuarterlyReportResponse)
+   */
+  @Override
+  public ServerResponse handle(QuarterlyReportResponse response) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

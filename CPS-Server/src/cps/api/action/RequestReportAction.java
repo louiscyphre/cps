@@ -1,27 +1,19 @@
 package cps.api.action;
 
-import cps.api.request.RequestHandler;
-import cps.api.response.ServerResponse;
-
-public class RequestReportAction extends ServiceAction {
+public abstract class RequestReportAction extends ServiceAction {
   private static final long serialVersionUID = 1L;
-  private String            reportType;
+  private int            reportType;
 
-  public RequestReportAction(int userID, String reportType) {
+  public RequestReportAction(int userID, int reportType) {
     super(userID);
     this.reportType = reportType;
   }
 
-  public String getReportType() {
+  public int getReportType() {
     return reportType;
   }
 
-  public void setReportType(String reportType) {
+  public void setReportType(int reportType) {
     this.reportType = reportType;
-  }
-
-  @Override
-  public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
-    return handler.handle(this, session);
   }
 }

@@ -42,6 +42,9 @@ public interface Constants {
   public final int LOT_HEIGHT = 3;
   public final int LOT_DEPTH  = 3;
 
+  public final int REPORT_TYPE_WEEKLY = 1;
+  public final int REPORT_TYPE_QUARTERLY = 2;
+
   // SQL queries - OnetimeService
   public final String SQL_CREATE_ONETIME_SERVICE             = "INSERT INTO onetime_service values(default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   public final String SQL_GET_ONETIME_SERVICE_BY_CUSTOMER_ID = "SELECT * FROM onetime_service WHERE customer_id=? ORDER BY id";
