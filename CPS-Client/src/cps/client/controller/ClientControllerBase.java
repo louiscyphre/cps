@@ -136,9 +136,10 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   protected void baseInitialize() {
-    assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
-    assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
-    assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file 'ServiceActionReserveSlot.fxml'.";
+    assert root != null : "fx:id=\"root\" was not injected: check your FXML file";
+    assert infoLabel != null : "fx:id=\"infoLabel\" was not injected: check your FXML file";
+    assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file";
+    assert infoBox != null : "fx:id=\"infoBox\" was not injected: check your FXML file";
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
   }

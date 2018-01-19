@@ -5,6 +5,7 @@ import cps.api.response.InitLotResponse;
 import cps.api.response.ListComplaintsResponse;
 import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.RefundResponse;
+import cps.api.response.RejectComplaintResponse;
 import cps.api.response.RequestLotStateResponse;
 import cps.api.response.RequestReportResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
@@ -72,4 +73,7 @@ class ServiceResponseHandlerImpl implements ServiceResponseHandler {
     return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
+  public ServerResponse handle(RejectComplaintResponse response) {
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  }
 }
