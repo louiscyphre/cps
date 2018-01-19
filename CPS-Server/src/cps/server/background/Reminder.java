@@ -114,7 +114,7 @@ public class Reminder extends Thread {
      * server
      */
     System.out.printf(
-        "\nSending message to customer %d, to email %s.\n We are waiting for your car #%s, at %d, at %s\n",
+        "\nSending message to customer %d, to email %s.\n We are waiting for your car %s, at lot %s, at %s\n",
         late.getCustomerID(), late.getEmail(), late.getCarID(), late.getLotID(), late.getPlannedStartTime());
   }
 }

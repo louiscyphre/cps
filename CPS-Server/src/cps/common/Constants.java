@@ -79,7 +79,7 @@ public interface Constants {
   // SQL queries - Weekly statistics
   public final String SQL_CREATE_WEEKLY_STATISTICS = "INSERT INTO weekly_statistics values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   public final String SQL_FIND_WEEKLY_STATISTICS   = "SELECT * FROM weekly_statistics WHERE start = ? AND lot_id = ?";
-  public final String SQL_UPDATE_WEEKLY_STATISTICS = "UPDATE weekly_statistics SET start = ?, lot_id = ?, realized_orders_mean = ?, canceled_orders_mean = ?, late_arrivals_mean = ?, realized_orders_median = ?, canceled_orders_median = ?, late_arrivals_median = ?, realized_orders_dist = ?, canceled_orders_dist = ?, late_arrivals_dist = ?";
+  public final String SQL_UPDATE_WEEKLY_STATISTICS = "UPDATE weekly_statistics SET realized_orders_mean = ?, canceled_orders_mean = ?, late_arrivals_mean = ?, realized_orders_median = ?, canceled_orders_median = ?, late_arrivals_median = ?, realized_orders_dist = ?, canceled_orders_dist = ?, late_arrivals_dist = ? WHERE start = ?, lot_id = ?";
 
   // SQL queries - ParkingLot
   public final String SQL_CREATE_PARKING_LOT    = "INSERT INTO parking_lot values(default, ?, ?, ?, ?, default, ?,default)";
@@ -104,6 +104,6 @@ public interface Constants {
   // SQL queries - Complaint
   public final String SQL_CREATE_COMPLAINT       = "INSERT INTO complaint values(default, ?, default, ?, ?, ?, ?, default)";
   public final String SQL_FIND_COMPLAINT_BY_ID   = "SELECT * FROM complaint WHERE id=?";
-  public final String SQL_UPDATE_COMPLAINT_LIGHT = "UPDATE complaint SET customer_id=?, employee_id=?, status=?, resolved_at=?, refund_amount=?";
-  public final String SQL_UPDATE_COMPLAINT       = "UPDATE complaint SET customer_id=?, employee_id=?, status=?, resolved_at=?, refund_amount=?, description=?";
+  public final String SQL_UPDATE_COMPLAINT_LIGHT = "UPDATE complaint SET customer_id=?, employee_id=?, status=?, resolved_at=?, refund_amount=? WHERE id=?";
+  public final String SQL_UPDATE_COMPLAINT       = "UPDATE complaint SET customer_id=?, employee_id=?, status=?, resolved_at=?, refund_amount=?, description=? WHERE id=?";
 }
