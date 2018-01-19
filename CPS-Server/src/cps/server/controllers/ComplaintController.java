@@ -41,18 +41,18 @@ public class ComplaintController extends RequestController {
    * @return the server response */
   public ServerResponse handle(ComplaintRequest request, UserSession session) {
     return database.performQuery(new ComplaintResponse(), (conn, response) -> {
-      Complaint complaint = Complaint.create(conn, request.getCustomerID(), request.getLotID(), request.getContent(), Timestamp.valueOf(LocalDateTime.now()), null);
+      Complaint complaint = Complaint.create(conn, request.getCustomerID(), request.getLotID(), request.getContent(),
+          Timestamp.valueOf(LocalDateTime.now()), null);
 
       errorIfNull(complaint, "Failed to create complaint");
 
       response.setComplaintID(complaint.getId());
       response.setSuccess("Complaint created successfully");
-      //XXX Statistics
+      // XXX Statistics
       // Add complaint to monthly statistics
-      //FIXME - Tegra what to do with complaint lot id?
-      MonthlyReport.increaseComplaints(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMinute(), 0);
-      
-      
+      // FIXME - Tegra what to do with complaint lot id?
+      MonthlyReport.increaseComplaints(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMinute(),request.getLotID());
+
       return response;
     });
   }
@@ -66,7 +66,8 @@ public class ComplaintController extends RequestController {
       User employee = session.requireUser();
 
       errorIf(!employee.canAccessDomain(Constants.ACCESS_DOMAIN_CUSTOMER_SERVICE), "You cannot perform this action");
-      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER, "You cannot perform this action");
+      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER,
+          "You cannot perform this action");
 
       Complaint complaint = Complaint.findByIDNotNull(conn, action.getComplaintID());
 
@@ -97,7 +98,8 @@ public class ComplaintController extends RequestController {
       User employee = session.requireUser();
 
       errorIf(!employee.canAccessDomain(Constants.ACCESS_DOMAIN_CUSTOMER_SERVICE), "You cannot perform this action");
-      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER, "You cannot perform this action");
+      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER,
+          "You cannot perform this action");
 
       Complaint complaint = Complaint.findByIDNotNull(conn, action.getComplaintID());
 
@@ -143,7 +145,7 @@ public class ComplaintController extends RequestController {
   public ServerResponse handle(ListComplaintsAction action, ServiceSession session) {
     return database.performQuery(new ListComplaintsResponse(), (conn, response) -> {
       session.requireUser(); // Employee must be logged in
-      
+
       Collection<Complaint> result = Complaint.findAll(conn);
 
       // This shouldn't happen - at least an empty list should always be returned
