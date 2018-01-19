@@ -21,6 +21,7 @@ import cps.api.response.ServerResponse;
 import cps.common.Constants;
 import cps.entities.models.Complaint;
 import cps.entities.models.Customer;
+import cps.entities.models.MonthlyReport;
 import cps.entities.people.User;
 import cps.server.ServerController;
 import cps.server.session.CustomerSession;
@@ -46,7 +47,12 @@ public class ComplaintController extends RequestController {
 
       response.setComplaintID(complaint.getId());
       response.setSuccess("Complaint created successfully");
-      //TODO Tegra add complaint to daily statistics 
+      //XXX Statistics
+      // Add complaint to monthly statistics
+      //FIXME - Tegra what to do with complaint lot id?
+      MonthlyReport.increaseComplaints(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMinute(), 0);
+      
+      
       return response;
     });
   }
