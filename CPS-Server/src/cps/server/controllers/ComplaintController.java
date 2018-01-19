@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package cps.server.controllers;
 
 import java.sql.Timestamp;
@@ -24,12 +27,17 @@ import cps.server.session.CustomerSession;
 import cps.server.session.ServiceSession;
 import cps.server.session.UserSession;
 
+/** Handles requests that deal with customer complaints. */
 public class ComplaintController extends RequestController {
 
   public ComplaintController(ServerController serverController) {
     super(serverController);
   }
 
+  /** Called when the user wants to file a complaint.
+   * @param request the request
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(ComplaintRequest request, UserSession session) {
     return database.performQuery(new ComplaintResponse(), (conn, response) -> {
       Complaint complaint = Complaint.create(conn, request.getCustomerID(), request.getContent(), Timestamp.valueOf(LocalDateTime.now()), null);
@@ -43,6 +51,10 @@ public class ComplaintController extends RequestController {
     });
   }
 
+  /** Called when an employee wants to refund a customer who submitted a complaint.
+   * @param action the action
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(RefundAction action, UserSession session) {
     return database.performQuery(new RefundResponse(), (conn, response) -> {
       User employee = session.requireUser();
@@ -69,6 +81,10 @@ public class ComplaintController extends RequestController {
     });
   }
 
+  /** Called when a complaint was deemed invalid, and the customer service employee decides to close it.
+   * @param action the action
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(RejectComplaintAction action, ServiceSession session) {
     return database.performQuery(new RejectComplaintResponse(), (conn, response) -> {
       User employee = session.requireUser();
@@ -93,13 +109,10 @@ public class ComplaintController extends RequestController {
     });
   }
 
-  /**
-   * Handle List My Complaints Request.
-   *
-   * @param request
-   *          the request
-   * @return the server response
-   */
+  /** Is used to produce a list of all complaints for the currently logged in customer.
+   * @param request the client request
+   * @param session the customer session
+   * @return a list of the customer's complaints */
   public ServerResponse handle(ListMyComplaintsRequest request, CustomerSession session) {
     return database.performQuery(new ListMyComplaintsResponse(), (conn, response) -> {
       Customer customer = session.requireCustomer(); // Customer must be logged in
@@ -115,6 +128,10 @@ public class ComplaintController extends RequestController {
     });
   }
 
+  /** Is used to produce a list of all complaints in the system, for customer service employees to be able to view and navigate complaints.
+   * @param action the action
+   * @param session the session
+   * @return a list of all complaints in the system */
   public ServerResponse handle(ListComplaintsAction action, ServiceSession session) {
     return database.performQuery(new ListComplaintsResponse(), (conn, response) -> {
       session.requireUser(); // Employee must be logged in

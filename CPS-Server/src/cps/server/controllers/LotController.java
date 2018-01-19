@@ -33,11 +33,11 @@ import cps.server.ServerException;
 import cps.server.session.ServiceSession;
 import cps.server.session.UserSession;
 
-/** Handles Parking Lot requests. */
+/** Handles requests that deal with Parking Lots. */
 public class LotController extends RequestController {
 
   /**
-   * Instantiates a new lot controller.
+   * Instantiates a new Parking Lot controller.
    * 
    * @param serverController
    *          the server controller
@@ -48,11 +48,12 @@ public class LotController extends RequestController {
 
   /**
    * Retrieve a list of all Parking Lots in the system.
+   * Can be performed by both Customers and Employees.
    * 
    * @param request
-   *          the request
+   *          the client request
    * @param session
-   *          the session
+   *          the user session
    * @return a list of Parking Lots
    */
   public ServerResponse handle(ListParkingLotsRequest request, UserSession session) {
@@ -78,9 +79,9 @@ public class LotController extends RequestController {
    * Create and initialize a new Parking Lot.
    * 
    * @param request
-   *          the request
+   *          the service action request
    * @param session
-   *          the session
+   *          the service user session
    * @return success or error
    */
   public InitLotResponse handle(InitLotAction request, ServiceSession session) {
@@ -125,9 +126,9 @@ public class LotController extends RequestController {
    * Update the local service prices for the specified Parking Lot.
    * 
    * @param action
-   *          the action
+   *          the service action request
    * @param session
-   *          the session
+   *          the service user session
    * @return success or error
    */
   public UpdatePricesResponse handle(UpdatePricesAction action, ServiceSession session) {
@@ -160,9 +161,9 @@ public class LotController extends RequestController {
    * optionally set a `lot is full` flag.
    * 
    * @param action
-   *          the action
+   *          the service action request
    * @param session
-   *          the session
+   *          the service user session
    * @return success or error
    */
   public SetFullLotResponse handle(SetFullLotAction action, ServiceSession session) {
@@ -197,9 +198,9 @@ public class LotController extends RequestController {
    * content of the Parking Cells inside of the lot.
    * 
    * @param action
-   *          the action
+   *          the service action request
    * @param session
-   *          the session
+   *          the service user session
    * @return Parking Lot data
    */
   public RequestLotStateResponse handle(RequestLotStateAction action, ServiceSession session) {
@@ -257,9 +258,9 @@ public class LotController extends RequestController {
    * here via the normal process.
    * 
    * @param action
-   *          the action
+   *          the service action request
    * @param session
-   *          the session
+   *          the service user session
    * @return success or error
    */
   public ServerResponse handle(ParkingCellSetReservedAction action, ServiceSession session) {
@@ -278,9 +279,9 @@ public class LotController extends RequestController {
    * Disable a Parking Cell inside of the lot - cars cannot be parked here.
    * 
    * @param action
-   *          the action
+   *          the service action request
    * @param session
-   *          the session
+   *          the service user session
    * @return the server response
    * @throws ServerException
    */
