@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import cps.api.request.Request;
 import cps.api.response.CancelOnetimeParkingResponse;
 import cps.api.response.ComplaintResponse;
+import cps.api.response.CurrentPerformanceResponse;
 import cps.api.response.DisableParkingSlotsResponse;
 import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
@@ -20,6 +21,7 @@ import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.LoginResponse;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
+import cps.api.response.PeriodicReportResponse;
 import cps.api.response.QuarterlyReportResponse;
 import cps.api.response.RefundResponse;
 import cps.api.response.RegularSubscriptionResponse;
@@ -47,7 +49,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class ClientControllerBase implements ViewController {
+public abstract class ClientControllerBase implements ViewController {
   /**
    * 
    */
@@ -641,7 +643,16 @@ public class ClientControllerBase implements ViewController {
    */
   @Override
   public ServerResponse handle(QuarterlyReportResponse response) {
-    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(CurrentPerformanceResponse response) {
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(PeriodicReportResponse response) {
     return null;
   }
 

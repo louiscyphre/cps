@@ -2,6 +2,7 @@ package cps.client.controller.responsehandler;
 
 import cps.api.response.CancelOnetimeParkingResponse;
 import cps.api.response.ComplaintResponse;
+import cps.api.response.CurrentPerformanceResponse;
 import cps.api.response.DisableParkingSlotsResponse;
 import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
@@ -13,6 +14,7 @@ import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.LoginResponse;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
+import cps.api.response.PeriodicReportResponse;
 import cps.api.response.QuarterlyReportResponse;
 import cps.api.response.RefundResponse;
 import cps.api.response.RegularSubscriptionResponse;
@@ -273,6 +275,18 @@ public class ResponseHandlerImpl implements ResponseHandler {
    */
   @Override
   public ServerResponse handle(QuarterlyReportResponse response) {
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(CurrentPerformanceResponse response) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(PeriodicReportResponse response) {
+    // TODO Auto-generated method stub
     return null;
   }
 

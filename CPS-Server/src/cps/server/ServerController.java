@@ -212,4 +212,16 @@ public class ServerController implements RequestHandler<SessionHolder> {
   public ServerResponse handle(GetQuarterlyReportAction action, SessionHolder context) {
     return reportController.handle(action, context.acquireServiceSession());
   }
+
+  @Override
+  public ServerResponse handle(GetCurrentPerformanceAction action, SessionHolder session) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(GetPeriodicReportAction action, SessionHolder session) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

@@ -54,4 +54,8 @@ public interface RequestHandler<SessionType> {
   public ServerResponse handle(GetWeeklyReportAction action, SessionType session);
 
   public ServerResponse handle(GetQuarterlyReportAction action, SessionType session);
+
+  public ServerResponse handle(GetCurrentPerformanceAction action, SessionType session);
+
+  public ServerResponse handle(GetPeriodicReportAction action, SessionType session);
 }

@@ -57,4 +57,8 @@ public interface ResponseHandler {
   public ServerResponse handle(WeeklyReportResponse response);
 
   public ServerResponse handle(QuarterlyReportResponse response);
+
+  public ServerResponse handle(CurrentPerformanceResponse response);
+
+  public ServerResponse handle(PeriodicReportResponse response);
 }
