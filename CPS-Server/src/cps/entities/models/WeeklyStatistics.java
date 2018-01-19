@@ -123,7 +123,7 @@ public class WeeklyStatistics implements Serializable {
 
   public static WeeklyStatistics createUpdateWeeklyReport(Connection conn, LocalDateTime date, int lotid)
       throws SQLException {
-    // XXX I'm here
+    // FIXME Cauchy - when should we call this?
 
     // Find this week's Sunday
     LocalDate start = date.toLocalDate();
