@@ -1,6 +1,7 @@
 package cps.common;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -124,5 +125,13 @@ public abstract class Utilities {
     if (Constants.DEBUG_MODE) {
       System.out.print(String.format(message, args));
     }
+  }
+
+  public static LocalDate findWeekStart(LocalDate start) {
+    while (!start.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+      start = start.minusDays(1);
+    }
+    
+    return start;
   }
 }
