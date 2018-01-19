@@ -65,6 +65,7 @@ public class OnetimeService implements ParkingService {
     this.id = id;
   }
 
+  @Override
   public int getParkingType() {
     return parkingType;
   }

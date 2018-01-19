@@ -220,15 +220,6 @@ public class DailyStatistics implements Serializable {
     return item;
   }
 
-  /** Increase canceled order count by one for today in specific parking lot.
-   * @param conn the conn
-   * @param lotId the lot id
-   * @throws SQLException the SQL exception
-   * @throws ServerException the server exception */
-  public static void increaseCanceledOrder(Connection conn, int lotId) throws SQLException, ServerException {
-    increaseCanceledOrder(conn, LocalDate.now(), lotId);
-  }
-
   /** Increase canceled order count by one in specific parking lot at specific
    * date.
    * @param conn the conn

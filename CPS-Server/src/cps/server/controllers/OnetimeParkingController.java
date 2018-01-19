@@ -5,6 +5,7 @@ package cps.server.controllers;
 
 import java.sql.Timestamp;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -21,13 +22,13 @@ import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
 import cps.entities.models.Customer;
-import cps.entities.models.DailyStatistics;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.session.CustomerSession;
 import cps.server.session.UserSession;
+import cps.server.statistics.StatisticsCollector;
 
 /** Handles OnetimeService requests. */
 public class OnetimeParkingController extends RequestController {
@@ -186,7 +187,7 @@ public class OnetimeParkingController extends RequestController {
 
         // XXX Statistics
         // Increase daily counter of canceled orders
-        DailyStatistics.increaseCanceledOrder(conn, service.getLotID());
+        StatisticsCollector.increaseCanceledOrder(conn, LocalDate.now(),service.getLotID());
 
         // Refund customer
         Customer customer = service.getCustomer(conn);

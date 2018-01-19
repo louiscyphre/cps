@@ -128,7 +128,7 @@ public class WeeklyStatistics implements Serializable {
     // Find this week's Sunday
     LocalDate start = date.toLocalDate();
     while (!start.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-      start.minusDays(1);
+      start = start.minusDays(1);
     }
     WeeklyStatistics result = findOrCreate(conn, start, lotid);
 
@@ -137,24 +137,24 @@ public class WeeklyStatistics implements Serializable {
     /* Calculate median and mean */
     int[][] medianHelper = new int[2][7];
 
-    float ro = 0f;
-    float co = 0f;
-    float la = 0f;
+    float numRealizedOrders = 0f;
+    float numCanceledOrders = 0f;
+    float numLateArrivals = 0f;
 
     for (int i = 0; i < 7; i++) {
       medianHelper[0][i] = days[i].getRealizedOrders();
       medianHelper[1][i] = days[i].getCanceledOrders();
       medianHelper[2][i] = days[i].getLateArrivals();
-      ro += (float) days[i].getRealizedOrders();
-      co += (float) days[i].getCanceledOrders();
-      la += (float) days[i].getLateArrivals();
+      numRealizedOrders += (float) days[i].getRealizedOrders();
+      numCanceledOrders += (float) days[i].getCanceledOrders();
+      numLateArrivals += (float) days[i].getLateArrivals();
     }
     for (int i = 0; i < 2; i++) {
       Arrays.sort(medianHelper[i]);
     }
-    result.realizedOrdersMean = ro / 7;
-    result.canceledOrdersMean = co / 7;
-    result.lateArrivalsMean = la / 7;
+    result.realizedOrdersMean = numRealizedOrders / 7;
+    result.canceledOrdersMean = numCanceledOrders / 7;
+    result.lateArrivalsMean = numLateArrivals / 7;
     result.realizedOrdersMedian = medianHelper[0][3];
     result.canceledOrdersMedian = medianHelper[1][3];
     result.lateArrivalsMedian = medianHelper[2][3];
@@ -165,13 +165,13 @@ public class WeeklyStatistics implements Serializable {
     result.lateArrivalsDist = "";
     result.realizedOrdersDist = "";
     for (int i = 0; i < 6; i++) {
-      result.realizedOrdersDist += String.format("%f,", days[i].getRealizedOrders() / ro);
-      result.canceledOrdersDist += String.format("%f,", days[i].getCanceledOrders() / co);
-      result.lateArrivalsDist += String.format("%f,", days[i].getLateArrivals() / la);
+      result.realizedOrdersDist += String.format("%f,", days[i].getRealizedOrders() / numRealizedOrders);
+      result.canceledOrdersDist += String.format("%f,", days[i].getCanceledOrders() / numCanceledOrders);
+      result.lateArrivalsDist += String.format("%f,", days[i].getLateArrivals() / numLateArrivals);
     }
-    result.realizedOrdersDist += String.format("%f", days[6].getRealizedOrders() / ro);
-    result.canceledOrdersDist += String.format("%f", days[6].getCanceledOrders() / co);
-    result.lateArrivalsDist += String.format("%f", days[6].getLateArrivals() / la);
+    result.realizedOrdersDist += String.format("%f", days[6].getRealizedOrders() / numRealizedOrders);
+    result.canceledOrdersDist += String.format("%f", days[6].getCanceledOrders() / numCanceledOrders);
+    result.lateArrivalsDist += String.format("%f", days[6].getLateArrivals() / numLateArrivals);
 
     /* Distributions now recorded as comma separated values from sunday to saturday */
     result.update(conn);

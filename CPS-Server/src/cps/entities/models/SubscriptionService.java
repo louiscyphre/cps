@@ -376,4 +376,9 @@ public class SubscriptionService implements ParkingService {
   public void setWarned(boolean warned) {
     
   }
+
+  @Override
+  public int getParkingType() {
+    return Constants.PARKING_TYPE_RESERVED;
+  }
 }

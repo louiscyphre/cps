@@ -14,8 +14,6 @@ import cps.api.response.ServerResponse;
 import cps.common.Constants;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
-import cps.entities.models.DailyStatistics;
-import cps.entities.models.MonthlyReport;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.ParkingService;
@@ -23,6 +21,7 @@ import cps.entities.models.SubscriptionService;
 import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.session.CustomerSession;
+import cps.server.statistics.StatisticsCollector;
 
 /** The Class EntryExitController. */
 public class ParkingEntryController extends RequestController {
@@ -85,23 +84,7 @@ public class ParkingEntryController extends RequestController {
     transportationController.insertCar(conn, lot, carID, service.getExitTime());
 
     // XXX Statistics
-    if (service.getLicenseType() == Constants.LICENSE_TYPE_ONETIME) {
-      // Update daily statistics - realized orders
-      DailyStatistics.increaseRealizedOrder(conn, lot.getId());
-      if (((OnetimeService) service).getParkingType() == Constants.PARKING_TYPE_INCIDENTAL) {
-        // Monthly statistics
-        MonthlyReport.increaseIncidental(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
-            lot.getId());
-      } else {
-        // Daily statistics - late arrival
-        if (((OnetimeService) service).isWarned()) {
-          DailyStatistics.increaseLateArrival(conn, service.getId());
-        }
-        // Monthly statistics
-        MonthlyReport.increaseReserved(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
-            lot.getId());
-      }
-    }
+    StatisticsCollector.increaseOnetime(conn, service.getId(), service.getLicenseType(), service.getParkingType(), lot.getId(), service.isWarned());
 
     if (!service.isParked()) {
       service.setParked(true);

@@ -21,12 +21,12 @@ import cps.api.response.ServerResponse;
 import cps.common.Constants;
 import cps.entities.models.Complaint;
 import cps.entities.models.Customer;
-import cps.entities.models.MonthlyReport;
 import cps.entities.people.User;
 import cps.server.ServerController;
 import cps.server.session.CustomerSession;
 import cps.server.session.ServiceSession;
 import cps.server.session.UserSession;
+import cps.server.statistics.StatisticsCollector;
 
 /** Handles requests that deal with customer complaints. */
 public class ComplaintController extends RequestController {
@@ -48,10 +48,10 @@ public class ComplaintController extends RequestController {
 
       response.setComplaintID(complaint.getId());
       response.setSuccess("Complaint created successfully");
+      
       // XXX Statistics
       // Add complaint to monthly statistics
-      // FIXME - Tegra what to do with complaint lot id?
-      MonthlyReport.increaseComplaints(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMinute(),request.getLotID());
+      StatisticsCollector.increaseComplaints(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), request.getLotID());
 
       return response;
     });

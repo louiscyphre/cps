@@ -3,7 +3,6 @@ package cps.server.controllers;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import cps.api.request.FullSubscriptionRequest;
@@ -15,11 +14,11 @@ import cps.api.response.ServerResponse;
 import cps.api.response.SubscriptionResponse;
 import cps.common.Constants;
 import cps.entities.models.Customer;
-import cps.entities.models.MonthlyReport;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
 import cps.server.ServerController;
 import cps.server.session.CustomerSession;
+import cps.server.statistics.StatisticsCollector;
 
 public class SubscriptionController extends RequestController {
 
@@ -76,13 +75,7 @@ public class SubscriptionController extends RequestController {
       errorIfNull(service, "Failed to create SubscriptionService entry");
 
       // XXX Statistics
-      if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
-        MonthlyReport.increaseRegular(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
-            request.getLotID());
-      } else {
-        // FIXME Tegra what to do with full subscription lot id?
-        MonthlyReport.increaseFull(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), 0);
-      }
+      StatisticsCollector.increaseSubscription(conn, service.getSubscriptionType(), service.getLotID());
 
       // Calculate payment
       float payment = paymentForSubscription(conn, customer, service);
