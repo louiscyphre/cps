@@ -106,6 +106,11 @@ public class ResponseHandlerImpl implements ResponseHandler {
     return this.serviceResponseHandler.handle(response);
   }
 
+  @Override
+  public ServerResponse handle(RejectComplaintResponse response) {
+    return this.serviceResponseHandler.handle(response);
+  }
+  
   // // // // // // // // // // // // // // // // // // // // // // // //
   // ----- Customer -----
   @Override
@@ -173,9 +178,6 @@ public class ResponseHandlerImpl implements ResponseHandler {
     return null;
   }
 
-  @Override
-  public ServerResponse handle(RejectComplaintResponse response) {
-    return null;
-  }
+  
 
 }

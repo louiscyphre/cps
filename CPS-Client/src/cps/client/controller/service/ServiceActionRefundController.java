@@ -103,7 +103,7 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
           formattedText.add(new Text(selectedComplaint.getResolvedAt().toString()));
           formattedText.add(new Text("\n"));
         }
-
+        displayInfo(formattedText);
       }
     }
   }
@@ -175,7 +175,7 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     complaintsMap.clear();
     for (Complaint i : response.getData()) {
       String complaintMeta = new String("[ID" + i.getId() + ": ]" + "[E: " + i.getEmployeeID() + "]" + "[C: "
-          + i.getCustomerID() + "]" + "(" + i.getDescription().substring(0, 5) + "...)");
+          + i.getCustomerID() + "]");
 
       tmp.add(complaintMeta);
       complaintsMap.put(complaintMeta, i);
