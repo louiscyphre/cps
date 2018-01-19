@@ -15,8 +15,8 @@
       <children>
             <ListView fx:id="complaintsList" prefHeight="79.0" prefWidth="290.0" />
             <TextArea fx:id="complaintContent" prefHeight="178.0" prefWidth="290.0" wrapText="true" />
-            <TextField fx:id="refundTF" alignment="CENTER" promptText="Refund Amount" styleClass="inputField" />
-            <TextField fx:id="reasonTF" alignment="CENTER" promptText="Reason" styleClass="inputField" />
+            <TextField fx:id="refundTF" alignment="CENTER" promptText="Refund Amount" styleClass="inputFieldWide" />
+            <TextField fx:id="reasonTF" alignment="CENTER" promptText="Reason" styleClass="inputFieldWide" />
         <VBox fx:id="infoBox" alignment="CENTER" prefHeight="116.0" prefWidth="290.0" spacing="0.0" styleClass="infoLabel">
           <children>
             <ProgressIndicator fx:id="infoProgress" visible="false">
