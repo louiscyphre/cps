@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import cps.common.Constants;
+import cps.server.database.QueryBuilder;
 
 // Database entity for monthly parking subscriptions - regular or full both stored in the same table.
 
@@ -380,5 +381,17 @@ public class SubscriptionService implements ParkingService {
   @Override
   public int getParkingType() {
     return Constants.PARKING_TYPE_RESERVED;
+  }
+
+  public static int countAll(Connection conn) throws SQLException {
+    return new QueryBuilder<Integer>("SELECT count(*) FROM subscription_service")
+        .fetchResult(conn, result -> result.getInt(1));
+  }
+
+  public static int countWithMultipleCars(Connection conn) throws SQLException {
+    return new QueryBuilder<Integer>(String.join(" ",
+        "SELECT count(a.id) FROM subscription_service a INNER JOIN subscription_service b",
+        "ON a.customer_id = b.customer_id AND a.car_id != b.car_id GROUP BY a.customer_id"))
+        .fetchResult(conn, result -> result.getInt(1));
   }
 }
