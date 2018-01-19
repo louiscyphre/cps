@@ -33,9 +33,9 @@ import cps.server.statistics.StatisticsCollector;
 /** Handles OnetimeService requests. */
 public class OnetimeParkingController extends RequestController {
 
-  /** Instantiates a new one-time parking controller.
-   * @param serverController
-   *        the server application */
+  
+  /** Instantiates a new onetime parking controller.
+   * @param serverController the server application */
   public OnetimeParkingController(ServerController serverController) {
     super(serverController);
   }
@@ -109,10 +109,8 @@ public class OnetimeParkingController extends RequestController {
   }
 
   /** Handle IncidentalParkingRequest.
-   * @param request
-   *        the request
-   * @param session
-   *        the session
+   * @param request the request
+   * @param session the session
    * @return the server response */
   public ServerResponse handle(IncidentalParkingRequest request, CustomerSession session) {
     Timestamp startTime = new Timestamp(System.currentTimeMillis());
@@ -122,10 +120,8 @@ public class OnetimeParkingController extends RequestController {
   }
 
   /** Handle ReservedParkingRequest.
-   * @param request
-   *        the request
-   * @param session
-   *        the session
+   * @param request the request
+   * @param session the session
    * @return the server response */
   public ServerResponse handle(ReservedParkingRequest request, CustomerSession session) {
     Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
@@ -140,10 +136,8 @@ public class OnetimeParkingController extends RequestController {
   }
 
   /** Handle CancelOnetimeParkingRequest.
-   * @param request
-   *        the request
-   * @param session
-   *        the session
+   * @param request the request
+   * @param session the session
    * @return the server response */
   public ServerResponse handle(CancelOnetimeParkingRequest request, UserSession session) {
     ServerResponse toRet = database.performQuery(new CancelOnetimeParkingResponse(), (conn, response) -> {
@@ -187,7 +181,7 @@ public class OnetimeParkingController extends RequestController {
 
         // XXX Statistics
         // Increase daily counter of canceled orders
-        StatisticsCollector.increaseCanceledOrder(conn, LocalDate.now(),service.getLotID());
+        StatisticsCollector.increaseCanceledOrder(conn, LocalDate.now(), service.getLotID());
 
         // Refund customer
         Customer customer = service.getCustomer(conn);
@@ -208,10 +202,8 @@ public class OnetimeParkingController extends RequestController {
   }
 
   /** Handle List One Time Entries Request.
-   * @param request
-   *        the request
-   * @param session
-   *        the session
+   * @param request the request
+   * @param session the session
    * @return the server response */
   public ServerResponse handle(ListOnetimeEntriesRequest request, UserSession session) {
     return database.performQuery(new ListOnetimeEntriesResponse(), (conn, response) -> {
