@@ -1,29 +1,34 @@
 package cps.client.context;
 
+/**
+ * Straight-forward implementation of the CustomerContext
+ * @see CustomerContext
+ */
 public class CustomerContextImpl implements CustomerContext {
 
   /**
-   * 
+   * Customer ID
    */
   private int     customerId;
   /**
-   * 
+   * Customer Email
    */
   private String  customerEmail;
   /**
-   * 
+   * Pending Email
    */
   private String  pendingEmail;
   /**
-   * 
+   * Boolean indicating whether there is a user logged in the system
    */
   private boolean loggedIn;
   /**
-   * 
+   * ID of the chosen lot
    */
   private int     chosenLotIDforSubscription;
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.context.CustomerContext#getCustomerId()
    */
   @Override
@@ -34,7 +39,8 @@ public class CustomerContextImpl implements CustomerContext {
     return 0;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.context.CustomerContext#setCustomerId(int)
    */
   @Override
@@ -42,7 +48,8 @@ public class CustomerContextImpl implements CustomerContext {
     this.customerId = id;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.context.CustomerContext#getCustomerEmail()
    */
   @Override
@@ -53,7 +60,8 @@ public class CustomerContextImpl implements CustomerContext {
     return null;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.context.CustomerContext#getPendingEmail()
    */
   @Override
@@ -61,7 +69,8 @@ public class CustomerContextImpl implements CustomerContext {
     return pendingEmail;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.context.CustomerContext#setPendingEmail(java.lang.String)
    */
   @Override
@@ -69,7 +78,8 @@ public class CustomerContextImpl implements CustomerContext {
     this.pendingEmail = pendingEmail;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.context.CustomerContext#acceptPendingEmail()
    */
   @Override
@@ -78,7 +88,8 @@ public class CustomerContextImpl implements CustomerContext {
     this.pendingEmail = null;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.context.CustomerContext#isLoggedIn()
    */
   @Override
@@ -86,7 +97,8 @@ public class CustomerContextImpl implements CustomerContext {
     return this.loggedIn;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.context.CustomerContext#setLoggedIn(boolean)
    */
   @Override
@@ -94,7 +106,8 @@ public class CustomerContextImpl implements CustomerContext {
     this.loggedIn = loggedIn;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.context.CustomerContext#logContextOut()
    */
   @Override
@@ -109,19 +122,14 @@ public class CustomerContextImpl implements CustomerContext {
    * (non-Javadoc)
    * @see cps.client.context.CustomerContext#getChosenLotID()
    */
-  /* (non-Javadoc)
-   * @see cps.client.context.CustomerContext#getChosenLotID()
-   */
   @Override
   public int getChosenLotID() {
     return chosenLotIDforSubscription;
   }
 
   /*
+  /*
    * (non-Javadoc)
-   * @see cps.client.context.CustomerContext#setChosenLotID(int)
-   */
-  /* (non-Javadoc)
    * @see cps.client.context.CustomerContext#setChosenLotID(int)
    */
   @Override

@@ -3,10 +3,13 @@ package cps.client.context;
 import cps.client.utils.InternalClientException;
 import cps.entities.people.CompanyPerson;
 
+/**
+ * Straightforward implementation of the EmployeeContext
+ */
 public class EmployeeContextImpl implements EmployeeContext {
 
   /**
-   * 
+   * CompanyPerson entity bound to the context.
    */
   private CompanyPerson companyPerson;
 
@@ -45,5 +48,4 @@ public class EmployeeContextImpl implements EmployeeContext {
   public void setCompanyPerson(CompanyPerson companyPerson) {
     this.companyPerson = companyPerson;
   }
-
 }
