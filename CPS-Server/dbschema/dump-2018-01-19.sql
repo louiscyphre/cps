@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.30-MariaDB, for Linux (x86_64)
 --
--- Host: 127.0.0.1    Database: cps
+-- Host: localhost    Database: cps
 -- ------------------------------------------------------
--- Server version	5.7.20-log
+-- Server version	10.1.30-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -54,8 +54,10 @@ CREATE TABLE `complaint` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `customer_id` int(10) NOT NULL,
   `employee_id` int(10) DEFAULT NULL,
+  `lot_id` int(10) DEFAULT NULL,
   `status` int(10) NOT NULL DEFAULT '1',
   `description` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `resolved_at` timestamp NULL DEFAULT NULL,
   `refund_amount` float NOT NULL DEFAULT '0',
@@ -149,7 +151,6 @@ CREATE TABLE `disabled_slots_table` (
 
 LOCK TABLES `disabled_slots_table` WRITE;
 /*!40000 ALTER TABLE `disabled_slots_table` DISABLE KEYS */;
-INSERT INTO `disabled_slots_table` VALUES (1,'2018-01-18 15:56:21',1,1,1,'2018-01-18 17:45:00'),(1,'2018-01-18 16:06:31',1,1,1,'2018-01-18 17:45:00'),(1,'2018-01-18 17:00:00',1,2,1,NULL);
 /*!40000 ALTER TABLE `disabled_slots_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -182,6 +183,36 @@ LOCK TABLES `employee` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `monthly_report`
+--
+
+DROP TABLE IF EXISTS `monthly_report`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `monthly_report` (
+  `year` int(11) NOT NULL,
+  `month` int(11) NOT NULL,
+  `lot_id` int(11) NOT NULL,
+  `ordered_reserved` int(11) DEFAULT '0',
+  `ordered_incidental` int(11) DEFAULT '0',
+  `ordered_regular` int(11) DEFAULT '0',
+  `ordered_full` int(11) DEFAULT '0',
+  `complaints_count` int(11) DEFAULT '0',
+  `disabled_slots` int(11) DEFAULT '0',
+  PRIMARY KEY (`year`,`month`,`lot_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `monthly_report`
+--
+
+LOCK TABLES `monthly_report` WRITE;
+/*!40000 ALTER TABLE `monthly_report` DISABLE KEYS */;
+/*!40000 ALTER TABLE `monthly_report` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `onetime_service`
 --
 
@@ -198,10 +229,11 @@ CREATE TABLE `onetime_service` (
   `planned_start_time` datetime NOT NULL,
   `planned_end_time` datetime NOT NULL,
   `parked` bit(1) NOT NULL DEFAULT b'0',
+  `completed` bit(1) NOT NULL DEFAULT b'0',
   `canceled` bit(1) NOT NULL DEFAULT b'0',
   `warned` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,7 +242,6 @@ CREATE TABLE `onetime_service` (
 
 LOCK TABLES `onetime_service` WRITE;
 /*!40000 ALTER TABLE `onetime_service` DISABLE KEYS */;
-INSERT INTO `onetime_service` VALUES (1,2,0,'jlauaju@gmail.com','TT-442535',1,'2018-01-17 17:06:52','2018-01-19 09:01:52','\0','\0','\0'),(2,2,0,'jgalaln@gmail.com','IT-446550',2,'2018-01-17 17:06:52','2018-01-17 19:01:52','\0','\0','\0');
 /*!40000 ALTER TABLE `onetime_service` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -240,7 +271,7 @@ CREATE TABLE `parking_cell` (
 
 LOCK TABLES `parking_cell` WRITE;
 /*!40000 ALTER TABLE `parking_cell` DISABLE KEYS */;
-INSERT INTO `parking_cell` VALUES (1,0,0,0,NULL,NULL,'\0','\0'),(1,0,0,1,NULL,NULL,'\0','\0'),(1,0,0,2,NULL,NULL,'\0','\0'),(1,0,1,0,NULL,NULL,'\0','\0'),(1,0,1,1,NULL,NULL,'\0','\0'),(1,0,1,2,NULL,NULL,'\0','\0'),(1,0,2,0,NULL,NULL,'\0','\0'),(1,0,2,1,NULL,NULL,'\0','\0'),(1,0,2,2,NULL,NULL,'\0','\0'),(1,1,0,0,NULL,NULL,'\0','\0'),(1,1,0,1,NULL,NULL,'\0','\0'),(1,1,0,2,NULL,NULL,'\0','\0'),(1,1,1,0,NULL,NULL,'\0','\0'),(1,1,1,1,NULL,NULL,'\0','\0'),(1,1,1,2,NULL,NULL,'\0','\0'),(1,1,2,0,NULL,NULL,'\0','\0'),(1,1,2,1,NULL,NULL,'\0','\0'),(1,1,2,2,NULL,NULL,'\0','\0'),(1,2,0,0,NULL,NULL,'\0','\0'),(1,2,0,1,NULL,NULL,'\0','\0'),(1,2,0,2,NULL,NULL,'\0','\0'),(1,2,1,0,NULL,NULL,'\0','\0'),(1,2,1,1,NULL,NULL,'\0','\0'),(1,2,1,2,NULL,NULL,'\0','\0'),(1,2,2,0,NULL,NULL,'\0','\0'),(1,2,2,1,NULL,NULL,'\0','\0'),(1,2,2,2,NULL,NULL,'\0','\0'),(1,3,0,0,NULL,NULL,'\0','\0'),(1,3,0,1,NULL,NULL,'\0','\0'),(1,3,0,2,NULL,NULL,'\0','\0'),(1,3,1,0,NULL,NULL,'\0','\0'),(1,3,1,1,NULL,NULL,'\0','\0'),(1,3,1,2,NULL,NULL,'\0','\0'),(1,3,2,0,NULL,NULL,'\0','\0'),(1,3,2,1,NULL,NULL,'\0','\0'),(1,3,2,2,'TT-442535','2018-01-19 09:01:52','\0','\0'),(2,0,0,0,NULL,NULL,'\0','\0'),(2,0,0,1,NULL,NULL,'\0','\0'),(2,0,0,2,NULL,NULL,'\0','\0'),(2,0,1,0,NULL,NULL,'\0','\0'),(2,0,1,1,NULL,NULL,'\0','\0'),(2,0,1,2,NULL,NULL,'\0','\0'),(2,0,2,0,NULL,NULL,'\0','\0'),(2,0,2,1,NULL,NULL,'\0','\0'),(2,0,2,2,'IT-446550','2018-01-17 19:01:52','\0','\0'),(2,1,0,0,NULL,NULL,'\0','\0'),(2,1,0,1,NULL,NULL,'\0','\0'),(2,1,0,2,NULL,NULL,'\0','\0'),(2,1,1,0,NULL,NULL,'\0','\0'),(2,1,1,1,NULL,NULL,'\0','\0'),(2,1,1,2,NULL,NULL,'\0','\0'),(2,1,2,0,NULL,NULL,'\0','\0'),(2,1,2,1,NULL,NULL,'\0','\0'),(2,1,2,2,NULL,NULL,'\0','\0'),(2,2,0,0,NULL,NULL,'\0','\0'),(2,2,0,1,NULL,NULL,'\0','\0'),(2,2,0,2,NULL,NULL,'\0','\0'),(2,2,1,0,NULL,NULL,'\0','\0'),(2,2,1,1,NULL,NULL,'\0','\0'),(2,2,1,2,NULL,NULL,'\0','\0'),(2,2,2,0,NULL,NULL,'\0','\0'),(2,2,2,1,NULL,NULL,'\0','\0'),(2,2,2,2,NULL,NULL,'\0','\0'),(2,3,0,0,NULL,NULL,'\0','\0'),(2,3,0,1,NULL,NULL,'\0','\0'),(2,3,0,2,NULL,NULL,'\0','\0'),(2,3,1,0,NULL,NULL,'\0','\0'),(2,3,1,1,NULL,NULL,'\0','\0'),(2,3,1,2,NULL,NULL,'\0','\0'),(2,3,2,0,NULL,NULL,'\0','\0'),(2,3,2,1,NULL,NULL,'\0','\0'),(2,3,2,2,NULL,NULL,'\0','\0'),(2,4,0,0,NULL,NULL,'\0','\0'),(2,4,0,1,NULL,NULL,'\0','\0'),(2,4,0,2,NULL,NULL,'\0','\0'),(2,4,1,0,NULL,NULL,'\0','\0'),(2,4,1,1,NULL,NULL,'\0','\0'),(2,4,1,2,NULL,NULL,'\0','\0'),(2,4,2,0,NULL,NULL,'\0','\0'),(2,4,2,1,NULL,NULL,'\0','\0'),(2,4,2,2,NULL,NULL,'\0','\0'),(2,5,0,0,NULL,NULL,'\0','\0'),(2,5,0,1,NULL,NULL,'\0','\0'),(2,5,0,2,NULL,NULL,'\0','\0'),(2,5,1,0,NULL,NULL,'\0','\0'),(2,5,1,1,NULL,NULL,'\0','\0'),(2,5,1,2,NULL,NULL,'\0','\0'),(2,5,2,0,NULL,NULL,'\0','\0'),(2,5,2,1,NULL,NULL,'\0','\0'),(2,5,2,2,NULL,NULL,'\0','\0'),(2,6,0,0,NULL,NULL,'\0','\0'),(2,6,0,1,NULL,NULL,'\0','\0'),(2,6,0,2,NULL,NULL,'\0','\0'),(2,6,1,0,NULL,NULL,'\0','\0'),(2,6,1,1,NULL,NULL,'\0','\0'),(2,6,1,2,NULL,NULL,'\0','\0'),(2,6,2,0,NULL,NULL,'\0','\0'),(2,6,2,1,NULL,NULL,'\0','\0'),(2,6,2,2,NULL,NULL,'\0','\0'),(2,7,0,0,NULL,NULL,'\0','\0'),(2,7,0,1,NULL,NULL,'\0','\0'),(2,7,0,2,NULL,NULL,'\0','\0'),(2,7,1,0,NULL,NULL,'\0','\0'),(2,7,1,1,NULL,NULL,'\0','\0'),(2,7,1,2,NULL,NULL,'\0','\0'),(2,7,2,0,NULL,NULL,'\0','\0'),(2,7,2,1,NULL,NULL,'\0','\0'),(2,7,2,2,NULL,NULL,'\0','\0'),(3,0,0,0,NULL,NULL,'\0','\0'),(3,0,0,1,NULL,NULL,'\0','\0'),(3,0,0,2,NULL,NULL,'\0','\0'),(3,0,1,0,NULL,NULL,'\0','\0'),(3,0,1,1,NULL,NULL,'\0','\0'),(3,0,1,2,NULL,NULL,'\0','\0'),(3,0,2,0,NULL,NULL,'\0','\0'),(3,0,2,1,NULL,NULL,'\0','\0'),(3,0,2,2,NULL,NULL,'\0','\0'),(3,1,0,0,NULL,NULL,'\0','\0'),(3,1,0,1,NULL,NULL,'\0','\0'),(3,1,0,2,NULL,NULL,'\0','\0'),(3,1,1,0,NULL,NULL,'\0','\0'),(3,1,1,1,NULL,NULL,'\0','\0'),(3,1,1,2,NULL,NULL,'\0','\0'),(3,1,2,0,NULL,NULL,'\0','\0'),(3,1,2,1,NULL,NULL,'\0','\0'),(3,1,2,2,NULL,NULL,'\0','\0'),(3,2,0,0,NULL,NULL,'\0','\0'),(3,2,0,1,NULL,NULL,'\0','\0'),(3,2,0,2,NULL,NULL,'\0','\0'),(3,2,1,0,NULL,NULL,'\0','\0'),(3,2,1,1,NULL,NULL,'\0','\0'),(3,2,1,2,NULL,NULL,'\0','\0'),(3,2,2,0,NULL,NULL,'\0','\0'),(3,2,2,1,NULL,NULL,'\0','\0'),(3,2,2,2,NULL,NULL,'\0','\0'),(3,3,0,0,NULL,NULL,'\0','\0'),(3,3,0,1,NULL,NULL,'\0','\0'),(3,3,0,2,NULL,NULL,'\0','\0'),(3,3,1,0,NULL,NULL,'\0','\0'),(3,3,1,1,NULL,NULL,'\0','\0'),(3,3,1,2,NULL,NULL,'\0','\0'),(3,3,2,0,NULL,NULL,'\0','\0'),(3,3,2,1,NULL,NULL,'\0','\0'),(3,3,2,2,NULL,NULL,'\0','\0'),(3,4,0,0,NULL,NULL,'\0','\0'),(3,4,0,1,NULL,NULL,'\0','\0'),(3,4,0,2,NULL,NULL,'\0','\0'),(3,4,1,0,NULL,NULL,'\0','\0'),(3,4,1,1,NULL,NULL,'\0','\0'),(3,4,1,2,NULL,NULL,'\0','\0'),(3,4,2,0,NULL,NULL,'\0','\0'),(3,4,2,1,NULL,NULL,'\0','\0'),(3,4,2,2,NULL,NULL,'\0','\0'),(3,5,0,0,NULL,NULL,'\0','\0'),(3,5,0,1,NULL,NULL,'\0','\0'),(3,5,0,2,NULL,NULL,'\0','\0'),(3,5,1,0,NULL,NULL,'\0','\0'),(3,5,1,1,NULL,NULL,'\0','\0'),(3,5,1,2,NULL,NULL,'\0','\0'),(3,5,2,0,NULL,NULL,'\0','\0'),(3,5,2,1,NULL,NULL,'\0','\0'),(3,5,2,2,NULL,NULL,'\0','\0'),(3,6,0,0,NULL,NULL,'\0','\0'),(3,6,0,1,NULL,NULL,'\0','\0'),(3,6,0,2,NULL,NULL,'\0','\0'),(3,6,1,0,NULL,NULL,'\0','\0'),(3,6,1,1,NULL,NULL,'\0','\0'),(3,6,1,2,NULL,NULL,'\0','\0'),(3,6,2,0,NULL,NULL,'\0','\0'),(3,6,2,1,NULL,NULL,'\0','\0'),(3,6,2,2,NULL,NULL,'\0','\0'),(3,7,0,0,NULL,NULL,'\0','\0'),(3,7,0,1,NULL,NULL,'\0','\0'),(3,7,0,2,NULL,NULL,'\0','\0'),(3,7,1,0,NULL,NULL,'\0','\0'),(3,7,1,1,NULL,NULL,'\0','\0'),(3,7,1,2,NULL,NULL,'\0','\0'),(3,7,2,0,NULL,NULL,'\0','\0'),(3,7,2,1,NULL,NULL,'\0','\0'),(3,7,2,2,NULL,NULL,'\0','\0'),(3,8,0,0,NULL,NULL,'\0','\0'),(3,8,0,1,NULL,NULL,'\0','\0'),(3,8,0,2,NULL,NULL,'\0','\0'),(3,8,1,0,NULL,NULL,'\0','\0'),(3,8,1,1,NULL,NULL,'\0','\0'),(3,8,1,2,NULL,NULL,'\0','\0'),(3,8,2,0,NULL,NULL,'\0','\0'),(3,8,2,1,NULL,NULL,'\0','\0'),(3,8,2,2,NULL,NULL,'\0','\0'),(3,9,0,0,NULL,NULL,'\0','\0'),(3,9,0,1,NULL,NULL,'\0','\0'),(3,9,0,2,NULL,NULL,'\0','\0'),(3,9,1,0,NULL,NULL,'\0','\0'),(3,9,1,1,NULL,NULL,'\0','\0'),(3,9,1,2,NULL,NULL,'\0','\0'),(3,9,2,0,NULL,NULL,'\0','\0'),(3,9,2,1,NULL,NULL,'\0','\0'),(3,9,2,2,NULL,NULL,'\0','\0'),(3,10,0,0,NULL,NULL,'\0','\0'),(3,10,0,1,NULL,NULL,'\0','\0'),(3,10,0,2,NULL,NULL,'\0','\0'),(3,10,1,0,NULL,NULL,'\0','\0'),(3,10,1,1,NULL,NULL,'\0','\0'),(3,10,1,2,NULL,NULL,'\0','\0'),(3,10,2,0,NULL,NULL,'\0','\0'),(3,10,2,1,NULL,NULL,'\0','\0'),(3,10,2,2,NULL,NULL,'\0','\0'),(3,11,0,0,NULL,NULL,'\0','\0'),(3,11,0,1,NULL,NULL,'\0','\0'),(3,11,0,2,NULL,NULL,'\0','\0'),(3,11,1,0,NULL,NULL,'\0','\0'),(3,11,1,1,NULL,NULL,'\0','\0'),(3,11,1,2,NULL,NULL,'\0','\0'),(3,11,2,0,NULL,NULL,'\0','\0'),(3,11,2,1,NULL,NULL,'\0','\0'),(3,11,2,2,NULL,NULL,'\0','\0');
+INSERT INTO `parking_cell` VALUES (1,0,0,0,NULL,NULL,'\0','\0'),(1,0,0,1,NULL,NULL,'\0','\0'),(1,0,0,2,NULL,NULL,'\0','\0'),(1,0,1,0,NULL,NULL,'\0','\0'),(1,0,1,1,NULL,NULL,'\0','\0'),(1,0,1,2,NULL,NULL,'\0','\0'),(1,0,2,0,NULL,NULL,'\0','\0'),(1,0,2,1,NULL,NULL,'\0','\0'),(1,0,2,2,NULL,NULL,'\0','\0'),(1,1,0,0,NULL,NULL,'\0','\0'),(1,1,0,1,NULL,NULL,'\0','\0'),(1,1,0,2,NULL,NULL,'\0','\0'),(1,1,1,0,NULL,NULL,'\0','\0'),(1,1,1,1,NULL,NULL,'\0','\0'),(1,1,1,2,NULL,NULL,'\0','\0'),(1,1,2,0,NULL,NULL,'\0','\0'),(1,1,2,1,NULL,NULL,'\0','\0'),(1,1,2,2,NULL,NULL,'\0','\0'),(1,2,0,0,NULL,NULL,'\0','\0'),(1,2,0,1,NULL,NULL,'\0','\0'),(1,2,0,2,NULL,NULL,'\0','\0'),(1,2,1,0,NULL,NULL,'\0','\0'),(1,2,1,1,NULL,NULL,'\0','\0'),(1,2,1,2,NULL,NULL,'\0','\0'),(1,2,2,0,NULL,NULL,'\0','\0'),(1,2,2,1,NULL,NULL,'\0','\0'),(1,2,2,2,NULL,NULL,'\0','\0'),(1,3,0,0,NULL,NULL,'\0','\0'),(1,3,0,1,NULL,NULL,'\0','\0'),(1,3,0,2,NULL,NULL,'\0','\0'),(1,3,1,0,NULL,NULL,'\0','\0'),(1,3,1,1,NULL,NULL,'\0','\0'),(1,3,1,2,NULL,NULL,'\0','\0'),(1,3,2,0,NULL,NULL,'\0','\0'),(1,3,2,1,NULL,NULL,'\0','\0'),(1,3,2,2,NULL,NULL,'\0','\0'),(2,0,0,0,NULL,NULL,'\0','\0'),(2,0,0,1,NULL,NULL,'\0','\0'),(2,0,0,2,NULL,NULL,'\0','\0'),(2,0,1,0,NULL,NULL,'\0','\0'),(2,0,1,1,NULL,NULL,'\0','\0'),(2,0,1,2,NULL,NULL,'\0','\0'),(2,0,2,0,NULL,NULL,'\0','\0'),(2,0,2,1,NULL,NULL,'\0','\0'),(2,0,2,2,NULL,NULL,'\0','\0'),(2,1,0,0,NULL,NULL,'\0','\0'),(2,1,0,1,NULL,NULL,'\0','\0'),(2,1,0,2,NULL,NULL,'\0','\0'),(2,1,1,0,NULL,NULL,'\0','\0'),(2,1,1,1,NULL,NULL,'\0','\0'),(2,1,1,2,NULL,NULL,'\0','\0'),(2,1,2,0,NULL,NULL,'\0','\0'),(2,1,2,1,NULL,NULL,'\0','\0'),(2,1,2,2,NULL,NULL,'\0','\0'),(2,2,0,0,NULL,NULL,'\0','\0'),(2,2,0,1,NULL,NULL,'\0','\0'),(2,2,0,2,NULL,NULL,'\0','\0'),(2,2,1,0,NULL,NULL,'\0','\0'),(2,2,1,1,NULL,NULL,'\0','\0'),(2,2,1,2,NULL,NULL,'\0','\0'),(2,2,2,0,NULL,NULL,'\0','\0'),(2,2,2,1,NULL,NULL,'\0','\0'),(2,2,2,2,NULL,NULL,'\0','\0'),(2,3,0,0,NULL,NULL,'\0','\0'),(2,3,0,1,NULL,NULL,'\0','\0'),(2,3,0,2,NULL,NULL,'\0','\0'),(2,3,1,0,NULL,NULL,'\0','\0'),(2,3,1,1,NULL,NULL,'\0','\0'),(2,3,1,2,NULL,NULL,'\0','\0'),(2,3,2,0,NULL,NULL,'\0','\0'),(2,3,2,1,NULL,NULL,'\0','\0'),(2,3,2,2,NULL,NULL,'\0','\0'),(2,4,0,0,NULL,NULL,'\0','\0'),(2,4,0,1,NULL,NULL,'\0','\0'),(2,4,0,2,NULL,NULL,'\0','\0'),(2,4,1,0,NULL,NULL,'\0','\0'),(2,4,1,1,NULL,NULL,'\0','\0'),(2,4,1,2,NULL,NULL,'\0','\0'),(2,4,2,0,NULL,NULL,'\0','\0'),(2,4,2,1,NULL,NULL,'\0','\0'),(2,4,2,2,NULL,NULL,'\0','\0'),(2,5,0,0,NULL,NULL,'\0','\0'),(2,5,0,1,NULL,NULL,'\0','\0'),(2,5,0,2,NULL,NULL,'\0','\0'),(2,5,1,0,NULL,NULL,'\0','\0'),(2,5,1,1,NULL,NULL,'\0','\0'),(2,5,1,2,NULL,NULL,'\0','\0'),(2,5,2,0,NULL,NULL,'\0','\0'),(2,5,2,1,NULL,NULL,'\0','\0'),(2,5,2,2,NULL,NULL,'\0','\0'),(2,6,0,0,NULL,NULL,'\0','\0'),(2,6,0,1,NULL,NULL,'\0','\0'),(2,6,0,2,NULL,NULL,'\0','\0'),(2,6,1,0,NULL,NULL,'\0','\0'),(2,6,1,1,NULL,NULL,'\0','\0'),(2,6,1,2,NULL,NULL,'\0','\0'),(2,6,2,0,NULL,NULL,'\0','\0'),(2,6,2,1,NULL,NULL,'\0','\0'),(2,6,2,2,NULL,NULL,'\0','\0'),(2,7,0,0,NULL,NULL,'\0','\0'),(2,7,0,1,NULL,NULL,'\0','\0'),(2,7,0,2,NULL,NULL,'\0','\0'),(2,7,1,0,NULL,NULL,'\0','\0'),(2,7,1,1,NULL,NULL,'\0','\0'),(2,7,1,2,NULL,NULL,'\0','\0'),(2,7,2,0,NULL,NULL,'\0','\0'),(2,7,2,1,NULL,NULL,'\0','\0'),(2,7,2,2,NULL,NULL,'\0','\0'),(3,0,0,0,NULL,NULL,'\0','\0'),(3,0,0,1,NULL,NULL,'\0','\0'),(3,0,0,2,NULL,NULL,'\0','\0'),(3,0,1,0,NULL,NULL,'\0','\0'),(3,0,1,1,NULL,NULL,'\0','\0'),(3,0,1,2,NULL,NULL,'\0','\0'),(3,0,2,0,NULL,NULL,'\0','\0'),(3,0,2,1,NULL,NULL,'\0','\0'),(3,0,2,2,NULL,NULL,'\0','\0'),(3,1,0,0,NULL,NULL,'\0','\0'),(3,1,0,1,NULL,NULL,'\0','\0'),(3,1,0,2,NULL,NULL,'\0','\0'),(3,1,1,0,NULL,NULL,'\0','\0'),(3,1,1,1,NULL,NULL,'\0','\0'),(3,1,1,2,NULL,NULL,'\0','\0'),(3,1,2,0,NULL,NULL,'\0','\0'),(3,1,2,1,NULL,NULL,'\0','\0'),(3,1,2,2,NULL,NULL,'\0','\0'),(3,2,0,0,NULL,NULL,'\0','\0'),(3,2,0,1,NULL,NULL,'\0','\0'),(3,2,0,2,NULL,NULL,'\0','\0'),(3,2,1,0,NULL,NULL,'\0','\0'),(3,2,1,1,NULL,NULL,'\0','\0'),(3,2,1,2,NULL,NULL,'\0','\0'),(3,2,2,0,NULL,NULL,'\0','\0'),(3,2,2,1,NULL,NULL,'\0','\0'),(3,2,2,2,NULL,NULL,'\0','\0'),(3,3,0,0,NULL,NULL,'\0','\0'),(3,3,0,1,NULL,NULL,'\0','\0'),(3,3,0,2,NULL,NULL,'\0','\0'),(3,3,1,0,NULL,NULL,'\0','\0'),(3,3,1,1,NULL,NULL,'\0','\0'),(3,3,1,2,NULL,NULL,'\0','\0'),(3,3,2,0,NULL,NULL,'\0','\0'),(3,3,2,1,NULL,NULL,'\0','\0'),(3,3,2,2,NULL,NULL,'\0','\0');
 /*!40000 ALTER TABLE `parking_cell` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -270,18 +301,18 @@ CREATE TABLE `parking_lot` (
 
 LOCK TABLES `parking_lot` WRITE;
 /*!40000 ALTER TABLE `parking_lot` DISABLE KEYS */;
-INSERT INTO `parking_lot` VALUES (1,'Sesam 2',4,5,3,NULL,'12.f.t43','\0'),(2,'Rabin 14',8,5,3,NULL,'13.f.t43','\0'),(3,'Big 16',12,5,3,NULL,'14.f.t43','\0');
+INSERT INTO `parking_lot` VALUES (1,'Sesame, 1',4,5,4,NULL,'1.0.0.1','\0'),(2,'Morocco, 2',8,10,5,NULL,'1.0.0.2','\0'),(3,'France, 3',4,2,1,NULL,'1.0.0.3','\0');
 /*!40000 ALTER TABLE `parking_lot` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `monthly_report`
+-- Table structure for table `quarterly_report`
 --
 
-DROP TABLE IF EXISTS `monthly_report`;
+DROP TABLE IF EXISTS `quarterly_report`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `monthly_report` (
+CREATE TABLE `quarterly_report` (
   `year` int(11) NOT NULL,
   `quarter` int(11) NOT NULL,
   `lot_id` int(11) NOT NULL,
@@ -299,9 +330,9 @@ CREATE TABLE `monthly_report` (
 -- Dumping data for table `quarterly_report`
 --
 
-LOCK TABLES `monthly_report` WRITE;
-/*!40000 ALTER TABLE `monthly_report` DISABLE KEYS */;
-/*!40000 ALTER TABLE `monthly_report` ENABLE KEYS */;
+LOCK TABLES `quarterly_report` WRITE;
+/*!40000 ALTER TABLE `quarterly_report` DISABLE KEYS */;
+/*!40000 ALTER TABLE `quarterly_report` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -375,4 +406,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-18 19:24:39
+-- Dump completed on 2018-01-19 18:27:53
