@@ -49,6 +49,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+/**
+ * Base class of all the Client Controllers.
+ */
 public abstract class ClientControllerBase implements ViewController {
   /**
    * 

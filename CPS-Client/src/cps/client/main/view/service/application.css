@@ -13,6 +13,20 @@
     -fx-pref-width:460;
 }
 
+.statisticsTable {
+    -fx-min-width:615;
+    -fx-pref-width:615;
+}
+.statisticsLabelUnderTables {
+    -fx-min-width:615;
+    -fx-pref-height:60;
+    -fx-pref-width:615;
+    -fx-background-color:#CECECE;
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+}
+
+
 .backButton, .cancelButton {
     -fx-background-color: #F3F3F3;
     -fx-color: #ffffff;
