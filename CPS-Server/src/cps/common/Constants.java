@@ -56,12 +56,11 @@ public interface Constants {
   public final String SQL_UPDATE_ONETIME_BY_ID               = "UPDATE onetime_service SET parking_type=?, customer_id=?, email=?, car_id=?, lot_id=?, planned_start_time=?, planned_end_time=?, parked=?, completed=?, canceled=?, warned=? WHERE id=?";
 
   // SQL queries - SubscriptionService
-  // TODO: add `parked` field to `subscription_service` table
-  public final String SQL_CREATE_SUBSCRIPTION_SERVICE             = "INSERT INTO subscription_service values(default, ?, ?, ?, ?, ?, ?, ?, ?)";
+  public final String SQL_CREATE_SUBSCRIPTION_SERVICE             = "INSERT INTO subscription_service values(default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   public final String SQL_GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID = "SELECT * FROM subscription_service WHERE customer_id=? ORDER BY id";
   public final String SQL_GET_SUBSCRIPTION_SERVICE_BY_ID          = "SELECT * FROM subscription_service WHERE id=? ORDER BY id";
   public final String SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR     = "SELECT * FROM subscription_service WHERE ID=? AND customer_id=? AND car_id=?";
-  public final String SQL_UPDATE_SUBSCRIPTION_BY_ID               = "UPDATE subscription_service SET subs_type=?, customer_id=?, email=?, car_id=?, lot_id=?, start_date=?, end_date=?, daily_exit_time=? WHERE id=?";
+  public final String SQL_UPDATE_SUBSCRIPTION_BY_ID               = "UPDATE subscription_service SET subs_type=?, customer_id=?, email=?, car_id=?, lot_id=?, start_date=?, end_date=?, daily_exit_time=?, parked=?, completed=?, canceled=?, warned=? WHERE id=?";
 
   // SQL queries - CarTransportation
   public final String SQL_CREATE_CAR_TRANSPORTATION             = "INSERT INTO car_transportation values(?, ?, ?, ?, ?, default, default)";

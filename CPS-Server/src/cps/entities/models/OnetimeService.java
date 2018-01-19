@@ -213,9 +213,8 @@ public class OnetimeService implements ParkingService {
   }
 
   /** A shorter version of create.
-   * @return the onetime service
-   * @throws SQLException
-   *         the SQL exception */
+   * @return the new onetime service
+   * @throws SQLException the SQL exception */
   public static OnetimeService create(Connection conn, int type, int customerID, String email, String carID, int lotID, Timestamp plannedStartTime,
       Timestamp plannedEndTime) throws SQLException {
     return create(conn, type, customerID, email, carID, lotID, plannedStartTime, plannedEndTime, false, false, false, false);
@@ -403,11 +402,14 @@ public class OnetimeService implements ParkingService {
 
   public static Collection<OnetimeService> findLateCustomers(Connection conn, Duration delta, boolean warned) throws SQLException {
     LinkedList<OnetimeService> items = new LinkedList<OnetimeService>();
+    
     PreparedStatement stmt = conn.prepareStatement(
-        String.join(" ", "SELECT os.*", "FROM onetime_service os", "WHERE os.planned_start_time <= ? ", "AND not parked AND not completed AND os.warned=? AND not os.canceled"));
-    int i = 1;
-    stmt.setTimestamp(i++, Timestamp.valueOf(LocalDateTime.now().minus(delta)));
-    stmt.setBoolean(i++, warned);
+        String.join(" ",
+            "SELECT os.*", "FROM onetime_service os", "WHERE os.planned_start_time <= ? ",
+            "AND not parked AND not completed AND os.warned=? AND not os.canceled"));
+    
+    stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now().minus(delta)));
+    stmt.setBoolean(2, warned);
     ResultSet rs = stmt.executeQuery();
 
     while (rs.next()) {

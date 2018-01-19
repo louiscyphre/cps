@@ -47,13 +47,12 @@ public class ReportController extends RequestController {
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_MANAGER, "You do not have permission to perform this action");
       errorIf(user.getAccessLevel() <= Constants.ACCESS_LEVEL_LOCAL_MANAGER && user.getDepartmentID() != action.getLotID(), "A LocalEmployee can perform this action only on their lot");
       
-      
       LocalDate start = action.getPeriodStart();
       LocalDate end = action.getPeriodEnd();
       
       LinkedList<MonthlyReport> data = new LinkedList<>();
       
-      while (start.isBefore(end)) {      
+      while (!start.isAfter(end)) {      
         int year = action.getPeriodStart().getYear();
         int month = action.getPeriodStart().getMonthValue();
         data.add(MonthlyReport.getMonthlyReport(conn, year, month, action.getLotID()));

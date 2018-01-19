@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.util.Collection;
 
 import cps.entities.models.OnetimeService;
+import cps.entities.models.SubscriptionService;
 import cps.server.ServerConfig;
 import cps.server.ServerException;
 import cps.server.database.DatabaseController;
@@ -16,9 +17,9 @@ import static cps.common.Utilities.debugPrint;
 import static cps.common.Utilities.debugPrintln;
 
 /**
- * The Class Reminder.
- * 
- * @author Tegra
+ * Runs in the background to remind users about important events.
+ * 1. Ask users who are late to their reserved parking whether they are still interested in the reservation.
+ * 2. Remind users who purchased a monthly subscription, that there is 1 week left before their subscription runs out.
  */
 public class Reminder extends Thread {
   DatabaseController db = null;
@@ -54,6 +55,14 @@ public class Reminder extends Thread {
          * order
          */
         cancelLateReservations();
+
+
+        /*
+         * This function will find users that purchased a monthly subscription
+         * and have 1 week left until it expires,
+         * and will notify them to renew their subscription.
+         */
+        warnSubscriptionOwners();
 
       }
 
@@ -116,5 +125,24 @@ public class Reminder extends Thread {
     System.out.printf(
         "\nSending message to customer %d, to email %s.\n We are waiting for your car %s, at lot %s, at %s\n",
         late.getCustomerID(), late.getEmail(), late.getCarID(), late.getLotID(), late.getPlannedStartTime());
+  }
+
+  // TODO add warned and completed flags to subscription schema
+  private void warnSubscriptionOwners() throws ServerException {
+    db.performAction(conn -> {
+      debugPrint("Searching customers who have 1 week left on their subscription");
+      Collection<SubscriptionService> items = SubscriptionService.findExpiringAfter(conn, Duration.ofDays(7), true);
+
+      for (SubscriptionService entry : items) {
+        entry.setWarned(true);
+        entry.update(conn); // We assume that update always works, if it
+                            // doesn't, it throws an SQL exception
+      }
+
+      // Note: the same customer can be warned multiple times if they own more than one subscription
+      debugPrintln("...sent %s subscription expiration warnings", items.size());
+    });
+
+    
   }
 }

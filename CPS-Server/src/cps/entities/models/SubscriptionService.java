@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,19 +22,22 @@ import cps.server.database.QueryBuilder;
 public class SubscriptionService implements ParkingService {
   private static final long serialVersionUID = 1L;
 
-  int       id;
-  int       subscriptionType; // 1 = regular, 2 = full
-  String    email;
-  int       customerID;
-  String    carID;
-  int       lotID;            // if null then full, else regular
-  LocalDate startDate;
-  LocalDate endDate;
-  LocalTime dailyExitTime;    // null for full subscription
-  boolean   parked;
+  int             id;
+  int             subscriptionType; // 1 = regular, 2 = full
+  String          email;
+  int             customerID;
+  String          carID;
+  int             lotID;            // if null then full, else regular
+  LocalDate       startDate;
+  LocalDate       endDate;
+  LocalTime       dailyExitTime;    // null for full subscription
+  boolean         parked;
+  private boolean completed;
+  private boolean canceled;
+  private boolean warned;
 
   public SubscriptionService(int id, int type, int customerID, String email, String carID, int lotID, LocalDate startDate, LocalDate endDate,
-      LocalTime dailyExitTime, boolean parked) {
+      LocalTime dailyExitTime, boolean parked, boolean completed, boolean canceled, boolean warned) {
     this.id = id;
     this.subscriptionType = type;
     this.customerID = customerID;
@@ -44,16 +48,19 @@ public class SubscriptionService implements ParkingService {
     this.endDate = endDate;
     this.dailyExitTime = dailyExitTime;
     this.parked = parked;
+    this.completed = completed;
+    this.canceled = canceled;
+    this.warned = warned;
   }
 
   public SubscriptionService(int id, int type, int customerID, String email, String carID, int lotID, LocalDate startDate, LocalDate endDate,
       LocalTime dailyExitTime) {
-    this(id, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime, false);
+    this(id, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime, false, false, false, false);
   }
 
   public SubscriptionService(ResultSet rs) throws SQLException {
     this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getInt(6), rs.getDate(7).toLocalDate(), rs.getDate(8).toLocalDate(),
-        rs.getTime(9).toLocalTime());
+        rs.getTime(9).toLocalTime(), rs.getBoolean(10), rs.getBoolean(11), rs.getBoolean(12), rs.getBoolean(13));
   }
 
   public int getId() {
@@ -143,7 +150,7 @@ public class SubscriptionService implements ParkingService {
     this.parked = parked;
   }
 
-  /** Creates the.
+  /** Creates a new SubscriptionService entry in the database.
    * @param conn the conn
    * @param type the type
    * @param customerID int - Customer ID
@@ -153,10 +160,14 @@ public class SubscriptionService implements ParkingService {
    * @param startDate LocalDate - The start date
    * @param endDate LocalDate - The end date
    * @param dailyExitTime LocalTime - The daily exit time
+   * @param parked the parked
+   * @param completed the completed
+   * @param canceled the canceled
+   * @param warned the warned
    * @return the subscription service
    * @throws SQLException the SQL exception */
   public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID, int lotID, LocalDate startDate,
-      LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
+      LocalDate endDate, LocalTime dailyExitTime, boolean parked, boolean completed, boolean canceled, boolean warned) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_SUBSCRIPTION_SERVICE, Statement.RETURN_GENERATED_KEYS);
 
     int field = 1;
@@ -168,6 +179,10 @@ public class SubscriptionService implements ParkingService {
     statement.setDate(field++, Date.valueOf(startDate));
     statement.setDate(field++, Date.valueOf(endDate));
     statement.setTime(field++, Time.valueOf(dailyExitTime));
+    statement.setBoolean(field++, parked);
+    statement.setBoolean(field++, completed);
+    statement.setBoolean(field++, canceled);
+    statement.setBoolean(field++, warned);
     statement.executeUpdate();
 
     ResultSet keys = statement.getGeneratedKeys();
@@ -180,7 +195,15 @@ public class SubscriptionService implements ParkingService {
 
     statement.close();
 
-    return new SubscriptionService(newID, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime);
+    return new SubscriptionService(newID, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime, parked, completed, canceled, warned);
+  }
+  
+  /** A shorter version of create.
+   * @return the new subscription service
+   * @throws SQLException the SQL exception */
+  public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID, int lotID, LocalDate startDate,
+      LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
+    return create(conn, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime, false, false, false, false);
   }
 
   public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID) throws SQLException {
@@ -341,7 +364,10 @@ public class SubscriptionService implements ParkingService {
     st.setDate(index++, Date.valueOf(this.startDate));
     st.setDate(index++, Date.valueOf(this.endDate));
     st.setTime(index++, Time.valueOf(this.dailyExitTime));
-//    st.setBoolean(index++, this.parked);
+    st.setBoolean(index++, this.parked);
+    st.setBoolean(index++, this.completed);
+    st.setBoolean(index++, this.canceled);
+    st.setBoolean(index++, this.warned);
     st.setInt(index++, this.id);
     st.executeUpdate();
     st.close();
@@ -350,32 +376,33 @@ public class SubscriptionService implements ParkingService {
 
   @Override
   public boolean isCompleted() {
-    return LocalDateTime.of(endDate, dailyExitTime).isBefore(LocalDateTime.now()) && !parked;
+//    return LocalDateTime.of(endDate, dailyExitTime).isBefore(LocalDateTime.now()) && !parked;
+    return completed;
   }
 
   @Override
   public void setCompleted(boolean completed) {
-    
+    this.completed = completed;
   }
 
   @Override
   public boolean isCanceled() {
-    return false;
+    return canceled;
   }
 
   @Override
   public void setCanceled(boolean canceled) {
-    
+    this.canceled = canceled;
   }
 
   @Override
   public boolean isWarned() {
-    return false;
+    return warned;
   }
 
   @Override
   public void setWarned(boolean warned) {
-    
+    this.warned = warned;
   }
 
   @Override
@@ -390,8 +417,18 @@ public class SubscriptionService implements ParkingService {
 
   public static int countWithMultipleCars(Connection conn) throws SQLException {
     return new QueryBuilder<Integer>(String.join(" ",
-        "SELECT count(a.id) FROM subscription_service a INNER JOIN subscription_service b",
-        "ON a.customer_id = b.customer_id AND a.car_id != b.car_id GROUP BY a.customer_id"))
-        .fetchResult(conn, result -> result.getInt(1));
+      "SELECT count(a.id) FROM subscription_service a INNER JOIN subscription_service b",
+      "ON a.customer_id = b.customer_id AND a.car_id != b.car_id GROUP BY a.customer_id"))
+      .fetchResult(conn, result -> result.getInt(1));
+  }
+
+  public static Collection<SubscriptionService> findExpiringAfter(Connection conn, Duration delta, boolean warned) throws SQLException {
+    return new QueryBuilder<SubscriptionService>(String.join(" ",
+      "SELECT *", "FROM subscription_service os", "WHERE end_date <= ? ",
+      "AND not parked AND not completed AND warned=? AND not canceled"
+    )).withFields(statement -> {
+      statement.setDate(1, Date.valueOf(LocalDate.now().minus(delta)));
+      statement.setBoolean(2, warned);
+    }).collectResults(conn, result -> new SubscriptionService(result));
   }
 }
