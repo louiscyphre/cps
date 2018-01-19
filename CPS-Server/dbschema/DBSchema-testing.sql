@@ -212,27 +212,6 @@ CREATE TABLE `parking_lot` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `quarterly_report`
---
-
-DROP TABLE IF EXISTS `quarterly_report`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `quarterly_report` (
-  `year` int(11) NOT NULL,
-  `quarter` int(11) NOT NULL,
-  `lot_id` int(11) NOT NULL,
-  `ordered_onetimes` int(11) DEFAULT '0',
-  `ordered_incidental` int(11) DEFAULT '0',
-  `ordered_regular` int(11) DEFAULT '0',
-  `ordered_full` int(11) DEFAULT '0',
-  `complaints_count` int(11) DEFAULT '0',
-  `disabled_slots` int(11) DEFAULT '0',
-  PRIMARY KEY (`year`,`quarter`,`lot_id`)
-) ENGINE=Memory DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `subscription_service`
 --
 
