@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-
+import java.time.temporal.ChronoUnit;
 import cps.server.database.QueryBuilder;
 
 // TODO: Auto-generated Javadoc
@@ -129,12 +129,18 @@ public class DisabledCellsStatistics {
     return stmt.executeUpdate();
   }
 
-  public static double countDIsableHours(Connection conn) {
-    double result = 0f;
-    String helper = "";
-    helper += "";
+  public static double countDisableHours(Connection conn) throws SQLException {
+    long helper = 0;
+    LocalDateTime start, end;
+    PreparedStatement stmt = conn.prepareStatement("SELECT date_disabled,date_enabled FROM disabled_slots_table");
+    ResultSet rs = stmt.executeQuery();
+    while (rs.next()) {
+      start = rs.getTimestamp("date_disabled").toLocalDateTime();
+      end = rs.getTimestamp("date_enabled").toLocalDateTime();
+      helper += start.until(end, ChronoUnit.MINUTES);
+    }
 
-    return result;
+    return (double) (helper / 60);
   }
 
 }
