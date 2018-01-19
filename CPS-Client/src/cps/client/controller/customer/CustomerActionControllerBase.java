@@ -37,7 +37,7 @@ public class CustomerActionControllerBase extends ClientControllerBase {
   }
 
   void sendMainRequest() {
-    
+
   }
 
 }

@@ -32,14 +32,14 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
 
   @FXML // fx:id="newReservedPriceTextField"
   private TextField newIncidentalPriceTextField; // Value injected by FXMLLoader
-  
+
   @FXML
   private ComboBox<String> parkingLotsList;
 
   HashMap<String, ParkingLot> parkingLotsMap = null;
-  
+
   String userLotChoice = null;
-  
+
   @FXML
   void handleComboBoxAction(ActionEvent event) {
     if (processing || parkingLotsMap != null) {
@@ -47,7 +47,7 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     }
     userLotChoice = parkingLotsList.getValue();
   }
-  
+
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
@@ -57,23 +57,24 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     assert parkingLotsList != null : "fx:id=\"parkingLotsList\" was not injected: check your FXML file 'ServiceActionUpdatePrices.fxml'.";
 
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_UPDATE_PRICES);
-    
+
     // Update the price information when the current lot changes
-    parkingLotsList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-      refreshPrices();
-    });
+    parkingLotsList.getSelectionModel().selectedItemProperty()
+        .addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+          refreshPrices();
+        });
   }
-  
+
   private void refreshPrices() {
     ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
     if (lot != null) {
       List<Text> formattedMessage = new LinkedList<Text>();
       formattedMessage.add(new Text(String.format("Incidental price: %s ILS per hour\n", lot.getPrice1())));
       formattedMessage.add(new Text(String.format("Reserved price: %s ILS per hour", lot.getPrice2())));
-      displayInfo(formattedMessage);      
+      displayInfo(formattedMessage);
     }
   }
-  
+
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
@@ -93,31 +94,32 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     try {
       float newReservedParkingPrice = requireFloat(newReservedPriceTextField, "New reserved parking price");
       float newIncidentalParkingPrice = requireFloat(newIncidentalPriceTextField, "New incidental parking price");
-  
+
       User user = ControllersClientAdapter.getEmployeeContext().requireCompanyPerson();
       ParkingLot lot = notNull(parkingLotsMap.get(parkingLotsList.getValue()), "Please choose a parking lot");
-      UpdatePricesAction action = new UpdatePricesAction(user.getId(), lot.getId(), newIncidentalParkingPrice, newReservedParkingPrice);
+      UpdatePricesAction action = new UpdatePricesAction(user.getId(), lot.getId(), newIncidentalParkingPrice,
+          newReservedParkingPrice);
       ControllersClientAdapter.getClient().sendRequest(action);
     } catch (Exception e) {
       displayError(e.getMessage());
-    }  
+    }
   }
-  
+
   /**
    * @param list
    */
-  public void setParkingLots(Collection <ParkingLot> list) {
-    List<String> tmp = new ArrayList<String> ();
+  public void setParkingLots(Collection<ParkingLot> list) {
+    List<String> tmp = new ArrayList<String>();
     parkingLotsMap = new HashMap<String, ParkingLot>();
-    for (ParkingLot i: list) {
+    for (ParkingLot i : list) {
       String address = new String(i.getStreetAddress());
       tmp.add(address);
-      parkingLotsMap.put(address,  i);
+      parkingLotsMap.put(address, i);
     }
     ObservableList<String> addresses = FXCollections.observableList(tmp);
     fillComboBoxItems(addresses);
   }
-  
+
   private void fillComboBoxItems(ObservableList<String> addresses) {
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
@@ -128,21 +130,22 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     if (response.success()) {
       setParkingLots(response.getData());
     }
-    return super.handleGenericResponse(response); 
+    return super.handleGenericResponse(response);
   }
-  
+
   @Override
   public ServerResponse handle(UpdatePricesResponse response) {
     if (response.success()) {
-      // cleanCtrl(); // FIXME doing this doesn't update the prices for some reason
+      // cleanCtrl(); // FIXME doing this doesn't update the prices for some
+      // reason
       ParkingLot lot = parkingLotsMap.get(response.getStreetAddress());
-      
+
       if (lot != null) {
         lot.setPrice1(response.getPrice1());
         lot.setPrice2(response.getPrice2());
-      }      
+      }
     }
-    
+
     super.handleGenericResponse(response);
     return response;
   }

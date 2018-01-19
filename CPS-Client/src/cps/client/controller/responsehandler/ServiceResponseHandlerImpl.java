@@ -57,7 +57,7 @@ class ServiceResponseHandlerImpl implements ServiceResponseHandler {
   public ServerResponse handle(ListParkingLotsResponse response) {
     return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
-  
+
   @Override
   public ServerResponse handle(UpdatePricesResponse response) {
     return ControllersClientAdapter.getCurrentCtrl().handle(response);

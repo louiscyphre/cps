@@ -63,7 +63,8 @@ public class CustomerContextImpl implements CustomerContext {
     loggedIn = false;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.context.CustomerContext#getChosenLotID()
    */
   @Override
@@ -71,7 +72,8 @@ public class CustomerContextImpl implements CustomerContext {
     return chosenLotIDforSubscription;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.context.CustomerContext#setChosenLotID(int)
    */
   @Override

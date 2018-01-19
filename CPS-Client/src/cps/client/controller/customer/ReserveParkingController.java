@@ -38,7 +38,8 @@ import javafx.scene.text.Text;
 /**
  * Created on: 2018-01-09 8:26:06 PM
  */
-public class ReserveParkingController extends CustomerActionControllerBaseSubmitAndFinish implements ParkingLotsController {
+public class ReserveParkingController extends CustomerActionControllerBaseSubmitAndFinish
+    implements ParkingLotsController {
 
   @FXML
   private DatePicker endDatePicker;
@@ -137,7 +138,9 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     assert endDatePicker != null : "fx:id=\"endDatePicker\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
     assert emailTF != null : "fx:id=\"emailTF\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
     assert startDatePicker != null : "fx:id=\"startDatePicker\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
-//    startDatePicker.setOnShowing(e -> Locale.setDefault(Locale.Category.FORMAT, Locale.ENGLISH)); // TODO maybe not needed
+    // startDatePicker.setOnShowing(e ->
+    // Locale.setDefault(Locale.Category.FORMAT, Locale.ENGLISH)); // TODO maybe
+    // not needed
     assert carIDTextField != null : "fx:id=\"carIDTextField\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
 
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.RESERVE_PARKING);
@@ -307,7 +310,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     parkingLotsMap.clear();
     loadParkingLots();
   }
-  
+
   @Override
   public ServerResponse handle(ReservedParkingResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();

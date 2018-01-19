@@ -40,13 +40,13 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
   }
 
   void validateAndSend() {
-    
+
   }
-  
+
   EmployeeContext requireEmployeeContext() throws InternalClientException {
     return notNull(ControllersClientAdapter.getEmployeeContext(), "Emlpoyee Context");
   }
-  
+
   CompanyPerson requireLoggedInUser() throws InternalClientException {
     return requireEmployeeContext().requireCompanyPerson();
   }

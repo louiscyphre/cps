@@ -33,7 +33,7 @@ public interface ViewController extends ResponseHandler {
   public void turnLoggedInStateOff();
 
   public void cleanCtrl();
-  
+
   public BorderPane getRoot();
 
 }

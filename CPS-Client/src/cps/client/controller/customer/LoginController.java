@@ -38,7 +38,7 @@ public class LoginController extends CustomerActionControllerBase {
 
   @FXML
   private Button submitButton;
-  
+
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -98,7 +98,7 @@ public class LoginController extends CustomerActionControllerBase {
     submitButton.setDisable(false);
     cancelButton.setDisable(false);
   }
-  
+
   @Override
   public ServerResponse handle(LoginResponse response) {
 

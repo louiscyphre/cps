@@ -5,7 +5,6 @@ import cps.api.response.InitLotResponse;
 import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
-import cps.client.controller.ControllerConstants.SceneCode;
 import cps.entities.people.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -28,14 +27,14 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
   private TextField robotIpTF; // Value injected by FXMLLoader
 
   @Override
-  void validateAndSend() { 
+  void validateAndSend() {
     try {
       String streetAddress = requireFieldTrim(streetAddressTF, "Street Address");
       int lotSize = requireInteger(lotSizeTF, "Lot Width");
       float incidentalTariff = requireFloat(incidentalTariffTF, "Incidental Tariff");
       float reservedTariff = requireFloat(reservedTariffTF, "Reserved Tariff");
       String robotIp = requireFieldTrim(robotIpTF, "Robot IP");
-  
+
       User user = ControllersClientAdapter.getEmployeeContext().requireCompanyPerson();
       sendRequest(new InitLotAction(user.getId(), streetAddress, lotSize, incidentalTariff, reservedTariff, robotIp));
     } catch (Exception e) {
@@ -45,7 +44,7 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
 
   @Override
   public ServerResponse handle(InitLotResponse response) {
-    if(response.success()) {
+    if (response.success()) {
       setFinishInsteadOfSubmit(true);
     }
     return super.handleGenericResponse(response);

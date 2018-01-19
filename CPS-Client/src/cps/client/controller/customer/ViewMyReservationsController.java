@@ -63,7 +63,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
   private ObservableList<TableOnetimeService>      obsEntriesList;
 
   private HashMap<Integer, String> parkingLotsMap;
-  
+
   private void refresh() {
     if (parkingLotsMap.isEmpty()) {
       ListParkingLotsRequest request = new ListParkingLotsRequest();
@@ -74,7 +74,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
           ControllersClientAdapter.getCustomerContext().getCustomerId());
       turnProcessingStateOn();
       ControllersClientAdapter.getClient().sendRequest(request);
-    }    
+    }
   }
 
   @FXML
@@ -168,7 +168,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
     List<TableOnetimeService> newEntriesList = new LinkedList<TableOnetimeService>();
     Timestamp now = Timestamp.valueOf(LocalDateTime.now());
     list.forEach(e -> {
-      if(e.getPlannedEndTime().compareTo(now) > 0 && !e.isCanceled()) {
+      if (e.getPlannedEndTime().compareTo(now) > 0 && !e.isCanceled()) {
         TableOnetimeService toAdd = new TableOnetimeService((e.getParkingType()), e.getCarID(), e.getLotID(),
             e.getPlannedStartTime().toString(), e.getPlannedEndTime().toString(), e.getId());
         newEntriesList.add(toAdd);
@@ -181,7 +181,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
   public void removeEntry(int onetimeServiceID) {
     obsEntriesList.remove(new TableOnetimeService(0, null, 0, null, null, onetimeServiceID));
   }
-  
+
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
     parkingLotsMap = new HashMap<Integer, String>();
@@ -296,7 +296,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
 
     obsEntriesList.addAll(entriesList);
   }
-  
+
   @Override
   public ServerResponse handle(ListOnetimeEntriesResponse response) {
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
@@ -326,7 +326,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
 
     return null;
   }
-  
+
   @Override
   public ServerResponse handle(CancelOnetimeParkingResponse response) {
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();

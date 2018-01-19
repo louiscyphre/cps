@@ -32,7 +32,7 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
     // ACCESS_LEVEL_GLOBAL_MANAGER
     ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MANAGE_LOT, 10);
   }
-  
+
   @FXML
   void handleRefundButton(ActionEvent event) {
     // ACCESS_DOMAIN_CUSTOMER_SERVICE, ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER

@@ -3,7 +3,6 @@
  */
 package cps.client.controller.customer;
 
-
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -28,7 +27,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Created on: 2018-01-15 2:34:23 AM 
+ * Created on: 2018-01-15 2:34:23 AM
  */
 public class FullSubscriptionController extends CustomerActionControllerBaseSubmitAndFinish {
 
@@ -47,8 +46,6 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
   @FXML
   private TextField carIDTextField;
 
-
-  
   @FXML
   void handlePickStartDate(ActionEvent event) {
     if (processing) {
@@ -129,7 +126,6 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
-  
 
   // returns customer context - >=1 if logged in, 0 otherwise
   private int getCustomerID() {
@@ -146,12 +142,12 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
       return emailTextField.getText();
     }
   }
-  
+
   // return car id or null if empty
   private String getCarID() {
     return carIDTextField.getText();
   }
-  
+
   // returns planned start date or null if empty
   private LocalDate getPlannedStartDate() {
     if (startDatePicker.getValue() == null) {
@@ -163,7 +159,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
       return null;
     }
   }
-  
+
   @FXML
   void initialize() {
     super.baseInitialize();
@@ -175,7 +171,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
   }
-  
+
   public ServerResponse handle(FullSubscriptionResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();

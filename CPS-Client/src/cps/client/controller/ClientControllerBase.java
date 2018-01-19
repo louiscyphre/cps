@@ -177,7 +177,7 @@ public abstract class ClientControllerBase implements ViewController {
 
     return response;
   }
-  
+
   @Override
   public BorderPane getRoot() {
     return root;
@@ -309,12 +309,10 @@ public abstract class ClientControllerBase implements ViewController {
     return null;
   }
 
-  
   // Helper methods
   public String getText(TextInputControl field) {
     return field == null ? "" : field.getText();
   }
-
 
   public String requireField(String value, String parameterName) throws UserLevelClientException {
     if (value == null || value.trim().length() == 0) {
@@ -386,24 +384,24 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   protected String fixTime(String text) {
-    String[] parts = text.split(":");    
+    String[] parts = text.split(":");
     StringBuilder result = new StringBuilder();
-    
+
     for (int i = 0; i < parts.length; i++) {
       if (parts[i].length() < 2) {
         parts[i] = "0" + parts[i];
       }
-      
+
       result.append(parts[i]);
-      
+
       if (i < parts.length - 1) {
         result.append(":");
       }
     }
-    
+
     return result.toString();
   }
-  
+
   protected LocalTime getTime(TextInputControl field, String parameterName) {
     try {
       String text = fixTime(requireFieldTrim(field, parameterName));

@@ -407,7 +407,6 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
 
     double rectWidth = (gridAnchor.getWidth() - vgap) / content[0][0].length - vgap;
     double rectHeight = (gridAnchor.getHeight() - hgap) / content.length - hgap;
-    Paint rectPaint;
 
     for (int level = 0; level < content[0].length; level++) {
       for (int depth = 0; depth < content[0][0].length; depth++) {

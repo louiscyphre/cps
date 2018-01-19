@@ -94,7 +94,7 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
     // input fields clear
     carIdTextField.clear();
   }
-  
+
   @Override
   public ServerResponse handle(ParkingExitResponse response) {
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
@@ -103,11 +103,11 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
 
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       formattedMessage.add(new Text("The car retrieval is granted!\nRobot will retrieve your car shortly.\n"));
-      if(response.getPayment() > 0) {
+      if (response.getPayment() > 0) {
         formattedMessage.add(new Text("You have been credited "));
         formattedMessage.add(new Text(Float.toString(Math.abs(response.getPayment()))));
         formattedMessage.add(new Text(" ILS\n"));
-      } else if(response.getPayment() < 0) {
+      } else if (response.getPayment() < 0) {
         formattedMessage.add(new Text("You have been debited "));
         formattedMessage.add(new Text(Float.toString(Math.abs(response.getPayment()))));
         formattedMessage.add(new Text(" ILS\n"));

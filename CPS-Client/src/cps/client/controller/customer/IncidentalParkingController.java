@@ -215,7 +215,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     endDatePicker.getEditor();
     endTimeTextField.clear();
   }
-  
+
   public ServerResponse handle(IncidentalParkingResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
@@ -266,6 +266,5 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
 
     return response;
   }
-
 
 }

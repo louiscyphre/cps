@@ -22,7 +22,7 @@ public class EmployeeContextImpl implements EmployeeContext {
     if (companyPerson == null) {
       throw new InternalClientException("This action requires a logged in user");
     }
-    
+
     return companyPerson;
   }
 

@@ -48,11 +48,12 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.turnLoggedInStateOff();
       initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Web Client");
       setMainMenuControllerForWeb();
-      
+
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
+
   private void loadKiosk() throws IOException {
     try {
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
@@ -80,7 +81,7 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_INIT_LOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MENU);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_LOT_IS_FULL);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MANAGE_LOT); 
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MANAGE_LOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_REFUND);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
       ControllersClientAdapter.turnLoggedInStateOff();
@@ -108,14 +109,14 @@ public class ClientApplication extends Application implements INetworkClient {
       }
 
       Locale.setDefault(Locale.Category.FORMAT, Locale.ENGLISH);
-      
+
       this.client = new CPSNetworkClient(parser.getHost(), parser.getPort(), this);
 
       ControllersClientAdapter.registerClient(this);
 
       switch (parser.getMode()) {
         case "webclient":
-           loadWebClient();
+          loadWebClient();
           break;
         case "service":
           loadService();
@@ -151,7 +152,7 @@ public class ClientApplication extends Application implements INetworkClient {
     });
 
   }
-  
+
   private void setMainMenuControllerForWeb() {
     ((CustomerMainMenuController) ControllersClientAdapter.fetchCtrl(SceneCode.CUSTOMER_INITIAL_MENU)).setAsWebClient();
   }

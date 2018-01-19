@@ -29,7 +29,7 @@ public interface ServiceResponseHandler {
   public ServerResponse handle(ReserveParkingSlotsResponse response);
 
   public ServerResponse handle(SetFullLotResponse response);
-  
+
   public ServerResponse handle(ListParkingLotsResponse response);
 
   public ServerResponse handle(UpdatePricesResponse response);
@@ -37,7 +37,7 @@ public interface ServiceResponseHandler {
   public ServerResponse handle(ServiceLoginResponse response);
 
   public ServerResponse handle(ListComplaintsResponse response);
-  
+
   public ServerResponse handle(RejectComplaintResponse response);
-  
+
 }

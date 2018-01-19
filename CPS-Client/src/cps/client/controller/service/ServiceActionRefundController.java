@@ -174,8 +174,8 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     List<String> tmp = new ArrayList<String>();
     complaintsMap.clear();
     for (Complaint i : response.getData()) {
-      String complaintMeta = new String("[ID" + i.getId() + ": ]" + "[E: " + i.getEmployeeID() + "]" + "[C: "
-          + i.getCustomerID() + "]");
+      String complaintMeta = new String(
+          "[ID" + i.getId() + ": ]" + "[E: " + i.getEmployeeID() + "]" + "[C: " + i.getCustomerID() + "]");
 
       tmp.add(complaintMeta);
       complaintsMap.put(complaintMeta, i);

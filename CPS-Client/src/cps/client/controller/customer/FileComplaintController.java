@@ -30,11 +30,11 @@ public class FileComplaintController extends CustomerActionControllerBaseSubmitA
       displayError(e.getMessage());
     }
   }
-  
+
   @Override
   public ServerResponse handle(ComplaintResponse response) {
     super.handleGenericResponse(response);
-    if(response.success()) {
+    if (response.success()) {
       setFinishInsteadOfSubmit(true);
     }
     return null;

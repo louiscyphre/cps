@@ -55,8 +55,8 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
   void refreshAlternativeLots() {
     ParkingLot selectedLot = parkingLotsMap.get(lotsList.getValue());
     if (selectedLot != null) {
-      alternativeLotsList.getItems().setAll(
-          parkingLotsMap.entrySet().stream().filter(e -> e.getValue().getId() != selectedLot.getId()).map(e -> e.getKey()).collect(Collectors.toList()));
+      alternativeLotsList.getItems().setAll(parkingLotsMap.entrySet().stream()
+          .filter(e -> e.getValue().getId() != selectedLot.getId()).map(e -> e.getKey()).collect(Collectors.toList()));
     }
   }
 
@@ -72,9 +72,10 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.SERVICE_ACTION_LOT_IS_FULL);
 
     // Update the list of alternative lots when the current lot changes
-    lotsList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-      refreshAlternativeLots();
-    });
+    lotsList.getSelectionModel().selectedItemProperty()
+        .addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+          refreshAlternativeLots();
+        });
   }
 
   @Override
@@ -118,7 +119,8 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
       for (int i = 0; i < alternativeLotsIds.size(); i++) {
         arrayToSend[i] = alternativeLotsIds.get(i);
       }
-      errorIf(setAlternativeLotsCheckBox.isSelected() && alternativeLotsIds.size() < 1, "Please choose alternative parking lot");
+      errorIf(setAlternativeLotsCheckBox.isSelected() && alternativeLotsIds.size() < 1,
+          "Please choose alternative parking lot");
       turnProcessingStateOn();
       sendRequest(new SetFullLotAction(user.getId(), lot.getId(), setFullStateCheckBox.isSelected(), arrayToSend));
     } catch (Exception e) {
