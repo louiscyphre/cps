@@ -18,11 +18,27 @@ import javafx.util.StringConverter;
 /**
  * Created on: 2018-01-09 10:38:44 PM
  */
+/**
+ * @author firl
+ *
+ */
 public class DateTimePicker extends DatePicker {
+  /**
+   * 
+   */
   public static final String DefaultFormat = "yyyy-MM-dd HH:mm";
 
+  /**
+   * 
+   */
   private DateTimeFormatter             formatter;
+  /**
+   * 
+   */
   private ObjectProperty<LocalDateTime> dateTimeValue = new SimpleObjectProperty<>(LocalDateTime.now());
+  /**
+   * 
+   */
   private ObjectProperty<String>        format        = new SimpleObjectProperty<String>() {
                                                         public void set(String newValue) {
                                                           super.set(newValue);
@@ -30,6 +46,9 @@ public class DateTimePicker extends DatePicker {
                                                         }
                                                       };
 
+  /**
+   * 
+   */
   public DateTimePicker() {
     getStyleClass().add("datetime-picker");
     setFormat(DefaultFormat);
@@ -59,15 +78,24 @@ public class DateTimePicker extends DatePicker {
 
   }
 
+  /**
+   * 
+   */
   private void simulateEnterPressed() {
     getEditor().fireEvent(new KeyEvent(getEditor(), getEditor(), KeyEvent.KEY_PRESSED, null, null, KeyCode.ENTER, false,
         false, false, false));
   }
 
+  /**
+   * @return
+   */
   public LocalDateTime getDateTimeValue() {
     return dateTimeValue.get();
   }
 
+  /**
+   * @param dateTimeValue
+   */
   public void setDateTimeValue(LocalDateTime dateTimeValue) {
     if (dateTimeValue.isAfter(LocalDateTime.of(1971, 6, 30, 12, 00)))
       this.dateTimeValue.set(dateTimeValue);
@@ -75,22 +103,38 @@ public class DateTimePicker extends DatePicker {
       this.dateTimeValue.set(null);
   }
 
+  /**
+   * @return
+   */
   public ObjectProperty<LocalDateTime> dateTimeValueProperty() {
     return dateTimeValue;
   }
 
+  /**
+   * @return
+   */
   public String getFormat() {
     return format.get();
   }
 
+  /**
+   * @return
+   */
   public ObjectProperty<String> formatProperty() {
     return format;
   }
 
+  /**
+   * @param format
+   */
   public void setFormat(String format) {
     this.format.set(format);
   }
 
+  /**
+   * @author firl
+   *
+   */
   class InternalConverter extends StringConverter<LocalDate> {
     public String toString(LocalDate object) {
 

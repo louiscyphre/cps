@@ -31,24 +31,45 @@ import javafx.scene.text.Text;
  * Created on: 2018-01-13 1:01:03 AM
  */
 public class IncidentalParkingController extends CustomerActionControllerBaseSubmitAndFinish {
+  /**
+   * 
+   */
   @FXML
   private TextField carIDTextField;
 
+  /**
+   * 
+   */
   @FXML
   private DatePicker endDatePicker;
 
+  /**
+   * 
+   */
   @FXML
   private TextField endTimeTextField;
 
+  /**
+   * 
+   */
   @FXML
   private TextField emailTextField;
 
+  /**
+   * 
+   */
   @FXML
   private Font x1;
 
+  /**
+   * 
+   */
   @FXML
   private Insets x3;
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
+   */
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -57,6 +78,9 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     validateAndSend();
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handlePickEndDate(ActionEvent event) {
     if (processing) {
@@ -64,6 +88,9 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     }
   }
 
+  /**
+   * 
+   */
   private void validateAndSend() {
     // validation in same order as order in the form
     // out of form
@@ -99,8 +126,6 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
       return;
     }
 
-    // TODO replace the lotid handling from the list instead lotid may be 1 or 0
-    // - check
     int lotID = getLotId();
     if (lotID <= 0) {
       displayError("Invalid lot ID");
@@ -124,17 +149,26 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
   }
 
   // returns customer context - >=1 if logged in, 0 otherwise
+  /**
+   * @return
+   */
   private int getCustomerId() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
   // return car id or null if empty
+  /**
+   * @return
+   */
   private String getCarId() {
     return carIDTextField.getText();
   }
 
   // returns planned end date or null if empty
+  /**
+   * @return
+   */
   private LocalDateTime getPlannedEndDateTime() {
     if (endDatePicker.getValue() == null) {
       return null;
@@ -147,11 +181,17 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
   }
 
   // returns planned end time or null if empty
+  /**
+   * @return
+   */
   private LocalTime getEndTime() {
     return getTime(endTimeTextField, "End time");
   }
 
   // returns lot id or -1 if empty
+  /**
+   * @return
+   */
   private int getLotId() {
     if (ControllersClientAdapter.getLotID() == 0) {
       return -1;
@@ -160,6 +200,9 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
   }
 
   // returns email if logged in from customer context,
+  /**
+   * @return
+   */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
     if (cntx.isLoggedIn()) {
@@ -170,27 +213,42 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
   }
 
   // show Email field
+  /**
+   * 
+   */
   public void showEmail() {
     emailTextField.visibleProperty().set(true);
   }
 
   //
+  /**
+   * 
+   */
   public void hideEmail() {
     emailTextField.visibleProperty().set(false);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn()
+   */
   @Override
   public void turnLoggedInStateOn() {
     super.turnLoggedInStateOn();
     emailTextField.setVisible(false);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff()
+   */
   @Override
   public void turnLoggedInStateOff() {
     super.turnLoggedInStateOff();
     emailTextField.setVisible(true);
   }
 
+  /**
+   * 
+   */
   @FXML
   void initialize() {
     super.baseInitialize();
@@ -204,6 +262,9 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
                                                      // Field
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     // info box clear
@@ -216,6 +277,9 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     endTimeTextField.clear();
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.IncidentalParkingResponse)
+   */
   public ServerResponse handle(IncidentalParkingResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
@@ -223,8 +287,6 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     int responseCustomerId = response.getCustomerID();
     List<Text> formattedMessage = new LinkedList<Text>();
 
-    // if request fails customer id is 0 TODO
-    // new customer
     if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
       // outputting the customer id on screen
       context.setCustomerId(responseCustomerId);

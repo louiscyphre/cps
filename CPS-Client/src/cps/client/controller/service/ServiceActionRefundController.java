@@ -26,29 +26,56 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
-// TODO verify with server side how the refund should behave
+/**
+ * @author firl
+ *
+ */
 public class ServiceActionRefundController extends ServiceActionControllerBase {
 
+  /**
+   * 
+   */
   @FXML
   private ListView<String> complaintsList;
 
+  /**
+   * 
+   */
   @FXML
   private TextField refundTF;
 
+  /**
+   * 
+   */
   @FXML
   private TextField reasonTF;
 
+  /**
+   * 
+   */
   @FXML
   private TextArea complaintContent;
 
+  /**
+   * 
+   */
   @FXML
   private Button rejectButton;
 
+  /**
+   * 
+   */
   @FXML
   private Button refundButton;
 
+  /**
+   * 
+   */
   private HashMap<String, Complaint> complaintsMap;
 
+  /**
+   * @param event
+   */
   @FXML
   void handleRejectButton(ActionEvent event) {
     if (!processing) {
@@ -56,6 +83,9 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleRefundButton(ActionEvent event) {
     if (!processing) {
@@ -63,6 +93,9 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     }
   }
 
+  /**
+   * 
+   */
   void handleComplaintSelected() {
     if (!processing) {
       String selectedMeta = complaintsList.getSelectionModel().getSelectedItem();
@@ -108,6 +141,9 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     }
   }
 
+  /**
+   * 
+   */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
@@ -121,6 +157,9 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_REFUND);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
@@ -136,6 +175,9 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     refundButton.setDisable(true);
   }
 
+  /**
+   * @param reject
+   */
   void validateAndSend(boolean reject) {
     try {
       String selectedMeta = complaintsList.getSelectionModel().getSelectedItem();
@@ -154,6 +196,9 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.RefundResponse)
+   */
   @Override
   public ServerResponse handle(RefundResponse response) {
     super.handleGenericResponse(response);
@@ -161,6 +206,9 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     return null;
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.RejectComplaintResponse)
+   */
   @Override
   public ServerResponse handle(RejectComplaintResponse response) {
     super.handleGenericResponse(response);
@@ -168,6 +216,9 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     return null;
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ListComplaintsResponse)
+   */
   @Override
   public ServerResponse handle(ListComplaintsResponse response) {
     turnProcessingStateOff();

@@ -17,43 +17,82 @@ import javafx.scene.text.Text;
 
 public class CustomerMainMenuController extends CustomerActionControllerBase {
 
+  /**
+   * 
+   */
   @FXML // fx:id="exitParkingButton"
   private Button exitParkingButton; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="buySubscriptionButton"
   private Button buySubscriptionButton; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="parkNowButton"
   private Button parkNowButton; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="enterParkingButton"
   private Button enterParkingButton; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="logOutButton"
   private Button logOutButton; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="reserveParkingButton"
   private Button reserveParkingButton; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="viewMyReservationsButton"
   private Button viewMyReservationsButton; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="fileComplaintButton"
   private Button fileComplaintButton; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="buttonsVbox"
   private VBox buttonsVbox; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="logInButton"
   private Button logInButton; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   private boolean isRunnedAsWebClient = false;
 
+  /**
+   * @param event
+   */
   @FXML
   void handleLogoutButton(ActionEvent event) {
     ControllersClientAdapter.turnLoggedInStateOff();
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleEnterParkingButton(ActionEvent event) {
     if (!processing) {
@@ -61,6 +100,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleExitParkingButton(ActionEvent event) {
     if (!processing) {
@@ -68,6 +110,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleViewMyReservationsButton(ActionEvent event) {
     if (!processing) {
@@ -75,6 +120,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleFileComplaintButton(ActionEvent event) {
     if (!processing) {
@@ -82,6 +130,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleLoginButton(ActionEvent event) {
     if (!processing) {
@@ -89,6 +140,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleReserveParkingButton(ActionEvent event) {
     if (!processing) {
@@ -96,6 +150,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleBuySubscriptionButton(ActionEvent event) {
     if (!processing) {
@@ -103,6 +160,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleParkNowButton(ActionEvent event) {
     if (!processing) {
@@ -110,6 +170,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * 
+   */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   private void initialize() {
@@ -133,6 +196,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
                                                      // Field
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#displayInfo(java.util.List)
+   */
   @Override
   public void displayInfo(List<Text> formattedText) {
     infoBox.getStyleClass().clear();
@@ -143,6 +209,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#displayInfo(java.lang.String)
+   */
   @Override
   public void displayInfo(String simpleInfoMsg) {
     infoBox.getStyleClass().clear();
@@ -151,6 +220,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     infoLabel.getChildren().add(new Text(simpleInfoMsg));
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#displayError(java.util.List)
+   */
   @Override
   public void displayError(List<Text> formettedErrorMsg) {
     infoBox.getStyleClass().clear();
@@ -161,6 +233,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#displayError(java.lang.String)
+   */
   @Override
   public void displayError(String simpleErrorMsg) {
     infoBox.getStyleClass().clear();
@@ -169,6 +244,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     infoLabel.getChildren().add(new Text(simpleErrorMsg));
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnProcessingStateOn()
+   */
   @Override
   public void turnProcessingStateOn() {
     infoProgress.visibleProperty().set(true);
@@ -180,11 +258,17 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     processing = true;
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnProcessingStateOff()
+   */
   @Override
   public void turnProcessingStateOff() {
     processing = false;
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn()
+   */
   @Override
   public void turnLoggedInStateOn() {
     buttonsVbox.getChildren().remove(logInButton);
@@ -204,6 +288,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     buttonsVbox.getStyleClass().add("loggedInButtonsBox");
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff()
+   */
   @Override
   public void turnLoggedInStateOff() {
     cleanCtrl();
@@ -226,6 +313,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     buttonsVbox.getStyleClass().remove("loggedInButtonsBox");
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
@@ -235,6 +325,9 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * 
+   */
   public void setAsWebClient() {
     isRunnedAsWebClient = true;
     buttonsVbox.getChildren().remove(enterParkingButton);

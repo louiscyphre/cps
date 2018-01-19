@@ -18,9 +18,15 @@ import javafx.scene.text.Text;
 
 public class ExitCarController extends CustomerActionControllerBaseSubmitAndFinish {
 
+  /**
+   * 
+   */
   @FXML // fx:id="carIdTextField"
   private TextField carIdTextField; // Value injected by FXMLLoader
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
+   */
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -29,6 +35,9 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
     validateAndSend();
   }
 
+  /**
+   * 
+   */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
@@ -39,6 +48,9 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
                                                      // Field
   }
 
+  /**
+   * 
+   */
   private void validateAndSend() {
     // validation in same order as order in the form
     // out of form
@@ -69,17 +81,26 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
   }
 
   // returns customer context - >=1 if logged in, 0 otherwise
+  /**
+   * @return
+   */
   private int getCustomerId() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
   // return car id or null if empty
+  /**
+   * @return
+   */
   private String getCarId() {
     return carIdTextField.getText();
   }
 
   // returns lot id or -1 if empty
+  /**
+   * @return
+   */
   private int getLotId() {
     if (ControllersClientAdapter.getLotID() == 0) {
       return -1;
@@ -87,6 +108,9 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
     return ControllersClientAdapter.getLotID();
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     // info box clear
@@ -95,6 +119,9 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
     carIdTextField.clear();
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ParkingExitResponse)
+   */
   @Override
   public ServerResponse handle(ParkingExitResponse response) {
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();

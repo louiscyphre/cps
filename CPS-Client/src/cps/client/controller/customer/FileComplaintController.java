@@ -9,9 +9,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
 public class FileComplaintController extends CustomerActionControllerBaseSubmitAndFinish {
+  /**
+   * 
+   */
   @FXML // fx:id="complaintContent"
   private TextArea complaintContent; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML
   // This method is called by the FXMLLoader when initialization is complete
   void initialize() {
@@ -20,6 +26,9 @@ public class FileComplaintController extends CustomerActionControllerBaseSubmitA
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.FILE_COMPLAINT);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#sendMainRequest()
+   */
   @Override
   void sendMainRequest() {
     try {
@@ -31,6 +40,9 @@ public class FileComplaintController extends CustomerActionControllerBaseSubmitA
     }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ComplaintResponse)
+   */
   @Override
   public ServerResponse handle(ComplaintResponse response) {
     super.handleGenericResponse(response);
@@ -40,6 +52,9 @@ public class FileComplaintController extends CustomerActionControllerBaseSubmitA
     return null;
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();

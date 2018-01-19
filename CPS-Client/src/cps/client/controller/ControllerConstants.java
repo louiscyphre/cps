@@ -2,6 +2,10 @@ package cps.client.controller;
 
 public class ControllerConstants {
 
+  /**
+   * @author firl
+   *
+   */
   public enum SceneCode {
 
     TEST_SCENE("view/service/ServiceActionDisableSlotDynamicGrid.fxml"),
@@ -58,6 +62,10 @@ public class ControllerConstants {
 
   }
 
+  /**
+   * @author firl
+   *
+   */
   public enum InputVerification {
     INPUT_OK(0, "The request is valid"),
 
@@ -89,8 +97,4 @@ public class ControllerConstants {
       return this.msg;
     }
   }
-
-  // TODO Title maybe unnecessary in 'fxml' files
-  // serviceActionsMenuScene/serviceLoginScene/serviceMainMenuScene
-
 }

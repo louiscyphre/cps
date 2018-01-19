@@ -25,20 +25,39 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+/**
+ * @author firl
+ *
+ */
 public class LoginController extends CustomerActionControllerBase {
 
+  /**
+   * 
+   */
   @FXML // fx:id="emailTextField"
   private TextField emailTextField; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="passwordTextField"
   private PasswordField passwordTextField;
 
+  /**
+   * 
+   */
   @FXML
   private Button cancelButton;
 
+  /**
+   * 
+   */
   @FXML
   private Button submitButton;
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
+   */
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -50,6 +69,9 @@ public class LoginController extends CustomerActionControllerBase {
     validateAndSend();
   }
 
+  /**
+   * 
+   */
   private void validateAndSend() {
     String email = null;
     try {
@@ -77,6 +99,9 @@ public class LoginController extends CustomerActionControllerBase {
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
+  /**
+   * 
+   */
   @FXML
   void initialize() {
     super.baseInitialize();
@@ -88,6 +113,9 @@ public class LoginController extends CustomerActionControllerBase {
                                                      // Field
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     // info box clear
@@ -99,6 +127,9 @@ public class LoginController extends CustomerActionControllerBase {
     cancelButton.setDisable(false);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.LoginResponse)
+   */
   @Override
   public ServerResponse handle(LoginResponse response) {
 

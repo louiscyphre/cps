@@ -25,21 +25,43 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
+/**
+ * @author firl
+ *
+ */
 public class ServiceActionUpdatePricesController extends ServiceActionControllerBase implements ParkingLotsController {
 
+  /**
+   * 
+   */
   @FXML // fx:id="newReservedPriceTextField"
   private TextField newReservedPriceTextField; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="newReservedPriceTextField"
   private TextField newIncidentalPriceTextField; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML
   private ComboBox<String> parkingLotsList;
 
+  /**
+   * 
+   */
   HashMap<String, ParkingLot> parkingLotsMap = null;
 
+  /**
+   * 
+   */
   String userLotChoice = null;
 
+  /**
+   * @param event
+   */
   @FXML
   void handleComboBoxAction(ActionEvent event) {
     if (processing || parkingLotsMap != null) {
@@ -48,6 +70,9 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     userLotChoice = parkingLotsList.getValue();
   }
 
+  /**
+   * 
+   */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
@@ -65,6 +90,9 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
         });
   }
 
+  /**
+   * 
+   */
   private void refreshPrices() {
     ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
     if (lot != null) {
@@ -75,6 +103,9 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
@@ -89,6 +120,9 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.service.ServiceActionControllerBase#validateAndSend()
+   */
   @Override
   void validateAndSend() {
     try {
@@ -108,6 +142,9 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
   /**
    * @param list
    */
+  /* (non-Javadoc)
+   * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.Collection)
+   */
   public void setParkingLots(Collection<ParkingLot> list) {
     List<String> tmp = new ArrayList<String>();
     parkingLotsMap = new HashMap<String, ParkingLot>();
@@ -120,11 +157,17 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     fillComboBoxItems(addresses);
   }
 
+  /**
+   * @param addresses
+   */
   private void fillComboBoxItems(ObservableList<String> addresses) {
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ListParkingLotsResponse)
+   */
   @Override
   public ServerResponse handle(ListParkingLotsResponse response) {
     if (response.success()) {
@@ -133,11 +176,12 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     return super.handleGenericResponse(response);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.UpdatePricesResponse)
+   */
   @Override
   public ServerResponse handle(UpdatePricesResponse response) {
     if (response.success()) {
-      // cleanCtrl(); // FIXME doing this doesn't update the prices for some
-      // reason
       ParkingLot lot = parkingLotsMap.get(response.getStreetAddress());
 
       if (lot != null) {

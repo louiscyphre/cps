@@ -36,52 +36,107 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
+/**
+ * @author firl
+ *
+ */
 public class ServiceActionManageLotController extends ServiceActionControllerBase implements ParkingLotsController {
 
+  /**
+   * 
+   */
   @FXML // ResourceBundle that was given to the FXMLLoader
   private ResourceBundle resources;
 
+  /**
+   * 
+   */
   @FXML // URL location of the FXML file that was given to the FXMLLoader
   private URL location;
 
+  /**
+   * 
+   */
   @FXML // fx:id="gridAnchor"
   protected StackPane gridAnchor; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="parkingLotsList"
   protected ComboBox<String> parkingLotsList; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML // fx:id="levelIndicator"
   protected int levelIndicator; // Value injected by FXMLLoader
 
+  /**
+   * 
+   */
   @FXML
   protected Button overviewButton;
 
+  /**
+   * 
+   */
   @FXML
   private Button disableButton;
 
+  /**
+   * 
+   */
   @FXML
   private Button reserveButton;
 
+  /**
+   * 
+   */
   protected ArrayList<GridPane> carsGrids;
 
+  /**
+   * 
+   */
   protected HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
 
   // matrix representing 3D array
+  /**
+   * 
+   */
   protected ArrayList<ArrayList<ArrayList<ParkingCell>>> parkingCell;
 
+  /**
+   * 
+   */
   protected ArrayList<Text> overviewInfo;
 
+  /**
+   * 
+   */
   protected ArrayList<Text> cellInfo;
 
+  /**
+   * 
+   */
   protected Rectangle selectedCar;
 
+  /**
+   * 
+   */
   protected ParkingCell selectedCell;
 
+  /**
+   * 
+   */
   private void updateView() {
     gridAnchor.getChildren().forEach(carsGrid -> carsGrid.setVisible(false));
     gridAnchor.getChildren().get(getCurrentLevelIndex()).setVisible(true);
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleReserveSlot(ActionEvent event) {
     if (!processing) {
@@ -100,6 +155,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleDisableSlot(ActionEvent event) {
     if (!processing) {
@@ -118,6 +176,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handle1pressed(ActionEvent event) {
     if (!processing) {
@@ -126,6 +187,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handle2pressed(ActionEvent event) {
     if (!processing) {
@@ -134,6 +198,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handle3pressed(ActionEvent event) {
     if (!processing) {
@@ -142,6 +209,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void showOverview(ActionEvent event) {
     if (!processing) {
@@ -149,6 +219,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleChooseParkingLot(ActionEvent event) {
     if (!processing) {
@@ -156,6 +229,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * 
+   */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
@@ -169,10 +245,16 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     registerCtrl();
   }
 
+  /**
+   * 
+   */
   protected void registerCtrl() {
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_MANAGE_LOT);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
@@ -191,6 +273,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     sendRequest(new ListParkingLotsRequest());
   }
 
+  /**
+   * 
+   */
   private void clearParkingCells() {
     parkingCell.forEach(inner -> {
       inner.forEach(inner2 -> {
@@ -201,6 +286,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     parkingCell.clear();
   }
 
+  /**
+   * 
+   */
   private void initParkingCells() {
     parkingCell = new ArrayList<ArrayList<ArrayList<ParkingCell>>>(Constants.LOT_HEIGHT);
     for (int i = 0; i < Constants.LOT_HEIGHT; i++) {
@@ -211,6 +299,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * 
+   */
   private void clearCarsGrids() {
     carsGrids.forEach(carsGrid -> {
       carsGrid.getChildren().clear();
@@ -218,6 +309,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     gridAnchor.getChildren().forEach(carsGrid -> carsGrid.setVisible(false));
   }
 
+  /**
+   * 
+   */
   private void initCarsGrids() {
     carsGrids = new ArrayList<GridPane>(Constants.LOT_HEIGHT);
     for (int i = 0; i < Constants.LOT_DEPTH; i++) {
@@ -234,6 +328,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     gridAnchor.getChildren().setAll(carsGrids);
   }
 
+  /**
+   * 
+   */
   private void initOverviewInfo() {
     overviewInfo = new ArrayList<Text>(15);
 
@@ -258,6 +355,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     overviewInfo.add(new Text("\n"));
   }
 
+  /**
+   * 
+   */
   private void updateOverviewInfo() {
     int capacity = parkingCell.size() * parkingCell.get(0).size() * parkingCell.get(0).get(0).size();
     int disabled = new Integer(0);
@@ -292,6 +392,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     // });
   }
 
+  /**
+   * 
+   */
   private void initCellInfo() {
     cellInfo = new ArrayList<Text>(15);
 
@@ -320,6 +423,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     // });
   }
 
+  /**
+   * @param cell
+   */
   private void updateCellInfo(ParkingCell cell) {
 
     cellInfo.set(1, new Text("[" + (cell.height + 1) + "," + (cell.depth + 1) + "," + (cell.width + 1) + "]"));
@@ -338,10 +444,16 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
 
   }
 
+  /**
+   * @return
+   */
   private int getCurrentLevelIndex() {
     return levelIndicator - 1;
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.service.ServiceActionControllerBase#validateAndSend()
+   */
   @Override
   void validateAndSend() {
     try {
@@ -356,6 +468,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.Collection)
+   */
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
     List<String> tmp = new ArrayList<String>();
@@ -372,11 +487,17 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     fillComboBoxItems(addresses);
   }
 
+  /**
+   * @param addresses
+   */
   private void fillComboBoxItems(ObservableList<String> addresses) {
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.RequestLotStateResponse)
+   */
   @Override
   public ServerResponse handle(RequestLotStateResponse response) {
 
@@ -399,6 +520,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     return null;
   }
 
+  /**
+   * @param content
+   */
   private void readContent(ParkingCell[][][] content) {
     double vgap = carsGrids.get(0).getVgap();
     double hgap = carsGrids.get(0).getHgap();
@@ -442,6 +566,10 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * @param correspondingCell
+   * @param currentRectangle
+   */
   private void toggleSelectCar(ParkingCell correspondingCell, Rectangle currentRectangle) {
     // if pressed same or another and was assigned
     if (selectedCar != null) {
@@ -462,6 +590,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * @param currentRectangle
+   */
   protected void onMouseEnteredHandler(Rectangle currentRectangle) {
     if (processing)
       return;
@@ -475,6 +606,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * @param currentRectangle
+   */
   protected void onMouseClickedHandler(Rectangle currentRectangle) {
     if (processing)
       return;
@@ -492,11 +626,17 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
+  /**
+   * @param value
+   */
   private void setSlotButtonsDisabled(boolean value) {
     reserveButton.setDisable(value);
     disableButton.setDisable(value);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ReserveParkingSlotsResponse)
+   */
   @Override
   public ServerResponse handle(ReserveParkingSlotsResponse response) {
     super.handleGenericResponse(response);
@@ -507,6 +647,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     return null;
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.DisableParkingSlotsResponse)
+   */
   @Override
   public ServerResponse handle(DisableParkingSlotsResponse response) {
     super.handleGenericResponse(response);
@@ -517,6 +660,10 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     return null;
   }
 
+  /**
+   * @param currentParkingCell
+   * @param rect
+   */
   void paintRectAccordingToCell(ParkingCell currentParkingCell, Rectangle rect) {
     Paint rectPaint;
     if (currentParkingCell.isFree() || currentParkingCell == null) {

@@ -5,8 +5,16 @@ import java.util.regex.Pattern;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+/**
+ * @author firl
+ *
+ */
 public class FormatValidation {
 
+  /**
+   * @author firl
+   *
+   */
   public enum InputFormats {
     USERNAME("^[a-zA-Z0-9._-]{3,}$", "Bad or Missing Username"), CARID("[A-Z0-9\\-]{1,12}",
         "Bad or Missing Car ID"), LOCAL_TIME("([01]?[0-9]|2[0-3]):[0-5][0-9]", "Bad or Missing Local Time"),
@@ -62,6 +70,9 @@ public class FormatValidation {
     }
   }
 
+  /**
+   * @param args
+   */
   public static void main(String args[]) {
     // System.out.println(InputFormats.LOTID.validate("123-456"));
     // System.out.println(InputFormats.LOTID.validate("1-23-4-56-"));
