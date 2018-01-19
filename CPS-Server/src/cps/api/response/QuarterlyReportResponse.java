@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import cps.entities.models.MonthlyReport;
 
-public class QuarterlyReportResponse extends ServerResponseWithData<Collection<MonthlyReport>> {
+public class QuarterlyReportResponse extends RequestReportResponse<Collection<MonthlyReport>> {
   private static final long serialVersionUID = 1L;
 
   @Override
