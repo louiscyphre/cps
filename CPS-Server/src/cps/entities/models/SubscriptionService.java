@@ -431,7 +431,7 @@ public class SubscriptionService implements ParkingService {
       "SELECT *", "FROM subscription_service os", "WHERE end_date <= ? ",
       "AND not completed AND warned=? AND not canceled"
     )).withFields(statement -> {
-      statement.setDate(1, Date.valueOf(LocalDate.now().minus(delta)));
+      statement.setDate(1, Date.valueOf(LocalDateTime.now().plus(delta).toLocalDate()));
       statement.setBoolean(2, warned);
     }).collectResults(conn, result -> new SubscriptionService(result));
   }
