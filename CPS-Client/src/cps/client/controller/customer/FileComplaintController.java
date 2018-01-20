@@ -8,15 +8,18 @@ import cps.client.controller.ControllersClientAdapter;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
+/**
+ * File Complaint controller.
+ */
 public class FileComplaintController extends CustomerActionControllerBaseSubmitAndFinish {
   /**
-   * 
+   * Complaint Text Area.
    */
   @FXML // fx:id="complaintContent"
   private TextArea complaintContent; // Value injected by FXMLLoader
 
   /**
-   * 
+   * Initializes the Controller and Registers it.
    */
   @FXML
   // This method is called by the FXMLLoader when initialization is complete

@@ -27,11 +27,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Created on: 2018-01-15 2:34:23 AM
- */
-/**
- * @author firl
- *
+ * Full Subscription controller. 
  */
 public class FullSubscriptionController extends CustomerActionControllerBaseSubmitAndFinish {
 
@@ -48,24 +44,26 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
   private TextField emailTextField;
 
   /**
-   * 
+   * Font injected by FXML
    */
   @FXML
   private Font x1;
 
   /**
-   * 
+   * Insets injected by FXML
    */
   @FXML
   private Insets x3;
 
   /**
-   * 
+   * CarID Text Field
    */
   @FXML
   private TextField carIDTextField;
 
   /**
+   * Handles date pick.
+   * 
    * @param event
    */
   @FXML
@@ -75,8 +73,10 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     }
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBase#handleBackButton(javafx.event.ActionEvent)
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#
+   * handleBackButton(javafx.event.ActionEvent)
    */
   @FXML
   void handleBackButton(ActionEvent event) {
@@ -86,8 +86,10 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS, 10);
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#
+   * handleSubmitButton(javafx.event.ActionEvent)
    */
   @FXML
   void handleSubmitButton(ActionEvent event) {
@@ -97,7 +99,8 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     validateAndSend();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn()
    */
   @Override
@@ -106,7 +109,8 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     emailTextField.setVisible(false);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff()
    */
   @Override
@@ -116,7 +120,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
   }
 
   /**
-   * 
+   * Validates that the fields and Sends API request to the server.
    */
   private void validateAndSend() {
     // validation in same order as order in the form
@@ -164,18 +168,16 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
-  // returns customer context - >=1 if logged in, 0 otherwise
   /**
-   * @return
+   * @return customer context id
    */
   private int getCustomerID() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
-  // returns email if logged in from customer context,
   /**
-   * @return
+   * @return email from customer context
    */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
@@ -186,17 +188,15 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     }
   }
 
-  // return car id or null if empty
   /**
-   * @return
+   * @return car id
    */
   private String getCarID() {
     return carIDTextField.getText();
   }
 
-  // returns planned start date or null if empty
   /**
-   * @return
+   * @return planned parking start date
    */
   private LocalDate getPlannedStartDate() {
     if (startDatePicker.getValue() == null) {
@@ -210,7 +210,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
   }
 
   /**
-   * 
+   * Initializes the Controller and Registers it.
    */
   @FXML
   void initialize() {
@@ -224,8 +224,9 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
                                                      // Field
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.FullSubscriptionResponse)
+  /**
+   * Display the Subscription Details Request was succesful, and user
+   * credentials if new user, error - otherwise.
    */
   public ServerResponse handle(FullSubscriptionResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
@@ -267,8 +268,11 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     return response;
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl()
+  /*
+   * (non-Javadoc)
+   * @see
+   * cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#
+   * cleanCtrl()
    */
   @Override
   public void cleanCtrl() {

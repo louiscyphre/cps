@@ -1,10 +1,12 @@
 package cps.client.controller;
 
+/**
+ * Class to hold all the constants needed for the application operation. 
+ */
 public class ControllerConstants {
 
   /**
-   * @author firl
-   *
+   *  SceneCodes hold relative paths to fxml
    */
   public enum SceneCode {
 
@@ -63,8 +65,7 @@ public class ControllerConstants {
   }
 
   /**
-   * @author firl
-   *
+   * Enum for error message handling, and default error messages.
    */
   public enum InputVerification {
     INPUT_OK(0, "The request is valid"),

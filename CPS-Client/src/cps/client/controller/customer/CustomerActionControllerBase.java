@@ -6,9 +6,13 @@ import cps.client.controller.ControllersClientAdapter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
+/**
+ * Base Class for Customer controllers, both Web and Kiosk.
+ */
 public class CustomerActionControllerBase extends ClientControllerBase {
 
   /**
+   * Returns customer to main menu.
    * @param event
    */
   @FXML
@@ -19,6 +23,7 @@ public class CustomerActionControllerBase extends ClientControllerBase {
   }
 
   /**
+   * Returns customer to main menu.
    * @param event
    */
   @FXML
@@ -29,6 +34,7 @@ public class CustomerActionControllerBase extends ClientControllerBase {
   }
 
   /**
+   * Submit button handling.
    * @param event
    */
   @FXML
@@ -39,6 +45,7 @@ public class CustomerActionControllerBase extends ClientControllerBase {
   }
 
   /**
+   * Ok button handling.
    * @param event
    */
   @FXML
@@ -49,10 +56,9 @@ public class CustomerActionControllerBase extends ClientControllerBase {
   }
 
   /**
-   * 
+   * Stub for a main request function.
    */
   void sendMainRequest() {
 
   }
-
 }
