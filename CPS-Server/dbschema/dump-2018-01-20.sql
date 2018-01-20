@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.1.30-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: cps
+-- Host: 127.0.0.1    Database: cps
 -- ------------------------------------------------------
--- Server version	10.1.30-MariaDB
+-- Server version	5.7.20-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -198,6 +198,8 @@ CREATE TABLE `monthly_report` (
   `ordered_regular` int(11) DEFAULT '0',
   `ordered_full` int(11) DEFAULT '0',
   `complaints_count` int(11) DEFAULT '0',
+  `complaints_closed_count` int(11) DEFAULT '0',
+  `complaints_refunded_count` int(11) DEFAULT '0',
   `disabled_slots` int(11) DEFAULT '0',
   PRIMARY KEY (`year`,`month`,`lot_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -306,36 +308,6 @@ INSERT INTO `parking_lot` VALUES (1,'Sesame, 1',4,5,4,NULL,'1.0.0.1','\0'),(2,'M
 UNLOCK TABLES;
 
 --
--- Table structure for table `quarterly_report`
---
-
-DROP TABLE IF EXISTS `quarterly_report`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `quarterly_report` (
-  `year` int(11) NOT NULL,
-  `quarter` int(11) NOT NULL,
-  `lot_id` int(11) NOT NULL,
-  `ordered_onetimes` int(11) DEFAULT '0',
-  `ordered_incidental` int(11) DEFAULT '0',
-  `ordered_regular` int(11) DEFAULT '0',
-  `ordered_full` int(11) DEFAULT '0',
-  `complaints_count` int(11) DEFAULT '0',
-  `disabled_slots` int(11) DEFAULT '0',
-  PRIMARY KEY (`year`,`quarter`,`lot_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `quarterly_report`
---
-
-LOCK TABLES `quarterly_report` WRITE;
-/*!40000 ALTER TABLE `quarterly_report` DISABLE KEYS */;
-/*!40000 ALTER TABLE `quarterly_report` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `subscription_service`
 --
 
@@ -410,4 +382,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-20  1:41:03
+-- Dump completed on 2018-01-20 13:38:48

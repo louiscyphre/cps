@@ -22,22 +22,27 @@ public class MonthlyReport {
   /** The lot id. */
   private int lotId;
 
-  /** The ord reserved. */
+  /** Amount of Reserved parkings. */
   private int ordReserved;
 
-  /** The ord incidental. */
+  /** Amount of Incidendal parkings. */
   private int ordIncidental;
 
-  /** The ord regular. */
+  /** Amount of Regular subscriptions. */
   private int ordRegular;
 
-  /** The ord full. */
+  /** Amount of Full subscriptions. */
   private int ordFull;
 
-  /** The coplaints count. */
+  /** Amount of complaints. */
   private int coplaintsCount;
 
-  /** The disabled slots. */
+  /** The complaints closed count. */
+  private int complaintsClosedCount;
+
+  private int complaintsRefundedCount;
+
+  /** Amount of disabled slots. */
   private int disabledSlots;
 
   /** Instantiates a new monthly report.
@@ -50,8 +55,8 @@ public class MonthlyReport {
    * @param _ordfull the ordfull
    * @param _coplaintscount the coplaintscount
    * @param _disabledslots the disabledslots */
-  public MonthlyReport(int _year, int _month, int _lotid, int _ordreserved, int _ordincidental, int _ordregular, int _ordfull, int _coplaintscount,
-      int _disabledslots) {
+  public MonthlyReport(int _year, int _month, int _lotid, int _ordreserved, int _ordincidental, int _ordregular,
+      int _ordfull, int _coplaintscount, int complaintsclosedcount, int complaintsrefundedcount, int _disabledslots) {
     this.year = _year;
     this.month = _month;
     this.lotId = _lotid;
@@ -60,6 +65,8 @@ public class MonthlyReport {
     this.ordRegular = _ordregular;
     this.ordFull = _ordfull;
     this.coplaintsCount = _coplaintscount;
+    this.complaintsClosedCount = complaintsclosedcount;
+    this.complaintsRefundedCount = complaintsrefundedcount;
     this.disabledSlots = _disabledslots;
   }
 
@@ -78,22 +85,23 @@ public class MonthlyReport {
     this.disabledSlots = rs.getInt("disabled_slots");
   }
 
-  /** Creates the.
-   * @param conn the conn
+  /** Creates Monthly Report in the database.
+   * @param conn the Connection
    * @param year the year
    * @param month the month
-   * @param lotid the lotid
-   * @return the monthly report
+   * @param lotid the lot id
+   * @return Newly created Monthly Report
    * @throws SQLException the SQL exception */
   public static MonthlyReport create(Connection conn, int year, int month, int lotid) throws SQLException {
-    PreparedStatement stmt = conn.prepareStatement("INSERT INTO monthly_report VALUES (?,?,?,default,default,default,default,default,default)");
+    PreparedStatement stmt = conn
+        .prepareStatement("INSERT INTO monthly_report VALUES (?,?,?,default,default,default,default,default,default,default,default)");
     int i = 1;
     stmt.setInt(i++, year);
     stmt.setInt(i++, month);
     stmt.setInt(i++, lotid);
     stmt.executeUpdate();
     stmt.close();
-    return new MonthlyReport(year, month, lotid, 0, 0, 0, 0, 0, 0);
+    return new MonthlyReport(year, month, lotid, 0, 0, 0, 0, 0, 0, 0, 0);
   }
 
   /** Find report.
@@ -105,7 +113,8 @@ public class MonthlyReport {
    * @throws SQLException the SQL exception */
   public static MonthlyReport findReport(Connection conn, int year, int month, int lotid) throws SQLException {
     MonthlyReport result = null;
-    PreparedStatement stmt = conn.prepareStatement("SELECT * FROM monthly_report WHERE year=? AND month=? AND lot_id=?");
+    PreparedStatement stmt = conn
+        .prepareStatement("SELECT * FROM monthly_report WHERE year=? AND month=? AND lot_id=?");
     int i = 1;
     stmt.setInt(i++, year);
     stmt.setInt(i++, month);
@@ -130,11 +139,13 @@ public class MonthlyReport {
    * @return the monthly report
    * @throws SQLException the SQL exception
    * @throws ServerException the server exception */
-  public static MonthlyReport findReportNotNull(Connection conn, int year, int month, int lotid) throws SQLException, ServerException {
+  public static MonthlyReport findReportNotNull(Connection conn, int year, int month, int lotid)
+      throws SQLException, ServerException {
     MonthlyReport report = findReport(conn, year, month, lotid);
 
     if (report == null) {
-      throw new ServerException(String.format("Failed to get report from Monthly report. year=%d,month=%d,lot=%d", year, month, lotid));
+      throw new ServerException(
+          String.format("Failed to get report from Monthly report. year=%d,month=%d,lot=%d", year, month, lotid));
     }
 
     return report;
@@ -165,11 +176,13 @@ public class MonthlyReport {
    * @return the monthly report
    * @throws SQLException the SQL exception
    * @throws ServerException the server exception */
-  public static MonthlyReport createOrFindNotNull(Connection conn, int year, int month, int lotid) throws SQLException, ServerException {
+  public static MonthlyReport createOrFindNotNull(Connection conn, int year, int month, int lotid)
+      throws SQLException, ServerException {
     MonthlyReport report = createOrFind(conn, year, month, lotid);
 
     if (report == null) {
-      throw new ServerException(String.format("Failed to get report from Monthly report. year=%d,month=%d,lot=%d", year, month, lotid));
+      throw new ServerException(
+          String.format("Failed to get report from Monthly report. year=%d,month=%d,lot=%d", year, month, lotid));
     }
 
     return report;
@@ -204,7 +217,8 @@ public class MonthlyReport {
    * @param lotid the lotid
    * @throws SQLException the SQL exception
    * @throws ServerException the server exception */
-  public static void increaseReserved(Connection conn, int year, int month, int lotid) throws SQLException, ServerException {
+  public static void increaseReserved(Connection conn, int year, int month, int lotid)
+      throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
     rep.ordReserved++;
     rep.update(conn);
@@ -217,7 +231,8 @@ public class MonthlyReport {
    * @param lotid the lotid
    * @throws SQLException the SQL exception
    * @throws ServerException the server exception */
-  public static void increaseIncidental(Connection conn, int year, int month, int lotid) throws SQLException, ServerException {
+  public static void increaseIncidental(Connection conn, int year, int month, int lotid)
+      throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
     rep.ordIncidental++;
     rep.update(conn);
@@ -230,7 +245,8 @@ public class MonthlyReport {
    * @param lotid the lotid
    * @throws SQLException the SQL exception
    * @throws ServerException the server exception */
-  public static void increaseRegular(Connection conn, int year, int month, int lotid) throws SQLException, ServerException {
+  public static void increaseRegular(Connection conn, int year, int month, int lotid)
+      throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
     rep.ordRegular++;
     rep.update(conn);
@@ -243,7 +259,8 @@ public class MonthlyReport {
    * @param lotid the lotid
    * @throws SQLException the SQL exception
    * @throws ServerException the server exception */
-  public static void increaseFull(Connection conn, int year, int month, int lotid) throws SQLException, ServerException {
+  public static void increaseFull(Connection conn, int year, int month, int lotid)
+      throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
     rep.ordFull++;
     rep.update(conn);
@@ -256,12 +273,44 @@ public class MonthlyReport {
    * @param lotid the lotid
    * @throws SQLException the SQL exception
    * @throws ServerException the server exception */
-  public static void increaseComplaints(Connection conn, int year, int month, int lotid) throws SQLException, ServerException {
+  public static void increaseComplaints(Connection conn, int year, int month, int lotid)
+      throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
-    rep.ordRegular++;
+    rep.coplaintsCount++;
     rep.update(conn);
   }
 
+  
+  /** Increase closed complaints count.
+   * @param conn the conn
+   * @param year the year
+   * @param month the month
+   * @param lotid the lotid
+   * @throws SQLException the SQL exception
+   * @throws ServerException the server exception */
+  public static void increaseClosed(Connection conn, int year, int month, int lotid)
+      throws SQLException, ServerException {
+    MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
+    rep.complaintsClosedCount++;
+    rep.update(conn);
+  }
+  
+  
+  /** Increase refunded complaints count.
+   * @param conn the conn
+   * @param year the year
+   * @param month the month
+   * @param lotid the lotid
+   * @throws SQLException the SQL exception
+   * @throws ServerException the server exception */
+  public static void increaseRefunded(Connection conn, int year, int month, int lotid)
+      throws SQLException, ServerException {
+    MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
+    rep.complaintsRefundedCount++;
+    rep.update(conn);
+  }
+  
+  
   /** Count disabled cells.
    * @param conn the conn
    * @param year the year
@@ -269,7 +318,8 @@ public class MonthlyReport {
    * @param lotid the lotid
    * @throws SQLException the SQL exception
    * @throws ServerException the server exception */
-  public static void countDisabledCells(Connection conn, int year, int month, int lotid) throws SQLException, ServerException {
+  public static void countDisabledCells(Connection conn, int year, int month, int lotid)
+      throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
     rep.disabledSlots = DisabledCellsStatistics.countDisabledCells(conn, lotid, LocalDateTime.of(year, month, 1, 0, 0),
         LocalDateTime.of(year, month + 1, 1, 0, 0).minusDays(1));
@@ -284,13 +334,13 @@ public class MonthlyReport {
    * @return the monthly report
    * @throws SQLException the SQL exception
    * @throws ServerException the server exception */
-  public static MonthlyReport getMonthlyReport(Connection conn, int year, int month, int lotid) throws SQLException, ServerException {
+  public static MonthlyReport getMonthlyReport(Connection conn, int year, int month, int lotid)
+      throws SQLException, ServerException {
     countDisabledCells(conn, year, month, lotid);
     MonthlyReport rep = findReportNotNull(conn, year, month, lotid);
     return rep;
   }
 
-  
   public int getYear() {
     return year;
   }

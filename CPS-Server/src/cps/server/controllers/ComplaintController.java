@@ -21,6 +21,7 @@ import cps.api.response.ServerResponse;
 import cps.common.Constants;
 import cps.entities.models.Complaint;
 import cps.entities.models.Customer;
+import cps.entities.models.MonthlyReport;
 import cps.entities.people.User;
 import cps.server.ServerController;
 import cps.server.session.CustomerSession;
@@ -81,6 +82,12 @@ public class ComplaintController extends RequestController {
       complaint.setStatus(Constants.COMPLAINT_STATUS_ACCEPTED);
       complaint.update(conn);
 
+      //XXX Statistics
+      // Count as closed and refunded
+      MonthlyReport.increaseClosed(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());
+      MonthlyReport.increaseRefunded(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());
+      
+
       response.setComplaintID(complaint.getId());
       response.setCustomerID(customer.getId());
       response.setAmount(action.getAmount());
@@ -110,6 +117,10 @@ public class ComplaintController extends RequestController {
       complaint.setResolvedAt(Timestamp.valueOf(LocalDateTime.now()));
       complaint.setStatus(Constants.COMPLAINT_STATUS_REJECTED);
       complaint.update(conn);
+      
+      //XXX Statistics
+      //Count as closed
+      MonthlyReport.increaseClosed(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());
 
       response.setComplaintID(complaint.getId());
       response.setCustomerID(customer.getId());
