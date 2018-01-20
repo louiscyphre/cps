@@ -57,8 +57,12 @@ public class ReportController extends RequestController {
       LocalDate start = action.getPeriodStart();
       LocalDate end = action.getPeriodEnd();
 
-      LinkedList<MonthlyReport> data = new LinkedList<>();
 
+      LinkedList<MonthlyReport> data = new LinkedList<>();
+      //FIXME Tegra here
+      /*
+      MonthlyReport total=new MonthlyReport(action.getPeriodStart().getYear(), action.getPeriodStart().getMonth(), _lotid, _ordreserved, _ordincidental, _ordregular, _ordfull, _coplaintscount, complaintsclosedcount, complaintsrefundedcount, _disabledslots)
+      */
       while (!start.isAfter(end)) {
         int year = action.getPeriodStart().getYear();
         int month = action.getPeriodStart().getMonthValue();
