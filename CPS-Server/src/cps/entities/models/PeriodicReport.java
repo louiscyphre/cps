@@ -77,7 +77,7 @@ public class PeriodicReport extends GenericReport<StatisticalData> {
       hours[i] = DisabledCellsStatistics.countDisableHours(conn, start, start.plusDays(7));
 
       /* Set label to week number */
-      rows[i] = String.format("Week %d", i);
+      rows[i] = String.format("Week %d", i + 1);
     }
 
     PeriodicReport report = new PeriodicReport(rows);

@@ -44,6 +44,7 @@ public interface Constants {
 
   public final int REPORT_TYPE_WEEKLY    = 1;
   public final int REPORT_TYPE_QUARTERLY = 2;
+  public final int REPORT_TYPE_PERIODIC  = 3;
 
   // SQL queries - OnetimeService
   public final String SQL_CREATE_ONETIME_SERVICE             = "INSERT INTO onetime_service values(default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

@@ -229,7 +229,7 @@ public class DailyStatistics implements Serializable {
       st.setDate(1, Date.valueOf(iDate));
       rs = st.executeQuery();
 
-      if (!rs.wasNull()) {
+      if (rs.next()) {
         item[i] = new DailyStatistics(iDate, 0, rs.getInt("realized_orders"), rs.getInt("canceled_orders"), rs.getInt("late_arrivals"),
             rs.getInt("inactive_slots"));
 
@@ -239,6 +239,7 @@ public class DailyStatistics implements Serializable {
       }
       rs.close();
       st.close();
+      iDate = iDate.plusDays(1);
     }
 
     return item;
