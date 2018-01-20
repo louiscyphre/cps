@@ -10,7 +10,7 @@ import java.sql.Date;
 import cps.common.Constants;
 import cps.server.ServerException;
 
-/** The Class DailyStatistics. */
+/** Records daily statistical data to be used as a data source for generating weekly statistics. */
 public class DailyStatistics implements Serializable {
   private static final long serialVersionUID = 1L;
 
@@ -32,7 +32,7 @@ public class DailyStatistics implements Serializable {
   /** The number of complaints. */
   private int complaints;
 
-  /** Instantiates a new daily statistics.
+  /** Instantiates a new daily statistics object.
    * @param day the day
    * @param lotId the lot id
    * @param realizedOrders the realized orders
@@ -49,9 +49,9 @@ public class DailyStatistics implements Serializable {
     this.complaints = complaints;
   }
 
-  /** Instantiates a new daily statistics.
-   * @param rs the rs
-   * @throws SQLException the SQL exception */
+  /** Instantiates a new daily statistics object from an SQL ResultSet.
+   * @param rs the SQL ResultSet
+   * @throws SQLException on error */
   public DailyStatistics(ResultSet rs) throws SQLException {
     this(rs.getDate("day").toLocalDate(), rs.getInt("lot_id"), rs.getInt("realized_orders"), rs.getInt("canceled_orders"), rs.getInt("late_arrivals"),
         rs.getInt("complaints"));
@@ -107,11 +107,11 @@ public class DailyStatistics implements Serializable {
 
   /** Creates an empty entry in the table for specific date and lotId. All other
    * parameters are zero by default
-   * @param conn the conn
+   * @param conn the SQL connection
    * @param today the today
    * @param lotId the lot id
    * @return the daily statistics
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static DailyStatistics create(Connection conn, LocalDate today, int lotId) throws SQLException {
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_NEW_DAY);
 
@@ -125,14 +125,13 @@ public class DailyStatistics implements Serializable {
 
   }
 
-  /** If statistics for set Date exists in database, the function returns the
-   * corresponding line as ResultSet. Else creates an empty line in database and
-   * returns null ResultSet
-   * @param conn the conn
+  /** If a daily statistics entry for the given date exists in the database, the function returns the
+   * corresponding entry. Else it creates a new entry initialized with zeros and returns it.
+   * @param conn the SQL connection
    * @param _date the date
    * @param lotId the lot id
    * @return the daily statistics
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static DailyStatistics createIfNotExists(Connection conn, LocalDate _date, int lotId) throws SQLException {
     DailyStatistics item = null;
 
@@ -152,21 +151,20 @@ public class DailyStatistics implements Serializable {
   }
 
   /** Increase realized order count by one for today in specific parking lot.
-   * @param conn the conn
+   * @param conn the SQL connection
    * @param lotId the lot id
-   * @throws SQLException the SQL exception
-   * @throws ServerException the server exception */
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public static void increaseRealizedOrder(Connection conn, int lotId) throws SQLException, ServerException {
     increaseRealizedOrder(conn, LocalDate.now(), lotId);
   }
 
-  /** Increase realized order count by one in specific parking lot at specific
-   * date.
-   * @param conn the conn
+  /** Increase realized order count by one for the specified parking lot and date.
+   * @param conn the SQL connection
    * @param _date the date
    * @param lotId the lot id
-   * @throws SQLException the SQL exception
-   * @throws ServerException the server exception */
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public static void increaseRealizedOrder(Connection conn, LocalDate _date, int lotId) throws SQLException, ServerException {
     // check if line exists in database
     DailyStatistics entry = createIfNotExists(conn, _date, lotId);
@@ -186,12 +184,13 @@ public class DailyStatistics implements Serializable {
     }
   }
 
-  /** Gets the seven days.
-   * @param conn the conn
+  /** Return seven successive daily statistics entries.
+   * Used for calculated weekly statistics.
+   * @param conn the SQL connection
    * @param firstDay the first day
    * @param lotId the lot id
    * @return the seven days
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static DailyStatistics[] getSevenDays(Connection conn, LocalDate firstDay, int lotId) throws SQLException {
     DailyStatistics[] item = new DailyStatistics[7];
     PreparedStatement st = null;
@@ -245,13 +244,12 @@ public class DailyStatistics implements Serializable {
     return item;
   }
 
-  /** Increase canceled order count by one in specific parking lot at specific
-   * date.
-   * @param conn the conn
+  /** Increase canceled order count by one for the specified parking lot and date.
+   * @param conn the SQL connection
    * @param _date the date
    * @param lotId the lot id
-   * @throws SQLException the SQL exception
-   * @throws ServerException the server exception */
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public static void increaseCanceledOrder(Connection conn, LocalDate _date, int lotId) throws SQLException, ServerException {
     // check if line exists in database
     DailyStatistics entry = createIfNotExists(conn, _date, lotId);
@@ -271,22 +269,21 @@ public class DailyStatistics implements Serializable {
     }
   }
 
-  /** Increase Late Arrival count by one for today in specific parking lot.
-   * @param conn the conn
+  /** Increase Late Arrival count by one for today in the specified parking lot.
+   * @param conn the SQL connection
    * @param lotId the lot id
-   * @throws SQLException the SQL exception
-   * @throws ServerException the server exception */
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public static void increaseLateArrival(Connection conn, int lotId) throws SQLException, ServerException {
     increaseLateArrival(conn, LocalDate.now(), lotId);
   }
 
-  /** Increase Late Arrival count by one in specific parking lot at specific
-   * date.
-   * @param conn the conn
+  /** Increase Late Arrival count by one for the specified parking lot and date.
+   * @param conn the SQL connection
    * @param _date the date
    * @param lotId the lot id
-   * @throws SQLException the SQL exception
-   * @throws ServerException the server exception */
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public static void increaseLateArrival(Connection conn, LocalDate _date, int lotId) throws SQLException, ServerException {
     // check if line exists in database
     DailyStatistics entry = createIfNotExists(conn, _date, lotId);

@@ -90,7 +90,7 @@ public class StatisticsCollector {
     if (disabled) {
       DisabledCellsStatistics.create(conn, lotID, i, j, k);
     } else {
-      DisabledCellsStatistics.markfixed(conn, lotID, i, j, k);
+      DisabledCellsStatistics.markFixed(conn, lotID, i, j, k);
     }
   }
 }
