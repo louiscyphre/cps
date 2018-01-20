@@ -102,7 +102,7 @@ public class MonthlyReport {
    * @throws SQLException the SQL exception */
   public static MonthlyReport create(Connection conn, int year, int month, int lotid) throws SQLException {
     PreparedStatement stmt = conn.prepareStatement(
-        "INSERT INTO monthly_report VALUES (?,?,?,default,default,default,default,default,default,default,default)");
+        "INSERT INTO monthly_report VALUES(?,?,?,default,default,default,default,default,default,default,default)");
     int i = 1;
     stmt.setInt(i++, year);
     stmt.setInt(i++, month);

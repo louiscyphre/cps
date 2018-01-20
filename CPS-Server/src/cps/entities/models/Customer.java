@@ -11,15 +11,31 @@ import cps.common.Constants;
 import cps.entities.people.User;
 import cps.server.ServerException;
 
+/** Represents a customer as a data object that can be sent through the network and persisted in the database. */
 public class Customer implements Serializable, User {
   private static final long serialVersionUID = 1L;
 
+  /** The customer's id. */
   public int    id;
+  
+  /** The customer's email. */
   public String email;
+  
+  /** The customer's password. */
   public String password;
+  
+  /** The amount of debit in the customer's account. */
   public float  debit;
+  
+  /** The amount of credit in the customer's account. */
   public float  credit;
 
+  /** Instantiates a new customer.
+   * @param id the id
+   * @param email the email
+   * @param password the password
+   * @param debit the debit
+   * @param credit the credit */
   public Customer(int id, String email, String password, float debit, float credit) {
     this.id = id;
     this.email = email;
@@ -28,6 +44,9 @@ public class Customer implements Serializable, User {
     this.credit = credit;
   }
 
+  /** Instantiates a new customer from an SQL ResultSet.
+   * @param rs the SQL ResultSet
+   * @throws SQLException the SQL exception */
   public Customer(ResultSet rs) throws SQLException {
     this(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getFloat(4), rs.getFloat(5));
   }
@@ -64,6 +83,8 @@ public class Customer implements Serializable, User {
     this.debit = debit;
   }
 
+  /** Adds the debit.
+   * @param debit the debit */
   public void addDebit(float debit) {
     this.debit += debit;
   }
@@ -76,10 +97,18 @@ public class Customer implements Serializable, User {
     this.credit = credit;
   }
 
+  /** Adds the credit.
+   * @param credit the credit */
   public void addCredit(float credit) {
     this.credit += credit;
   }
 
+  /** Creates the.
+   * @param conn the conn
+   * @param email the email
+   * @param password the password
+   * @return the customer
+   * @throws SQLException the SQL exception */
   public static Customer create(Connection conn, String email, String password) throws SQLException {
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_CUSTOMER, Statement.RETURN_GENERATED_KEYS);
 
@@ -102,6 +131,11 @@ public class Customer implements Serializable, User {
 
   }
 
+  /** Find by ID.
+   * @param conn the conn
+   * @param id the id
+   * @return the customer
+   * @throws SQLException the SQL exception */
   public static Customer findByID(Connection conn, int id) throws SQLException {
     Customer result = null;
     PreparedStatement st = conn.prepareStatement(Constants.SQL_FIND_CUSTOMER_BY_ID);
@@ -119,6 +153,12 @@ public class Customer implements Serializable, User {
     return result;
   }
 
+  /** Find by ID not null.
+   * @param conn the conn
+   * @param id the id
+   * @return the customer
+   * @throws SQLException the SQL exception
+   * @throws ServerException the server exception */
   public static Customer findByIDNotNull(Connection conn, int id) throws SQLException, ServerException {
     Customer result = findByID(conn, id);
 
@@ -129,6 +169,11 @@ public class Customer implements Serializable, User {
     return result;
   }
 
+  /** Find by email.
+   * @param conn the conn
+   * @param email the email
+   * @return the customer
+   * @throws SQLException the SQL exception */
   public static Customer findByEmail(Connection conn, String email) throws SQLException {
     Customer result = null;
     PreparedStatement st = conn.prepareStatement(Constants.SQL_FIND_CUSTOMER_BY_EMAIL);
@@ -146,6 +191,12 @@ public class Customer implements Serializable, User {
     return result;
   }
 
+  /** Find by email and password.
+   * @param conn the conn
+   * @param email the email
+   * @param password the password
+   * @return the customer
+   * @throws SQLException the SQL exception */
   public static Customer findByEmailAndPassword(Connection conn, String email, String password) throws SQLException {
     Customer result = null;
     PreparedStatement st = conn.prepareStatement(Constants.SQL_FIND_CUSTOMER_BY_EMAIL_AND_PASSWORD);
@@ -164,6 +215,10 @@ public class Customer implements Serializable, User {
     return result;
   }
 
+  /** Update.
+   * @param conn the conn
+   * @throws SQLException the SQL exception
+   * @throws ServerException the server exception */
   public void update(Connection conn) throws SQLException, ServerException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_CUSTOMER);
 
@@ -180,11 +235,21 @@ public class Customer implements Serializable, User {
     st.close();
   }
 
+  /** Pay.
+   * @param conn the conn
+   * @param sum the sum
+   * @throws SQLException the SQL exception
+   * @throws ServerException the server exception */
   public void pay(Connection conn, float sum) throws SQLException, ServerException {
     addDebit(sum);
     update(conn);
   }
 
+  /** Receive refund.
+   * @param conn the conn
+   * @param sum the sum
+   * @throws SQLException the SQL exception
+   * @throws ServerException the server exception */
   public void receiveRefund(Connection conn, float sum) throws SQLException, ServerException {
     addCredit(sum);
     update(conn);
@@ -200,6 +265,9 @@ public class Customer implements Serializable, User {
     return 0;
   }
 
+  /* (non-Javadoc)
+   * @see cps.entities.people.User#canAccessDomain(int)
+   */
   @Override
   public boolean canAccessDomain(int domain) {
     return false;

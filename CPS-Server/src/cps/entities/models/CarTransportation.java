@@ -21,11 +21,24 @@ import cps.server.database.QueryBuilder;
 public class CarTransportation implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  /* key - customer id + car id + lot id + inserted at */
+
+  /* Primary key: customer_id, car_id, lot_id, inserted_at */
+  
+  /** The customer ID. */
   private int    customerID;
+  
+  /** The car ID - the car's license plate number. */
   private String carID;
+  
+  /** The authorization type - which service gave permission to park the car: OnetimeService or SubscriptionService.
+   * Is used to determine in which table to search for the service. */
   private int    authType;
+  
+  /** The authorization ID - ID of the parking service entry through which the user got permission to park this car.
+   * Is used later to check certain parameters. */
   private int    authID;
+  
+  /** The parking lot ID. */
   private int    lotID;
 
   public int getCustomerID() {
@@ -107,12 +120,12 @@ public class CarTransportation implements Serializable {
 
   /** Instantiates a new car transportation from an SQL ResultSet.
    * @param rs the SQL ResultSet
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public CarTransportation(ResultSet rs) throws SQLException {
     this(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getTimestamp(6), rs.getTimestamp(7));
   }
 
-  /** Creates the.
+  /** Creates a new car transportation entry in the database.
    * @param conn the SQL connection
    * @param customerID the customer ID
    * @param carID the car ID
@@ -120,9 +133,8 @@ public class CarTransportation implements Serializable {
    * @param authID the auth ID
    * @param lotID the lot ID
    * @return the car transportation
-   * @throws SQLException the SQL exception
+   * @throws SQLException on error
    * @throws ServerException the server exception */
-  // Creates a new CarTransportation entry in the SQL table
   public static CarTransportation create(Connection conn, int customerID, String carID, int authType, int authID, int lotID)
       throws SQLException, ServerException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_CAR_TRANSPORTATION, Statement.RETURN_GENERATED_KEYS);
@@ -153,13 +165,20 @@ public class CarTransportation implements Serializable {
     return new CarTransportation(customerID, carID, authType, authID, lotID, insertedAt, removedAt);
   }
 
-  /** Find a car of the customer when he wants to exit parking.
+  /** Is used to check whether a customer can retrieve a car with the parameters that they supplied.
+   * 
+   * Finds a car transportation entry that matches the following conditions:
+   * 1. same customer id
+   * 2. same car id
+   * 3. same lot id
+   * 4. the car has not been retrieved yet.
+   * 
    * @param conn the SQL connection
    * @param customerID the customer ID
    * @param carID the car ID
    * @param lotID the lot ID
    * @return the car transportation
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static CarTransportation findForExit(Connection conn, int customerID, String carID, int lotID) throws SQLException {
     // First - find the insertion of the car
 
@@ -184,25 +203,28 @@ public class CarTransportation implements Serializable {
     return result;
   }
 
-  /** Find for entry.
+  /** Is used to check whether a car with this ID (licencse plate number) is already parked.
+   * 
+   * Finds a car transportation entry that matches the following conditions:
+   * 1. same car id
+   * 2. the car has not been retrieved yet.
+   * 
    * @param conn the SQL connection
    * @param customerID the customer ID
    * @param carID the car ID
    * @param lotID the lot ID
    * @return the car transportation
-   * @throws SQLException the SQL exception */
-  public static CarTransportation findForEntry(Connection conn, int customerID, String carID, int lotID) throws SQLException {
-    return new QueryBuilder<CarTransportation>(Constants.SQL_FIND_CAR_TRANSPORTATION_FOR_ENTRY).withFields(statement -> {
-      statement.setInt(1, customerID);
-      statement.setString(2, carID);
-      statement.setInt(3, lotID);
+   * @throws SQLException on error */
+  public static CarTransportation findParked(Connection conn, String carID) throws SQLException {
+    return new QueryBuilder<CarTransportation>(Constants.SQL_FIND_CAR_TRANSPORTATION_PARKED).withFields(statement -> {
+      statement.setString(1, carID);
     }).fetchResult(conn, result -> new CarTransportation(result));
   }
 
-  /** Update removed at.
+  /** Update only the `removed_at` field.
    * @param conn the SQL connection
-   * @param removedAt the removed at
-   * @throws SQLException the SQL exception */
+   * @param removedAt the new value of the `removed_at` field
+   * @throws SQLException on error */
   public void updateRemovedAt(Connection conn, Timestamp removedAt) throws SQLException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_REMOVED_AT);
 
@@ -220,12 +242,12 @@ public class CarTransportation implements Serializable {
     st.close();
   }
 
-  /** Find by car id.
+  /** Find the most recent transportation with a matching car ID and lot ID.
    * @param conn the SQL connection
    * @param carID the car ID
    * @param lotID the lot ID
    * @return the car transportation
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static CarTransportation findByCarId(Connection conn, String carID, int lotID) throws SQLException {
     // First - find the insertion of the car
 
@@ -238,22 +260,21 @@ public class CarTransportation implements Serializable {
 
     ResultSet resultSet = query.executeQuery();
 
-    // if exists - return the object
+    // if exists - return the object, else return null
     if (resultSet.next()) {
       result = new CarTransportation(resultSet);
     }
-    // else return null;
-
+    
     resultSet.close();
     query.close();
     return result;
   }
 
-  /** Find by lot ID.
+  /** Retrieve a list of all transportations that were made from/to a specific parking lot (identified by lot ID).
    * @param conn the SQL connection
    * @param lotID the lot ID
-   * @return the collection
-   * @throws SQLException the SQL exception */
+   * @return the list of transportations for this lot
+   * @throws SQLException on error */
   public static Collection<CarTransportation> findByLotID(Connection conn, int lotID) throws SQLException {
     LinkedList<CarTransportation> items = new LinkedList<CarTransportation>();
 
@@ -271,19 +292,21 @@ public class CarTransportation implements Serializable {
     return items;
   }
 
-  /** Gets the parking lot.
+  /** Retrieve the parking lot associated with this transportation.
    * @param conn the SQL connection
    * @return the parking lot
-   * @throws SQLException the SQL exception
+   * @throws SQLException on error
    * @throws ServerException the server exception */
   public ParkingLot getParkingLot(Connection conn) throws SQLException, ServerException {
     return ParkingLot.findByIDNotNull(conn, lotID);
   }
 
-  /** Gets the parking service.
+  /** Retrieve the parking service associated with this transportation.
+   * Uses the combination of the `auth_type` and `auth_id` fields to find the service.
+   * 
    * @param conn the SQL connection
    * @return the parking service
-   * @throws SQLException the SQL exception
+   * @throws SQLException on error
    * @throws ServerException the server exception */
   public ParkingService getParkingService(Connection conn) throws SQLException, ServerException {
     if (authType == Constants.LICENSE_TYPE_ONETIME) {
@@ -295,7 +318,10 @@ public class CarTransportation implements Serializable {
     }
   }
 
-  /** Find completed subscription entry by date.
+  /** Find the transportation entry for a completed subscription by date.
+   * Is used to check that the user has already parked today with a regular subscription,
+   * and cannot enter parking again with the same subscription on the same day.
+   * 
    * @param conn the SQL connection
    * @param customerID the customer ID
    * @param carID the car ID
@@ -303,7 +329,7 @@ public class CarTransportation implements Serializable {
    * @param subsID the subs ID
    * @param day the day
    * @return the car transportation
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static CarTransportation findCompletedSubscriptionEntryByDate(Connection conn, int customerID, String carID, int lotID, int subsID, LocalDate day) throws SQLException {
     return new QueryBuilder<CarTransportation>(
       "SELECT * FROM car_transportation WHERE customer_id = ? AND car_id = ? AND lot_id = ? AND auth_type = ? AND auth_id = ? AND date(inserted_at) = ? AND removed_at IS NOT NULL"
