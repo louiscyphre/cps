@@ -36,47 +36,68 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
+/**
+ * Controller Class for View My Reservation scene.
+ */
 public class ViewMyReservationsController extends CustomerActionControllerBase
     implements ParkingLotsController, OnetimeEntriesController {
 
+  /** TableView containing all the reservations. */
   @FXML // fx:id="tableView"
   private TableView<TableOnetimeService> tableView; // Value injected by
                                                     // FXMLLoader
 
+  /** Type column */
   @FXML
   private TableColumn<TableOnetimeService, String> colType;
 
+  /** Car ID column */
   @FXML
   private TableColumn<TableOnetimeService, String> colCarId;
 
+  /** Lot column */
   @FXML
   private TableColumn<TableOnetimeService, String> colLot;
 
+  /** Start Date column */
   @FXML
   private TableColumn<TableOnetimeService, String> colStart;
 
+  /** Leave Date column */
   @FXML
   private TableColumn<TableOnetimeService, String> colLeave;
 
+  /** Cancel button column */
   @FXML
   private TableColumn<TableOnetimeService, String> colCancel;
-  private ObservableList<TableOnetimeService>      obsEntriesList;
 
+  /** List holding the entries */
+  private ObservableList<TableOnetimeService> obsEntriesList;
+
+  /** Parking Lots mapping */
   private HashMap<Integer, String> parkingLotsMap;
-  
+
+  /**
+   * Refresh function. Request from the server fresh list of Reservations
+   */
   private void refresh() {
     if (parkingLotsMap.isEmpty()) {
       ListParkingLotsRequest request = new ListParkingLotsRequest();
+      // Toggle processing state on
       turnProcessingStateOn();
       ControllersClientAdapter.getClient().sendRequest(request);
     } else {
       ListOnetimeEntriesRequest request = new ListOnetimeEntriesRequest(
           ControllersClientAdapter.getCustomerContext().getCustomerId());
+      // Toggle processing state on
       turnProcessingStateOn();
       ControllersClientAdapter.getClient().sendRequest(request);
-    }    
+    }
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handleRefreshButton(ActionEvent event) {
     if (!processing) {
@@ -84,6 +105,9 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
     }
   }
 
+  /**
+   * Initializes the Controller and Registers it.
+   */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
@@ -109,7 +133,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
 
     parkingLotsMap = new HashMap<Integer, String>();
 
-    // cancel button
+    // cancel button in cancel colum
     Callback<TableColumn<TableOnetimeService, String>, TableCell<TableOnetimeService, String>> cellFactory = //
         new Callback<TableColumn<TableOnetimeService, String>, TableCell<TableOnetimeService, String>>() {
 
@@ -145,8 +169,10 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
 
         };
 
+    // cancel column factory
     colCancel.setCellFactory(cellFactory);
 
+    // binding to list of reservations
     this.obsEntriesList = FXCollections.observableArrayList();
     tableView.setItems(this.obsEntriesList);
 
@@ -155,6 +181,10 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
                                                      // Field
   }
 
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
@@ -163,12 +193,18 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
     refresh();
   }
 
+  /*
+   * (non-Javadoc)
+   * @see
+   * cps.client.controller.OnetimeEntriesController#setOnetimeEntries(java.util.
+   * Collection)
+   */
   @Override
   public void setOnetimeEntries(Collection<OnetimeService> list) {
     List<TableOnetimeService> newEntriesList = new LinkedList<TableOnetimeService>();
     Timestamp now = Timestamp.valueOf(LocalDateTime.now());
     list.forEach(e -> {
-      if(e.getPlannedEndTime().compareTo(now) > 0 && !e.isCanceled()) {
+      if (e.getPlannedEndTime().compareTo(now) > 0 && !e.isCanceled()) {
         TableOnetimeService toAdd = new TableOnetimeService((e.getParkingType()), e.getCarID(), e.getLotID(),
             e.getPlannedStartTime().toString(), e.getPlannedEndTime().toString(), e.getId());
         newEntriesList.add(toAdd);
@@ -177,11 +213,20 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
     this.obsEntriesList.setAll(newEntriesList);
   }
 
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.OnetimeEntriesController#removeEntry(int)
+   */
   @Override
   public void removeEntry(int onetimeServiceID) {
     obsEntriesList.remove(new TableOnetimeService(0, null, 0, null, null, onetimeServiceID));
   }
-  
+
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.
+   * Collection)
+   */
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
     parkingLotsMap = new HashMap<Integer, String>();
@@ -195,7 +240,9 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
-  // Table row entry
+  /**
+   * Table row entry.
+   */
   public class TableOnetimeService {
     private final SimpleStringProperty type;
     private final SimpleStringProperty carID;
@@ -204,6 +251,16 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
     private final SimpleStringProperty leaveDate;
     private int                        serviceID;
 
+    /**
+     * Class to hold inner representation of OnetimeServices in Table.
+     * 
+     * @param type
+     * @param carID
+     * @param lotid
+     * @param startDate
+     * @param leaveDate
+     * @param serviceID
+     */
     public TableOnetimeService(int type, String carID, int lotid, String startDate, String leaveDate, int serviceID) {
       this.type = new SimpleStringProperty(type == 1 ? "Incidental" : (type == 2 ? "Reserved" : "-"));
       this.carID = new SimpleStringProperty(carID);
@@ -268,35 +325,10 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
 
   }
 
-  // @FXML
-  void addDummyData(ActionEvent event) {
-
-    List<ParkingLot> parkingLotList = new LinkedList<ParkingLot>();
-
-    parkingLotList.add(new ParkingLot(1, "1st street", 4, 12, 12, null, "12.2.f.1", false));
-    parkingLotList.add(new ParkingLot(2, "2nd street", 4, 12, 12, null, "12.2.f.1", false));
-    parkingLotList.add(new ParkingLot(3, "3rd street", 4, 12, 12, null, "12.2.f.1", false));
-    parkingLotList.add(new ParkingLot(4, "4th street", 4, 12, 12, null, "12.2.f.1", false));
-
-    setParkingLots(parkingLotList);
-
-    List<OnetimeService> list = new LinkedList<OnetimeService>();
-    for (int i = 0; i < 10; i++) {
-      list.add(new OnetimeService(0, 1 + (i % 2), 0, "email" + i, "carid" + i, 1,
-          Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now())));
-    }
-
-    List<TableOnetimeService> entriesList = new LinkedList<TableOnetimeService>();
-
-    list.forEach(e -> {
-      TableOnetimeService toAdd = new TableOnetimeService((e.getParkingType()), e.getCarID(), e.getLotID(),
-          e.getPlannedStartTime().toString(), e.getPlannedEndTime().toString(), e.getId());
-      entriesList.add(toAdd);
-    });
-
-    obsEntriesList.addAll(entriesList);
-  }
-  
+  /**
+   * Handles the response from the server containing the Data about reservations
+   * and populates inner data structures accordingly.
+   */
   @Override
   public ServerResponse handle(ListOnetimeEntriesResponse response) {
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
@@ -326,7 +358,11 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
 
     return null;
   }
-  
+
+  /**
+   * Handles the response from the server regarding entry which was requested to
+   * be cancelled and populates inner data structures accordingly.
+   */
   @Override
   public ServerResponse handle(CancelOnetimeParkingResponse response) {
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();

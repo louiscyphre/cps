@@ -1,51 +1,56 @@
 package cps.client.controller;
 
+/**
+ * Class to hold all the constants needed for the application operation. 
+ */
 public class ControllerConstants {
 
+  /**
+   *  SceneCodes hold relative paths to fxml
+   */
   public enum SceneCode {
 
-    TEST_SCENE("../view/service/ServiceActionDisableSlotDynamicGrid.fxml"),
+    TEST_SCENE("view/service/ServiceActionDisableSlotDynamicGrid.fxml"),
 
     // customer views
-    LOGIN("../view/customer/LoginScene.fxml"),
+    LOGIN("view/customer/LoginScene.fxml"),
 
-    CUSTOMER_INITIAL_MENU("../view/customer/CustomerInitialMenuScene.fxml"),
+    CUSTOMER_INITIAL_MENU("view/customer/CustomerInitialMenuScene.fxml"),
 
-    CUSTOMER_LIST_SUBSCRIPTIONS("../view/customer/CustomerListSubscriptionsScene.fxml"),
+    CUSTOMER_LIST_SUBSCRIPTIONS("view/customer/CustomerListSubscriptionsScene.fxml"),
 
-    RESERVE_PARKING("../view/customer/ReserveParkingScene.fxml"),
+    RESERVE_PARKING("view/customer/ReserveParkingScene.fxml"),
 
-    INCIDENTAL_PARKING("../view/customer/IncidentalParkingScene.fxml"),
+    INCIDENTAL_PARKING("view/customer/IncidentalParkingScene.fxml"),
 
-    ENTER_PARKING("../view/customer/EnterParkingScene.fxml"),
+    ENTER_PARKING("view/customer/EnterParkingScene.fxml"),
 
-    EXIT_PARKING("../view/customer/ExitParkingScene.fxml"),
+    EXIT_PARKING("view/customer/ExitParkingScene.fxml"),
 
-    VIEW_MY_RESERVATION("../view/customer/ViewMyReservationsScene.fxml"),
+    VIEW_MY_RESERVATION("view/customer/ViewMyReservationsScene.fxml"),
 
-    REGULAR_SUBSCRIPTION("../view/customer/RegularSubscriptionScene.fxml"),
+    REGULAR_SUBSCRIPTION("view/customer/RegularSubscriptionScene.fxml"),
 
-    FULL_SUBSCRIPTION("../view/customer/FullSubscriptionScene.fxml"),
-    
-    FILE_COMPLAINT("../view/customer/FileComplaintScene.fxml"), 
+    FULL_SUBSCRIPTION("view/customer/FullSubscriptionScene.fxml"),
+
+    FILE_COMPLAINT("view/customer/FileComplaintScene.fxml"),
 
     // service views
-    SERVICE_ACTION_INIT_LOT("../view/service/ServiceActionInitLotScene.fxml"),
+    SERVICE_ACTION_INIT_LOT("view/service/ServiceActionInitLotScene.fxml"),
 
-    SERVICE_ACTION_LOT_IS_FULL("../view/service/ServiceActionLotIsFull.fxml"),
+    SERVICE_ACTION_LOT_IS_FULL("view/service/ServiceActionLotIsFull.fxml"),
 
-    SERVICE_ACTION_LOT_STATE("../view/service/ServiceActionLotState.fxml"),
+    SERVICE_ACTION_LOT_STATE("view/service/ServiceActionLotState.fxml"),
 
-    SERVICE_ACTION_MENU("../view/service/ServiceActionMenuScene.fxml"),
+    SERVICE_ACTION_MENU("view/service/ServiceActionMenuScene.fxml"),
 
-    SERVICE_ACTION_REFUND("../view/service/ServiceActionRefund.fxml"),
+    SERVICE_ACTION_REFUND("view/service/ServiceActionRefund.fxml"),
 
-    SERVICE_ACTION_UPDATE_PRICES("../view/service/ServiceActionUpdatePrices.fxml"),
+    SERVICE_ACTION_UPDATE_PRICES("view/service/ServiceActionUpdatePrices.fxml"),
 
-    SERVICE_ACTION_LOGIN("../view/service/ServiceLoginScene.fxml"),
-    
-    SERVICE_ACTION_MANAGE_LOT("../view/service/ServiceActionManageLot.fxml"),
-    ;
+    SERVICE_ACTION_LOGIN("view/service/ServiceLoginScene.fxml"),
+
+    SERVICE_ACTION_MANAGE_LOT("view/service/ServiceActionManageLot.fxml"),;
 
     String myRelativePath;
 
@@ -59,6 +64,9 @@ public class ControllerConstants {
 
   }
 
+  /**
+   * Enum for error message handling, and default error messages.
+   */
   public enum InputVerification {
     INPUT_OK(0, "The request is valid"),
 
@@ -90,8 +98,4 @@ public class ControllerConstants {
       return this.msg;
     }
   }
-
-  // TODO Title maybe unnecessary in 'fxml' files
-  // serviceActionsMenuScene/serviceLoginScene/serviceMainMenuScene
-
 }

@@ -36,55 +36,64 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Created on: 2018-01-09 8:26:06 PM
+ * Reserve Parking scene controller.
  */
-public class ReserveParkingController extends CustomerActionControllerBaseSubmitAndFinish implements ParkingLotsController {
+public class ReserveParkingController extends CustomerActionControllerBaseSubmitAndFinish
+    implements ParkingLotsController {
 
+  /** End Date DatePicker  */
   @FXML
   private DatePicker endDatePicker;
 
+  /** Start Date DatePicker  */
   @FXML
   private DatePicker startDatePicker;
 
+  /** Start Time TextField */
   @FXML
   private TextField startTimeTF;
 
+  /** End Time TextField  */
   @FXML
   private TextField endTimeTF;
 
-  @FXML
-  private Font x1;
-
+  /** Insets  */
   @FXML
   private Insets x2;
 
-  @FXML
-  private Insets x3;
 
-  @FXML
-  private Insets x4;
-
+  /** Car ID TextField  */
   @FXML
   private TextField carIDTextField;
 
+  /** Email TextField  */
   @FXML
   private TextField emailTF;
 
+  /** Parking Lots list  */
   @FXML
   private ComboBox<String> parkingLotsList;
 
+  /** Parking Lots Mapping  */
   private HashMap<String, Integer> parkingLotsMap = null;
 
-  // show Email field
+  /**
+   * Turns email TextField visible 
+   */
   public void showEmail() {
     emailTF.visibleProperty().set(true);
   }
 
-  //
+  /**
+   * Turns email TextField invisible 
+   */
   public void hideEmail() {
     emailTF.visibleProperty().set(false);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
+   */
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -93,6 +102,9 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     validateAndSend();
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handlePickStartDate(ActionEvent event) {
     if (processing) {
@@ -101,6 +113,9 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
 
   }
 
+  /**
+   * @param event
+   */
   @FXML
   void handlePickEndDate(ActionEvent event) {
     if (processing) {
@@ -108,6 +123,9 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     }
   }
 
+  /**
+   * Request from the server the updated list of lots.
+   */
   void loadParkingLots() {
     if (processing) {
       return;
@@ -119,6 +137,9 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.Collection)
+   */
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
     LinkedList<String> tmp = new LinkedList<String>();
@@ -131,13 +152,15 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     parkingLotsList.getItems().setAll(addresses);
   }
 
+  /**
+   * Initializes the Controller and Registers it. 
+   */
   @FXML
   void initialize() {
     super.baseInitialize();
     assert endDatePicker != null : "fx:id=\"endDatePicker\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
     assert emailTF != null : "fx:id=\"emailTF\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
     assert startDatePicker != null : "fx:id=\"startDatePicker\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
-//    startDatePicker.setOnShowing(e -> Locale.setDefault(Locale.Category.FORMAT, Locale.ENGLISH)); // TODO maybe not needed
     assert carIDTextField != null : "fx:id=\"carIDTextField\" was not injected: check your FXML file 'ReserveParkingScene.fxml'.";
 
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.RESERVE_PARKING);
@@ -148,6 +171,9 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     parkingLotsMap = new HashMap<String, Integer>();
   }
 
+  /**
+   * 
+   */
   private void validateAndSend() {
     // validation in same order as order in the form
     // out of form
@@ -194,7 +220,6 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
       return;
     }
 
-    // TODO replace the lotid handling from the list instead
     int lotId = getLotId();
     if (lotId <= 0) {
       displayError("Invalid lot ID");
@@ -218,12 +243,18 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   // returns customer context - >=1 if logged in, 0 otherwise
+  /**
+   * @return
+   */
   private int getCustomerId() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
   // returns email if logged in from customer context,
+  /**
+   * @return
+   */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
     if (cntx.isLoggedIn()) {
@@ -234,11 +265,17 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   // return car id or null if empty
+  /**
+   * @return
+   */
   private String getCarId() {
     return carIDTextField.getText().trim();
   }
 
   // returns lot id or -1 if empty
+  /**
+   * @return
+   */
   private int getLotId() {
     if (parkingLotsList == null || parkingLotsList.valueProperty() == null
         || parkingLotsList.valueProperty().getValue() == null) {
@@ -249,6 +286,9 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   // returns planned start date or null if empty
+  /**
+   * @return
+   */
   private LocalDateTime getPlannedStartDateTime() {
     if (startDatePicker.getValue() == null) {
       return null;
@@ -261,11 +301,17 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   // returns planned start time or null if empty
+  /**
+   * @return
+   */
   private LocalTime getStartTime() {
     return getTime(startTimeTF, "Start time");
   }
 
   // returns planned end date or null if empty
+  /**
+   * @return
+   */
   private LocalDateTime getPlannedEndDateTime() {
     if (endDatePicker.getValue() == null) {
       return null;
@@ -278,22 +324,34 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   // returns planned end time or null if empty
+  /**
+   * @return
+   */
   private LocalTime getEndTime() {
     return getTime(endTimeTF, "End time");
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn()
+   */
   @Override
   public void turnLoggedInStateOn() {
     super.turnLoggedInStateOn();
     emailTF.setVisible(false);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff()
+   */
   @Override
   public void turnLoggedInStateOff() {
     super.turnLoggedInStateOn();
     emailTF.setVisible(true);
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     // info box clear
@@ -307,7 +365,10 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     parkingLotsMap.clear();
     loadParkingLots();
   }
-  
+
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ReservedParkingResponse)
+   */
   @Override
   public ServerResponse handle(ReservedParkingResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
@@ -338,6 +399,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
 
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       formattedMessage.add(new Text("Succesfully reserved parking per request!\n"));
+      formattedMessage.add(new Text(String.format("Your account was debited %s ILS.", response.getPayment())));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
       setFinishInsteadOfSubmit(true);

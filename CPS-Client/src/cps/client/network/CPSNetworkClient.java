@@ -2,11 +2,25 @@ package cps.client.network;
 
 import java.io.IOException;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import ocsf.client.AbstractClient;
 
+/**
+ *
+ */
 public class CPSNetworkClient extends AbstractClient {
+  /**
+   * 
+   */
   INetworkClient clientUI;
 
+  /**
+   * @param host
+   * @param port
+   * @param clientUI
+   * @throws IOException
+   */
   public CPSNetworkClient(String host, int port, INetworkClient clientUI) throws IOException {
     super(host, port);
     this.clientUI = clientUI;
@@ -19,6 +33,10 @@ public class CPSNetworkClient extends AbstractClient {
    * @param msg
    *          The message from the server.
    */
+  /*
+   * (non-Javadoc)
+   * @see ocsf.client.AbstractClient#handleMessageFromServer(java.lang.Object)
+   */
   @Override
   protected void handleMessageFromServer(Object msg) {
     clientUI.receiveResponse(msg);
@@ -30,13 +48,9 @@ public class CPSNetworkClient extends AbstractClient {
    * @param message
    *          The message from the UI.
    */
-  public void handleMessageFromClientUI(Object message) {
-    try {
-      // message is an instance of Request or Action
-      sendToServer(message);
-    } catch (IOException e) {
-      // FIXME some business logic comes here
-    }
+  public void handleMessageFromClientUI(Object message) throws IOException {
+    // message is an instance of Request or Action
+    sendToServer(message);
   }
 
   /**
@@ -50,6 +64,12 @@ public class CPSNetworkClient extends AbstractClient {
     } finally {
       System.exit(0);
     }
+  }
+
+  @Override
+  protected void connectionException(Exception exception) {
+    System.err.format("Connection exception: %s\n", exception.getMessage());
+    // TODO show message "lost connection to server"
   }
 
 }

@@ -18,13 +18,22 @@ import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
 import cps.server.ServerController;
 import cps.server.session.CustomerSession;
+import cps.server.statistics.StatisticsCollector;
 
+/** The Class SubscriptionController. */
 public class SubscriptionController extends RequestController {
 
+  /** Instantiates a new subscription controller.
+   * @param serverController the server controller */
   public SubscriptionController(ServerController serverController) {
     super(serverController);
   }
 
+  /** Is called when the customer wants to purchase a full subscription.
+   * Calls the generalized handler with the appropriate parameters.
+   * @param request the request
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(FullSubscriptionRequest request, CustomerSession session) {
     LocalDate startDate = request.getStartDate();
     LocalDate endDate = startDate.plusDays(28);
@@ -33,6 +42,11 @@ public class SubscriptionController extends RequestController {
     return handle(request, session, response, startDate, endDate, dailyExitTime);
   }
 
+  /** Is called when the customer wants to purchase a full subscription.
+   * Calls the generalized handler with the appropriate parameters.
+   * @param request the request
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(RegularSubscriptionRequest request, CustomerSession session) {
     LocalDate startDate = request.getStartDate();
     LocalDate endDate = startDate.plusDays(28);
@@ -41,8 +55,21 @@ public class SubscriptionController extends RequestController {
     return handle(request, session, response, startDate, endDate, dailyExitTime);
   }
 
-  public ServerResponse handle(SubscriptionRequest request, CustomerSession session, SubscriptionResponse serverResponse, LocalDate startDate,
-      LocalDate endDate, LocalTime dailyExitTime) {
+  /** Generalized handler for Subscription Requests.
+   * 
+   * Checks the input parameters, updates database records, calculates the payment, and charges the customer's account.
+   * 
+   * If the user was not logged in while making this request, will create a new user and send them the password.
+   * After this, the user will be able to log in with their email address and the generated password.
+   * @param request the request
+   * @param session the session
+   * @param serverResponse the server response
+   * @param startDate the start date
+   * @param endDate the end date
+   * @param dailyExitTime the daily exit time
+   * @return the server response */
+  public ServerResponse handle(SubscriptionRequest request, CustomerSession session,
+      SubscriptionResponse serverResponse, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
     return database.performQuery(serverResponse, (conn, response) -> {
 
       // Check that the start date is not in the past
@@ -58,18 +85,23 @@ public class SubscriptionController extends RequestController {
 
       // check overlapping subscriptions with the same car ID
       if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
-        errorIf(SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(), request.getLotID(), startDate, endDate),
+        errorIf(
+            SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(),
+                request.getLotID(), startDate, endDate),
             "Subscription for this car for this parking lot already exists in this timeframe");
       } else {
-        errorIf(SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(), 0, startDate, endDate),
-            "Subscription for this car already exists in this timeframe");
+        errorIf(SubscriptionService.overlapExists(conn, request.getCarID(), request.getSubscriptionType(), 0, startDate,
+            endDate), "Subscription for this car already exists in this timeframe");
       }
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
 
-      SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(), request.getEmail(), request.getCarID(),
-          request.getLotID(), startDate, endDate, dailyExitTime);
+      SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(),
+          request.getEmail(), request.getCarID(), request.getLotID(), startDate, endDate, dailyExitTime);
       errorIfNull(service, "Failed to create SubscriptionService entry");
+
+      // XXX Statistics
+      StatisticsCollector.increaseSubscription(conn, service.getSubscriptionType(), service.getLotID());
 
       // Calculate payment
       float payment = paymentForSubscription(conn, customer, service);
@@ -87,7 +119,8 @@ public class SubscriptionController extends RequestController {
     });
   }
 
-  private float paymentForSubscription(Connection conn, Customer customer, SubscriptionService service) throws SQLException {
+  private float paymentForSubscription(Connection conn, Customer customer, SubscriptionService service)
+      throws SQLException {
     if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
       // Regular monthly subscription
       ParkingLot lot = ParkingLot.findByID(conn, service.getLotID());

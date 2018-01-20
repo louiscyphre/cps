@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package cps.client.controller.customer;
 
 import java.util.List;
@@ -15,43 +13,90 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+
+/**
+ * Main menu controller. Displays all the possible to the customer actions. May
+ * be in either LoggedIn or LoggedOut state. May be in either WebClient or
+ * KioskClients state. Has no inner data, besides buttons in its class.
+ */
 public class CustomerMainMenuController extends CustomerActionControllerBase {
 
-  @FXML // fx:id="exitParkingButton"
-  private Button exitParkingButton; // Value injected by FXMLLoader
+  /**
+   * Exit Parking button. 
+   */
+  @FXML
+  private Button exitParkingButton;
 
-  @FXML // fx:id="buySubscriptionButton"
-  private Button buySubscriptionButton; // Value injected by FXMLLoader
+  /**
+   * Buy Subscription button.
+   */
+  @FXML
+  private Button buySubscriptionButton;
 
-  @FXML // fx:id="parkNowButton"
-  private Button parkNowButton; // Value injected by FXMLLoader
+  /**
+   * Park Now button.
+   */
+  @FXML 
+  private Button parkNowButton; 
 
-  @FXML // fx:id="enterParkingButton"
-  private Button enterParkingButton; // Value injected by FXMLLoader
+  /**
+   * Enter Parking button.
+   */
+  @FXML
+  private Button enterParkingButton;
 
-  @FXML // fx:id="logOutButton"
-  private Button logOutButton; // Value injected by FXMLLoader
+  /**
+   * Logout button.
+   */
+  @FXML 
+  private Button logOutButton; 
 
-  @FXML // fx:id="reserveParkingButton"
-  private Button reserveParkingButton; // Value injected by FXMLLoader
+  /**
+   * Reserve Parking button.
+   */
+  @FXML 
+  private Button reserveParkingButton; 
 
-  @FXML // fx:id="viewMyReservationsButton"
-  private Button viewMyReservationsButton; // Value injected by FXMLLoader
-  
-  @FXML // fx:id="fileComplaintButton"
-  private Button fileComplaintButton; // Value injected by FXMLLoader
+  /**
+   * View My Reservations button.
+   */
+  @FXML 
+  private Button viewMyReservationsButton; 
 
-  @FXML // fx:id="buttonsVbox"
-  private VBox buttonsVbox; // Value injected by FXMLLoader
+  /**
+   * File Complaint button.
+   */
+  @FXML 
+  private Button fileComplaintButton; 
 
-  @FXML // fx:id="logInButton"
-  private Button logInButton; // Value injected by FXMLLoader
+  /**
+   * VBox encasing the buttons.
+   */
+  @FXML 
+  private VBox buttonsVbox; 
 
+  /**
+   * Log In button.
+   */
+  @FXML 
+  private Button logInButton; 
+
+  /** WebClient state flag  */
+  private boolean isRunnedAsWebClient = false;
+
+  /**
+   * Logs the context out by calling CCA
+   * @param event
+   */
   @FXML
   void handleLogoutButton(ActionEvent event) {
     ControllersClientAdapter.turnLoggedInStateOff();
   }
 
+  /**
+   * Shows the customer the Enter Parking scene.
+   * @param event
+   */
   @FXML
   void handleEnterParkingButton(ActionEvent event) {
     if (!processing) {
@@ -59,6 +104,10 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * Shows the customer the Exit Parking scene.
+   * @param event
+   */
   @FXML
   void handleExitParkingButton(ActionEvent event) {
     if (!processing) {
@@ -66,6 +115,10 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * Shows the Customer View My Reservations scene.
+   * @param event
+   */
   @FXML
   void handleViewMyReservationsButton(ActionEvent event) {
     if (!processing) {
@@ -73,6 +126,10 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * Shows the customer File Complaint scene.
+   * @param event
+   */
   @FXML
   void handleFileComplaintButton(ActionEvent event) {
     if (!processing) {
@@ -80,6 +137,10 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * Shows the customer the Login scene.
+   * @param event
+   */
   @FXML
   void handleLoginButton(ActionEvent event) {
     if (!processing) {
@@ -87,6 +148,10 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * Shows the customer the Reserve Parking scene.
+   * @param event
+   */
   @FXML
   void handleReserveParkingButton(ActionEvent event) {
     if (!processing) {
@@ -94,6 +159,10 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * Shows the customer Buy Subscription scene.
+   * @param event
+   */
   @FXML
   void handleBuySubscriptionButton(ActionEvent event) {
     if (!processing) {
@@ -101,6 +170,10 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * Shows the customer Park Now scene.
+   * @param event
+   */
   @FXML
   void handleParkNowButton(ActionEvent event) {
     if (!processing) {
@@ -108,9 +181,13 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * Custom initialize function.
+   */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   private void initialize() {
+    // Initialize ensures the mutual for all controllers components are initialized. 
     super.baseInitialize();
     assert infoProgress != null : "fx:id=\"infoProgress\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
     assert exitParkingButton != null : "fx:id=\"exitParkingButton\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
@@ -123,14 +200,19 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     assert root != null : "fx:id=\"root\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
     assert reserveParkingButton != null : "fx:id=\"reserveParkingButton\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
     assert viewMyReservationsButton != null : "fx:id=\"viewMyReservationsButton\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
-    assert fileComplaintButton != null : "fx:id=\"fileComplaintButton\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";    
+    assert fileComplaintButton != null : "fx:id=\"fileComplaintButton\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
     assert buttonsVbox != null : "fx:id=\"buttonsVbox\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
     assert logInButton != null : "fx:id=\"logInButton\" was not injected: check your FXML file 'CustomerInitialMenuSceneMk2.fxml'.";
+    // Always register the controller in the Adapter class
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
   }
 
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#displayInfo(java.util.List)
+   */
   @Override
   public void displayInfo(List<Text> formattedText) {
     infoBox.getStyleClass().clear();
@@ -141,6 +223,11 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /*
+   * (non-Javadoc)
+   * @see
+   * cps.client.controller.ClientControllerBase#displayInfo(java.lang.String)
+   */
   @Override
   public void displayInfo(String simpleInfoMsg) {
     infoBox.getStyleClass().clear();
@@ -149,6 +236,11 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     infoLabel.getChildren().add(new Text(simpleInfoMsg));
   }
 
+  /*
+   * (non-Javadoc)
+   * @see
+   * cps.client.controller.ClientControllerBase#displayError(java.util.List)
+   */
   @Override
   public void displayError(List<Text> formettedErrorMsg) {
     infoBox.getStyleClass().clear();
@@ -159,6 +251,11 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /*
+   * (non-Javadoc)
+   * @see
+   * cps.client.controller.ClientControllerBase#displayError(java.lang.String)
+   */
   @Override
   public void displayError(String simpleErrorMsg) {
     infoBox.getStyleClass().clear();
@@ -167,6 +264,10 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     infoLabel.getChildren().add(new Text(simpleErrorMsg));
   }
 
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnProcessingStateOn()
+   */
   @Override
   public void turnProcessingStateOn() {
     infoProgress.visibleProperty().set(true);
@@ -178,42 +279,64 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     processing = true;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnProcessingStateOff()
+   */
   @Override
   public void turnProcessingStateOff() {
     processing = false;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn()
+   */
   @Override
   public void turnLoggedInStateOn() {
     buttonsVbox.getChildren().remove(logInButton);
     buttonsVbox.getChildren().add(0, logOutButton);
-    buttonsVbox.getChildren().add(4, enterParkingButton);
-    buttonsVbox.getChildren().add(5, exitParkingButton);
-    buttonsVbox.getChildren().add(6, viewMyReservationsButton);
-    buttonsVbox.getChildren().add(7, fileComplaintButton);
-    //buttonsVbox.getChildren().forEach(node -> {
-    //  node.getStyleClass().add("smallButton");
-    //});
+    // Show only buttons that are available to WebClient
+    if (isRunnedAsWebClient) {
+      buttonsVbox.getChildren().add(3, viewMyReservationsButton);
+      buttonsVbox.getChildren().add(4, fileComplaintButton);
+    } else { // Show only buttons that are available to Kiosk 
+      buttonsVbox.getChildren().add(4, enterParkingButton);
+      buttonsVbox.getChildren().add(5, exitParkingButton);
+      buttonsVbox.getChildren().add(6, viewMyReservationsButton);
+      buttonsVbox.getChildren().add(7, fileComplaintButton);
+    }
     buttonsVbox.getStyleClass().add("loggedInButtonsBox");
   }
 
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff()
+   */
   @Override
   public void turnLoggedInStateOff() {
     cleanCtrl();
+    // Remove the buttons assigned priorly in turn LoggedIn
     if (!buttonsVbox.getChildren().contains(logInButton)) {
       buttonsVbox.getChildren().add(0, logInButton);
     }
     buttonsVbox.getChildren().remove(logOutButton);
-    buttonsVbox.getChildren().remove(enterParkingButton);
-    buttonsVbox.getChildren().remove(exitParkingButton);
-    buttonsVbox.getChildren().remove(viewMyReservationsButton);
-    buttonsVbox.getChildren().remove(fileComplaintButton);
-    //buttonsVbox.getChildren().forEach(node -> {
-    //  node.getStyleClass().remove("smallButton");
-    //});
+    if (isRunnedAsWebClient) {
+      buttonsVbox.getChildren().remove(viewMyReservationsButton);
+      buttonsVbox.getChildren().remove(fileComplaintButton);
+    } else {
+      buttonsVbox.getChildren().remove(enterParkingButton);
+      buttonsVbox.getChildren().remove(exitParkingButton);
+      buttonsVbox.getChildren().remove(viewMyReservationsButton);
+      buttonsVbox.getChildren().remove(fileComplaintButton);
+    }
     buttonsVbox.getStyleClass().remove("loggedInButtonsBox");
   }
 
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
@@ -223,4 +346,13 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
     }
   }
 
+  /**
+   * Turns the main menu to WebClient layout and view
+   */
+  public void setAsWebClient() {
+    isRunnedAsWebClient = true;
+    buttonsVbox.getChildren().remove(enterParkingButton);
+    buttonsVbox.getChildren().remove(exitParkingButton);
+    buttonsVbox.getChildren().remove(parkNowButton);
+  }
 }

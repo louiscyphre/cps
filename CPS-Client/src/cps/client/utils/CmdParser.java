@@ -14,10 +14,21 @@ import org.apache.commons.cli.ParseException;
 /**
  * This class parses and saves all command line parameters for client
  */
+/**
+ * @author firl
+ *
+ */
 public class CmdParser {
 
+  /**
+   * 
+   */
   private CommandLine cmd;
 
+  /**
+   * @param args
+   * @throws ParseException
+   */
   public void extract(String[] args) throws ParseException {
 
     Options options = new Options();
@@ -34,7 +45,7 @@ public class CmdParser {
     mode.setRequired(false);
     options.addOption(mode);
 
-    Option lotId = new Option("l", "lot-id", true, "Parking lot id");
+    Option lotId = new Option("l", "lot-id", true, "Parking lot id (0 for web client)");
     lotId.setRequired(false);
     options.addOption(lotId);
 
@@ -50,11 +61,18 @@ public class CmdParser {
     }
   }
 
+  /**
+   * @return
+   */
   public String getHost() {
     String option = cmd.getOptionValue("host");
     return (option == null) ? option : cps.common.Constants.DEFAULT_HOST;
   }
 
+  /**
+   * @return
+   * @throws NumberFormatException
+   */
   public int getPort() throws NumberFormatException {
     String option = cmd.getOptionValue("port");
     if (option == null) {
@@ -63,11 +81,21 @@ public class CmdParser {
     return Integer.parseInt(option);
   }
 
+  /**
+   * @return
+   * @throws NumberFormatException
+   */
   public int getLotId() throws NumberFormatException {
     String option = cmd.getOptionValue("lot-id");
+    if (option == null) {
+      return cps.common.Constants.DEFAULT_LOT_NUMBER;
+    }
     return Integer.parseInt(option);
   }
 
+  /**
+   * @return
+   */
   public String getMode() {
     String option = cmd.getOptionValue("mode");
     return (option == null) ? "kiosk" : option;

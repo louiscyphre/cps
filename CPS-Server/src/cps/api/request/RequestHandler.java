@@ -39,9 +39,9 @@ public interface RequestHandler<SessionType> {
 
   public ServerResponse handle(RefundAction action, SessionType session);
 
-  public ServerResponse handle(RequestLotStateAction action, SessionType session);
+  public ServerResponse handle(RejectComplaintAction action, SessionType session);
 
-  public ServerResponse handle(RequestReportAction action, SessionType session);
+  public ServerResponse handle(RequestLotStateAction action, SessionType session);
 
   public ServerResponse handle(ParkingCellSetReservedAction action, SessionType session);
   
@@ -50,4 +50,12 @@ public interface RequestHandler<SessionType> {
   public ServerResponse handle(SetFullLotAction action, SessionType session);
 
   public ServerResponse handle(UpdatePricesAction action, SessionType session);
+
+  public ServerResponse handle(GetWeeklyReportAction action, SessionType session);
+
+  public ServerResponse handle(GetQuarterlyReportAction action, SessionType session);
+
+  public ServerResponse handle(GetCurrentPerformanceAction action, SessionType session);
+
+  public ServerResponse handle(GetPeriodicReportAction action, SessionType session);
 }

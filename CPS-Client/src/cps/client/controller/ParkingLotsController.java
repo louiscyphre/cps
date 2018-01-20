@@ -8,11 +8,13 @@ import java.util.Collection;
 import cps.entities.models.ParkingLot;
 
 /**
- * Created on: 2018-01-14 1:39:14 AM
+ * Interface for controllers with ParkingLots
  */
 public interface ParkingLotsController extends ViewController {
   /**
-   * @param list
+   * Sets the parking lots with accordance to given collection
+   * @param parkingLots collection of parking lots
+   * @see ParkingLot
    */
-  public void setParkingLots(Collection<ParkingLot> list);
+  public void setParkingLots(Collection<ParkingLot> parkingLots);
 }
