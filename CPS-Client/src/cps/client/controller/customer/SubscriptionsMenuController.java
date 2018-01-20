@@ -192,6 +192,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     assert subscriptionRadioButtons != null : "fx:id=\"subscriptionRadioButtons\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
     assert regularSubscriptionInfo != null : "fx:id=\"regularSubscriptionInfo\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
     assert fullSubscriptionInfo != null : "fx:id=\"fullSubscriptionInfo\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
+    assert parkingLotsList != null : "fx:id=\"parkingLotsList\" was not injected: check your FXML file 'CustomerListSubscriptionsScene.fxml'.";
 
     setInfo(regularSubscriptionInfo, "Choose option to see specific lot's prices");
     setFullSubscriptionInfo();

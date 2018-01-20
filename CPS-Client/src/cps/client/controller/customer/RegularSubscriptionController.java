@@ -284,6 +284,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     }
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       formattedMessage.add(new Text("Subscription purchased successfully!\n"));
+      formattedMessage.add(new Text(String.format("Your account was debited %s ILS.", response.getPayment())));
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
       setFinishInsteadOfSubmit(true);
