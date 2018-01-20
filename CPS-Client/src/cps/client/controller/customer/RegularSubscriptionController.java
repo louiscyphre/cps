@@ -176,7 +176,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /**
-   * @return customer id from context
+   * @return customer id from context - >=1 if logged in, 0 otherwise
    */
   private int getCustomerID() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
@@ -184,7 +184,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /**
-   * @return email from context
+   * @return email from customer context if logged in, or the value of the email field otherwise
    */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
@@ -196,14 +196,14 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /**
-   * @return car id 
+   * @return car id or null if empty
    */
   private String getCarID() {
     return carIDTextField.getText();
   }
-
+  
   /**
-   * @return planned start date
+   * @return planned start date or null if empty
    */
   private LocalDate getPlannedStartDate() {
     if (startDatePicker.getValue() == null) {
@@ -217,7 +217,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /**
-   * @return planned exit time
+   * @return planned exit time or null if empty
    */
   private LocalTime getPlannedDailyExitTime() {
     try {
@@ -279,6 +279,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       // Success info creation
       formattedMessage.add(new Text("Subscription purchased successfully!\n"));
+      formattedMessage.add(new Text(String.format("Your account was debited %s ILS.", response.getPayment())));
       // Turning off the processing state
       ctrl.turnProcessingStateOff();
       // Display the whole formatted message

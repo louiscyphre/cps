@@ -27,6 +27,7 @@ import cps.server.ServerController;
 import cps.server.session.CustomerSession;
 import cps.server.session.ServiceSession;
 import cps.server.session.UserSession;
+import cps.server.statistics.StatisticsCollector;
 
 /** Handles requests that deal with customer complaints. */
 public class ComplaintController extends RequestController {
@@ -41,18 +42,18 @@ public class ComplaintController extends RequestController {
    * @return the server response */
   public ServerResponse handle(ComplaintRequest request, UserSession session) {
     return database.performQuery(new ComplaintResponse(), (conn, response) -> {
-      Complaint complaint = Complaint.create(conn, request.getCustomerID(), request.getContent(), Timestamp.valueOf(LocalDateTime.now()), null);
+      Complaint complaint = Complaint.create(conn, request.getCustomerID(), request.getLotID(), request.getContent(),
+          Timestamp.valueOf(LocalDateTime.now()), null);
 
       errorIfNull(complaint, "Failed to create complaint");
 
       response.setComplaintID(complaint.getId());
       response.setSuccess("Complaint created successfully");
-      //XXX Statistics
+      
+      // XXX Statistics
       // Add complaint to monthly statistics
-      //FIXME - Tegra what to do with complaint lot id?
-      MonthlyReport.increaseComplaints(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMinute(), 0);
-      
-      
+      StatisticsCollector.increaseComplaints(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), request.getLotID());
+
       return response;
     });
   }
@@ -66,7 +67,8 @@ public class ComplaintController extends RequestController {
       User employee = session.requireUser();
 
       errorIf(!employee.canAccessDomain(Constants.ACCESS_DOMAIN_CUSTOMER_SERVICE), "You cannot perform this action");
-      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER, "You cannot perform this action");
+      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER,
+          "You cannot perform this action");
 
       Complaint complaint = Complaint.findByIDNotNull(conn, action.getComplaintID());
 
@@ -75,9 +77,16 @@ public class ComplaintController extends RequestController {
 
       complaint.setEmployeeID(employee.getId());
       complaint.setRefundAmount(action.getAmount());
+      complaint.setReason(action.getReason());
       complaint.setResolvedAt(Timestamp.valueOf(LocalDateTime.now()));
       complaint.setStatus(Constants.COMPLAINT_STATUS_ACCEPTED);
       complaint.update(conn);
+
+      //XXX Statistics
+      // Count as closed and refunded
+      MonthlyReport.increaseClosed(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());
+      MonthlyReport.increaseRefunded(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());
+      
 
       response.setComplaintID(complaint.getId());
       response.setCustomerID(customer.getId());
@@ -96,16 +105,22 @@ public class ComplaintController extends RequestController {
       User employee = session.requireUser();
 
       errorIf(!employee.canAccessDomain(Constants.ACCESS_DOMAIN_CUSTOMER_SERVICE), "You cannot perform this action");
-      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER, "You cannot perform this action");
+      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER,
+          "You cannot perform this action");
 
       Complaint complaint = Complaint.findByIDNotNull(conn, action.getComplaintID());
 
       Customer customer = Customer.findByIDNotNull(conn, complaint.getCustomerID());
 
       complaint.setEmployeeID(employee.getId());
+      complaint.setReason(action.getReason());
       complaint.setResolvedAt(Timestamp.valueOf(LocalDateTime.now()));
       complaint.setStatus(Constants.COMPLAINT_STATUS_REJECTED);
       complaint.update(conn);
+      
+      //XXX Statistics
+      //Count as closed
+      MonthlyReport.increaseClosed(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());
 
       response.setComplaintID(complaint.getId());
       response.setCustomerID(customer.getId());
@@ -141,7 +156,7 @@ public class ComplaintController extends RequestController {
   public ServerResponse handle(ListComplaintsAction action, ServiceSession session) {
     return database.performQuery(new ListComplaintsResponse(), (conn, response) -> {
       session.requireUser(); // Employee must be logged in
-      
+
       Collection<Complaint> result = Complaint.findAll(conn);
 
       // This shouldn't happen - at least an empty list should always be returned

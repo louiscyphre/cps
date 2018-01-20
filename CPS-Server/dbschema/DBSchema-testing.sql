@@ -45,8 +45,10 @@ CREATE TABLE `complaint` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `customer_id` int(10) NOT NULL,
   `employee_id` int(10) DEFAULT NULL,
+  `lot_id` int(10) DEFAULT NULL,
   `status` int(10) NOT NULL DEFAULT '1',
   `description` varchar(2000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `resolved_at` timestamp NULL DEFAULT NULL,
   `refund_amount` float NOT NULL DEFAULT '0',
@@ -142,6 +144,8 @@ CREATE TABLE `monthly_report` (
   `ordered_regular` int(11) DEFAULT '0',
   `ordered_full` int(11) DEFAULT '0',
   `complaints_count` int(11) DEFAULT '0',
+  `complaints_closed_count` int(11) DEFAULT '0',
+  `complaints_refunded_count` int(11) DEFAULT '0',
   `disabled_slots` int(11) DEFAULT '0',
   PRIMARY KEY (`year`,`month`,`lot_id`)
 ) ENGINE=Memory DEFAULT CHARSET=utf8;
@@ -208,28 +212,7 @@ CREATE TABLE `parking_lot` (
   `robot_ip` varchar(48) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `lot_full` bit(1) DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=Memory DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `quarterly_report`
---
-
-DROP TABLE IF EXISTS `quarterly_report`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `quarterly_report` (
-  `year` int(11) NOT NULL,
-  `quarter` int(11) NOT NULL,
-  `lot_id` int(11) NOT NULL,
-  `ordered_onetimes` int(11) DEFAULT '0',
-  `ordered_incidental` int(11) DEFAULT '0',
-  `ordered_regular` int(11) DEFAULT '0',
-  `ordered_full` int(11) DEFAULT '0',
-  `complaints_count` int(11) DEFAULT '0',
-  `disabled_slots` int(11) DEFAULT '0',
-  PRIMARY KEY (`year`,`quarter`,`lot_id`)
-) ENGINE=Memory DEFAULT CHARSET=utf8;
+) ENGINE=Memory AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -249,6 +232,10 @@ CREATE TABLE `subscription_service` (
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   `daily_exit_time` time DEFAULT NULL,
+  `parked` bit(1) NOT NULL DEFAULT b'0',
+  `completed` bit(1) NOT NULL DEFAULT b'0',
+  `canceled` bit(1) NOT NULL DEFAULT b'0',
+  `warned` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
 ) ENGINE=Memory DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -285,4 +272,4 @@ CREATE TABLE `weekly_statistics` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-18 20:54:14
+-- Dump completed on 2018-01-20 13:39:11

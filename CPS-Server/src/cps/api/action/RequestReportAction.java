@@ -1,27 +1,41 @@
 package cps.api.action;
 
-import cps.api.request.RequestHandler;
-import cps.api.response.ServerResponse;
+import java.time.LocalDate;
 
-public class RequestReportAction extends ServiceAction {
+public abstract class RequestReportAction extends ServiceAction {
   private static final long serialVersionUID = 1L;
-  private String            reportType;
+  private int               reportType;
+  private LocalDate         periodStart;
+  private LocalDate         periodEnd;
 
-  public RequestReportAction(int userID, String reportType) {
+  public RequestReportAction(int userID, int reportType, LocalDate periodStart, LocalDate periodEnd) {
     super(userID);
     this.reportType = reportType;
+    this.periodStart = periodStart;
+    this.periodEnd = periodEnd;
   }
-
-  public String getReportType() {
+  
+  public int getReportType() {
     return reportType;
   }
 
-  public void setReportType(String reportType) {
+  public void setReportType(int reportType) {
     this.reportType = reportType;
   }
 
-  @Override
-  public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
-    return handler.handle(this, session);
+  public LocalDate getPeriodStart() {
+    return periodStart;
+  }
+
+  public void setPeriodStart(LocalDate periodStart) {
+    this.periodStart = periodStart;
+  }
+
+  public LocalDate getPeriodEnd() {
+    return periodEnd;
+  }
+
+  public void setPeriodEnd(LocalDate periodEnd) {
+    this.periodEnd = periodEnd;
   }
 }

@@ -44,8 +44,6 @@ public interface ResponseHandler {
   
   public ServerResponse handle(RejectComplaintResponse response);
 
-  public ServerResponse handle(RequestReportResponse response);
-
   public ServerResponse handle(ReserveParkingSlotsResponse response);
 
   public ServerResponse handle(SetFullLotResponse response);
@@ -55,4 +53,12 @@ public interface ResponseHandler {
   public ServerResponse handle(RequestLotStateResponse response);
   
   public ServerResponse handle(ServiceLoginResponse response);
+
+  public ServerResponse handle(WeeklyReportResponse response);
+
+  public ServerResponse handle(QuarterlyReportResponse response);
+
+  public ServerResponse handle(CurrentPerformanceResponse response);
+
+  public ServerResponse handle(PeriodicReportResponse response);
 }

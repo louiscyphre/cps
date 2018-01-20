@@ -13,6 +13,7 @@
   <center>
     <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="400.0" spacing="10.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
+      			<!-- <ComboBox fx:id="parkingLotsList" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="219.0" promptText="Please choose a parking lot or category" styleClass="comboBox" /> -->
             <TextArea fx:id="complaintContent" maxWidth="320.0" prefHeight="200.0" prefWidth="320.0" wrapText="true" />
         <VBox fx:id="infoBox" alignment="CENTER" prefHeight="150.0" prefWidth="100.0" spacing="0.0" styleClass="infoLabel">
           <children>

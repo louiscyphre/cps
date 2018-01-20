@@ -1,6 +1,7 @@
 package cps.common;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -61,19 +62,19 @@ public abstract class Utilities {
       this.b = b;
     }
   }
-  
+
   public interface Visitor<T> {
     void apply(T argument);
   }
-  
+
   public interface VisitorWithReturnType<T, R> {
     R apply(T argument);
   }
-  
+
   public interface VisitorWithException<T, E extends Throwable> {
     void apply(T argument) throws E;
   }
-  
+
   public interface VisitorWithExceptionAndReturnType<T, E extends Throwable, R> {
     R apply(T argument) throws E;
   }
@@ -93,21 +94,25 @@ public abstract class Utilities {
   public static boolean isWeekend(DayOfWeek day) {
     return day == DayOfWeek.SATURDAY;
   }
-  
+
   public static boolean isEmpty(String string) {
     return string == null || string.trim().isEmpty();
   }
-  
+
   public static boolean between(int x, int a, int b) {
     return a <= x && x <= b;
   }
-  
+
   public static boolean between(float x, float a, float b) {
     return a <= x && x <= b;
   }
 
   public static <T> T valueOrDefault(T value, T defaultValue) {
     return value == null ? defaultValue : value;
+  }
+
+  public static String emptyIfNull(String value) {
+    return value == null ? "" : value;
   }
 
   public static void debugPrintln(String message, Object... args) {
@@ -121,4 +126,24 @@ public abstract class Utilities {
       System.out.print(String.format(message, args));
     }
   }
+
+  public static LocalDate findWeekStart(LocalDate start) {
+    while (!start.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+      start = start.minusDays(1);
+    }
+
+    return start;
+  }
+
+  public static int countWeeksInMonth(int year, int month) {
+    int weekCount = 0;
+    LocalDate start = LocalDate.of(year, month, 1);
+    LocalDate end = start.plusMonths(1);
+    while (start.isBefore(end)) {
+      weekCount++;
+      start = start.plusDays(7);
+    }
+    return weekCount;
+  }
+
 }

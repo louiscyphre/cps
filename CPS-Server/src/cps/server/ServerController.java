@@ -184,11 +184,6 @@ public class ServerController implements RequestHandler<SessionHolder> {
   }
 
   @Override
-  public ServerResponse handle(RequestReportAction action, SessionHolder context) {
-    return reportController.handle(action, context.acquireServiceSession());
-  }
-
-  @Override
   public ServerResponse handle(ParkingCellSetReservedAction action, SessionHolder context) {
     return lotController.handle(action, context.acquireServiceSession());
   }
@@ -206,5 +201,25 @@ public class ServerController implements RequestHandler<SessionHolder> {
   @Override
   public ServerResponse handle(UpdatePricesAction action, SessionHolder context) {
     return lotController.handle(action, context.acquireServiceSession());
+  }
+
+  @Override
+  public ServerResponse handle(GetWeeklyReportAction action, SessionHolder context) {
+    return reportController.handle(action, context.acquireServiceSession());
+  }
+
+  @Override
+  public ServerResponse handle(GetQuarterlyReportAction action, SessionHolder context) {
+    return reportController.handle(action, context.acquireServiceSession());
+  }
+
+  @Override
+  public ServerResponse handle(GetCurrentPerformanceAction action, SessionHolder context) {
+    return reportController.handle(action, context.acquireServiceSession());
+  }
+
+  @Override
+  public ServerResponse handle(GetPeriodicReportAction action, SessionHolder context) {
+    return reportController.handle(action, context.acquireServiceSession());
   }
 }

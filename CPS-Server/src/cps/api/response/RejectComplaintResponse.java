@@ -3,9 +3,9 @@ package cps.api.response;
 public class RejectComplaintResponse extends ServerResponse {
   private static final long serialVersionUID = 1L;
 
-  private int   complaintID = 0;
-  private int   customerID = 0;
-  private String reason = null;
+  private int    complaintID = 0;
+  private int    customerID  = 0;
+  private String reason      = null;
 
   @Override
   public ServerResponse handle(ResponseHandler handler) {

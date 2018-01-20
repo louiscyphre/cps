@@ -5,13 +5,22 @@ import cps.api.response.ServerResponse;
 
 public class RefundAction extends ServiceAction {
   private static final long serialVersionUID = 1L;
-  private float             amount;
   private int               complaintID;
+  private float             amount;
+  private String            reason;
 
   public RefundAction(int userID, float amount, int complaintID) {
     super(userID);
     this.amount = amount;
     this.complaintID = complaintID;
+    this.reason = null;
+  }
+
+  public RefundAction(int userID, int complaintID, float amount, String reason) {
+    super(userID);
+    this.complaintID = complaintID;
+    this.amount = amount;
+    this.reason = reason;
   }
 
   public RefundAction(int userID, double amount, int complaintID) {
@@ -45,5 +54,13 @@ public class RefundAction extends ServiceAction {
   @Override
   public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
     return handler.handle(this, session);
+  }
+
+  public String getReason() {
+    return reason;
+  }
+
+  public void setReason(String reason) {
+    this.reason = reason;
   }
 }

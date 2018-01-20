@@ -11,12 +11,12 @@
 
 <BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="626.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceActionRefundController">
   <center>
-    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="606.0" prefWidth="360.0" spacing="10.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+    <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="606.0" prefWidth="500.0" spacing="10.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
       <children>
             <ListView fx:id="complaintsList" prefHeight="79.0" prefWidth="290.0" />
             <TextArea fx:id="complaintContent" prefHeight="178.0" prefWidth="290.0" wrapText="true" />
-            <TextField fx:id="refundTF" alignment="CENTER" promptText="Refund Amount" styleClass="inputField" />
-            <TextField fx:id="reasonTF" alignment="CENTER" promptText="Reason" styleClass="inputField" />
+            <TextField fx:id="refundTF" alignment="CENTER" promptText="Refund Amount" styleClass="inputFieldWide" />
+            <TextField fx:id="reasonTF" alignment="CENTER" promptText="Reason" styleClass="inputFieldWide" />
         <VBox fx:id="infoBox" alignment="CENTER" prefHeight="116.0" prefWidth="290.0" spacing="0.0" styleClass="infoLabel">
           <children>
             <ProgressIndicator fx:id="infoProgress" visible="false">

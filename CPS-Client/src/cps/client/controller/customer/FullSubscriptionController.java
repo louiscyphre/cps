@@ -116,7 +116,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
   }
 
   /**
-   * Validates that the fields and Sends API request to the server.
+   * Validates the fields and Sends API request to the server.
    */
   private void validateAndSend() {
     // validation in same order as order in the form
@@ -164,6 +164,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
+  // returns customer context - >=1 if logged in, 0 otherwise
   /**
    * @return customer context id
    */
@@ -173,7 +174,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
   }
 
   /**
-   * @return email from customer context
+   * @return email from customer context, or value of the email field if not logged in
    */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
@@ -185,14 +186,14 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
   }
 
   /**
-   * @return car id
+   * @return car id or null if empty
    */
   private String getCarID() {
     return carIDTextField.getText();
   }
 
   /**
-   * @return planned parking start date
+   * @return planned parking start date or null if empty
    */
   private LocalDate getPlannedStartDate() {
     if (startDatePicker.getValue() == null) {
@@ -222,7 +223,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
 
   /**
    * Display the Subscription Details Request was succesful, and user
-   * credentials if new user, error - otherwise.
+   * credentials if new user, otherwise - error.
    */
   public ServerResponse handle(FullSubscriptionResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
@@ -251,13 +252,12 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
       // Applying customer ID
       context.setCustomerId(responseCustomerId);
       context.acceptPendingEmail();
-      // Turning the LoggedIn state, application-wide
       ControllersClientAdapter.turnLoggedInStateOn();
     }
     if (response.getStatus() == ServerResponse.STATUS_OK) {
       // Success info creation
       formattedMessage.add(new Text("Subscription purchased successfully!\n"));
-      // Turning off the processing state
+      formattedMessage.add(new Text(String.format("Your account was debited %s ILS.", response.getPayment())));
       ctrl.turnProcessingStateOff();
       // Display the whole formatted message
       ctrl.displayInfo(formattedMessage);

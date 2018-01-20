@@ -10,5 +10,6 @@ cps.server.controllers
 cps.server.database
 cps.server.devices
 cps.server.session
+cps.server.statistics
 cps.server.testing.tests
 cps.server.testing.utilities

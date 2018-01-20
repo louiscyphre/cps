@@ -1,16 +1,16 @@
 package cps.entities.models;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import com.mysql.jdbc.Connection;
+import java.util.Arrays;
 
 import cps.common.Constants;
+import cps.common.Utilities;
 
 // TODO: Auto-generated Javadoc
 /** The Class WeeklyStatistics. */
@@ -51,9 +51,8 @@ public class WeeklyStatistics implements Serializable {
    * @param realizedOrdersDist the realized orders dist
    * @param canceledOrdersDist the canceled orders dist
    * @param lateArrivalsDist the late arrivals dist */
-  public WeeklyStatistics(LocalDate start, int lotID, float realizedOrdersMean, float canceledOrdersMean,
-      float lateArrivalsMean, float realizedOrdersMedian, float canceledOrdersMedian, float lateArrivalsMedian,
-      String realizedOrdersDist, String canceledOrdersDist, String lateArrivalsDist) {
+  public WeeklyStatistics(LocalDate start, int lotID, float realizedOrdersMean, float canceledOrdersMean, float lateArrivalsMean, float realizedOrdersMedian,
+      float canceledOrdersMedian, float lateArrivalsMedian, String realizedOrdersDist, String canceledOrdersDist, String lateArrivalsDist) {
     super();
     this.start = start;
     this.setLotID(lotID);
@@ -72,8 +71,8 @@ public class WeeklyStatistics implements Serializable {
    * @param rs the rs
    * @throws SQLException the SQL exception */
   public WeeklyStatistics(ResultSet rs) throws SQLException {
-    this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getFloat(3), rs.getFloat(4), rs.getFloat(5), rs.getFloat(6),
-        rs.getFloat(7), rs.getFloat(8), rs.getString(9), rs.getString(10), rs.getString(11));
+    this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getFloat(3), rs.getFloat(4), rs.getFloat(5), rs.getFloat(6), rs.getFloat(7), rs.getFloat(8),
+        rs.getString(9), rs.getString(10), rs.getString(11));
   }
 
   /** Creates the.
@@ -91,10 +90,9 @@ public class WeeklyStatistics implements Serializable {
    * @param lateArrivalsDist the late arrivals dist
    * @return the weekly statistics
    * @throws SQLException the SQL exception */
-  public static WeeklyStatistics create(Connection conn, LocalDate start, int lotID, float realizedOrdersMean,
-      float canceledOrdersMean, float lateArrivalsMean, float realizedOrdersMedian, float canceledOrdersMedian,
-      float lateArrivalsMedian, String realizedOrdersDist, String canceledOrdersDist, String lateArrivalsDist)
-      throws SQLException {
+  public static WeeklyStatistics create(Connection conn, LocalDate start, int lotID, float realizedOrdersMean, float canceledOrdersMean, float lateArrivalsMean,
+      float realizedOrdersMedian, float canceledOrdersMedian, float lateArrivalsMedian, String realizedOrdersDist, String canceledOrdersDist,
+      String lateArrivalsDist) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_WEEKLY_STATISTICS);
 
     int field = 0;
@@ -114,18 +112,95 @@ public class WeeklyStatistics implements Serializable {
     statement.executeUpdate();
     statement.close();
 
-    return new WeeklyStatistics(start, lotID, realizedOrdersMean, canceledOrdersMean, lateArrivalsMean,
-        realizedOrdersMedian, canceledOrdersMedian, lateArrivalsMedian, realizedOrdersDist, canceledOrdersDist,
-        lateArrivalsDist);
+    return new WeeklyStatistics(start, lotID, realizedOrdersMean, canceledOrdersMean, lateArrivalsMean, realizedOrdersMedian, canceledOrdersMedian,
+        lateArrivalsMedian, realizedOrdersDist, canceledOrdersDist, lateArrivalsDist);
   }
 
-  /** Creates the for.
-   * @param conn the conn
-   * @param day the day
-   * @param lotid the lotid */
-  public static void createFor(Connection conn, LocalDateTime day, int lotid) {
-    // XXX I'm here
+  public static WeeklyStatistics createUpdateWeeklyReport(Connection conn, LocalDate start, int lotid) throws SQLException {
+    // Find this week's Sunday
+    start = Utilities.findWeekStart(start);
+    WeeklyStatistics result = findOrCreate(conn, start, lotid);
 
+    DailyStatistics[] days = DailyStatistics.getSevenDays(conn, start, lotid);
+
+    /* Calculate median and mean */
+    int[][] medianHelper = new int[2][7];
+
+    float numRealizedOrders = 0f;
+    float numCanceledOrders = 0f;
+    float numLateArrivals = 0f;
+
+    for (int i = 0; i < 7; i++) {
+      medianHelper[0][i] = days[i].getRealizedOrders();
+      medianHelper[1][i] = days[i].getCanceledOrders();
+      medianHelper[2][i] = days[i].getLateArrivals();
+      numRealizedOrders += (float) days[i].getRealizedOrders();
+      numCanceledOrders += (float) days[i].getCanceledOrders();
+      numLateArrivals += (float) days[i].getLateArrivals();
+    }
+    for (int i = 0; i < 2; i++) {
+      Arrays.sort(medianHelper[i]);
+    }
+    result.realizedOrdersMean = numRealizedOrders / 7;
+    result.canceledOrdersMean = numCanceledOrders / 7;
+    result.lateArrivalsMean = numLateArrivals / 7;
+    result.realizedOrdersMedian = medianHelper[0][3];
+    result.canceledOrdersMedian = medianHelper[1][3];
+    result.lateArrivalsMedian = medianHelper[2][3];
+
+    /* Calculate distribution */
+
+    result.canceledOrdersDist = "";
+    result.lateArrivalsDist = "";
+    result.realizedOrdersDist = "";
+    for (int i = 0; i < 6; i++) {
+      result.realizedOrdersDist += String.format("%f,", days[i].getRealizedOrders() / numRealizedOrders);
+      result.canceledOrdersDist += String.format("%f,", days[i].getCanceledOrders() / numCanceledOrders);
+      result.lateArrivalsDist += String.format("%f,", days[i].getLateArrivals() / numLateArrivals);
+    }
+    result.realizedOrdersDist += String.format("%f", days[6].getRealizedOrders() / numRealizedOrders);
+    result.canceledOrdersDist += String.format("%f", days[6].getCanceledOrders() / numCanceledOrders);
+    result.lateArrivalsDist += String.format("%f", days[6].getLateArrivals() / numLateArrivals);
+
+    /* Distributions now recorded as comma separated values from sunday to saturday */
+    result.update(conn);
+
+    return result;
+  }
+
+  public static WeeklyStatistics getWeeklyReportForPeriodic(Connection conn, LocalDate start) throws SQLException {
+    // Find this week's Sunday
+    start = Utilities.findWeekStart(start);
+    WeeklyStatistics result = new WeeklyStatistics(start, 0, 0, 0, 0, 0, 0, 0, "", "", "");
+
+    DailyStatistics[] days = DailyStatistics.getSevenDaysForPeriodic(conn, start);
+
+    /* Calculate median and mean */
+    int[][] medianHelper = new int[2][7];
+
+    float numRealizedOrders = 0f;
+    float numCanceledOrders = 0f;
+    float numLateArrivals = 0f;
+
+    for (int i = 0; i < 7; i++) {
+      medianHelper[0][i] = days[i].getRealizedOrders();
+      medianHelper[1][i] = days[i].getCanceledOrders();
+      medianHelper[2][i] = days[i].getLateArrivals();
+      numRealizedOrders += (float) days[i].getRealizedOrders();
+      numCanceledOrders += (float) days[i].getCanceledOrders();
+      numLateArrivals += (float) days[i].getLateArrivals();
+    }
+    for (int i = 0; i < 2; i++) {
+      Arrays.sort(medianHelper[i]);
+    }
+    result.realizedOrdersMean = numRealizedOrders / 7;
+    result.canceledOrdersMean = numCanceledOrders / 7;
+    result.lateArrivalsMean = numLateArrivals / 7;
+    result.realizedOrdersMedian = medianHelper[0][3];
+    result.canceledOrdersMedian = medianHelper[1][3];
+    result.lateArrivalsMedian = medianHelper[2][3];
+
+    return result;
   }
 
   /** Find.
@@ -134,7 +209,7 @@ public class WeeklyStatistics implements Serializable {
    * @param lotID the lot ID
    * @return the weekly statistics
    * @throws SQLException the SQL exception */
-  public static WeeklyStatistics find(Connection conn, LocalDate start, int lotID) throws SQLException {
+  public static WeeklyStatistics findOrCreate(Connection conn, LocalDate start, int lotID) throws SQLException {
     WeeklyStatistics item = null;
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_WEEKLY_STATISTICS);
 
@@ -147,6 +222,8 @@ public class WeeklyStatistics implements Serializable {
 
     if (result.next()) {
       item = new WeeklyStatistics(result);
+    } else {
+      item = create(conn, start, lotID, 0, 0, 0, 0, 0, 0, "", "", "");
     }
 
     result.close();

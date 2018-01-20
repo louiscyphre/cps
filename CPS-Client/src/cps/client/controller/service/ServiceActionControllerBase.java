@@ -44,6 +44,16 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
    * @param event
    */
   @FXML
+  void handleFinishButton(ActionEvent event) {
+    if (!processing) {
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU, 10);
+    }
+  }
+
+  /**
+   * @param event
+   */
+  @FXML
   void handleSubmitButton(ActionEvent event) {
     if (!processing) {
       validateAndSend();

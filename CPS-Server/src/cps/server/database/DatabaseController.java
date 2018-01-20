@@ -13,6 +13,7 @@ import cps.server.ServerException;
 import cps.common.Utilities.VisitorWithException;
 import cps.common.Utilities.VisitorWithExceptionAndReturnType;
 
+// TODO: Auto-generated Javadoc
 /** Manages database-related operations. */
 public class DatabaseController {
 
@@ -34,52 +35,45 @@ public class DatabaseController {
     /** Perform the action.
      * @param conn the SQL connection
      * @throws SQLException the SQL exception
-     * @throws ServerException the server exception */
+     * @throws ServerException on error */
     void perform(Connection conn) throws SQLException, ServerException;
   }
 
-  /** Used to return the result of a database query.
-   * @param <T> the generic type */
+  /** Used to receive a database query as a lambda function
+   * The query runs some code (specified in the body of the lambda function) and then returns a result of the generic type T.
+   * @param <T> the return type of the query */
   public interface DatabaseQuery<T> {
 
     /** Perform the query.
      * @param conn the SQL connection
      * @return the result object
      * @throws SQLException the SQL exception
-     * @throws ServerException the server exception */
+     * @throws ServerException on error */
     T perform(Connection conn) throws SQLException, ServerException;
   }
 
-  /** The Interface DatabaseQueryWithException.
-   * @param <T> the generic type */
-  public interface DatabaseQueryWithException<T> {
+  /** Used to receive a database query as a lambda function
+   * The query runs some code (specified in the body of the lambda function) and then returns a result of the generic type T.
+   * Receives a response of generic type T (typically a ServerResponse subclass) and returns it (perhaps modified).
+   * @param <T> the return type of the query */
+  public interface DatabaseQueryWithResponse<T> {
 
     /** Perform.
      * @param conn the SQL connection
      * @param response the response
      * @return the result object
      * @throws SQLException the SQL exception
-     * @throws ServerException the server exception */
+     * @throws ServerException on error */
     T perform(Connection conn, T response) throws SQLException, ServerException;
   }
 
-  /** The Interface EntityBuilder.
-   * @param <T> the generic type */
-  public interface EntityBuilder<T> {
-    
-    /** From result set.
-     * @param result the result
-     * @return the t
-     * @throws SQLException the SQL exception */
-    T fromResultSet(ResultSet result) throws SQLException;
-  }
-
-  /** The Interface StatementVisitor. */
+  /** Is used to receive a lambda function that fills the fields of a PreparedStatement. */
   public interface StatementVisitor extends VisitorWithException<PreparedStatement, SQLException> {
 
   }
 
-  /** The Interface ResultVisitor. */
+  /** Is used to receive a lambda function that creates an entity object or returns some result from an SQL ResultSet as parameter.
+   * @param <R> the return type of the lambda function - the type of the created entity */
   public interface ResultVisitor<R> extends VisitorWithExceptionAndReturnType<ResultSet, SQLException, R> {
 
   }
@@ -98,15 +92,18 @@ public class DatabaseController {
     this.password = password;
   }
   
+  /** Instantiates a new database controller.
+   * @param config the config
+   * @throws Exception the exception */
   public DatabaseController(ServerConfig config) throws Exception {
     this(config.get("db.host"), config.get("db.name"), config.get("db.username"),
         config.get("db.password"));
   }
 
   /**
-   * Gets the SQL connectionection.
+   * Opens and returns a new SQL connection.
    *
-   * @return the SQL connectionection
+   * @return the SQL connection
    * @throws SQLException
    *           the SQL exception
    */
@@ -115,7 +112,7 @@ public class DatabaseController {
   }
 
   /** Handle SQL exception.
-   * @param ex the ex */
+   * @param ex the exception */
   public void handleSQLException(SQLException ex) {
     System.out.println("SQLException: " + ex.getMessage());
     System.out.println("SQLState: " + ex.getSQLState());
@@ -135,9 +132,9 @@ public class DatabaseController {
     }
   }
 
-  /** Perform action.
-   * @param action the action
-   * @throws ServerException the server exception */
+  /** Perform an action (SQL query that doesn't return results) on the database.
+   * @param action a lambda function that performs the action
+   * @throws ServerException on error */
   public void performAction(DatabaseAction action) throws ServerException {
     Connection conn = null;
 
@@ -155,7 +152,7 @@ public class DatabaseController {
    * @param <T> the generic type
    * @param query the query
    * @return the t
-   * @throws ServerException the server exception */
+   * @throws ServerException on error */
   public <T> T performQuery(DatabaseQuery<T> query) throws ServerException {
     Connection conn = null;
     T result = null;
@@ -177,7 +174,7 @@ public class DatabaseController {
    * @param response the response
    * @param query the query
    * @return the t */
-  public <T extends ServerResponse> T performQuery(T response, DatabaseQueryWithException<T> query) {
+  public <T extends ServerResponse> T performQuery(T response, DatabaseQueryWithResponse<T> query) {
     Connection conn = null;
     T result = null;
 
@@ -197,8 +194,8 @@ public class DatabaseController {
     return result;
   }
 
-  /** Truncate tables.
-   * @throws ServerException the server exception */
+  /** Truncate all tables in the database.
+   * @throws ServerException on error */
   public void truncateTables() throws ServerException {
     performAction(conn -> {
       Collection<String> tables = getTables(conn);
@@ -212,11 +209,7 @@ public class DatabaseController {
     });
   }
 
-  /** Gets the tables.
-   * @param conn the SQL connection
-   * @return the tables
-   * @throws SQLException the SQL exception */
-  public Collection<String> getTables(Connection conn) throws SQLException {
+  Collection<String> getTables(Connection conn) throws SQLException {
     LinkedList<String> results = new LinkedList<>();
 
     Statement stmt = conn.createStatement();
@@ -232,7 +225,7 @@ public class DatabaseController {
     return results;
   }
 
-  public Collection<String> getTables() throws ServerException {
+  Collection<String> getTables() throws ServerException {
     return performQuery(conn -> getTables(conn));
   }
 
@@ -261,7 +254,7 @@ public class DatabaseController {
   /** Count the number of rows in a table.
    * @param table the table name
    * @return the number of rows
-   * @throws ServerException the server exception */
+   * @throws ServerException on error */
   public int countEntities(String table) throws ServerException {
     return performQuery(conn -> countEntities(conn, table));
   }
@@ -274,14 +267,14 @@ public class DatabaseController {
    * @param builder the builder
    * @return the collection
    * @throws SQLException the SQL exception */
-  public <T> Collection<T> findAll(Connection conn, String table, String orderBy, EntityBuilder<T> builder) throws SQLException {
+  public <T> Collection<T> findAll(Connection conn, String table, String orderBy, ResultVisitor<T> builder) throws SQLException {
     LinkedList<T> results = new LinkedList<T>();
 
     Statement stmt = conn.createStatement();
     ResultSet rs = stmt.executeQuery(String.format("SELECT * FROM %s ORDER BY %s", table, orderBy));
 
     while (rs.next()) {
-      results.add(builder.fromResultSet(rs));
+      results.add(builder.apply(rs));
     }
 
     rs.close();
@@ -291,8 +284,9 @@ public class DatabaseController {
   }
 
   /** Apply a user-specified action to each result of an SQL query.
+   * @param <R> the returned object type (not used here)
    * @param conn the SQL connection
-   * @param sqlCommand the sql command
+   * @param sqlCommand the SQL command
    * @param withStatement the with statement
    * @param withResult the with result
    * @throws SQLException the SQL exception */
