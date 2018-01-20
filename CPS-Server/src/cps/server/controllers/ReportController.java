@@ -16,6 +16,7 @@ import cps.api.response.WeeklyReportResponse;
 import cps.common.Constants;
 import cps.common.Utilities;
 import cps.entities.models.MonthlyReport;
+import cps.entities.models.PeriodicReport;
 import cps.entities.models.SubscriptionService;
 import cps.entities.models.WeeklyStatistics;
 import cps.entities.people.CompanyPerson;
@@ -99,7 +100,7 @@ public class ReportController extends RequestController {
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER,
           "Only the Global Manager can perform this action");
       // FIXME Tegra here
-      
+       response.setData(PeriodicReport.getPeriodicReport(conn, 1, 1)); // action.getPeriodStart()      
       return response;
     });
   }
