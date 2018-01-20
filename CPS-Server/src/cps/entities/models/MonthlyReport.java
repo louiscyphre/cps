@@ -22,22 +22,22 @@ public class MonthlyReport {
   /** The lot id. */
   private int lotId;
 
-  /** The ord reserved. */
+  /** Amount of Reserved parkings. */
   private int ordReserved;
 
-  /** The ord incidental. */
+  /** Amount of Incidendal parkings. */
   private int ordIncidental;
 
-  /** The ord regular. */
+  /** Amount of Regular subscriptions. */
   private int ordRegular;
 
-  /** The ord full. */
+  /** Amount of Full subscriptions. */
   private int ordFull;
 
-  /** The coplaints count. */
+  /** Amount of complaints. */
   private int coplaintsCount;
 
-  /** The disabled slots. */
+  /** Amount of disabled slots. */
   private int disabledSlots;
 
   /** Instantiates a new monthly report.
@@ -78,12 +78,12 @@ public class MonthlyReport {
     this.disabledSlots = rs.getInt("disabled_slots");
   }
 
-  /** Creates the.
-   * @param conn the conn
+  /** Creates Monthly Report in the database.
+   * @param conn the Connection
    * @param year the year
    * @param month the month
-   * @param lotid the lotid
-   * @return the monthly report
+   * @param lotid the lot id
+   * @return Newly created Monthly Report
    * @throws SQLException the SQL exception */
   public static MonthlyReport create(Connection conn, int year, int month, int lotid) throws SQLException {
     PreparedStatement stmt = conn.prepareStatement("INSERT INTO monthly_report VALUES (?,?,?,default,default,default,default,default,default)");
@@ -258,7 +258,7 @@ public class MonthlyReport {
    * @throws ServerException the server exception */
   public static void increaseComplaints(Connection conn, int year, int month, int lotid) throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
-    rep.ordRegular++;
+    rep.coplaintsCount++;
     rep.update(conn);
   }
 
