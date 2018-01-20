@@ -62,19 +62,19 @@ public abstract class Utilities {
       this.b = b;
     }
   }
-  
+
   public interface Visitor<T> {
     void apply(T argument);
   }
-  
+
   public interface VisitorWithReturnType<T, R> {
     R apply(T argument);
   }
-  
+
   public interface VisitorWithException<T, E extends Throwable> {
     void apply(T argument) throws E;
   }
-  
+
   public interface VisitorWithExceptionAndReturnType<T, E extends Throwable, R> {
     R apply(T argument) throws E;
   }
@@ -94,15 +94,15 @@ public abstract class Utilities {
   public static boolean isWeekend(DayOfWeek day) {
     return day == DayOfWeek.SATURDAY;
   }
-  
+
   public static boolean isEmpty(String string) {
     return string == null || string.trim().isEmpty();
   }
-  
+
   public static boolean between(int x, int a, int b) {
     return a <= x && x <= b;
   }
-  
+
   public static boolean between(float x, float a, float b) {
     return a <= x && x <= b;
   }
@@ -131,7 +131,19 @@ public abstract class Utilities {
     while (!start.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
       start = start.minusDays(1);
     }
-    
+
     return start;
   }
+
+  public static int countWeeksInMonth(int year,int month) {
+    int weekCount = 0;
+    LocalDate da = LocalDate.of(year, month, 1);
+    LocalDate da2 = da.plusMonths(1);
+    while (da.isBefore(da2)) {
+      weekCount++;
+      da = da.plusDays(7);
+    }
+    return weekCount;
+  }
+
 }
