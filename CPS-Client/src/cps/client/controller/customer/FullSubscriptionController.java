@@ -31,15 +31,11 @@ import javafx.scene.text.Text;
  */
 public class FullSubscriptionController extends CustomerActionControllerBaseSubmitAndFinish {
 
-  /**
-   * 
-   */
+  /** Start Date date picker  */
   @FXML
   private DatePicker startDatePicker;
 
-  /**
-   * 
-   */
+  /** email TextField  */
   @FXML
   private TextField emailTextField;
 
@@ -235,34 +231,45 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     int responseCustomerId = response.getCustomerID();
     List<Text> formattedMessage = new LinkedList<Text>();
     if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
+      // Customer ID
       context.setCustomerId(responseCustomerId);
       formattedMessage.add(new Text("Your Customer ID:"));
       Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      // Making bold font
       Font defaultFont = customerIdText.getFont();
       customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(customerIdText);
       formattedMessage.add(new Text("\n"));
-
+      // Password
       formattedMessage.add(new Text("Your Password:"));
       Text password = new Text(response.getPassword());
+      // Making bold font
       defaultFont = password.getFont();
       password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(password);
       formattedMessage.add(new Text("\n"));
-
+      // Applying customer ID
       context.setCustomerId(responseCustomerId);
       context.acceptPendingEmail();
+      // Turning the LoggedIn state, application-wide
       ControllersClientAdapter.turnLoggedInStateOn();
     }
     if (response.getStatus() == ServerResponse.STATUS_OK) {
+      // Success info creation
       formattedMessage.add(new Text("Subscription purchased successfully!\n"));
+      // Turning off the processing state
       ctrl.turnProcessingStateOff();
+      // Display the whole formatted message
       ctrl.displayInfo(formattedMessage);
+      // Submit->Finish
       setFinishInsteadOfSubmit(true);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      // Error message creation
       formattedMessage.add(new Text("Could not proceed with purchase!\n"));
       formattedMessage.add(new Text(response.getDescription()));
+      // Turning off the processing state
       ctrl.turnProcessingStateOff();
+      // Display the whole formatted message, as an error
       ctrl.displayError(formattedMessage);
     }
     return response;

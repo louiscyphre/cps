@@ -25,53 +25,35 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 /**
- * Created on: 2018-01-09 1:04:02 AM
- */
-/**
- * @author firl
  *
  */
 public class SubscriptionsMenuController extends CustomerActionControllerBase implements ParkingLotsController {
 
-  /**
-   * 
-   */
+  /** TextFlow containing Regular Subscription details text*/
   @FXML
   private TextFlow regularSubscriptionInfo;
 
-  /**
-   * 
-   */
+  /** TextFlow containing Full Subscription details text*/
   @FXML
   private TextFlow fullSubscriptionInfo;
 
-  /**
-   * 
-   */
+  /** Toggle Group for choice of radio buttons  */
   @FXML
   private ToggleGroup subscriptionRadioButtons;
 
-  /**
-   * 
-   */
+  /** Regular Subscription radio button  */
   @FXML
   private RadioButton regularSubscriptionRadioButton;
 
-  /**
-   * 
-   */
+  /** Full Subscription radio button  */
   @FXML
   private RadioButton fullSubscriptionRadioButton;
 
-  /**
-   * 
-   */
+  /** ComboBox containing parking lots */
   @FXML
   private ComboBox<String> parkingLotsList;
 
-  /**
-   * 
-   */
+  /** Parking Lots mapping to addresses  */
   HashMap<String, ParkingLot> parkingLotsMap = null;
 
   /**
@@ -94,6 +76,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
   }
 
   /**
+   * Helper function assigning the given collection of parking names to combo box.
    * @param addresses
    */
   private void fillComboBoxItems(ObservableList<String> addresses) {
@@ -102,6 +85,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
   }
 
   /**
+   * Updates the regular subscription info in accordance with button choice.
    * @param choice
    */
   private void setRegularSubscriptionInfoForLot(String choice) {
@@ -114,7 +98,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
   }
 
   /**
-   * 
+   * Updates the full subscription info in accordance with button choice.
    */
   private void setFullSubscriptionInfo() {
     float subscriptionOverallPrice = Constants.PRICE_PER_HOUR_RESERVED * Constants.SUBSCRIPTION_TYPE_FULL_HOURS;
@@ -182,9 +166,8 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     ControllersClientAdapter.getCustomerContext().setChosenLotID(userChosenLotID);
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REGULAR_SUBSCRIPTION, 10);
   }
-
   /**
-   * 
+   * Initializes the Controller and Registers it. 
    */
   @FXML
   void initialize() {
@@ -211,6 +194,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
   }
 
   /**
+   * Updates the chosen text box with the supplied info.
    * @param textBox
    * @param info
    */

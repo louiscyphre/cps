@@ -36,97 +36,56 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Created on: 2018-01-09 8:26:06 PM
- */
-/**
- * @author firl
- *
+ * Reserve Parking scene controller.
  */
 public class ReserveParkingController extends CustomerActionControllerBaseSubmitAndFinish
     implements ParkingLotsController {
 
-  /**
-   * 
-   */
+  /** End Date DatePicker  */
   @FXML
   private DatePicker endDatePicker;
 
-  /**
-   * 
-   */
+  /** Start Date DatePicker  */
   @FXML
   private DatePicker startDatePicker;
 
-  /**
-   * 
-   */
+  /** Start Time TextField */
   @FXML
   private TextField startTimeTF;
 
-  /**
-   * 
-   */
+  /** End Time TextField  */
   @FXML
   private TextField endTimeTF;
 
-  /**
-   * 
-   */
-  @FXML
-  private Font x1;
-
-  /**
-   * 
-   */
+  /** Insets  */
   @FXML
   private Insets x2;
 
-  /**
-   * 
-   */
-  @FXML
-  private Insets x3;
 
-  /**
-   * 
-   */
-  @FXML
-  private Insets x4;
-
-  /**
-   * 
-   */
+  /** Car ID TextField  */
   @FXML
   private TextField carIDTextField;
 
-  /**
-   * 
-   */
+  /** Email TextField  */
   @FXML
   private TextField emailTF;
 
-  /**
-   * 
-   */
+  /** Parking Lots list  */
   @FXML
   private ComboBox<String> parkingLotsList;
 
-  /**
-   * 
-   */
+  /** Parking Lots Mapping  */
   private HashMap<String, Integer> parkingLotsMap = null;
 
-  // show Email field
   /**
-   * 
+   * Turns email TextField visible 
    */
   public void showEmail() {
     emailTF.visibleProperty().set(true);
   }
 
-  //
   /**
-   * 
+   * Turns email TextField invisible 
    */
   public void hideEmail() {
     emailTF.visibleProperty().set(false);
@@ -165,7 +124,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   /**
-   * 
+   * Request from the server the updated list of lots.
    */
   void loadParkingLots() {
     if (processing) {
@@ -194,7 +153,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   /**
-   * 
+   * Initializes the Controller and Registers it. 
    */
   @FXML
   void initialize() {

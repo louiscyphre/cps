@@ -30,46 +30,42 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Created on: 2018-01-15 6:02:42 AM
- */
-/**
- * @author firl
  *
  */
 public class RegularSubscriptionController extends CustomerActionControllerBaseSubmitAndFinish {
 
   /**
-   * 
+   * End time TextField
    */
   @FXML
   private TextField endTimeTextField;
 
   /**
-   * 
+   * End time TextField
    */
   @FXML
   private TextField emailTextField;
 
   /**
-   * 
+   * Start date DatePicker
    */
   @FXML
   private DatePicker startDatePicker;
 
   /**
-   * 
+   * Font
    */
   @FXML
   private Font x1;
 
   /**
-   * 
+   * Insets
    */
   @FXML
   private Insets x3;
 
   /**
-   * 
+   * Car ID TextField
    */
   @FXML
   private TextField carIDTextField;
@@ -125,7 +121,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /**
-   * 
+   * Validates that the fields and Sends API request to the server.
    */
   private void validateAndSend() {
     // validation in same order as order in the form
@@ -179,18 +175,16 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
-  // returns customer context - >=1 if logged in, 0 otherwise
   /**
-   * @return
+   * @return customer id from context
    */
   private int getCustomerID() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
-  // returns email if logged in from customer context,
   /**
-   * @return
+   * @return email from context
    */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
@@ -201,17 +195,15 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     }
   }
 
-  // return car id or null if empty
   /**
-   * @return
+   * @return car id 
    */
   private String getCarID() {
     return carIDTextField.getText();
   }
 
-  // returns planned start date or null if empty
   /**
-   * @return
+   * @return planned start date
    */
   private LocalDate getPlannedStartDate() {
     if (startDatePicker.getValue() == null) {
@@ -224,9 +216,8 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     }
   }
 
-  // returns planned end time or null if empty
   /**
-   * @return
+   * @return planned exit time
    */
   private LocalTime getPlannedDailyExitTime() {
     try {
@@ -237,7 +228,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /**
-   * 
+   * Initializes the Controller and Registers it.
    */
   @FXML
   void initialize() {
@@ -263,34 +254,43 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     int responseCustomerId = response.getCustomerID();
     List<Text> formattedMessage = new LinkedList<Text>();
     if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
+      // Customer ID
       context.setCustomerId(responseCustomerId);
       formattedMessage.add(new Text("Your Customer ID:"));
       Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      // Making bold font
       Font defaultFont = customerIdText.getFont();
       customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(customerIdText);
       formattedMessage.add(new Text("\n"));
-
+      // Password
       formattedMessage.add(new Text("Your Password:"));
       Text password = new Text(response.getPassword());
+      // Making bold font
       defaultFont = password.getFont();
       password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(password);
       formattedMessage.add(new Text("\n"));
-
+      // Applying customer ID
       context.setCustomerId(responseCustomerId);
       context.acceptPendingEmail();
       ControllersClientAdapter.turnLoggedInStateOn();
     }
     if (response.getStatus() == ServerResponse.STATUS_OK) {
+      // Success info creation
       formattedMessage.add(new Text("Subscription purchased successfully!\n"));
+      // Turning off the processing state
       ctrl.turnProcessingStateOff();
+      // Display the whole formatted message
       ctrl.displayInfo(formattedMessage);
       setFinishInsteadOfSubmit(true);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      // Error message creation
       formattedMessage.add(new Text("Could not proceed with purchase!\n"));
       formattedMessage.add(new Text(response.getDescription()));
+      // Turning off the processing state
       ctrl.turnProcessingStateOff();
+      // Display the whole formatted message, as an error
       ctrl.displayError(formattedMessage);
     }
     return response;
