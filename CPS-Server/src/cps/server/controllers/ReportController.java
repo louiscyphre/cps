@@ -98,8 +98,8 @@ public class ReportController extends RequestController {
       CompanyPerson user = session.requireCompanyPerson();
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER,
           "Only the Global Manager can perform this action");
-      // FIXME WHere is the report generated?
-
+      // FIXME Tegra here
+      
       return response;
     });
   }
