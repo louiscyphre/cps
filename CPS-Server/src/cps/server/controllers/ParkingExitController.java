@@ -72,7 +72,11 @@ public class ParkingExitController extends RequestController {
       transportationController.retrieveCar(conn, request.getLotID(), request.getCarID());
       ParkingService service = transportation.getParkingService(conn);
       service.setParked(false);
-      service.setCompleted(true);
+      
+      if (service.shouldCompleteAfterExit()) {
+        service.setCompleted(true);
+      }
+      
       service.update(conn);
 
       // Success

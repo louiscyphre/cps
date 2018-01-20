@@ -373,10 +373,14 @@ public class SubscriptionService implements ParkingService {
     st.close();
     
   }
+  
+  @Override
+  public boolean shouldCompleteAfterExit() {
+    return LocalDateTime.of(endDate, dailyExitTime).isBefore(LocalDateTime.now()) && !parked;    
+  }
 
   @Override
   public boolean isCompleted() {
-//    return LocalDateTime.of(endDate, dailyExitTime).isBefore(LocalDateTime.now()) && !parked;
     return completed;
   }
 
@@ -425,7 +429,7 @@ public class SubscriptionService implements ParkingService {
   public static Collection<SubscriptionService> findExpiringAfter(Connection conn, Duration delta, boolean warned) throws SQLException {
     return new QueryBuilder<SubscriptionService>(String.join(" ",
       "SELECT *", "FROM subscription_service os", "WHERE end_date <= ? ",
-      "AND not parked AND not completed AND warned=? AND not canceled"
+      "AND not completed AND warned=? AND not canceled"
     )).withFields(statement -> {
       statement.setDate(1, Date.valueOf(LocalDate.now().minus(delta)));
       statement.setBoolean(2, warned);

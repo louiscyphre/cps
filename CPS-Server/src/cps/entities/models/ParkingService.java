@@ -31,4 +31,6 @@ public interface ParkingService extends Serializable {
   public void update(Connection conn) throws SQLException;
 
   public int getParkingType();
+
+  public boolean shouldCompleteAfterExit();
 }

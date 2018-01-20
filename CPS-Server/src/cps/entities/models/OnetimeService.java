@@ -421,4 +421,9 @@ public class OnetimeService implements ParkingService {
 
     return items;
   }
+
+  @Override
+  public boolean shouldCompleteAfterExit() {
+    return true;
+  }
 }
