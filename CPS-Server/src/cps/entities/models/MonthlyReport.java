@@ -48,6 +48,7 @@ public class MonthlyReport {
   /** Amount of disabled slots. */
   private int disabledSlots;
 
+  /** The label for this data entry. */
   private String fieldText;
 
   /** Instantiates a new monthly report.
