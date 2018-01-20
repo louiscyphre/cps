@@ -11,8 +11,8 @@ import java.time.temporal.ChronoUnit;
 
 import cps.server.ServerException;
 
-// TODO: Auto-generated Javadoc
-/** The Class MonthlyReport. */
+/** Consolidates statistical data used for quarterly reports.
+ * A quarterly report is represented as a collection of monthly reports. */
 @SuppressWarnings("unused")
 public class MonthlyReport {
 
@@ -54,12 +54,12 @@ public class MonthlyReport {
    * @param _year the year
    * @param _month the month
    * @param _lotid the lotid
-   * @param _ordreserved the ordreserved
-   * @param _ordincidental the ordincidental
-   * @param _ordregular the ordregular
-   * @param _ordfull the ordfull
-   * @param _coplaintscount the coplaintscount
-   * @param _disabledslots the disabledslots */
+   * @param _ordreserved the number of reserved parkings
+   * @param _ordincidental the number of incidental parkings
+   * @param _ordregular the number of regular subscriptions
+   * @param _ordfull the number of full subscriptions
+   * @param _coplaintscount the number of complaints
+   * @param _disabledslots the number disabled slots */
   public MonthlyReport(int _year, int _month, int _lotid, int _ordreserved, int _ordincidental, int _ordregular,
       int _ordfull, int _coplaintscount, int complaintsclosedcount, int complaintsrefundedcount, int _disabledslots,
       String field) {
@@ -77,8 +77,8 @@ public class MonthlyReport {
     this.fieldText = field;
   }
 
-  /** Instantiates a new monthly report.
-   * @param rs the rs
+  /** Instantiates a new monthly report from the columns of a ResultSet.
+   * @param rs the SQL ResultSet
    * @throws SQLException the SQL exception */
   public MonthlyReport(ResultSet rs) throws SQLException {
     this.year = rs.getInt("year");
@@ -93,7 +93,7 @@ public class MonthlyReport {
   }
 
   /** Creates Monthly Report in the database.
-   * @param conn the Connection
+   * @param conn the SQL connectionection
    * @param year the year
    * @param month the month
    * @param lotid the lot id
@@ -111,8 +111,8 @@ public class MonthlyReport {
     return new MonthlyReport(year, month, lotid, 0, 0, 0, 0, 0, 0, 0, 0, Month.of(month).toString());
   }
 
-  /** Find report.
-   * @param conn the conn
+  /** Find a report in the database.
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -138,6 +138,8 @@ public class MonthlyReport {
     return result;
   }
 
+  /** Add the numeric fields of another report to this report.
+   * @param rep the other report */
   public void add(MonthlyReport rep) {
     this.ordIncidental += rep.ordIncidental;
     this.ordReserved += rep.ordReserved;
@@ -149,8 +151,8 @@ public class MonthlyReport {
     this.disabledSlots += rep.disabledSlots;
   }
   
-  /** Find report not null.
-   * @param conn the conn
+  /** Try to find a report, throw an exception if not found.
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -169,8 +171,8 @@ public class MonthlyReport {
     return report;
   }
 
-  /** Creates the or find.
-   * @param conn the conn
+  /** Create or find a MonthlyReport.
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -187,7 +189,7 @@ public class MonthlyReport {
   }
 
   /** Creates the or find not null.
-   * @param conn the conn
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -207,7 +209,7 @@ public class MonthlyReport {
   }
 
   /** Update.
-   * @param conn the conn
+   * @param conn the SQL connection
    * @throws SQLException the SQL exception */
   public void update(Connection conn) throws SQLException {
     String helper = "UPDATE monthly_report SET ordered_reserved=?, ordered_incidental=?, ordered_regular=?, ";
@@ -229,7 +231,7 @@ public class MonthlyReport {
   }
 
   /** Increase reserved.
-   * @param conn the conn
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -243,7 +245,7 @@ public class MonthlyReport {
   }
 
   /** Increase incidental.
-   * @param conn the conn
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -256,8 +258,8 @@ public class MonthlyReport {
     rep.update(conn);
   }
 
-  /** Increase regular.
-   * @param conn the conn
+  /** Increase count of regular subscriptions.
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -270,8 +272,8 @@ public class MonthlyReport {
     rep.update(conn);
   }
 
-  /** Increase full.
-   * @param conn the conn
+  /** Increase count of full subscriptions.
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -285,7 +287,7 @@ public class MonthlyReport {
   }
 
   /** Increase complaints.
-   * @param conn the conn
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -299,7 +301,7 @@ public class MonthlyReport {
   }
 
   /** Increase closed complaints count.
-   * @param conn the conn
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -313,7 +315,7 @@ public class MonthlyReport {
   }
 
   /** Increase refunded complaints count.
-   * @param conn the conn
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -327,7 +329,7 @@ public class MonthlyReport {
   }
 
   /** Count disabled cells.
-   * @param conn the conn
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
@@ -341,8 +343,8 @@ public class MonthlyReport {
     rep.update(conn);
   }
 
-  /** Gets the monthly report.
-   * @param conn the conn
+  /** Retrieve the monthly report from the database.
+   * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @param lotid the lotid
