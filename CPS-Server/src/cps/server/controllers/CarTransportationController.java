@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import cps.entities.models.ParkingLot;
 import cps.server.ServerException;
 
-// TODO: Auto-generated Javadoc
 /** Is used to make it possible to swap out different insertion/retrieval algorithms.
  * The insertion/retrieval algorithm is used to pack cars into the internal storage (parking cell array) of a parking lot. */
 public interface CarTransportationController {

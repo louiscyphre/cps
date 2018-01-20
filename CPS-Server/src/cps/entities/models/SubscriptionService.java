@@ -209,7 +209,7 @@ public class SubscriptionService implements ParkingService {
   public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID) throws SQLException {
     SubscriptionService item = null;
 
-    PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR);
+    PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_SUBSCRIPTION_FOR_ENTRY);
 
     int index = 1;
 

@@ -42,13 +42,13 @@ public interface Constants {
   public final int LOT_HEIGHT = 3;
   public final int LOT_DEPTH  = 3;
 
-  public final int REPORT_TYPE_WEEKLY = 1;
+  public final int REPORT_TYPE_WEEKLY    = 1;
   public final int REPORT_TYPE_QUARTERLY = 2;
 
   // SQL queries - OnetimeService
   public final String SQL_CREATE_ONETIME_SERVICE             = "INSERT INTO onetime_service values(default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   public final String SQL_GET_ONETIME_SERVICE_BY_CUSTOMER_ID = "SELECT * FROM onetime_service WHERE customer_id=? ORDER BY id";
-  public final String SQL_FIND_ONETIME_SERVICE_FOR_ENTRY     = "SELECT * FROM onetime_service WHERE customer_id=? AND car_id=? AND lot_id=? AND not canceled AND not completed ORDER BY id DESC LIMIT 1";
+  public final String SQL_FIND_ONETIME_SERVICE_FOR_ENTRY     = "SELECT * FROM onetime_service WHERE customer_id=? AND car_id=? AND lot_id=? ORDER BY id DESC LIMIT 1";
   public final String SQL_GET_ONETIME_SERVICE_BY_ID          = "SELECT * FROM onetime_service WHERE id=?";
   public final String SQL_OVERLAPPING_ONETIME_SERVICE_CLAUSE = "car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (? < planned_start_time AND planned_start_time < ?)) AND not canceled AND not completed";
   public final String SQL_FIND_OVERLAPPING_ONETIME_SERVICE   = "SELECT * FROM onetime_service WHERE " + SQL_OVERLAPPING_ONETIME_SERVICE_CLAUSE;
@@ -58,22 +58,22 @@ public interface Constants {
   // SQL queries - SubscriptionService
   public final String SQL_CREATE_SUBSCRIPTION_SERVICE             = "INSERT INTO subscription_service values(default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   public final String SQL_GET_SUBSCRIPTION_SERVICE_BY_CUSTOMER_ID = "SELECT * FROM subscription_service WHERE customer_id=? ORDER BY id";
-  public final String SQL_GET_SUBSCRIPTION_SERVICE_BY_ID          = "SELECT * FROM subscription_service WHERE id=? ORDER BY id";
-  public final String SQL_GET_SUBSCRIPTION_BY_ID_CUSTOMER_CAR     = "SELECT * FROM subscription_service WHERE ID=? AND customer_id=? AND car_id=?";
+  public final String SQL_GET_SUBSCRIPTION_SERVICE_BY_ID          = "SELECT * FROM subscription_service WHERE id=?";
+  public final String SQL_FIND_SUBSCRIPTION_FOR_ENTRY             = "SELECT * FROM subscription_service WHERE id=? AND customer_id=? AND car_id=?";
   public final String SQL_UPDATE_SUBSCRIPTION_BY_ID               = "UPDATE subscription_service SET subs_type=?, customer_id=?, email=?, car_id=?, lot_id=?, start_date=?, end_date=?, daily_exit_time=?, parked=?, completed=?, canceled=?, warned=? WHERE id=?";
 
   // SQL queries - CarTransportation
   public final String SQL_CREATE_CAR_TRANSPORTATION             = "INSERT INTO car_transportation values(?, ?, ?, ?, ?, default, default)";
   public final String SQL_FIND_CAR_TRANSPORTATION_BY_LOT_ID     = "SELECT * FROM car_transportation WHERE lot_id=?";
   public final String SQL_UPDATE_REMOVED_AT                     = "UPDATE car_transportation SET removed_at=? WHERE customer_id=? AND car_id=? AND lot_id=? AND inserted_at=?";
-  public final String SQL_FIND_CAR_TRANSPORTATION_FOR_ENTRY     = "SELECT * FROM car_transportation WHERE customer_id=? AND car_id=? AND lot_id=? LIMIT 1";
+  public final String SQL_FIND_CAR_TRANSPORTATION_PARKED        = "SELECT * FROM car_transportation WHERE car_id=? AND removed_at IS NULL LIMIT 1";
   public final String SQL_FIND_CAR_TRANSPORTATION_FOR_EXIT      = "SELECT * FROM car_transportation WHERE customer_id=? AND car_id=? AND lot_id=? AND removed_at IS NULL ORDER BY inserted_at DESC LIMIT 1";
   public final String SQL_FIND_CAR_TRANSPORTATION_BY_CAR_NUMBER = "SELECT * FROM car_transportation WHERE car_id=? AND lot_id=? AND removed_at IS NULL ORDER BY inserted_at DESC LIMIT 1";
 
   // SQL queries - DailyStatistics
   public final String SQL_CREATE_NEW_DAY          = "INSERT INTO daily_statistics values(? ,? ,default ,default ,default ,default,default)";
   public final String SQL_CHECK_DATE              = "SELECT * FROM daily_statistics WHERE day=? AND lot_id=?";
-  public final String SQL_GET_DATE              = "SELECT sum(realized_orders) as realized_orders,sum(canceled_orders) as canceled_orders,sum(late_arrivals) as late_arrivals,sum(inactive_slots) as inactive_slots FROM daily_statistics WHERE day=?";
+  public final String SQL_GET_DATE                = "SELECT sum(realized_orders) as realized_orders,sum(canceled_orders) as canceled_orders,sum(late_arrivals) as late_arrivals,sum(inactive_slots) as inactive_slots FROM daily_statistics WHERE day=?";
   public final String SQL_INCREASE_REALIZED_ORDER = "UPDATE daily_statistics SET realized_orders=? WHERE day=? AND lot_id=?";
   public final String SQL_INCREASE_CANCELED_ORDER = "UPDATE daily_statistics SET canceled_orders=? WHERE day=? AND lot_id=?";
   public final String SQL_INCREASE_LATE_ARRIVAL   = "UPDATE daily_statistics SET late_arrivals=? WHERE day=? AND lot_id=?";

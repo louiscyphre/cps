@@ -20,29 +20,21 @@ import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.session.CustomerSession;
 
-/**
- * The Class EntryExitController.
- */
+/** Processes ParkingExit request - when the customer came back and they want to retrieve their car. */
 public class ParkingExitController extends RequestController {
 
-  /**
-   * Instantiates a new entry exit controller.
-   *
-   * @param serverController
-   *          the server application
-   */
+  /** Instantiates a new parking exit controller.
+   * @param serverController the server controller */
   public ParkingExitController(ServerController serverController) {
     super(serverController);
   }
 
-  /**
-   * Handle ParkingExitRequest.
-   *
-   * @param request
-   *          the request
-   * @param session
-   * @return the server response
-   */
+  /** Called when a customer wants to retrieve their car from the parking lot.
+   * Checks if the car exists in the lot and is associated with the customer.
+   * Calculates payment, if applicable, and charges or refunds the customer's account.
+   * @param request the request
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(ParkingExitRequest request, CustomerSession session) {
     return database.performQuery(new ParkingExitResponse(), (conn, response) -> {
       CarTransportation transportation = CarTransportation.findForExit(conn, request.getCustomerID(), request.getCarID(),
@@ -56,12 +48,6 @@ public class ParkingExitController extends RequestController {
 
       // Calculate the amount of money that the customer has to pay
       float sum = calculatePayment(conn, transportation, request);
-
-      // Find customer
-      Customer customer = Customer.findByIDNotNull(conn, request.getCustomerID());
-
-      // Write payment
-      customer.pay(conn, sum);
 
       /*
        * Attempt to retrieve the car from the lot The function will shuffle
@@ -79,6 +65,12 @@ public class ParkingExitController extends RequestController {
       
       service.update(conn);
 
+      // Find customer
+      Customer customer = Customer.findByIDNotNull(conn, request.getCustomerID());
+
+      // Write payment
+      customer.pay(conn, sum);
+
       // Success
       response.setCustomerID(customer.getId());
       response.setPayment(sum);
@@ -88,7 +80,7 @@ public class ParkingExitController extends RequestController {
     });
   }
 
-  public static float calculatePayment(Connection conn, CarTransportation carTransportation,
+  static float calculatePayment(Connection conn, CarTransportation carTransportation,
       ParkingExitRequest exitRequest) throws SQLException, ServerException {
 
     // Determine if this is a subscription or one time
@@ -108,7 +100,7 @@ public class ParkingExitController extends RequestController {
 
   }
 
-  public static float calculatePayment(Connection conn, CarTransportation carTransportation,
+  static float calculatePayment(Connection conn, CarTransportation carTransportation,
       ParkingExitRequest exitRequest, OnetimeService service) throws SQLException, ServerException {
     // Determine prices at that parking lot
     ParkingLot parkingLot = ParkingLot.findByIDNotNull(conn, exitRequest.getLotID());
@@ -156,7 +148,7 @@ public class ParkingExitController extends RequestController {
     return sum;
   }
 
-  public static float calculatePayment(Connection conn, CarTransportation carTransportation,
+  static float calculatePayment(Connection conn, CarTransportation carTransportation,
       ParkingExitRequest exitRequest, SubscriptionService service) throws SQLException, ServerException {
     if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
       Timestamp plannedExitTime = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(), service.getDailyExitTime()));

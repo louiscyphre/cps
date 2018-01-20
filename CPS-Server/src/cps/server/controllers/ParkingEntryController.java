@@ -23,7 +23,8 @@ import cps.server.ServerException;
 import cps.server.session.CustomerSession;
 import cps.server.statistics.StatisticsCollector;
 
-/** The Class EntryExitController. */
+/** Processes ParkingEntry requests - when the user has a reservation or a subscription and now they want to park.
+ * If the user made an IncidentalParking request, their car will be parked immediately after that. */
 public class ParkingEntryController extends RequestController {
 
   /** Instantiates a new entry exit controller.
@@ -33,7 +34,7 @@ public class ParkingEntryController extends RequestController {
     super(serverController);
   }
 
-  /** Handle ParkingEntryRequest.
+  /** Checks if the user has a reservation or a subscription and allows them to enter if the parameters are correct.
    * @param request
    *        the request
    * @param session
@@ -62,16 +63,15 @@ public class ParkingEntryController extends RequestController {
     });
   }
 
-  public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service)
+  void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service)
       throws SQLException, ServerException {
-    // Check that this car is allowed to enter
-    // CarTransportation transportation = CarTransportation.findForEntry(conn,
-    // customerID, carID, lot.getId());
-    // errorIf(transportation != null, "The car with the specified ID was
-    // already parked");
-
     // Check that the lot does not already contain the car
     errorIf(lot.contains(lot.constructContentArray(conn), carID), "This car is already parked in the chosen lot");
+    
+
+    // Check that other lots don't already contain the car
+     CarTransportation transportation = CarTransportation.findParked(conn, carID);
+     errorIf(transportation != null, "The car with the specified ID was already parked");
 
     // Attempt to insert the car into the lot.
     // Optimal coordinates are calculated before insertion.
@@ -115,6 +115,7 @@ public class ParkingEntryController extends RequestController {
       OnetimeService service = OnetimeService.findForEntry(conn, customerID, carID, lotID);
       errorIfNull(service,
           "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      errorIf(service.isParked(), "You are already parking with this reservation");
       errorIf(service.isCompleted(), "This reservation was already completed");
       errorIf(service.isCanceled(), "This reservation was canceled");
       errorIf(service.getPlannedStartTime().toLocalDateTime().isAfter(LocalDateTime.now()),
@@ -126,7 +127,11 @@ public class ParkingEntryController extends RequestController {
       // Check if they have a SubscriptionService entry
       int subsID = request.getSubscriptionID();
       SubscriptionService service = SubscriptionService.findForEntry(conn, customerID, carID, subsID);
+      errorIf(service.isParked(), "You are already parking with this subscription");
+      errorIf(service.isCompleted(), "This subscription has expired");
+      
       // TODO is it possible to cancel a subscription?
+      errorIf(service.isCanceled(), "This subscription was canceled");
 
       // Allow entry only once a day for regular subscription
       if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {

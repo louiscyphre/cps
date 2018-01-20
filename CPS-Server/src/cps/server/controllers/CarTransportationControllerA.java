@@ -22,7 +22,8 @@ import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.devices.Robot;
 
-/** Handles the insertion and retrieval of cars to/from a parking lot. */
+/** Implementation of a car insertion/retrieval algorithm.
+ * The algorithm is used to pack cars into the internal storage (parking cell array) of a parking lot. */
 @SuppressWarnings("unused")
 public class CarTransportationControllerA extends RequestController implements CarTransportationController {
 
@@ -34,7 +35,7 @@ public class CarTransportationControllerA extends RequestController implements C
   private Map<String, Robot> robots;
 
   /** Insert multiple cars. This function should only be run after checking there
-   * is at least one empty space in the parking lot
+   * is at least one empty space in the parking lot.
    * @param conn
    *        the SQL connection
    * @param lot
@@ -233,7 +234,7 @@ public class CarTransportationControllerA extends RequestController implements C
   /** Attempt to insert the car into the lot. Optimal coordinates are calculated
    * before insertion If the lot is full, or some other error occurs,
    * LotController will return an appropriate error response, which we will send
-   * back to the user
+   * back to the user.
    * @param conn
    *        the SQL connection
    * @param lot
@@ -278,7 +279,7 @@ public class CarTransportationControllerA extends RequestController implements C
   }
 
   /** This function will calculate how much cars we need to move in order to
-   * insert a car to the specified spot.
+   * insert a car into the specified cell.
    * @param content
    *        Lot content as array
    * @param iSize
