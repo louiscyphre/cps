@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import cps.server.database.QueryBuilder;
 
@@ -39,8 +41,7 @@ public class DisabledCellsStatistics {
    * @param _height the height
    * @param _depth the depth
    * @param _dateEnabled the date enabled */
-  public DisabledCellsStatistics(int _lotid, LocalDateTime _dateDisabled, int _width, int _height, int _depth,
-      LocalDateTime _dateEnabled) {
+  public DisabledCellsStatistics(int _lotid, LocalDateTime _dateDisabled, int _width, int _height, int _depth, LocalDateTime _dateEnabled) {
     this.lotId = _lotid;
     this.dateDisabled = _dateDisabled;
     this.width = _width;
@@ -87,8 +88,8 @@ public class DisabledCellsStatistics {
    * @param _depth the depth
    * @throws SQLException the SQL exception */
   public static void markfixed(Connection conn, int _lotid, int _width, int _height, int _depth) throws SQLException {
-    PreparedStatement stmt = conn.prepareStatement(
-        "UPDATE disabled_slots_table SET date_enabled=? WHERE lotid=? AND width=? AND height=? AND depth=? AND date_enabled is null");
+    PreparedStatement stmt = conn
+        .prepareStatement("UPDATE disabled_slots_table SET date_enabled=? WHERE lotid=? AND width=? AND height=? AND depth=? AND date_enabled is null");
     int i = 1;
     stmt.setTimestamp(i++, Timestamp.valueOf(LocalDateTime.now()));
     stmt.setInt(i++, _lotid);
@@ -105,8 +106,7 @@ public class DisabledCellsStatistics {
    * @param to the to
    * @return the int
    * @throws SQLException the SQL exception */
-  public static int countDisabledCells(Connection conn, int lotid, LocalDateTime from, LocalDateTime to)
-      throws SQLException {
+  public static int countDisabledCells(Connection conn, int lotid, LocalDateTime from, LocalDateTime to) throws SQLException {
     String helper = "";
     // Count distinct selection
     helper += "SELECT count(DISTINCT lotid,width,height,depth) FROM disabled_slots_table ";
@@ -129,14 +129,43 @@ public class DisabledCellsStatistics {
     return stmt.executeUpdate();
   }
 
-  public static double countDisableHours(Connection conn) throws SQLException {
+  public static double countDisableHours(Connection conn, LocalDate from, LocalDate to) throws SQLException {
     long helper = 0;
     LocalDateTime start, end;
-    PreparedStatement stmt = conn.prepareStatement("SELECT date_disabled,date_enabled FROM disabled_slots_table");
+    String qhelper = "SELECT date_disabled,date_enabled FROM disabled_slots_table ";
+    qhelper += "WHERE (? <= date_disabled AND date_disabled <= ?) ";
+    qhelper += "OR (? <= date_enabled AND date_enabled <= ?)";
+    qhelper += "OR (date_disabled <= ? AND (date_enabled is null OR date_enabled >= ?))";
+
+    Timestamp _from = Timestamp.valueOf(from.atStartOfDay());
+    Timestamp _to = Timestamp.valueOf(to.atTime(LocalTime.MAX));
+
+    PreparedStatement stmt = conn.prepareStatement(qhelper);
+
+    int i = 1;
+
+    stmt.setTimestamp(i++, _from);
+    stmt.setTimestamp(i++, _to);
+    stmt.setTimestamp(i++, _from);
+    stmt.setTimestamp(i++, _to);
+    stmt.setTimestamp(i++, _from);
+    stmt.setTimestamp(i++, _to);
+
     ResultSet rs = stmt.executeQuery();
+
     while (rs.next()) {
       start = rs.getTimestamp("date_disabled").toLocalDateTime();
-      end = rs.getTimestamp("date_enabled").toLocalDateTime();
+      if (start.isBefore(from.atStartOfDay())) {
+        start = from.atStartOfDay();
+      }
+      if (rs.getTimestamp("date_enabled") == null) {
+        end = _to.toLocalDateTime();
+      } else {
+        end = rs.getTimestamp("date_enabled").toLocalDateTime();
+        if (end.isAfter(_to.toLocalDateTime())) {
+          end = _to.toLocalDateTime();
+        }
+      }
       helper += start.until(end, ChronoUnit.MINUTES);
     }
     rs.close();
