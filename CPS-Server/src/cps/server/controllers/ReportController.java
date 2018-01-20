@@ -100,7 +100,7 @@ public class ReportController extends RequestController {
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER,
           "Only the Global Manager can perform this action");
       // FIXME Tegra here
-       response.setData(PeriodicReport.getPeriodicReport(conn, 1, 1)); // action.getPeriodStart()      
+       response.setData(PeriodicReport.generate(conn, 1, 1)); // action.getPeriodStart()      
       return response;
     });
   }

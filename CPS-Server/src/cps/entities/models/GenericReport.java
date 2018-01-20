@@ -9,11 +9,14 @@ public class GenericReport<T> implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private Map<String, T> entries = new HashMap<>();
+  int                    numRows;
 
-  public GenericReport(String... keys) {
+  public GenericReport(int numRows, String... keys) {
     for (String key : keys) {
       entries.put(key, null);
     }
+
+    this.numRows = numRows;
   }
 
   public T getData(String key) {
@@ -33,6 +36,14 @@ public class GenericReport<T> implements Serializable {
 
   public boolean containsKey(String key) {
     return entries.containsKey(key);
+  }
+
+  public int getNumRows() {
+    return numRows;
+  }
+
+  public void setNumRows(int numRows) {
+    this.numRows = numRows;
   }
 
 }

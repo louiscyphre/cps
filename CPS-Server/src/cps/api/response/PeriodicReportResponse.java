@@ -1,10 +1,8 @@
 package cps.api.response;
 
-import java.util.Collection;
-
 import cps.entities.models.PeriodicReport;
 
-public class PeriodicReportResponse extends ServerResponseWithData<Collection<PeriodicReport>>  {
+public class PeriodicReportResponse extends ServerResponseWithData<PeriodicReport>  {
   private static final long serialVersionUID = 1L;
 
   @Override
