@@ -29,7 +29,7 @@ public class StatisticalData implements Serializable {
     this.median = median;
   }
 
-  public StatisticalData(String name, double[] values) {
+  public StatisticalData(double[] values) {
     this.total = sumOf(values);
     this.mean = this.total / values.length;
     this.median = medianOf(values);

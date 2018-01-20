@@ -19,7 +19,7 @@ public class PeriodicReport extends GenericReport<StatisticalData> {
   }
   
   public void setColumn(String name, double[] values) {
-    setData(name, new StatisticalData(name, values));
+    setData(name, new StatisticalData(values));
   }
 
   public String[] getRowNames() {

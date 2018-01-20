@@ -14,7 +14,7 @@ import cps.entities.people.User;
 import cps.server.session.ServiceSession;
 import cps.server.testing.utilities.ServerControllerTest;
 
-public class TestPeriodicReport extends ServerControllerTest {
+public class TestStatisticalReports extends ServerControllerTest {
 
   @Test
   public void testPeriodicReport() {
