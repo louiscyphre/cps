@@ -17,7 +17,6 @@ import cps.client.controller.responsehandler.ResponseHandlerImpl;
 import cps.client.network.CPSNetworkClient;
 import cps.client.network.INetworkClient;
 import cps.client.utils.CmdParser;
-import cps.client.utils.UserLevelClientException;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -90,8 +89,9 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.INCIDENTAL_PARKING);
       ControllersClientAdapter.registerScene(SceneCode.VIEW_MY_RESERVATION);
       ControllersClientAdapter.registerScene(SceneCode.FILE_COMPLAINT);
+
       ControllersClientAdapter.turnLoggedInStateOff();
-      initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Kiosk Client");
+      initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Customer Client");
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -110,6 +110,13 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_MANAGE_LOT);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_REFUND);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
+      // Statistics
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_CHOICE);
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_CLAIMS_STATUS);
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_DISABLED_PARKING_CELLS);
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_MONTHLY);
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_WEEKLY);
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_ORDERS);
       ControllersClientAdapter.turnLoggedInStateOff();
       initializeStage(SceneCode.SERVICE_ACTION_LOGIN, "CPS Service Client");
     } catch (IOException e) {

@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceActionMenuSceneController">
+<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: E6DDD4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceStatisticsChoice">
   <top>
     <Label text="Reports" BorderPane.alignment="CENTER" />
   </top>
@@ -36,6 +36,7 @@
                   <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="180.0" layoutY="80.0" mnemonicParsing="false" onAction="#handleOrdersReportsButton" prefHeight="60.0" prefWidth="180.0" styleClass="regularButton" text="Orders" textAlignment="CENTER" />
                   <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="180.0" layoutY="110.0" mnemonicParsing="false" onAction="#handleDisabledCellsReportsButton" prefHeight="60.0" prefWidth="180.0" styleClass="regularButton" text="Disabled cells" textAlignment="CENTER" />
                   <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="180.0" layoutY="140.0" mnemonicParsing="false" onAction="#handleComplaintsReportsButton" prefHeight="60.0" prefWidth="180.0" styleClass="regularButton" text="Complaints" textAlignment="CENTER" />
+                  <Button id="" alignment="CENTER" contentDisplay="LEFT" layoutX="170.0" layoutY="263.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="60.0" prefWidth="180.0" styleClass="regularButton" text="Back" textAlignment="CENTER" />
                </children>
             </VBox>
             <VBox fx:id="infoBox" alignment="CENTER" maxWidth="-Infinity" prefHeight="113.0" prefWidth="280.0" spacing="0.0" styleClass="infoLabel">

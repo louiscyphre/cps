@@ -50,7 +50,21 @@ public class ControllerConstants {
 
     SERVICE_ACTION_LOGIN("view/service/ServiceLoginScene.fxml"),
 
-    SERVICE_ACTION_MANAGE_LOT("view/service/ServiceActionManageLot.fxml"),;
+    SERVICE_ACTION_MANAGE_LOT("view/service/ServiceActionManageLot.fxml"),
+    
+    SERVICE_STATISTICS_ORDERS("view/service/ServiceStatisticsOrders.fxml"),
+    
+    SERVICE_STATISTICS_CHOICE("view/service/ServiceStatisticsChoice.fxml"),
+    
+    SERVICE_STATISTICS_WEEKLY("view/service/ServiceStaticticsWeekly.fxml"),
+    
+    SERVICE_STATISTICS_MONTHLY("view/service/ServiceStaticticsMonthly.fxml"),
+    
+    SERVICE_STATISTICS_DISABLED_PARKING_CELLS("view/service/ServiceStaticticsDisabledParkingCells.fxml"),
+    
+    SERVICE_STATISTICS_CLAIMS_STATUS("view/service/ServiceStaticticsClaimsStatus.fxml"),
+    
+    ;
 
     String myRelativePath;
 

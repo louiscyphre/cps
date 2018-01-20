@@ -79,6 +79,7 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   void handleStatisticsButton(ActionEvent event) {
     // ACCESS_DOMAIN_STATISTICS,
     // ACCESS_LEVEL_GLOBAL_MANAGER
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE, 10);
   }
 
   /**
