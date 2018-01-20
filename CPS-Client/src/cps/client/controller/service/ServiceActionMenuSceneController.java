@@ -9,26 +9,19 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 
 /**
- * @author firl
- *
+ * Service Main Menu scene controller.
  */
 public class ServiceActionMenuSceneController extends ServiceActionControllerBase {
 
-  /**
-   * 
-   */
+  /**   */
   @FXML // fx:id="jobTitleLabel"
   private Label jobTitleLabel; // Value injected by FXMLLoader
 
-  /**
-   * 
-   */
+  /**   */
   @FXML // fx:id="infoProgress"
   private ProgressIndicator infoProgress; // Value injected by FXMLLoader
 
-  /**
-   * 
-   */
+  /**   */
   @FXML // fx:id="usernameLabel"
   private Label usernameLabel; // Value injected by FXMLLoader
 

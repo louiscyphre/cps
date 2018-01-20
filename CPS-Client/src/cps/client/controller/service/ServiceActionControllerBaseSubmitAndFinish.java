@@ -7,23 +7,21 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 /**
- * @author firl
- *
+ * Class with simple submit and finish mechanics.
+ * Prior to successful submission  the default and visible button is Submit.
+ * After successful submission the default and visible button is Finish.
  */
 public class ServiceActionControllerBaseSubmitAndFinish extends ServiceActionControllerBase {
-  /**
-   * 
-   */
+  /** Submit button  */
   @FXML
   protected Button submitButton;
 
-  /**
-   * 
-   */
+  /** Finish button  */
   @FXML
   protected Button finishButton;
 
   /**
+   * Returns the user to main menu.
    * @param event
    */
   @FXML
@@ -32,6 +30,7 @@ public class ServiceActionControllerBaseSubmitAndFinish extends ServiceActionCon
   }
 
   /**
+   * Toggle function, to turn one Submit button to Finish.
    * @param value
    */
   protected void setFinishInsteadOfSubmit(boolean value) {

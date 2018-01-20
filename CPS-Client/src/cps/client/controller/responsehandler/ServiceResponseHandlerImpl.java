@@ -16,8 +16,7 @@ import cps.api.response.UpdatePricesResponse;
 import cps.client.controller.ControllersClientAdapter;
 
 /**
- * @author firl
- *
+ * Implementation class. Delegates to specific handler the handling.
  */
 class ServiceResponseHandlerImpl implements ServiceResponseHandler {
 

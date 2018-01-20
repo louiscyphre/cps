@@ -11,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 /**
- * @author firl
  *
  */
 public class ServiceLoginSceneController extends ServiceActionControllerBase {

@@ -26,48 +26,39 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 
 /**
- * @author firl
- *
+ * Lot is Full scene controller.
  */
 public class ServiceActionLotIsFullController extends ServiceActionControllerBase implements ParkingLotsController {
 
-  /**
-   * 
-   */
+  /** Set Full state check box */
   @FXML
   private CheckBox setFullStateCheckBox;
 
-  /**
-   * 
-   */
+  /** Set alternative lots check box */
   @FXML
   private CheckBox setAlternativeLotsCheckBox;
 
-  /**
-   * 
-   */
+  /** Alternative lots list view */
   @FXML
   private ListView<String> alternativeLotsList;
 
-  /**
-   * 
-   */
+  /** Lots lits ComboBox */
   @FXML
   private ComboBox<String> lotsList;
 
-  /**
-   * 
-   */
+  /** Parking lots mapping to address */
   private HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
 
   /**
+   * Handles the event when some lot is chosen, and removing it from possible
+   * alternative lots.
+   * 
    * @param event
    */
   @FXML
   void handleSetAlternativeLotsCheckBox(ActionEvent event) {
     if (!processing) {
       alternativeLotsList.setVisible(setAlternativeLotsCheckBox.isSelected());
-
       if (setAlternativeLotsCheckBox.isSelected()) {
         refreshAlternativeLots();
       }
@@ -75,7 +66,8 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
   }
 
   /**
-   * 
+   * Refresh the list, when some lot is chosen - removing it from possible
+   * alternative lots.
    */
   void refreshAlternativeLots() {
     ParkingLot selectedLot = parkingLotsMap.get(lotsList.getValue());
@@ -86,7 +78,7 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
   }
 
   /**
-   * 
+   * Initializes the Controller and Registers it.
    */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
@@ -106,7 +98,8 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
         });
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#cleanCtrl()
    */
   @Override
@@ -125,8 +118,10 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
     sendRequest(new ListParkingLotsRequest());
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.service.ServiceActionControllerBase#validateAndSend()
+  /*
+   * (non-Javadoc)
+   * @see
+   * cps.client.controller.service.ServiceActionControllerBase#validateAndSend()
    */
   @Override
   void validateAndSend() {
@@ -162,16 +157,20 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
     }
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.SetFullLotResponse)
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.
+   * SetFullLotResponse)
    */
   @Override
   public ServerResponse handle(SetFullLotResponse response) {
     return super.handleGenericResponse(response);
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.Collection)
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.
+   * Collection)
    */
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
@@ -190,6 +189,7 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
   }
 
   /**
+   * Fills the combo box in accordance to given collection of addresses.
    * @param addresses
    */
   private void fillComboBoxItems(ObservableList<String> addresses) {

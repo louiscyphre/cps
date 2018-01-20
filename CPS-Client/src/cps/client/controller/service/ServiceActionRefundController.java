@@ -27,7 +27,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 /**
- * @author firl
  *
  */
 public class ServiceActionRefundController extends ServiceActionControllerBase {

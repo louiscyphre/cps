@@ -15,78 +15,88 @@ import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
 
 /**
- * @author firl
- *
+ * Service Response Handler Class. Used to Handle generic and specific Responses.
  */
 public interface ServiceResponseHandler {
-  // CompanyPerson responses
   /**
+   * Handles DisableParkingSlots Response.
    * @param response
    * @return
    */
   public ServerResponse handle(DisableParkingSlotsResponse response);
 
   /**
+   * Handles InitLot Response.
    * @param response
    * @return
    */
   public ServerResponse handle(InitLotResponse response);
 
   /**
+   * Handles Refund Response.
    * @param response
    * @return
    */
   public ServerResponse handle(RefundResponse response);
 
   /**
+   * Handles RequestLotState Response.
    * @param response
    * @return
    */
   public ServerResponse handle(RequestLotStateResponse response);
 
   /**
+   * Handles RequestReport Response.
    * @param response
    * @return
    */
   public ServerResponse handle(RequestReportResponse response);
 
   /**
+   * Handles ReserveParkingSlots Response.
    * @param response
    * @return
    */
   public ServerResponse handle(ReserveParkingSlotsResponse response);
 
   /**
+   * Handles SetFullLot Response.
    * @param response
    * @return
    */
   public ServerResponse handle(SetFullLotResponse response);
 
   /**
+   * Handles ListParkingLots Response.
    * @param response
    * @return
    */
   public ServerResponse handle(ListParkingLotsResponse response);
 
   /**
+   * Handles UpdatePrices Response.
    * @param response
    * @return
    */
   public ServerResponse handle(UpdatePricesResponse response);
 
   /**
+   * Handles ServiceLogin Response.
    * @param response
    * @return
    */
   public ServerResponse handle(ServiceLoginResponse response);
 
   /**
+   * Handles ListComplaints Response.
    * @param response
    * @return
    */
   public ServerResponse handle(ListComplaintsResponse response);
 
   /**
+   * Handles RejectComplaint Response.
    * @param response
    * @return
    */

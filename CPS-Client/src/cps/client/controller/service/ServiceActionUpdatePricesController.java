@@ -26,10 +26,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 /**
- * @author firl
  *
  */
-public class ServiceActionUpdatePricesController extends ServiceActionControllerBase implements ParkingLotsController {
+public class ServiceActionUpdatePricesController extends ServiceActionControllerBaseSubmitAndFinish implements ParkingLotsController {
 
   /**
    * 

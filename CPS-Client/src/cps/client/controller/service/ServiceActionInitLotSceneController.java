@@ -10,42 +10,33 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 /**
- * @author firl
- *
+ * Init Lot Scene controller class.
  */
 public class ServiceActionInitLotSceneController extends ServiceActionControllerBaseSubmitAndFinish {
-  /**
-   * 
-   */
+  /** Street Address TextField  */
   @FXML // fx:id="streetAddressTF"
   private TextField streetAddressTF; // Value injected by FXMLLoader
 
-  /**
-   * 
-   */
+  /** Lot Size TextField  */
   @FXML // fx:id="lotSizeTF"
   private TextField lotSizeTF; // Value injected by FXMLLoader
 
-  /**
-   * 
-   */
+  /** Incidental tariff TextField  */
   @FXML // fx:id="incidentalTariffTF"
   private TextField incidentalTariffTF; // Value injected by FXMLLoader
 
-  /**
-   * 
-   */
+  /** Reserved tariff TextField  */
   @FXML // fx:id="reservedTariffTF"
   private TextField reservedTariffTF; // Value injected by FXMLLoader
 
-  /**
-   * 
-   */
+  /** RobotIP TextField */
   @FXML // fx:id="robotIpTF"
   private TextField robotIpTF; // Value injected by FXMLLoader
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.service.ServiceActionControllerBase#validateAndSend()
+  /*
+   * (non-Javadoc)
+   * @see
+   * cps.client.controller.service.ServiceActionControllerBase#validateAndSend()
    */
   @Override
   void validateAndSend() {
@@ -63,8 +54,10 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
     }
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.InitLotResponse)
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.
+   * InitLotResponse)
    */
   @Override
   public ServerResponse handle(InitLotResponse response) {
@@ -75,7 +68,7 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
   }
 
   /**
-   * 
+   * Initializes the Controller and Registers it.
    */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
@@ -89,8 +82,11 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.SERVICE_ACTION_INIT_LOT);
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.service.ServiceActionControllerBaseSubmitAndFinish#cleanCtrl()
+  /*
+   * (non-Javadoc)
+   * @see
+   * cps.client.controller.service.ServiceActionControllerBaseSubmitAndFinish#
+   * cleanCtrl()
    */
   @Override
   public void cleanCtrl() {

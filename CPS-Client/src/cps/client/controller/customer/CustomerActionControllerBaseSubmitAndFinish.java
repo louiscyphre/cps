@@ -25,6 +25,7 @@ public class CustomerActionControllerBaseSubmitAndFinish extends CustomerActionC
   protected Button finishButton;
 
   /**
+   * Returns the user to main menu.
    * @param event
    */
   @FXML

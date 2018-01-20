@@ -10,12 +10,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 /**
- * @author firl
- *
+ * Base Class for Service controllers.
  */
 public abstract class ServiceActionControllerBase extends ClientControllerBase {
 
   /**
+   * Returns company person to main menu.
+   * 
    * @param event
    */
   @FXML
@@ -26,6 +27,8 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
   }
 
   /**
+   * Returns company person to main menu.
+   * 
    * @param event
    */
   @FXML
@@ -36,6 +39,8 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
   }
 
   /**
+   * Submit button handling.
+   * 
    * @param event
    */
   @FXML
@@ -46,6 +51,8 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
   }
 
   /**
+   * Submit button handling.
+   * 
    * @param event
    */
   @FXML
@@ -56,23 +63,24 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
   }
 
   /**
-   * 
+   * Validate and send function, validates that input is valid and sends server
+   * corresponding API request.
    */
   void validateAndSend() {
 
   }
 
   /**
-   * @return
-   * @throws InternalClientException
+   * @return employee context
+   * @throws InternalClientException if employee context is not defined.
    */
   EmployeeContext requireEmployeeContext() throws InternalClientException {
     return notNull(ControllersClientAdapter.getEmployeeContext(), "Emlpoyee Context");
   }
 
   /**
-   * @return
-   * @throws InternalClientException
+   * @return company person
+   * @throws InternalClientException if company person is not defined
    */
   CompanyPerson requireLoggedInUser() throws InternalClientException {
     return requireEmployeeContext().requireCompanyPerson();
