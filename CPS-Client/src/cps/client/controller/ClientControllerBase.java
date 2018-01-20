@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import cps.api.request.Request;
 import cps.api.response.CancelOnetimeParkingResponse;
 import cps.api.response.ComplaintResponse;
+import cps.api.response.CurrentPerformanceResponse;
 import cps.api.response.DisableParkingSlotsResponse;
 import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
@@ -20,6 +21,8 @@ import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.LoginResponse;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
+import cps.api.response.PeriodicReportResponse;
+import cps.api.response.QuarterlyReportResponse;
 import cps.api.response.RefundResponse;
 import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.RejectComplaintResponse;
@@ -33,6 +36,7 @@ import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.SimpleResponse;
 import cps.api.response.UpdatePricesResponse;
+import cps.api.response.WeeklyReportResponse;
 import cps.client.utils.InternalClientException;
 import cps.client.utils.UserLevelClientException;
 import javafx.application.Platform;
@@ -412,15 +416,7 @@ public abstract class ClientControllerBase implements ViewController {
   public ServerResponse handle(RefundResponse response) {
     return null;
   }
-
-  /* (non-Javadoc)
-   * @see cps.api.response.ResponseHandler#handle(cps.api.response.RequestReportResponse)
-   */
-  @Override
-  public ServerResponse handle(RequestReportResponse response) {
-    return null;
-  }
-
+  
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ReserveParkingSlotsResponse)
    */
@@ -671,5 +667,25 @@ public abstract class ClientControllerBase implements ViewController {
     } catch (Exception e) {
       return null;
     }
+  }
+
+  @Override
+  public ServerResponse handle(WeeklyReportResponse response) {
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(QuarterlyReportResponse response) {
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(CurrentPerformanceResponse response) {
+    return null;
+  }
+
+  @Override
+  public ServerResponse handle(PeriodicReportResponse response) {
+    return null;
   }
 }
