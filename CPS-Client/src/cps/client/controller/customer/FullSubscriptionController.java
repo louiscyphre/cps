@@ -27,45 +27,39 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Created on: 2018-01-15 2:34:23 AM
- */
-/**
- * @author firl
- *
+ * Full Subscription controller. 
  */
 public class FullSubscriptionController extends CustomerActionControllerBaseSubmitAndFinish {
 
-  /**
-   * 
-   */
+  /** Start Date date picker  */
   @FXML
   private DatePicker startDatePicker;
 
-  /**
-   * 
-   */
+  /** email TextField  */
   @FXML
   private TextField emailTextField;
 
   /**
-   * 
+   * Font injected by FXML
    */
   @FXML
   private Font x1;
 
   /**
-   * 
+   * Insets injected by FXML
    */
   @FXML
   private Insets x3;
 
   /**
-   * 
+   * CarID Text Field
    */
   @FXML
   private TextField carIDTextField;
 
   /**
+   * Handles date pick.
+   * 
    * @param event
    */
   @FXML
@@ -75,8 +69,10 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     }
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBase#handleBackButton(javafx.event.ActionEvent)
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#
+   * handleBackButton(javafx.event.ActionEvent)
    */
   @FXML
   void handleBackButton(ActionEvent event) {
@@ -86,8 +82,10 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS, 10);
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#
+   * handleSubmitButton(javafx.event.ActionEvent)
    */
   @FXML
   void handleSubmitButton(ActionEvent event) {
@@ -97,7 +95,8 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     validateAndSend();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn()
    */
   @Override
@@ -106,7 +105,8 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     emailTextField.setVisible(false);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff()
    */
   @Override
@@ -116,7 +116,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
   }
 
   /**
-   * 
+   * Validates the fields and Sends API request to the server.
    */
   private void validateAndSend() {
     // validation in same order as order in the form
@@ -166,16 +166,15 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
 
   // returns customer context - >=1 if logged in, 0 otherwise
   /**
-   * @return
+   * @return customer context id
    */
   private int getCustomerID() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
-  // returns email if logged in from customer context,
   /**
-   * @return
+   * @return email from customer context, or value of the email field if not logged in
    */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
@@ -186,17 +185,15 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     }
   }
 
-  // return car id or null if empty
   /**
-   * @return
+   * @return car id or null if empty
    */
   private String getCarID() {
     return carIDTextField.getText();
   }
 
-  // returns planned start date or null if empty
   /**
-   * @return
+   * @return planned parking start date or null if empty
    */
   private LocalDate getPlannedStartDate() {
     if (startDatePicker.getValue() == null) {
@@ -210,7 +207,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
   }
 
   /**
-   * 
+   * Initializes the Controller and Registers it.
    */
   @FXML
   void initialize() {
@@ -224,8 +221,9 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
                                                      // Field
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.FullSubscriptionResponse)
+  /**
+   * Display the Subscription Details Request was succesful, and user
+   * credentials if new user, otherwise - error.
    */
   public ServerResponse handle(FullSubscriptionResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
@@ -234,42 +232,54 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     int responseCustomerId = response.getCustomerID();
     List<Text> formattedMessage = new LinkedList<Text>();
     if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
+      // Customer ID
       context.setCustomerId(responseCustomerId);
       formattedMessage.add(new Text("Your Customer ID:"));
       Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      // Making bold font
       Font defaultFont = customerIdText.getFont();
       customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(customerIdText);
       formattedMessage.add(new Text("\n"));
-
+      // Password
       formattedMessage.add(new Text("Your Password:"));
       Text password = new Text(response.getPassword());
+      // Making bold font
       defaultFont = password.getFont();
       password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(password);
       formattedMessage.add(new Text("\n"));
-
+      // Applying customer ID
       context.setCustomerId(responseCustomerId);
       context.acceptPendingEmail();
       ControllersClientAdapter.turnLoggedInStateOn();
     }
     if (response.getStatus() == ServerResponse.STATUS_OK) {
+      // Success info creation
       formattedMessage.add(new Text("Subscription purchased successfully!\n"));
       formattedMessage.add(new Text(String.format("Your account was debited %s ILS.", response.getPayment())));
       ctrl.turnProcessingStateOff();
+      // Display the whole formatted message
       ctrl.displayInfo(formattedMessage);
+      // Submit->Finish
       setFinishInsteadOfSubmit(true);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
+      // Error message creation
       formattedMessage.add(new Text("Could not proceed with purchase!\n"));
       formattedMessage.add(new Text(response.getDescription()));
+      // Turning off the processing state
       ctrl.turnProcessingStateOff();
+      // Display the whole formatted message, as an error
       ctrl.displayError(formattedMessage);
     }
     return response;
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl()
+  /*
+   * (non-Javadoc)
+   * @see
+   * cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#
+   * cleanCtrl()
    */
   @Override
   public void cleanCtrl() {

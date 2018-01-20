@@ -26,37 +26,38 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * @author firl
- *
+ * Customer Login scene controller.
  */
 public class LoginController extends CustomerActionControllerBase {
 
   /**
-   * 
+   * Email TextField
    */
   @FXML // fx:id="emailTextField"
   private TextField emailTextField; // Value injected by FXMLLoader
 
   /**
-   * 
+   * Password TextField
    */
   @FXML // fx:id="passwordTextField"
   private PasswordField passwordTextField;
 
   /**
-   * 
+   * Cancel Button
    */
   @FXML
   private Button cancelButton;
 
   /**
-   * 
+   * Submit button
    */
   @FXML
   private Button submitButton;
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#
+   * handleSubmitButton(javafx.event.ActionEvent)
    */
   @FXML
   void handleSubmitButton(ActionEvent event) {
@@ -70,7 +71,7 @@ public class LoginController extends CustomerActionControllerBase {
   }
 
   /**
-   * 
+   * Validates that the fields and Sends API request to the server.
    */
   private void validateAndSend() {
     String email = null;
@@ -100,20 +101,20 @@ public class LoginController extends CustomerActionControllerBase {
   }
 
   /**
-   * 
+   * Initializes the Controller and Registers it.
    */
   @FXML
   void initialize() {
     super.baseInitialize();
     assert emailTextField != null : "fx:id=\"emailTextField\" was not injected: check your FXML file 'LoginScene.fxml'.";
     assert passwordTextField != null : "fx:id=\"passwordTextField\" was not injected: check your FXML file 'LoginScene.fxml'.";
-
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.LOGIN);
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#cleanCtrl()
    */
   @Override
@@ -127,8 +128,10 @@ public class LoginController extends CustomerActionControllerBase {
     cancelButton.setDisable(false);
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.LoginResponse)
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.
+   * LoginResponse)
    */
   @Override
   public ServerResponse handle(LoginResponse response) {
@@ -139,26 +142,32 @@ public class LoginController extends CustomerActionControllerBase {
     int responseCustomerId = response.getCustomerID();
     List<Text> formattedMessage = new LinkedList<Text>();
     if (response.getStatus() == ServerResponse.STATUS_OK) {
+      // Customer ID
       context.setCustomerId(responseCustomerId);
       formattedMessage.add(new Text("Your Customer ID:"));
       Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      // Making bold font
       Font defaultFont = customerIdText.getFont();
       customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(customerIdText);
       formattedMessage.add(new Text("\n"));
-
+      // Info message creation
       Text loginSuccessfulMessage = new Text("Login was successful");
       formattedMessage.add(loginSuccessfulMessage);
       formattedMessage.add(new Text("\n"));
-
+      // Applying customer ID
       context.setCustomerId(responseCustomerId);
       context.acceptPendingEmail();
+      // Turning the LoggedIn state, application-wide
       ControllersClientAdapter.turnLoggedInStateOn();
-      ctrl.displayInfo(formattedMessage);
       ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU, 10);
+      // Turning off the processing state
       ctrl.turnProcessingStateOff();
+      ctrl.displayInfo(formattedMessage);
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
-      ControllersClientAdapter.getCurrentCtrl().turnProcessingStateOff();
+      // Turning off the processing state
+      ctrl.turnProcessingStateOff();
+      // Error message creation
       ctrl.displayError(response.getDescription());
     }
 

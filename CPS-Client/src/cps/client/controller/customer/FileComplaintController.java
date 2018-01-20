@@ -18,15 +18,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 
+/**
+ * File Complaint controller.
+ */
 public class FileComplaintController extends CustomerActionControllerBaseSubmitAndFinish implements ParkingLotsController {
   /**
-   * 
+   * Complaint Text Area.
    */
   @FXML // fx:id="complaintContent"
   private TextArea complaintContent; // Value injected by FXMLLoader
 
   /**
-   * 
+   * Initializes the Controller and Registers it.
    */
   @FXML
   private ComboBox<String> parkingLotsList;

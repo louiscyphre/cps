@@ -19,7 +19,7 @@ import javafx.scene.text.Text;
 public class ExitCarController extends CustomerActionControllerBaseSubmitAndFinish {
 
   /**
-   * 
+   * CarID Text Field
    */
   @FXML // fx:id="carIdTextField"
   private TextField carIdTextField; // Value injected by FXMLLoader
@@ -36,7 +36,7 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
   }
 
   /**
-   * 
+   * Initializes the Controller and Registers it. 
    */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
@@ -49,7 +49,7 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
   }
 
   /**
-   * 
+   * Validates that the fields and Sends API request to the server.
    */
   private void validateAndSend() {
     // validation in same order as order in the form
@@ -119,8 +119,8 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
     carIdTextField.clear();
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ParkingExitResponse)
+  /**
+   * Display parking retrieval granted if Request was succesful, error - otherwise.
    */
   @Override
   public ServerResponse handle(ParkingExitResponse response) {

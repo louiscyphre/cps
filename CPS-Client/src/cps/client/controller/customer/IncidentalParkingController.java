@@ -32,43 +32,45 @@ import javafx.scene.text.Text;
  */
 public class IncidentalParkingController extends CustomerActionControllerBaseSubmitAndFinish {
   /**
-   * 
+   * Car ID TextField
    */
   @FXML
   private TextField carIDTextField;
 
   /**
-   * 
+   * End Date picker
    */
   @FXML
   private DatePicker endDatePicker;
 
   /**
-   * 
+   * End Time Text Field
    */
   @FXML
   private TextField endTimeTextField;
 
   /**
-   * 
+   * Email Text Field
    */
   @FXML
   private TextField emailTextField;
 
   /**
-   * 
+   * Font
    */
   @FXML
   private Font x1;
 
   /**
-   * 
+   * Insets
    */
   @FXML
   private Insets x3;
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.customer.CustomerActionControllerBase#
+   * handleSubmitButton(javafx.event.ActionEvent)
    */
   @FXML
   void handleSubmitButton(ActionEvent event) {
@@ -89,7 +91,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
   }
 
   /**
-   * 
+   * Validates that the fields and Sends API request to the server.
    */
   private void validateAndSend() {
     // validation in same order as order in the form
@@ -148,26 +150,23 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
-  // returns customer context - >=1 if logged in, 0 otherwise
   /**
-   * @return
+   * @return customer id from context
    */
   private int getCustomerId() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
-  // return car id or null if empty
   /**
-   * @return
+   * @return car ID
    */
   private String getCarId() {
     return carIDTextField.getText();
   }
 
-  // returns planned end date or null if empty
   /**
-   * @return
+   * @return planned leave date
    */
   private LocalDateTime getPlannedEndDateTime() {
     if (endDatePicker.getValue() == null) {
@@ -180,17 +179,15 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     }
   }
 
-  // returns planned end time or null if empty
   /**
-   * @return
+   * @return planned end time
    */
   private LocalTime getEndTime() {
     return getTime(endTimeTextField, "End time");
   }
 
-  // returns lot id or -1 if empty
   /**
-   * @return
+   * @return lot id from the client application
    */
   private int getLotId() {
     if (ControllersClientAdapter.getLotID() == 0) {
@@ -199,9 +196,8 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     return ControllersClientAdapter.getLotID();
   }
 
-  // returns email if logged in from customer context,
   /**
-   * @return
+   * @return email from context
    */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
@@ -212,23 +208,22 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     }
   }
 
-  // show Email field
   /**
-   * 
+   * Toggles the email TextField visible
    */
   public void showEmail() {
     emailTextField.visibleProperty().set(true);
   }
 
-  //
   /**
-   * 
+   * Toggles the email TextField invisible
    */
   public void hideEmail() {
     emailTextField.visibleProperty().set(false);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn()
    */
   @Override
@@ -237,7 +232,8 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     emailTextField.setVisible(false);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff()
    */
   @Override
@@ -247,7 +243,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
   }
 
   /**
-   * 
+   * Initializes the Controller and Registers it. 
    */
   @FXML
   void initialize() {
@@ -256,14 +252,16 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     assert endDatePicker != null : "fx:id=\"endDatePicker\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert endTimeTextField != null : "fx:id=\"endTimeTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
     assert emailTextField != null : "fx:id=\"emailTextField\" was not injected: check your FXML file 'IncidentalParkingScene.fxml'.";
-
     ControllersClientAdapter.registerCtrl(this, ControllerConstants.SceneCode.INCIDENTAL_PARKING);
     Platform.runLater(() -> infoBox.requestFocus()); // to unfocus the Text
                                                      // Field
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl()
+  /*
+   * (non-Javadoc)
+   * @see
+   * cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#
+   * cleanCtrl()
    */
   @Override
   public void cleanCtrl() {
@@ -277,8 +275,10 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     endTimeTextField.clear();
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.IncidentalParkingResponse)
+  /*
+   * (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.
+   * IncidentalParkingResponse)
    */
   public ServerResponse handle(IncidentalParkingResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
@@ -288,41 +288,52 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     List<Text> formattedMessage = new LinkedList<Text>();
 
     if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
-      // outputting the customer id on screen
+      // Customer ID
       context.setCustomerId(responseCustomerId);
       formattedMessage.add(new Text("Your Customer ID:"));
       Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
+      // Making bold font
       Font defaultFont = customerIdText.getFont();
       customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(customerIdText);
       formattedMessage.add(new Text("\n"));
-      // password part
+      // Password
       formattedMessage.add(new Text("Your Password:"));
       Text password = new Text(response.getPassword());
       defaultFont = password.getFont();
+      // Making bold font
       password.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(password);
       formattedMessage.add(new Text("\n"));
-      // binding new user to application context
+      // Applying customer ID
       context.setCustomerId(responseCustomerId);
       context.acceptPendingEmail();
+      // Turning the LoggedIn state, application-wide
       ControllersClientAdapter.turnLoggedInStateOn();
     }
     // logged in customer
     if (response.success()) {
+      // Success info creation
       formattedMessage.add(new Text("Entry granted\n"));
       formattedMessage.add(new Text("Robot will collect your car shortly\n"));
-      Text warning = new Text("Don't forget: Password is required to collect the Car");
+      Text warning = new Text("Don't forget: Password is required to collect the Car\n");
+      // Making bold font
       Font defaultFont = warning.getFont();
       warning.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
+      formattedMessage.add(warning);
       formattedMessage.add(new Text("\n"));
+      // Turning off the processing state
       ctrl.turnProcessingStateOff();
+      // Display the whole formatted message
       ctrl.displayInfo(formattedMessage);
       setFinishInsteadOfSubmit(true);
     } else { // request failed
+      // Error message creation
       formattedMessage.add(new Text("Could not grant parking at this moment!\n"));
       formattedMessage.add(new Text(response.getDescription()));
+      // Turning off the processing state
       ctrl.turnProcessingStateOff();
+      // Display the whole formatted message, as an error
       ctrl.displayError(formattedMessage);
     }
 

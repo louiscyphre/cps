@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 import cps.api.request.Request;
 import cps.api.response.CancelOnetimeParkingResponse;
 import cps.api.response.ComplaintResponse;
-import cps.api.response.CurrentPerformanceResponse;
 import cps.api.response.DisableParkingSlotsResponse;
 import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
@@ -21,12 +20,11 @@ import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.LoginResponse;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
-import cps.api.response.PeriodicReportResponse;
-import cps.api.response.QuarterlyReportResponse;
 import cps.api.response.RefundResponse;
 import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.RejectComplaintResponse;
 import cps.api.response.RequestLotStateResponse;
+import cps.api.response.RequestReportResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.Response;
@@ -35,7 +33,6 @@ import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.SimpleResponse;
 import cps.api.response.UpdatePricesResponse;
-import cps.api.response.WeeklyReportResponse;
 import cps.client.utils.InternalClientException;
 import cps.client.utils.UserLevelClientException;
 import javafx.application.Platform;
@@ -59,43 +56,44 @@ public abstract class ClientControllerBase implements ViewController {
   protected static final String DEFAULT_INFO_LABEL = "Welcome to Car Parking System!";
 
   /**
-   * 
+   * ResourceBundle that was given to the FXMLLoader.
    */
-  @FXML // ResourceBundle that was given to the FXMLLoader
+  @FXML 
   protected ResourceBundle resources;
 
   /**
-   * 
+   * URL location of the FXML file that was given to the FXMLLoader
    */
-  @FXML // URL location of the FXML file that was given to the FXMLLoader
+  @FXML
   protected URL location;
 
   /**
-   * 
+   * Label into which the info is displayed.
    */
   @FXML // fx:id="infoLabel"
   protected TextFlow infoLabel; // Value injected by FXMLLoader
 
   /**
-   * 
+   * Progress indicator which is turned on when the controller transfers to <tt>Processing<tt> state.
    */
   @FXML // fx:id="infoProgress"
   protected ProgressIndicator infoProgress; // Value injected by FXMLLoader
 
   /**
-   * 
+   * The box holding the info display and processing indicator.
    */
   @FXML // fx:id="infoBox"
   protected VBox infoBox; // Value injected by FXMLLoader
 
   /**
-   * 
+   * The default root pane for every ViewController.
+   * @see ViewController#getRoot()
    */
   @FXML
   protected BorderPane root;
 
   /**
-   * 
+   * The processing indicator.
    */
   protected boolean processing;
 
@@ -104,7 +102,9 @@ public abstract class ClientControllerBase implements ViewController {
    */
   @Override
   public void displayInfo(List<Text> formattedText) {
+    // clear the styling of the box
     infoBox.getStyleClass().clear();
+    // apply the info style to the box and add FormattedText
     infoBox.getStyleClass().add("infoLabel");
     infoLabel.getChildren().clear();
     for (Text ft : formattedText) {
@@ -117,7 +117,9 @@ public abstract class ClientControllerBase implements ViewController {
    */
   @Override
   public void displayInfo(String simpleInfoMsg) {
+    // clear the styling of the box
     infoBox.getStyleClass().clear();
+    // apply the info style to the box and add Text
     infoBox.getStyleClass().add("infoLabel");
     infoLabel.getChildren().clear();
     infoLabel.getChildren().add(new Text(simpleInfoMsg));
@@ -128,7 +130,9 @@ public abstract class ClientControllerBase implements ViewController {
    */
   @Override
   public void displayError(List<Text> formettedErrorMsg) {
+    // clear the styling of the box
     infoBox.getStyleClass().clear();
+    // apply the info style to the box and add FormattedText
     infoBox.getStyleClass().add("errorLabel");
     infoLabel.getChildren().clear();
     for (Text ft : formettedErrorMsg) {
@@ -141,7 +145,9 @@ public abstract class ClientControllerBase implements ViewController {
    */
   @Override
   public void displayError(String simpleErrorMsg) {
+    // clear the styling of the box
     infoBox.getStyleClass().clear();
+    // apply the info style to the box and add Text
     infoBox.getStyleClass().add("errorLabel");
     infoLabel.getChildren().clear();
     infoLabel.getChildren().add(new Text(simpleErrorMsg));
@@ -152,12 +158,15 @@ public abstract class ClientControllerBase implements ViewController {
    */
   @Override
   public void turnProcessingStateOn() {
+    // enable the processing spinner
     infoProgress.visibleProperty().set(true);
+    // apply the info style to the box and add Text
     Text text = new Text("Processing...");
     infoLabel.getChildren().clear();
     infoLabel.getChildren().add(text);
     infoBox.getStyleClass().clear();
     infoBox.getStyleClass().add("processingLabel");
+    // processing flag
     processing = true;
   }
 
@@ -166,10 +175,13 @@ public abstract class ClientControllerBase implements ViewController {
    */
   @Override
   public void turnProcessingStateOff() {
+    // disable the processing spinner
     infoProgress.visibleProperty().set(false);
+    // apply the info style to the box and add Text
     infoBox.getStyleClass().clear();
     infoBox.getStyleClass().add("infoLabel");
     infoLabel.getChildren().clear();
+    // processing flag
     processing = false;
   }
 
@@ -214,6 +226,9 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * The generic sendRequest for the base Client class, with option to send
+   * request without waiting for the response.
+   * 
    * @param request
    * @param waitForResponse
    */
@@ -221,11 +236,12 @@ public abstract class ClientControllerBase implements ViewController {
     if (waitForResponse) {
       turnProcessingStateOn();
     }
-
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
   /**
+   * The generic sendRequest for the base Client class, with option to send
+   * 
    * @param request
    */
   public final void sendRequest(Request request) {
@@ -233,8 +249,10 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * The generic response handling.
+   * Turns the processing state off.
+   * Displays the info/error on the display.
    * @param response
-   * @return
    */
   public ServerResponse handleGenericResponse(ServerResponse response) {
 
@@ -258,6 +276,7 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   // ResponseHandler interface
+  // Every controller has its own specific handling of the responses.
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#dispatch(cps.api.response.Response)
    */
@@ -395,6 +414,14 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /* (non-Javadoc)
+   * @see cps.api.response.ResponseHandler#handle(cps.api.response.RequestReportResponse)
+   */
+  @Override
+  public ServerResponse handle(RequestReportResponse response) {
+    return null;
+  }
+
+  /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ReserveParkingSlotsResponse)
    */
   @Override
@@ -452,17 +479,18 @@ public abstract class ClientControllerBase implements ViewController {
 
   // Helper methods
   /**
+   * Helper function, turns TextField content into String
    * @param field
-   * @return
    */
   public String getText(TextInputControl field) {
     return field == null ? "" : field.getText();
   }
 
   /**
-   * @param value
-   * @param parameterName
-   * @return
+   * Helper function, with support of error display mechanics.
+   * Throws inner exception, if missing, the parameter name. 
+   * @param value some string input value
+   * @param parameterName parameter name of the value
    * @throws UserLevelClientException
    */
   public String requireField(String value, String parameterName) throws UserLevelClientException {
@@ -474,9 +502,10 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
-   * @param field
-   * @param parameterName
-   * @return
+   * Helper function, with support of error display mechanics.
+   * Throws inner exception, if missing, the parameter name.  
+   * @param field some TextInputControl 
+   * @param parameterName parameter name of the value
    * @throws UserLevelClientException
    */
   public String requireField(TextInputControl field, String parameterName) throws UserLevelClientException {
@@ -484,9 +513,10 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
-   * @param value
-   * @param parameterName
-   * @return
+   * Helper function, with support of error display mechanics.
+   * Throws inner exception, if missing, the parameter name.  
+   * @param value some string input value
+   * @param parameterName parameter name of the value
    * @throws UserLevelClientException
    */
   public String requireFieldTrim(String value, String parameterName) throws UserLevelClientException {
@@ -498,9 +528,10 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
-   * @param field
-   * @param parameterName
-   * @return
+   * Helper function, with support of error display mechanics.
+   * Throws inner exception, if missing, the parameter name.  
+   * @param field some TextInputControl
+   * @param parameterName parameter name of the value
    * @throws UserLevelClientException
    */
   public String requireFieldTrim(TextInputControl field, String parameterName) throws UserLevelClientException {
@@ -508,9 +539,10 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * Helper function, with support of error display mechanics.
+   * Throws inner exception, if the given parameter is not an Integer.  
    * @param value
    * @param parameterName
-   * @return
    * @throws UserLevelClientException
    */
   public int requireInteger(String value, String parameterName) throws UserLevelClientException {
@@ -522,9 +554,10 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * Helper function, with support of error display mechanics.
+   * Throws inner exception, if the given parameter is not an Integer.
    * @param field
    * @param parameterName
-   * @return
    * @throws UserLevelClientException
    */
   public int requireInteger(TextInputControl field, String parameterName) throws UserLevelClientException {
@@ -532,9 +565,10 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * Helper function, with support of error display mechanics.
+   * Throws inner exception, if the given parameter is not a Float.  
    * @param value
    * @param parameterName
-   * @return
    * @throws UserLevelClientException
    */
   public float requireFloat(String value, String parameterName) throws UserLevelClientException {
@@ -546,9 +580,10 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * Helper function, with support of error display mechanics.
+   * Throws inner exception, if the given parameter is not a Float.
    * @param field
    * @param parameterName
-   * @return
    * @throws UserLevelClientException
    */
   public float requireFloat(TextInputControl field, String parameterName) throws UserLevelClientException {
@@ -556,9 +591,10 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * Helper function, with support of error display mechanics.
+   * Throws inner exception, if the object is null.  
    * @param object
    * @param name
-   * @return
    * @throws InternalClientException
    */
   public <T> T notNull(T object, String name) throws InternalClientException {
@@ -569,6 +605,8 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * Helper function, with support of error display mechanics.
+   * Throws inner exception, if condition is false.  
    * @param condition
    * @param errorMessage
    * @throws UserLevelClientException
@@ -580,6 +618,8 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * Helper function, with support of error display mechanics.
+   * Throws inner exception, if given object is null.  
    * @param object
    * @param errorMessage
    * @throws UserLevelClientException
@@ -589,6 +629,7 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * Generic function to show JavaFX alerts with th given information.
    * @param message
    */
   public void showAlert(String message) {
@@ -596,8 +637,8 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * Helper function to fix time input.
    * @param text
-   * @return
    */
   protected String fixTime(String text) {
     String[] parts = text.split(":");
@@ -619,9 +660,9 @@ public abstract class ClientControllerBase implements ViewController {
   }
 
   /**
+   * Helper function, which parses the given TextInput to LocalTime
    * @param field
    * @param parameterName
-   * @return
    */
   protected LocalTime getTime(TextInputControl field, String parameterName) {
     try {
@@ -631,32 +672,4 @@ public abstract class ClientControllerBase implements ViewController {
       return null;
     }
   }
-
-  /* (non-Javadoc)
-   * @see cps.api.response.ResponseHandler#handle(cps.api.response.WeeklyReportResponse)
-   */
-  @Override
-  public ServerResponse handle(WeeklyReportResponse response) {
-    return null;
-  }
-
-
-  /* (non-Javadoc)
-   * @see cps.api.response.ResponseHandler#handle(cps.api.response.QuarterlyReportResponse)
-   */
-  @Override
-  public ServerResponse handle(QuarterlyReportResponse response) {
-    return null;
-  }
-
-  @Override
-  public ServerResponse handle(CurrentPerformanceResponse response) {
-    return null;
-  }
-
-  @Override
-  public ServerResponse handle(PeriodicReportResponse response) {
-    return null;
-  }
-
 }
