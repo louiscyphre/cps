@@ -3,6 +3,8 @@ package cps.entities.models;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import cps.common.Utilities;;
 
@@ -26,6 +28,22 @@ public class PeriodicReport extends GenericReport<StatisticalData> {
 
   public void setRowNames(String[] rowNames) {
     this.rowNames = rowNames;
+  }
+  
+  public Collection<Double> getRow(int i) {
+    LinkedList<Double> row = new LinkedList<>();
+    
+    for (String key : keySet()) {
+      StatisticalData data = getData(key);
+      if (data == null || data.getValues() == null || data.getValues().length < i + 1) {
+        row.add(0.0);
+      } else {
+        row.add(data.getValues()[i]);
+      }
+    }
+    
+    // Return a data row with an entry for each column
+    return row;
   }
   
   public static PeriodicReport generate(Connection conn, int year, int month) throws SQLException {    
