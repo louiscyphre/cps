@@ -135,8 +135,8 @@ public abstract class Utilities {
     return start;
   }
 
-  public static int countWeeksInMonth(int year,int month) {
-    int weekCount = 0;
+  public static int countWeeksInMonth(int year, int month) {
+    int weekCount = 1;
     LocalDate da = LocalDate.of(year, month, 1);
     LocalDate da2 = da.plusMonths(1);
     while (da.isBefore(da2)) {
