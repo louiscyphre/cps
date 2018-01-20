@@ -23,7 +23,8 @@ import cps.server.ServerException;
 import cps.server.session.CustomerSession;
 import cps.server.statistics.StatisticsCollector;
 
-/** The Class EntryExitController. */
+/** Processes ParkingEntry requests - when the user has a reservation or a subscription and now they want to park.
+ * If the user made an IncidentalParking request, their car will be parked immediately after that. */
 public class ParkingEntryController extends RequestController {
 
   /** Instantiates a new entry exit controller.
@@ -33,7 +34,7 @@ public class ParkingEntryController extends RequestController {
     super(serverController);
   }
 
-  /** Handle ParkingEntryRequest.
+  /** Checks if the user has a reservation or a subscription and allows them to enter if the parameters are correct.
    * @param request
    *        the request
    * @param session
@@ -62,7 +63,7 @@ public class ParkingEntryController extends RequestController {
     });
   }
 
-  public void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service)
+  void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service)
       throws SQLException, ServerException {
     // Check that this car is allowed to enter
     // CarTransportation transportation = CarTransportation.findForEntry(conn,

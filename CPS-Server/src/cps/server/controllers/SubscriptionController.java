@@ -20,12 +20,20 @@ import cps.server.ServerController;
 import cps.server.session.CustomerSession;
 import cps.server.statistics.StatisticsCollector;
 
+/** The Class SubscriptionController. */
 public class SubscriptionController extends RequestController {
 
+  /** Instantiates a new subscription controller.
+   * @param serverController the server controller */
   public SubscriptionController(ServerController serverController) {
     super(serverController);
   }
 
+  /** Is called when the customer wants to purchase a full subscription.
+   * Calls the generalized handler with the appropriate parameters.
+   * @param request the request
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(FullSubscriptionRequest request, CustomerSession session) {
     LocalDate startDate = request.getStartDate();
     LocalDate endDate = startDate.plusDays(28);
@@ -34,6 +42,11 @@ public class SubscriptionController extends RequestController {
     return handle(request, session, response, startDate, endDate, dailyExitTime);
   }
 
+  /** Is called when the customer wants to purchase a full subscription.
+   * Calls the generalized handler with the appropriate parameters.
+   * @param request the request
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(RegularSubscriptionRequest request, CustomerSession session) {
     LocalDate startDate = request.getStartDate();
     LocalDate endDate = startDate.plusDays(28);
@@ -42,6 +55,19 @@ public class SubscriptionController extends RequestController {
     return handle(request, session, response, startDate, endDate, dailyExitTime);
   }
 
+  /** Generalized handler for Subscription Requests.
+   * 
+   * Checks the input parameters, updates database records, calculates the payment, and charges the customer's account.
+   * 
+   * If the user was not logged in while making this request, will create a new user and send them the password.
+   * After this, the user will be able to log in with their email address and the generated password.
+   * @param request the request
+   * @param session the session
+   * @param serverResponse the server response
+   * @param startDate the start date
+   * @param endDate the end date
+   * @param dailyExitTime the daily exit time
+   * @return the server response */
   public ServerResponse handle(SubscriptionRequest request, CustomerSession session,
       SubscriptionResponse serverResponse, LocalDate startDate, LocalDate endDate, LocalTime dailyExitTime) {
     return database.performQuery(serverResponse, (conn, response) -> {

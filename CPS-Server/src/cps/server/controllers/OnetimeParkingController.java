@@ -30,7 +30,9 @@ import cps.server.session.CustomerSession;
 import cps.server.session.UserSession;
 import cps.server.statistics.StatisticsCollector;
 
-/** Handles OnetimeService requests. */
+/** Handles requests that deal with One-time Parking Services:
+ * - Incidental Parking (Park now)
+ * - Reserved Parking (Order now and park later) */
 public class OnetimeParkingController extends RequestController {
 
   
@@ -40,6 +42,20 @@ public class OnetimeParkingController extends RequestController {
     super(serverController);
   }
 
+  /** Generalized handler for both types of Onetime Parking requests.
+   * 
+   * Checks input parameters, updates database records, calculates payment, if applicable (Reserved Parking),
+   * and charges the customer's account (if a payment was required).
+   * 
+   * If the user was not logged in while making this request, will create a new user and send them the password.
+   * After this, the user will be able to log in with their email address and the generated password.
+   * @param request the request
+   * @param session the session
+   * @param serverResponse the server response
+   * @param startTime the start time
+   * @param plannedEndTime the planned end time
+   * @param now the now
+   * @return the server response */
   private ServerResponse handle(OnetimeParkingRequest request, CustomerSession session,
       OnetimeParkingResponse serverResponse, Timestamp startTime, Timestamp plannedEndTime, LocalDateTime now) {
     return database.performQuery(serverResponse, (conn, response) -> {
@@ -108,7 +124,9 @@ public class OnetimeParkingController extends RequestController {
     });
   }
 
-  /** Handle IncidentalParkingRequest.
+  /** Called when the user wants to Park Now (Incidental Parking request).
+   * Calls the generalized handler with the appropriate parameters for an Incidental Parking request.
+   * If the user made an IncidentalParking request, their car will be parked immediately after that.
    * @param request the request
    * @param session the session
    * @return the server response */
@@ -119,7 +137,8 @@ public class OnetimeParkingController extends RequestController {
     return handle(request, session, response, startTime, plannedEndTime, startTime.toLocalDateTime());
   }
 
-  /** Handle ReservedParkingRequest.
+  /** Called when the user wants to make a Reserved Parking request.
+   * Calls the generalized handler with the appropriate parameters for a Reserved Parking request.
    * @param request the request
    * @param session the session
    * @return the server response */
@@ -135,7 +154,7 @@ public class OnetimeParkingController extends RequestController {
     return toRet;
   }
 
-  /** Handle CancelOnetimeParkingRequest.
+  /** Called when the user wants to cancel a parking reservation that they made with a ReservedParkingRequest.
    * @param request the request
    * @param session the session
    * @return the server response */
@@ -201,7 +220,7 @@ public class OnetimeParkingController extends RequestController {
     return toRet;
   }
 
-  /** Handle List One Time Entries Request.
+  /** Returns a list of all one-time parking services that this customer had ordered.
    * @param request the request
    * @param session the session
    * @return the server response */
