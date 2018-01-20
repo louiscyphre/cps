@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
 
 import cps.server.ServerException;
 
@@ -45,6 +48,8 @@ public class MonthlyReport {
   /** Amount of disabled slots. */
   private int disabledSlots;
 
+  private String fieldText;
+
   /** Instantiates a new monthly report.
    * @param _year the year
    * @param _month the month
@@ -56,7 +61,8 @@ public class MonthlyReport {
    * @param _coplaintscount the coplaintscount
    * @param _disabledslots the disabledslots */
   public MonthlyReport(int _year, int _month, int _lotid, int _ordreserved, int _ordincidental, int _ordregular,
-      int _ordfull, int _coplaintscount, int complaintsclosedcount, int complaintsrefundedcount, int _disabledslots) {
+      int _ordfull, int _coplaintscount, int complaintsclosedcount, int complaintsrefundedcount, int _disabledslots,
+      String field) {
     this.year = _year;
     this.month = _month;
     this.lotId = _lotid;
@@ -68,6 +74,7 @@ public class MonthlyReport {
     this.complaintsClosedCount = complaintsclosedcount;
     this.complaintsRefundedCount = complaintsrefundedcount;
     this.disabledSlots = _disabledslots;
+    this.fieldText = field;
   }
 
   /** Instantiates a new monthly report.
@@ -93,15 +100,15 @@ public class MonthlyReport {
    * @return Newly created Monthly Report
    * @throws SQLException the SQL exception */
   public static MonthlyReport create(Connection conn, int year, int month, int lotid) throws SQLException {
-    PreparedStatement stmt = conn
-        .prepareStatement("INSERT INTO monthly_report VALUES (?,?,?,default,default,default,default,default,default,default,default)");
+    PreparedStatement stmt = conn.prepareStatement(
+        "INSERT INTO monthly_report VALUES (?,?,?,default,default,default,default,default,default,default,default)");
     int i = 1;
     stmt.setInt(i++, year);
     stmt.setInt(i++, month);
     stmt.setInt(i++, lotid);
     stmt.executeUpdate();
     stmt.close();
-    return new MonthlyReport(year, month, lotid, 0, 0, 0, 0, 0, 0, 0, 0);
+    return new MonthlyReport(year, month, lotid, 0, 0, 0, 0, 0, 0, 0, 0, Month.of(month).toString());
   }
 
   /** Find report.
@@ -131,6 +138,17 @@ public class MonthlyReport {
     return result;
   }
 
+  public void add(MonthlyReport rep) {
+    this.ordIncidental += rep.ordIncidental;
+    this.ordReserved += rep.ordReserved;
+    this.ordRegular += rep.ordRegular;
+    this.ordFull += rep.ordFull;
+    this.coplaintsCount += rep.coplaintsCount;
+    this.complaintsClosedCount += rep.complaintsClosedCount;
+    this.complaintsRefundedCount += rep.complaintsRefundedCount;
+    this.disabledSlots += rep.disabledSlots;
+  }
+  
   /** Find report not null.
    * @param conn the conn
    * @param year the year
@@ -280,7 +298,6 @@ public class MonthlyReport {
     rep.update(conn);
   }
 
-  
   /** Increase closed complaints count.
    * @param conn the conn
    * @param year the year
@@ -294,8 +311,7 @@ public class MonthlyReport {
     rep.complaintsClosedCount++;
     rep.update(conn);
   }
-  
-  
+
   /** Increase refunded complaints count.
    * @param conn the conn
    * @param year the year
@@ -309,8 +325,7 @@ public class MonthlyReport {
     rep.complaintsRefundedCount++;
     rep.update(conn);
   }
-  
-  
+
   /** Count disabled cells.
    * @param conn the conn
    * @param year the year

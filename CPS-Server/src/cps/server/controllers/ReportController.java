@@ -59,16 +59,21 @@ public class ReportController extends RequestController {
 
 
       LinkedList<MonthlyReport> data = new LinkedList<>();
-      //FIXME Tegra here
-      /*
-      MonthlyReport total=new MonthlyReport(action.getPeriodStart().getYear(), action.getPeriodStart().getMonth(), _lotid, _ordreserved, _ordincidental, _ordregular, _ordfull, _coplaintscount, complaintsclosedcount, complaintsrefundedcount, _disabledslots)
-      */
+
+      MonthlyReport total = new MonthlyReport(action.getPeriodStart().getYear(),
+          action.getPeriodStart().getMonthValue(), 0, 0, 0, 0, 0, 0, 0, 0, 0, "Total");
+      MonthlyReport report = null;
+
       while (!start.isAfter(end)) {
         int year = action.getPeriodStart().getYear();
         int month = action.getPeriodStart().getMonthValue();
-        data.add(MonthlyReport.getMonthlyReport(conn, year, month, action.getLotID()));
+        report = MonthlyReport.getMonthlyReport(conn, year, month, action.getLotID());
+        total.add(report);
+        data.add(report);
         start = start.plusMonths(1);
       }
+
+      data.add(total);
 
       response.setPeriod(action.getPeriodStart(), action.getPeriodEnd(), Duration.ofDays(30));
       response.setData(data);
@@ -91,9 +96,10 @@ public class ReportController extends RequestController {
   public ServerResponse handle(GetPeriodicReportAction action, ServiceSession session) {
     return database.performQuery(new PeriodicReportResponse(), (conn, response) -> {
       CompanyPerson user = session.requireCompanyPerson();
-      errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER, "Only the Global Manager can perform this action");
-    //FIXME WHere is the report generated?
-      
+      errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER,
+          "Only the Global Manager can perform this action");
+      // FIXME WHere is the report generated?
+
       return response;
     });
   }
