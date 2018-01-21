@@ -33,7 +33,7 @@ public class ServiceStatisticsChoice extends ServiceActionControllerBase {
 
   @FXML
   void handleComplaintsReportsButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CLAIMS_STATUS, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_COMPLAINTS, 10);
   }
 
   @FXML

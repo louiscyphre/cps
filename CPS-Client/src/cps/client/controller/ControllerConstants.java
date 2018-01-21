@@ -62,7 +62,7 @@ public class ControllerConstants {
     
     SERVICE_STATISTICS_DISABLED_PARKING_CELLS("view/service/ServiceStaticticsDisabledParkingCells.fxml"),
     
-    SERVICE_STATISTICS_CLAIMS_STATUS("view/service/ServiceStaticticsClaimsStatus.fxml"),
+    SERVICE_STATISTICS_COMPLAINTS("view/service/ServiceStaticticsComplaints.fxml"),
     
     ;
 
