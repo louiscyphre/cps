@@ -1,7 +1,11 @@
+/*
+ * 
+ */
 package cps.client.controller.service;
 
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.common.Constants;
+import cps.entities.models.MonthlyReport;
 import cps.entities.models.ParkingLot;
 
 import java.time.DateTimeException;
@@ -27,6 +31,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+// TODO: Auto-generated Javadoc
+/** The Class ServiceStaticticsComplaints. */
 public class ServiceStaticticsComplaints extends ServiceActionControllerBase implements ParkingLotsController {
 
   @FXML
@@ -53,19 +59,20 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
   /** Start date DatePicker */
   @FXML
   private DatePicker startDatePicker;
-  
+
   /** End date DatePicker */
   @FXML
   private DatePicker endDatePicker;
 
-  /** Parking lots list ComboBox */
+  /** Parking lots list ComboBox. */
   @FXML // fx:id="parkingLotsList"
   protected ComboBox<String> parkingLotsList; // Value injected by FXMLLoader
 
-  /** Parking lots mapping to their addresses */
+  /** Parking lots mapping to their addresses. */
   protected HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
 
-  /** @param event */
+  /** Handle start date choice.
+   * @param event the event */
   @FXML
   void handleStartDateChoice(ActionEvent event) {
     if (processing) {
@@ -74,14 +81,15 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
     endDatePicker.setDisable(false);
   }
 
-  /** @param event */
+  /** Handle end date choice.
+   * @param event the event */
   @FXML
   void handleEndDateChoice(ActionEvent event) {
     if (processing) {
       return;
     }
     parkingLotsList.setDisable(false);
-    
+
     if (!parkingLotsList.getItems().isEmpty()) {
       parkingLotsList.getItems().clear();
       parkingLotsMap.clear();
@@ -90,8 +98,9 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
     turnProcessingStateOn();
     sendRequest(new ListParkingLotsRequest());
   }
-  
-  /** @param event */
+
+  /** Handle lot choice.
+   * @param event the event */
   @FXML
   void handleLotChoice(ActionEvent event) {
     if (processing) {
@@ -125,20 +134,16 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
-  /**
-   * @return report start date or null if empty
-   */
+  /** @return report start date or null if empty */
   private LocalDate getReportStartDate() {
     return getDate(startDatePicker);
   }
-  
-  /**
-   * @return report end date or null if empty
-   */
+
+  /** @return report end date or null if empty */
   private LocalDate getReportEndDate() {
     return getDate(endDatePicker);
   }
-  
+
   private LocalDate getDate(DatePicker picker) {
     if (picker.getValue() == null) {
       return null;
@@ -150,11 +155,15 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
     }
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.service.ServiceActionControllerBase#handleBackButton(javafx.event.ActionEvent)
+   */
   @FXML
   void handleBackButton(ActionEvent event) {
     ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE, 10);
   }
 
+  /** Initialize. */
   @FXML
   void initialize() {
     super.baseInitialize();
@@ -164,6 +173,9 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
 
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
+   */
   @Override
   public void cleanCtrl() {
     // TODO Auto-generated method stub
@@ -175,12 +187,18 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
     parkingLotsMap.clear();
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.QuarterlyReportResponse)
+   */
   @Override
   public ServerResponse handle(QuarterlyReportResponse response) {
-    // TODO Auto-generated method stub
-    return super.handle(response);
+    fillReportTable(response.getData());
+    return response;
   }
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ListParkingLotsResponse)
+   */
   @Override
   public ServerResponse handle(ListParkingLotsResponse response) {
     setParkingLots(response.getData());
@@ -193,16 +211,16 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
    * Collection) */
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
-    
+
     List<String> tmp = new ArrayList<String>();
     parkingLotsMap = new HashMap<String, ParkingLot>();
-    
+
     for (ParkingLot i : list) {
       String address = new String(i.getStreetAddress());
       tmp.add(address);
       parkingLotsMap.put(address, i);
     }
-    
+
     ObservableList<String> addresses = FXCollections.observableList(tmp);
     fillComboBoxItems(addresses);
   }
@@ -211,5 +229,9 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
   private void fillComboBoxItems(ObservableList<String> addresses) {
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
+  }
+
+  private void fillReportTable(Collection<MonthlyReport> list) {
+
   }
 }
