@@ -43,6 +43,7 @@ public class MonthlyReport {
   /** The complaints closed count. */
   private int complaintsClosedCount;
 
+  /** The complaints refunded count. */
   private int complaintsRefundedCount;
 
   /** Amount of disabled slots. */
@@ -429,6 +430,22 @@ public class MonthlyReport {
 
   public void setDisabledSlots(int disabledSlots) {
     this.disabledSlots = disabledSlots;
+  }
+
+  public int getComplaintsClosedCount() {
+    return complaintsClosedCount;
+  }
+
+  public void setComplaintsClosedCount(int complaintsClosedCount) {
+    this.complaintsClosedCount = complaintsClosedCount;
+  }
+
+  public int getComplaintsRefundedCount() {
+    return complaintsRefundedCount;
+  }
+
+  public void setComplaintsRefundedCount(int complaintsRefundedCount) {
+    this.complaintsRefundedCount = complaintsRefundedCount;
   }
 
 }
