@@ -34,4 +34,15 @@ public interface EmployeeContext {
    * Logs the whole context out
    */
   public void logContextOut();
+
+  /**
+   * Returns the ID for currently chosen lot.
+   * @return
+   */
+  public int getChosenLotID();
+  
+  /**
+   * @param userChosenLotID
+   */
+  public void setChosenLotID(int userChosenLotID);
 }

@@ -112,7 +112,7 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
       // Statistics
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_CHOICE);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_CLAIMS_STATUS);
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_COMPLAINTS);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_DISABLED_PARKING_CELLS);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_MONTHLY);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_WEEKLY);

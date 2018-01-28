@@ -13,6 +13,9 @@ public class EmployeeContextImpl implements EmployeeContext {
    */
   private CompanyPerson companyPerson;
 
+  /** ID of the chosen lot */
+  private int chosenLotIDforQuery;
+
   /* (non-Javadoc)
    * @see cps.client.context.EmployeeContext#logContextOut()
    */
@@ -47,5 +50,24 @@ public class EmployeeContextImpl implements EmployeeContext {
   @Override
   public void setCompanyPerson(CompanyPerson companyPerson) {
     this.companyPerson = companyPerson;
+  }
+  
+  /*
+   * (non-Javadoc)
+   * @see cps.client.context.CustomerContext#getChosenLotID()
+   */
+  @Override
+  public int getChosenLotID() {
+    return chosenLotIDforQuery;
+  }
+
+
+  /*
+   * (non-Javadoc)
+   * @see cps.client.context.CustomerContext#setChosenLotID(int)
+   */
+  @Override
+  public void setChosenLotID(int lotID) {
+    chosenLotIDforQuery = lotID;
   }
 }
