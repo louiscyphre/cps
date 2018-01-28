@@ -297,9 +297,9 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
   public void fillReportTable(Collection<MonthlyReport> list) {
     List<ReportsTable> newEntriesList = new LinkedList<ReportsTable>();
     Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-    list.forEach(e -> {
-      ReportsTable toAdd = new ReportsTable((e.getYear()), e.getCoplaintsCount(), e.getComplaintsRejectedCount(), e.getComplaintsRefundedCount());
-      newEntriesList.add(toAdd);
+    list.forEach(e -> {//TODO//FIXME//Server side code needed
+      //ReportsTable toAdd = new ReportsTable((e.getYear()), e.getCoplaintsCount(), e.getComplaintsRejectedCount(), e.getComplaintsRefundedCount());
+      //newEntriesList.add(toAdd);
     });
     this.reportsTableEntriesList.setAll(newEntriesList);
   }
