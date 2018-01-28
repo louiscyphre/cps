@@ -141,6 +141,7 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
     }
     int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
     ControllersClientAdapter.getEmployeeContext().setChosenLotID(userChosenLotID);
+    validateAndSend();
   }
 
   /** Validates that the fields and Sends API request to the server. */
