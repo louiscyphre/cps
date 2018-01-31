@@ -3,12 +3,6 @@
  */
 package cps.client.controller.service;
 
-import cps.client.controller.ControllerConstants.SceneCode;
-import cps.client.controller.customer.ViewMyReservationsController.TableOnetimeService;
-import cps.common.Constants;
-import cps.entities.models.MonthlyReport;
-import cps.entities.models.ParkingLot;
-
 import java.sql.Timestamp;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -20,14 +14,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cps.api.action.GetQuarterlyReportAction;
-import cps.api.request.ListOnetimeEntriesRequest;
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.QuarterlyReportResponse;
 import cps.api.response.ServerResponse;
+import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
 import cps.client.controller.ReportsController;
+import cps.common.Constants;
+import cps.entities.models.MonthlyReport;
+import cps.entities.models.ParkingLot;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -220,7 +217,7 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
     this.reportsTableEntriesList = FXCollections.observableArrayList();
     tableView.setItems(this.reportsTableEntriesList);
 
-    ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_STATISTICS_COMPLAINTS);
+//    ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_STATISTICS_COMPLAINTS); // TODO 
   }
 
   /* (non-Javadoc)

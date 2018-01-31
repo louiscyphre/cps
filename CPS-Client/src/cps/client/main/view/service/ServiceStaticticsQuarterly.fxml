@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="725.0" style="-fx-background-color: E6DDD4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceStaticticsMonthly">
+	<center>
+		<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="708.0" spacing="20.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+			<padding>
+				<Insets bottom="20.0" left="20.0" right="20.0" top="15.0" />
+			</padding>
+			<children>
+            <Label alignment="CENTER" styleClass="statisticsLabelUnderTables" text="Quarterly Reports" />
+            <TabPane prefHeight="401.0" prefWidth="668.0">
+               <tabs>
+                  <Tab closable="false" text="Orders">
+                     <content>
+                        <TableView fx:id="ordersTableView" prefHeight="346.0" prefWidth="614.0" styleClass="statisticsTable">
+                           <columns>
+                              <TableColumn fx:id="ordersColYear" editable="false" prefWidth="78.0" text="Year" />
+                              <TableColumn fx:id="ordersColQuarter" editable="false" prefWidth="78.0" text="Quarter" />
+                              <TableColumn fx:id="ordersColLotID" editable="false" minWidth="0.0" prefWidth="78.0" text="Lot ID" />
+                              <TableColumn fx:id="ordersColWeeklyDayOfTheWeek" editable="false" prefWidth="144.0" text="Day of the week" />
+                              <TableColumn fx:id="ordersColWeeklyProcessed" editable="false" prefWidth="144.0" text="Processed orders" />
+                              <TableColumn fx:id="ordersColWeeklyCancelled" editable="false" minWidth="0.0" prefWidth="144.0" text="Cancelled orders" />
+                           </columns>
+                        </TableView>
+                     </content>
+                  </Tab>
+                  <Tab closable="false" text="Complaints">
+                     <content>
+                        <TableView fx:id="complaintsTableView" minWidth="613.0" prefHeight="373.0" prefWidth="668.0" style="-fx-border-radius: 8 8 8 8; -fx-background-radius: 8 8 8 8;" styleClass="statisticsTable">
+                           <columns>
+                              <TableColumn fx:id="complaintsColYear" editable="false" prefWidth="78.0" text="Year" />
+                              <TableColumn fx:id="complaintsColQuarter" editable="false" prefWidth="78.0" text="Quarter" />
+                              <TableColumn fx:id="complaintsColLotID" editable="false" minWidth="0.0" prefWidth="78.0" text="Lot ID" />
+                              <TableColumn fx:id="complaintsColOpenedClaims" editable="false" minWidth="0.0" prefWidth="144.0" text="Opened claims" />
+                              <TableColumn fx:id="complaintsColRejectedClaims" editable="false" minWidth="0.0" prefWidth="144.0" text="Rejected claims" />
+                              <TableColumn fx:id="complaintsColRefundedClaims" editable="false" minWidth="0.0" prefWidth="144.0" text="Refunded" />
+                           </columns>
+                        </TableView>
+                     </content>
+                  </Tab>
+                  <Tab closable="false" text="Disabled cells">
+                     <content>
+                        <TableView fx:id="disabledCellsTableView" prefHeight="346.0" prefWidth="614.0" styleClass="statisticsTable">
+                           <columns>
+                              <TableColumn fx:id="disabledCellsColYear" editable="false" prefWidth="78.0" text="Year" />
+                              <TableColumn fx:id="disabledCellsColQuarter" editable="false" prefWidth="78.0" text="Quarter" />
+                              <TableColumn fx:id="disabledCellsColLotID" editable="false" minWidth="0.0" prefWidth="78.0" text="Lot ID" />
+                              <TableColumn fx:id="disabledCellsColNumberOfDisabledCells" editable="false" minWidth="0.0" prefWidth="217.0" text="Number of disabled cells" />
+                              <TableColumn fx:id="disabledCellsColMonth" editable="false" prefWidth="217.0" text="Month" />
+                           </columns>
+                        </TableView>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+            <HBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <DatePicker fx:id="startDatePicker" minWidth="100.0" onAction="#handleStartDateChoice" prefHeight="40.0" prefWidth="300.0" promptText="Report start date" styleClass="datePickerStatistics" />
+                  <DatePicker fx:id="endDatePicker" disable="true" layoutX="10.0" layoutY="25.0" minWidth="100.0" onAction="#handleEndDateChoice" prefHeight="40.0" prefWidth="300.0" promptText="Report end date" styleClass="datePickerStatistics" />
+                  <ComboBox fx:id="parkingLotsList" disable="true" minHeight="40.0" minWidth="300.0" onAction="#handleLotChoice" prefHeight="40.0" prefWidth="240.0" promptText="Choose lot address" styleClass="comboBox" />
+               </children>
+            </HBox>
+				<VBox fx:id="infoBox" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="53.0" prefWidth="668.0" spacing="0.0" styleClass="bigInfoLabel">
+					<children>
+						<ProgressIndicator fx:id="infoProgress" prefHeight="21.0" prefWidth="280.0" visible="false" />
+						<TextFlow fx:id="infoLabel" prefHeight="77.0" prefWidth="280.0" textAlignment="CENTER">
+							<VBox.margin>
+								<Insets />
+							</VBox.margin>
+						</TextFlow>
+					</children>
+				</VBox>
+				<HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="90.0" prefWidth="614.0" spacing="60.0">
+					<children>
+						<Button id="" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="backButton" text="Close" textAlignment="CENTER" />
+					</children>
+				</HBox>
+			</children>
+		</VBox>
+	</center>
+	<padding>
+		<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+	</padding>
+</BorderPane>

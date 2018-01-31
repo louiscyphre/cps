@@ -17,23 +17,23 @@ public class ServiceStatisticsChoice extends ServiceActionControllerBase {
   private Label usernameLabel;
 
   @FXML
-  void handleMonthlyReportsButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_MONTHLY);
+  void handleQuarterlyReportsButton(ActionEvent event) {
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_QUARTERLY);
   }
 
   @FXML
-  void handleOrdersReportsButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_ORDERS);
+  void handleWeeklyReportsButton(ActionEvent event) {
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_WEEKLY);
   }
 
   @FXML
-  void handleDisabledCellsReportsButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_DISABLED_PARKING_CELLS);
+  void handleActivityReportsButton(ActionEvent event) {
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_ACTIVITY);
   }
 
   @FXML
-  void handleComplaintsReportsButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_COMPLAINTS);
+  void handlePerformanceReportsButton(ActionEvent event) {
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_PERFORMANCE);
   }
 
   @FXML

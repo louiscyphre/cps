@@ -52,18 +52,15 @@ public class ControllerConstants {
 
     SERVICE_ACTION_MANAGE_LOT("view/service/ServiceActionManageLot.fxml"),
     
-    SERVICE_STATISTICS_ORDERS("view/service/ServiceStatisticsOrders.fxml"),
-    
     SERVICE_STATISTICS_CHOICE("view/service/ServiceStatisticsChoice.fxml"),
     
     SERVICE_STATISTICS_WEEKLY("view/service/ServiceStaticticsWeekly.fxml"),
+
+    SERVICE_STATISTICS_QUARTERLY("view/service/ServiceStaticticsQuarterly.fxml"),
     
-    SERVICE_STATISTICS_MONTHLY("view/service/ServiceStaticticsMonthly.fxml"),
+    SERVICE_STATISTICS_ACTIVITY("view/service/ServiceStaticticsActivity.fxml"),
     
-    SERVICE_STATISTICS_DISABLED_PARKING_CELLS("view/service/ServiceStaticticsDisabledParkingCells.fxml"),
-    
-    SERVICE_STATISTICS_COMPLAINTS("view/service/ServiceStaticticsComplaints.fxml"),
-    
+    SERVICE_STATISTICS_PERFORMANCE("view/service/ServiceStaticticsPerformance.fxml"),
     ;
 
     String myRelativePath;

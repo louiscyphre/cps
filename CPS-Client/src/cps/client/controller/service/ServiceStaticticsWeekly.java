@@ -1,15 +1,14 @@
 package cps.client.controller.service;
 
-import cps.client.controller.ControllerConstants.SceneCode;
 import cps.api.response.ServerResponse;
 import cps.api.response.WeeklyReportResponse;
+import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-public class ServiceStaticticsWeekly extends ServiceActionControllerBase {
+public class ServiceStaticticsWeekly extends ServiceStatitisticsBase {
 
   @FXML
   private TableColumn<?, ?> colFri;
@@ -38,10 +37,6 @@ public class ServiceStaticticsWeekly extends ServiceActionControllerBase {
   @FXML
   private TableColumn<?, ?> colThu;
 
-  @FXML
-  void handleBackButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE);
-  }
   @FXML
   void initialize() {
     super.baseInitialize();
