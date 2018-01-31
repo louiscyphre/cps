@@ -11,30 +11,30 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import cps.server.database.QueryBuilder;
 
-// TODO: Auto-generated Javadoc
-/** The Class DisabledCellsStatistics. */
+/** Records statistical data about enable/disable actions performed on Parking Cells (car storage inside of a parking lot).
+ * Allows calculating the number of disabled cells in a given period, and the amount of time during which cells were inactive. */
 @SuppressWarnings("unused")
 public class DisabledCellsStatistics {
 
   /** The lot id. */
   private int lotId;
 
-  /** The date disabled. */
+  /** The date when the cell was disabled. */
   private LocalDateTime dateDisabled;
 
-  /** The width. */
+  /** The cell's width coordinate. */
   private int width;
 
-  /** The height. */
+  /** The cell's height coordinate. */
   private int height;
 
-  /** The depth. */
+  /** The cell's depth. */
   private int depth;
 
-  /** The date enabled. */
+  /** The date when the cell was enabled. */
   private LocalDateTime dateEnabled;
 
-  /** Instantiates a new disabled cells statistics.
+  /** Instantiates a new disabled cells statistics object.
    * @param _lotid the lotid
    * @param _dateDisabled the date disabled
    * @param _width the width
@@ -50,8 +50,8 @@ public class DisabledCellsStatistics {
     this.dateEnabled = _dateEnabled;
   }
 
-  /** Instantiates a new disabled cells statistics.
-   * @param rs the rs
+  /** Instantiates a new disabled cells statistics object from an SQL ResultSet.
+   * @param rs the SQL ResultSet
    * @throws SQLException the SQL exception */
   public DisabledCellsStatistics(ResultSet rs) throws SQLException {
     this.lotId = rs.getInt("lotid");
@@ -62,8 +62,8 @@ public class DisabledCellsStatistics {
     this.dateEnabled = rs.getTimestamp("date_enabled").toLocalDateTime();
   }
 
-  /** Creates the.
-   * @param conn the conn
+  /** Create a new disabled cells statistics object.
+   * @param conn the SQL connection
    * @param _lotid the lotid
    * @param _width the width
    * @param _height the height
@@ -80,14 +80,14 @@ public class DisabledCellsStatistics {
     stmt.executeUpdate();
   }
 
-  /** Markfixed.
-   * @param conn the conn
+  /** Find the most disabled cells statistics entry which recorded that a cell was disabled, but has not been enabled yet, and mark it as enabled.
+   * @param conn the SQL connection
    * @param _lotid the lotid
    * @param _width the width
    * @param _height the height
    * @param _depth the depth
    * @throws SQLException the SQL exception */
-  public static void markfixed(Connection conn, int _lotid, int _width, int _height, int _depth) throws SQLException {
+  public static void markFixed(Connection conn, int _lotid, int _width, int _height, int _depth) throws SQLException {
     PreparedStatement stmt = conn
         .prepareStatement("UPDATE disabled_slots_table SET date_enabled=? WHERE lotid=? AND width=? AND height=? AND depth=? AND date_enabled is null");
     int i = 1;
@@ -99,12 +99,12 @@ public class DisabledCellsStatistics {
     stmt.executeUpdate();
   }
 
-  /** Count disabled cells.
-   * @param conn the conn
-   * @param lotid the lotid
-   * @param from the from
-   * @param to the to
-   * @return the int
+  /** Count the number of disabled cells during a given period.
+   * @param conn the SQL connection
+   * @param lotid the lot id
+   * @param from starting point of the period
+   * @param to ending point of the period
+   * @return the number of disabled cells
    * @throws SQLException the SQL exception */
   public static int countDisabledCells(Connection conn, int lotid, LocalDateTime from, LocalDateTime to) throws SQLException {
     String helper = "";
