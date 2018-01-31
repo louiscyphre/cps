@@ -26,7 +26,7 @@ public class ServiceActionControllerBaseSubmitAndFinish extends ServiceActionCon
    */
   @FXML
   void handleFinishButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.SERVICE_ACTION_MENU, 10);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.SERVICE_ACTION_MENU);
   }
 
   /**

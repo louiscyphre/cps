@@ -27,7 +27,6 @@ import cps.api.response.RefundResponse;
 import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.RejectComplaintResponse;
 import cps.api.response.RequestLotStateResponse;
-import cps.api.response.RequestReportResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.Response;
@@ -473,6 +472,38 @@ public abstract class ClientControllerBase implements ViewController {
     return null;
   }
 
+  /* (non-Javadoc)
+   * @see cps.api.response.ResponseHandler#handle(cps.api.response.WeeklyReportResponse)
+   */
+  @Override
+  public ServerResponse handle(WeeklyReportResponse response) {
+    return null;
+  }
+
+  /* (non-Javadoc)
+   * @see cps.api.response.ResponseHandler#handle(cps.api.response.QuarterlyReportResponse)
+   */
+  @Override
+  public ServerResponse handle(QuarterlyReportResponse response) {
+    return null;
+  }
+
+  /* (non-Javadoc)
+   * @see cps.api.response.ResponseHandler#handle(cps.api.response.CurrentPerformanceResponse)
+   */
+  @Override
+  public ServerResponse handle(CurrentPerformanceResponse response) {
+    return null;
+  }
+
+  /* (non-Javadoc)
+   * @see cps.api.response.ResponseHandler#handle(cps.api.response.PeriodicReportResponse)
+   */
+  @Override
+  public ServerResponse handle(PeriodicReportResponse response) {
+    return null;
+  }
+  
   // Helper methods
   /**
    * Helper function, turns TextField content into String
@@ -667,25 +698,5 @@ public abstract class ClientControllerBase implements ViewController {
     } catch (Exception e) {
       return null;
     }
-  }
-
-  @Override
-  public ServerResponse handle(WeeklyReportResponse response) {
-    return null;
-  }
-
-  @Override
-  public ServerResponse handle(QuarterlyReportResponse response) {
-    return null;
-  }
-
-  @Override
-  public ServerResponse handle(CurrentPerformanceResponse response) {
-    return null;
-  }
-
-  @Override
-  public ServerResponse handle(PeriodicReportResponse response) {
-    return null;
   }
 }

@@ -100,7 +100,7 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   @FXML
   void handleEnterParkingButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ENTER_PARKING, 10);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.ENTER_PARKING);
     }
   }
 
@@ -111,7 +111,7 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   @FXML
   void handleExitParkingButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.EXIT_PARKING, 10);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.EXIT_PARKING);
     }
   }
 
@@ -122,7 +122,7 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   @FXML
   void handleViewMyReservationsButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_RESERVATION, 10);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.VIEW_MY_RESERVATION);
     }
   }
 
@@ -133,7 +133,7 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   @FXML
   void handleFileComplaintButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FILE_COMPLAINT, 10);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FILE_COMPLAINT);
     }
   }
 
@@ -144,7 +144,7 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   @FXML
   void handleLoginButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.LOGIN, 10);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.LOGIN);
     }
   }
 
@@ -155,7 +155,7 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   @FXML
   void handleReserveParkingButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.RESERVE_PARKING, 10);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.RESERVE_PARKING);
     }
   }
 
@@ -166,7 +166,7 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   @FXML
   void handleBuySubscriptionButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS, 10);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
     }
   }
 
@@ -177,7 +177,7 @@ public class CustomerMainMenuController extends CustomerActionControllerBase {
   @FXML
   void handleParkNowButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INCIDENTAL_PARKING, 10);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.INCIDENTAL_PARKING);
     }
   }
 

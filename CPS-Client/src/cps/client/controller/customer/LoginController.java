@@ -160,7 +160,7 @@ public class LoginController extends CustomerActionControllerBase {
       context.acceptPendingEmail();
       // Turning the LoggedIn state, application-wide
       ControllersClientAdapter.turnLoggedInStateOn();
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU, 10);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
       // Turning off the processing state
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);
