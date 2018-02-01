@@ -42,6 +42,9 @@ import javafx.scene.text.Text;
 public class ServiceStaticticsComplaints extends ServiceActionControllerBase implements ParkingLotsController, ReportsController {
 
   @FXML
+  private TableColumn<ReportsTable, String> colMonth;
+  
+  @FXML
   private TableColumn<ReportsTable, String> colQuarter;
 
   @FXML
