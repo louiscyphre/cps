@@ -99,7 +99,7 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
     turnProcessingStateOff();
 
     if (response.success()) {
-      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU, 10);
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
     } else {
       displayError(response.getDescription());
     }

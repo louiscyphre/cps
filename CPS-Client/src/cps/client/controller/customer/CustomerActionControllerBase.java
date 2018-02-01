@@ -1,10 +1,5 @@
 package cps.client.controller.customer;
 
-import cps.api.response.CurrentPerformanceResponse;
-import cps.api.response.PeriodicReportResponse;
-import cps.api.response.QuarterlyReportResponse;
-import cps.api.response.ServerResponse;
-import cps.api.response.WeeklyReportResponse;
 import cps.client.controller.ClientControllerBase;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
@@ -23,7 +18,7 @@ public class CustomerActionControllerBase extends ClientControllerBase {
   @FXML
   void handleBackButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU, 10);
+      ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU);
     }
   }
 
@@ -34,7 +29,7 @@ public class CustomerActionControllerBase extends ClientControllerBase {
   @FXML
   void handleCancelButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU, 10);
+      ControllersClientAdapter.setStage(SceneCode.CUSTOMER_INITIAL_MENU);
     }
   }
 
@@ -65,25 +60,5 @@ public class CustomerActionControllerBase extends ClientControllerBase {
    */
   void sendMainRequest() {
 
-  }
-
-  @Override
-  public ServerResponse handle(WeeklyReportResponse response) {
-    return null;
-  }
-
-  @Override
-  public ServerResponse handle(QuarterlyReportResponse response) {
-    return null;
-  }
-
-  @Override
-  public ServerResponse handle(CurrentPerformanceResponse response) {
-    return null;
-  }
-
-  @Override
-  public ServerResponse handle(PeriodicReportResponse response) {
-    return null;
   }
 }

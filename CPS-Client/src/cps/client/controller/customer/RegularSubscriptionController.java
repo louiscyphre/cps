@@ -88,7 +88,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     if (processing) {
       return;
     }
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS, 10);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
   }
 
   /* (non-Javadoc)

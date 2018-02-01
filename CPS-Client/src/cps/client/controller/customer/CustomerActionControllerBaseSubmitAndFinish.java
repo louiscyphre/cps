@@ -30,7 +30,7 @@ public class CustomerActionControllerBaseSubmitAndFinish extends CustomerActionC
    */
   @FXML
   void handleFinishButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU, 10);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_INITIAL_MENU);
   }
 
   /**

@@ -18,27 +18,27 @@ public class ServiceStatisticsChoice extends ServiceActionControllerBase {
 
   @FXML
   void handleMonthlyReportsButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_MONTHLY, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_MONTHLY);
   }
 
   @FXML
   void handleOrdersReportsButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_ORDERS, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_ORDERS);
   }
 
   @FXML
   void handleDisabledCellsReportsButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_DISABLED_PARKING_CELLS, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_DISABLED_PARKING_CELLS);
   }
 
   @FXML
   void handleComplaintsReportsButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_COMPLAINTS, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_COMPLAINTS);
   }
 
   @FXML
   void handleBackButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
   }
 
   @Override

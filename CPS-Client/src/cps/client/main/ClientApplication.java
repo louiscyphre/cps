@@ -176,7 +176,7 @@ public class ClientApplication extends Application implements INetworkClient {
    */
   private void initializeStage(SceneCode code, String title) {
     ControllersClientAdapter.getClient().getPrimaryStage().setTitle(title);
-    ControllersClientAdapter.setStage(code, 10);
+    ControllersClientAdapter.setStage(code);
     primaryStage.show();
     primaryStage.setOnCloseRequest(e -> {
       Platform.exit();

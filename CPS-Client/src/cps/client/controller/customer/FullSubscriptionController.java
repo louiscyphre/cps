@@ -79,7 +79,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     if (processing) {
       return;
     }
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS, 10);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.CUSTOMER_LIST_SUBSCRIPTIONS);
   }
 
   /*

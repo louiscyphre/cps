@@ -22,7 +22,7 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
   @FXML
   void handleBackButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU, 10);
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
     }
   }
 
@@ -34,7 +34,7 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
   @FXML
   void handleCancelButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU, 10);
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
     }
   }
 
@@ -46,7 +46,7 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
   @FXML
   void handleFinishButton(ActionEvent event) {
     if (!processing) {
-      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU, 10);
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MENU);
     }
   }
 
@@ -85,7 +85,7 @@ public abstract class ServiceActionControllerBase extends ClientControllerBase {
    * @throws InternalClientException if employee context is not defined.
    */
   EmployeeContext requireEmployeeContext() throws InternalClientException {
-    return notNull(ControllersClientAdapter.getEmployeeContext(), "Emlpoyee Context");
+    return notNull(ControllersClientAdapter.getEmployeeContext(), "Employee Context");
   }
 
   /**

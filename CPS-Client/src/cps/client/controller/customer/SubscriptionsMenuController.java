@@ -156,7 +156,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
       return;
     }
     if (fullSubscriptionRadioButton.isSelected()) {
-      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FULL_SUBSCRIPTION, 10);
+      ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FULL_SUBSCRIPTION);
       return;
     }
     if (parkingLotsList.getValue() == null) {
@@ -164,7 +164,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     }
     int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
     ControllersClientAdapter.getCustomerContext().setChosenLotID(userChosenLotID);
-    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REGULAR_SUBSCRIPTION, 10);
+    ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REGULAR_SUBSCRIPTION);
   }
   /**
    * Initializes the Controller and Registers it. 

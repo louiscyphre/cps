@@ -20,7 +20,7 @@ public class ServiceStaticticsDisabledParkingCells extends ServiceActionControll
 
   @FXML
   void handleBackButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE);
   }
   @FXML
   void initialize() {
