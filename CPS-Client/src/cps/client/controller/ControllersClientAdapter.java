@@ -152,39 +152,61 @@ public class ControllersClientAdapter {
     getInstance().currentScene = code; // indicate that this scene is current
                                        // for the future
     
-    // pause transition instantiation 
-    PauseTransition pauseTransition = new PauseTransition();
-    pauseTransition.setDuration(duration);
-    pauseTransition.play();
-    pauseTransition.setOnFinished((ActionEvent e) -> {
+    if(duration.greaterThan(Duration.millis(0))) {
+      // pause transition instantiation 
+      PauseTransition pauseTransition = new PauseTransition();
+      pauseTransition.setDuration(duration);
+      pauseTransition.play();
+      pauseTransition.setOnFinished((ActionEvent e) -> {
+        // scene switching mechanism using scene mapping
+        setSceneHelper(code);
+      });
+    }
+    else {
       // scene switching mechanism using scene mapping
-      Scene scene = ControllersClientAdapter.fetchScene(code);
-      ClientApplication clientApp = ControllersClientAdapter.getClient();
-      Stage stage = clientApp.getPrimaryStage();
-
-      ViewController ctrl = fetchCtrl(code);
-      stage.setScene(scene);
-      // enforcing the full screen
-      Screen screen = Screen.getPrimary();
-      Rectangle2D bounds = screen.getVisualBounds();
-      stage.setX(bounds.getMinX());
-      stage.setY(bounds.getMinY());
-      stage.setWidth(bounds.getWidth());
-      stage.setHeight(bounds.getHeight());
-      // controller clean, prior to the scene switch
-      if (ctrl != null) {
-        ctrl.cleanCtrl();
-      }
-    });
+      setSceneHelper(code);
+    }
   }
 
   /**
-   * Aux set stage
+   * Aux set stage, after given millis
    * @param code
    * @param millis milliseconds for the scene transition
    */
   public static void setStage(ControllerConstants.SceneCode code, int millis) {
     setStage(code, Duration.millis(millis));
+  }
+
+  /**
+   * Aux set stage, immediately
+   * @param code
+   */
+  public static void setStage(ControllerConstants.SceneCode code) {
+    setStage(code, Duration.millis(0));
+  }
+
+  /**
+   * Helper function which switches the scene.
+   * @param code
+   */
+  private static void setSceneHelper(ControllerConstants.SceneCode code) {
+    Scene scene = ControllersClientAdapter.fetchScene(code);
+    ClientApplication clientApp = ControllersClientAdapter.getClient();
+    Stage stage = clientApp.getPrimaryStage();
+    
+    ViewController ctrl = fetchCtrl(code);
+    stage.setScene(scene);
+    // enforcing the full screen
+    Screen screen = Screen.getPrimary();
+    Rectangle2D bounds = screen.getVisualBounds();
+    stage.setX(bounds.getMinX());
+    stage.setY(bounds.getMinY());
+    stage.setWidth(bounds.getWidth());
+    stage.setHeight(bounds.getHeight());
+    // controller clean, prior to the scene switch
+    if (ctrl != null) {
+      ctrl.cleanCtrl();
+    }
   }
 
   /**

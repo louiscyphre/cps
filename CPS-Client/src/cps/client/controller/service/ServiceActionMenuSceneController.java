@@ -32,7 +32,7 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   @FXML
   void handleInitializeLotButton(ActionEvent event) {
     // ACCESS_DOMAIN_PARKING_LOT , ACCESS_LEVEL_LOCAL_WORKER
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_INIT_LOT, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_INIT_LOT);
   }
 
   /**
@@ -42,7 +42,7 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   void handleManageLotButton(ActionEvent event) {
     // ACCESS_DOMAIN_PARKING_LOT, (ACCESS_LEVEL_LOCAL_WORKER)
     // ACCESS_LEVEL_GLOBAL_MANAGER
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MANAGE_LOT, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_MANAGE_LOT);
   }
 
   /**
@@ -51,7 +51,7 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   @FXML
   void handleRefundButton(ActionEvent event) {
     // ACCESS_DOMAIN_CUSTOMER_SERVICE, ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_REFUND, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_REFUND);
   }
 
   /**
@@ -60,7 +60,7 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   @FXML
   void handleLotIsFullButton(ActionEvent event) {
     // ACCESS_DOMAIN_PARKING_LOT, ACCESS_LEVEL_LOCAL_WORKER
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOT_IS_FULL, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOT_IS_FULL);
   }
 
   /**
@@ -69,7 +69,7 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   @FXML
   void handleUpdatePricesButton(ActionEvent event) {
     // ACCESS_DOMAIN_PARKING_LOT, ACCESS_LEVEL_LOCAL_MANAGER
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_UPDATE_PRICES, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
   }
 
   /**
@@ -79,7 +79,7 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   void handleStatisticsButton(ActionEvent event) {
     // ACCESS_DOMAIN_STATISTICS,
     // ACCESS_LEVEL_GLOBAL_MANAGER
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE);
   }
 
   /**
@@ -87,7 +87,7 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
    */
   @FXML
   void handleLogoutButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOGIN, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOGIN);
     ControllersClientAdapter.getEmployeeContext().logContextOut();
   }
 

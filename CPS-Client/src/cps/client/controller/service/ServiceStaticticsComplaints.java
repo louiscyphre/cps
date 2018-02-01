@@ -193,7 +193,7 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
    * @see cps.client.controller.service.ServiceActionControllerBase#handleBackButton(javafx.event.ActionEvent) */
   @FXML
   void handleBackButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE, 10);
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE);
   }
 
   /** Initialize. */
