@@ -246,8 +246,7 @@ public class LotController extends RequestController {
   /** Disable a Parking Cell inside of the lot - cars cannot be parked here.
    * @param action the service action request
    * @param session the service user session
-   * @return the server response
-   * @throws ServerException */
+   * @return the server response */
   public ServerResponse handle(ParkingCellSetDisabledAction action, ServiceSession session) {
     String successMessage = action.getValue() ? "Parking cell disabled successfully" : "Parking cell enabled successfully";
     return reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK(),

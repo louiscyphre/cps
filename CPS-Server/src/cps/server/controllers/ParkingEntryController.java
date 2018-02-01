@@ -35,9 +35,8 @@ public class ParkingEntryController extends RequestController {
   }
 
   /** Checks if the user has a reservation or a subscription and allows them to enter if the parameters are correct.
-   * @param request
-   *        the request
-   * @param session
+   * @param request the request
+   * @param session the session
    * @return the server response */
   public ServerResponse handle(ParkingEntryRequest request, CustomerSession session) {
     return database.performQuery(new ParkingEntryResponse(), (conn, response) -> {

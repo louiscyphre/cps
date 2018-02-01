@@ -46,7 +46,7 @@ public class CarTransportationControllerA extends RequestController implements C
    *        Stack holding the exit times, correlated with car IDs
    * @return true, if successful
    * @throws SQLException
-   *         the SQL exception
+   *         on error
    * @throws ServerException
    *         if an error occurs during insertion */
   private boolean insertCars(Connection conn, ParkingLot lot, Stack<String> carIds, Stack<LocalDateTime> exitTimes) throws SQLException, ServerException {
@@ -244,7 +244,7 @@ public class CarTransportationControllerA extends RequestController implements C
    * @param exitTime
    *        the exit time
    * @throws SQLException
-   *         the SQL exception
+   *         on error
    * @throws ServerException
    *         if an error occurs during insertion */
   public void insertCar(Connection conn, ParkingLot lot, String carId, LocalDateTime exitTime) throws SQLException, ServerException {
@@ -314,16 +314,11 @@ public class CarTransportationControllerA extends RequestController implements C
   }
 
   /** Attempt to retrieve a car with the specified ID from the parking lot.
-   * @param conn
-   *        the SQL connection
-   * @param lotId
-   *        the parking lot ID
-   * @param carID
-   *        the car ID
-   * @throws SQLException
-   *         the SQL exception
-   * @throws CarTransportationException
-   *         if an error occurs during retrieval */
+   * @param conn the SQL connection
+   * @param lotId the parking lot ID
+   * @param carID the car ID
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public void retrieveCar(Connection conn, int lotId, String carID) throws SQLException, ServerException {
     ParkingLot lot = ParkingLot.findByID(conn, lotId);
     // String[][][] content = lot.getContentAsArray();

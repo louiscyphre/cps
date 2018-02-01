@@ -10,9 +10,9 @@ import java.sql.Timestamp;
 import cps.common.Constants;
 import cps.server.ServerException;
 
-/**
- * The Class ParkingCell.
- */
+/** Represents a parking cell as a data object that can be sent through the network and persisted in the database.
+ * A parking cell is the single unit of parking inside of a parking lot.
+ * One parking cell contains one car. */
 public class ParkingCell implements Serializable {
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 1L;
@@ -26,28 +26,24 @@ public class ParkingCell implements Serializable {
   private boolean   reserved;
   private boolean   disabled;
 
-  /**
-   * Instantiates a new parking cell.
-   *
+  /** Instantiates a new parking cell.
    * @param lotID
-   *          the lot ID
+   *        the lot ID
    * @param width
-   *          the location I
+   *        the location I
    * @param height
-   *          the location J
+   *        the location J
    * @param depth
-   *          the location K
+   *        the location K
    * @param carID
-   *          the car ID
+   *        the car ID
    * @param plannedExitTime
-   *          the planned exit time
+   *        the planned exit time
    * @param reserved
-   *          the reserved
+   *        the reserved
    * @param disabled
-   *          the disabled
-   */
-  public ParkingCell(int lotID, int width, int height, int depth, String carID, Timestamp plannedExitTime,
-      boolean reserved, boolean disabled) {
+   *        the disabled */
+  public ParkingCell(int lotID, int width, int height, int depth, String carID, Timestamp plannedExitTime, boolean reserved, boolean disabled) {
     this.lotID = lotID;
     this.width = width;
     this.height = height;
@@ -58,17 +54,13 @@ public class ParkingCell implements Serializable {
     this.disabled = disabled;
   }
 
-  /**
-   * Instantiates a new parking cell.
-   *
+  /** Instantiates a new parking cell.
    * @param rs
-   *          the rs
+   *        the rs
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         on error */
   public ParkingCell(ResultSet rs) throws SQLException {
-    this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5), rs.getTimestamp(6), rs.getBoolean(7),
-        rs.getBoolean(8));
+    this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5), rs.getTimestamp(6), rs.getBoolean(7), rs.getBoolean(8));
   }
 
   public String getCarID() {
@@ -122,35 +114,32 @@ public class ParkingCell implements Serializable {
     return carID != null && carID.equals(otherCarID);
   }
 
-  /**
-   * Creates the.
-   *
+  /** Creates the.
    * @param conn
-   *          the conn
+   *        the SQL connection
    * @param lotID
-   *          the lot ID
+   *        the lot ID
    * @param width
-   *          the location I
+   *        the location I
    * @param height
-   *          the location J
+   *        the location J
    * @param depth
-   *          the location K
+   *        the location K
    * @param carID
-   *          the car ID
+   *        the car ID
    * @param plannedExitTime
-   *          the planned exit time
+   *        the planned exit time
    * @param reserved
-   *          the reserved
+   *        the reserved
    * @param disabled
-   *          the disabled
+   *        the disabled
    * @return the parking cell
    * @throws SQLException
-   *           the SQL exception
+   *         on error
    * @throws ServerException
-   *           the server exception
-   */
-  public static ParkingCell create(Connection conn, int lotID, int width, int height, int depth, String carID,
-      Timestamp plannedExitTime, boolean reserved, boolean disabled) throws SQLException, ServerException {
+   *         the server exception */
+  public static ParkingCell create(Connection conn, int lotID, int width, int height, int depth, String carID, Timestamp plannedExitTime, boolean reserved,
+      boolean disabled) throws SQLException, ServerException {
     // Create SQL statement
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_PARKING_CELL);
 
@@ -175,23 +164,20 @@ public class ParkingCell implements Serializable {
     return new ParkingCell(lotID, width, height, depth, carID, plannedExitTime, reserved, disabled);
   }
 
-  /**
-   * Find.
-   *
+  /** Find.
    * @param conn
-   *          the conn
+   *        the SQL connection
    * @param lotID
-   *          the lot ID
+   *        the lot ID
    * @param i
-   *          the i
+   *        the i
    * @param j
-   *          the j
+   *        the j
    * @param k
-   *          the k
+   *        the k
    * @return the parking cell
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         on error */
   public static ParkingCell find(Connection conn, int lotID, int i, int j, int k) throws SQLException {
     ParkingCell item = null;
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_PARKING_CELL);
@@ -212,16 +198,10 @@ public class ParkingCell implements Serializable {
     return item;
   }
 
-  /**
-   * Update.
-   *
-   * @param conn
-   *          the conn
-   * @throws SQLException
-   *           the SQL exception
-   * @throws ServerException
-   *           the server exception
-   */
+  /** Update the ParkingCell record in the database.
+   * Find record by the instance's id attribute and update record fields to match the instance.
+   * @param conn the SQL connection
+   * @throws SQLException on error */
   public void update(Connection conn) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_CELL);
 
@@ -234,9 +214,9 @@ public class ParkingCell implements Serializable {
     statement.setInt(field++, width);
     statement.setInt(field++, height);
     statement.setInt(field++, depth);
-    
+
     statement.executeUpdate();
-    
+
     statement.close();
   }
 
@@ -248,18 +228,15 @@ public class ParkingCell implements Serializable {
     public void call(ParkingCell argument) throws ServerException;
   }
 
-  /**
-   * Lot for each.
-   *
+  /** Lot for each.
    * @param conn
-   *          the conn
+   *        the SQL connection
    * @param lotID
-   *          the lot ID
+   *        the lot ID
    * @param visitor
-   *          the visitor
+   *        the visitor
    * @throws SQLException
-   *           the SQL exception
-   */
+   *         on error */
   public static void lotForEach(Connection conn, int lotID, ParkingCellVisitor visitor) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_PARKING_CELL_BY_LOT_ID);
 

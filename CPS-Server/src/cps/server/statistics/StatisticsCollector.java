@@ -14,8 +14,10 @@ import cps.server.ServerException;
 /** Consolidates the collection of statistics throughout the system.
  * At certain points in the source code, there are statistical entry points, which are calls to the static methods of this class. */
 public class StatisticsCollector {
+  
   /** Increase canceled order count by one for today in specific parking lot.
    * @param conn the SQL connection
+   * @param date the date
    * @param lotID the lot ID
    * @throws SQLException on error
    * @throws ServerException on error */

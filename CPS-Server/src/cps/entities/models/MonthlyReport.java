@@ -60,8 +60,11 @@ public class MonthlyReport {
    * @param _ordincidental the number of incidental parkings
    * @param _ordregular the number of regular subscriptions
    * @param _ordfull the number of full subscriptions
-   * @param _coplaintscount the number of complaints
-   * @param _disabledslots the number disabled slots */
+   * @param _complaintscount the number of complaints
+   * @param complaintsclosedcount the number of closed complaints
+   * @param complaintsrefundedcount the number of refunded complaints
+   * @param _disabledslots the number disabled slots
+   * @param field the field */
   public MonthlyReport(int _year, int _month, int _lotid, int _ordreserved, int _ordincidental, int _ordregular,
       int _ordfull, int _complaintscount, int complaintsclosedcount, int complaintsrefundedcount, int _disabledslots,
       String field) {
@@ -210,7 +213,7 @@ public class MonthlyReport {
     return report;
   }
 
-  /** Update.
+  /** Update the database record for this MonthlyReport.
    * @param conn the SQL connection
    * @throws SQLException on error */
   public void update(Connection conn) throws SQLException {
@@ -420,8 +423,8 @@ public class MonthlyReport {
     return complaintsCount;
   }
 
-  public void setComplaintsCount(int coplaintsCount) {
-    this.complaintsCount = coplaintsCount;
+  public void setComplaintsCount(int complaintsCount) {
+    this.complaintsCount = complaintsCount;
   }
 
   public int getDisabledSlots() {
