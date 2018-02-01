@@ -1,5 +1,6 @@
 package cps.entities.models;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +15,8 @@ import cps.server.ServerException;
 /** Consolidates statistical data used for quarterly reports.
  * A quarterly report is represented as a collection of monthly reports. */
 @SuppressWarnings("unused")
-public class MonthlyReport {
+public class MonthlyReport implements Serializable {
+  private static final long serialVersionUID = 1L;
 
   /** The year. */
   private int year;

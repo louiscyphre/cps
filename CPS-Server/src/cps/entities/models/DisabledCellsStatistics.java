@@ -107,26 +107,25 @@ public class DisabledCellsStatistics {
    * @return the number of disabled cells
    * @throws SQLException the SQL exception */
   public static int countDisabledCells(Connection conn, int lotid, LocalDateTime from, LocalDateTime to) throws SQLException {
-    String helper = "";
-    // Count distinct selection
-    helper += "SELECT count(DISTINCT lotid,width,height,depth) FROM disabled_slots_table ";
-    // Was disabled during
-    helper += "WHERE lotid=? AND ((? <= date_disabled AND date_disabled <= ?) ";
-    // Was enabled during
-    helper += "OR (? <= date_enabled AND date_enabled <= ?) ";
-    // Was disabled before and wasn't enabled at all or was enabled after
-    helper += "OR (date_disabled <= ? AND (date_enabled is null OR date_enabled >= ?)))";
-
-    PreparedStatement stmt = conn.prepareStatement(helper);
-    int i = 1;
-    stmt.setInt(i++, lotid);
-    stmt.setTimestamp(i++, Timestamp.valueOf(from));
-    stmt.setTimestamp(i++, Timestamp.valueOf(to));
-    stmt.setTimestamp(i++, Timestamp.valueOf(from));
-    stmt.setTimestamp(i++, Timestamp.valueOf(to));
-    stmt.setTimestamp(i++, Timestamp.valueOf(from));
-    stmt.setTimestamp(i++, Timestamp.valueOf(to));
-    return stmt.executeUpdate();
+    return new QueryBuilder<Integer>(String.join(" ",
+        // Count distinct selection
+        "SELECT count(DISTINCT lotid,width,height,depth) FROM disabled_slots_table",
+        // Was disabled during
+        "WHERE lotid=? AND ((? <= date_disabled AND date_disabled <= ?)",
+        // Was enabled during
+        "OR (? <= date_enabled AND date_enabled <= ?)",
+        // Was disabled before and wasn't enabled at all or was enabled after
+        "OR (date_disabled <= ? AND (date_enabled is null OR date_enabled >= ?)))"))
+    .withFields(statement -> {
+      int i = 1;
+      statement.setInt(i++, lotid);
+      statement.setTimestamp(i++, Timestamp.valueOf(from));
+      statement.setTimestamp(i++, Timestamp.valueOf(to));
+      statement.setTimestamp(i++, Timestamp.valueOf(from));
+      statement.setTimestamp(i++, Timestamp.valueOf(to));
+      statement.setTimestamp(i++, Timestamp.valueOf(from));
+      statement.setTimestamp(i++, Timestamp.valueOf(to));
+    }).fetchResult(conn, result -> result.getInt(1));
   }
 
   public static double countDisableHours(Connection conn, LocalDate from, LocalDate to) throws SQLException {
