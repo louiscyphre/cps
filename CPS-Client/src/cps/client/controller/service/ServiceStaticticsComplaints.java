@@ -54,7 +54,7 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
   private TableColumn<ReportsTable, String> colRejected;
 
   @FXML
-  private TableColumn<ReportsTable, String> colOpenedClaims;
+  private TableColumn<ReportsTable, String> colOpened;
 
   @FXML
   private TableColumn<ReportsTable, String> colRefunded;
@@ -205,14 +205,14 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
     assert tableView != null : "fx:id=\"tableView\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
     assert colYear != null : "fx:id=\"colYear\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
     assert colQuarter != null : "fx:id=\"colQuarter\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
-    assert colOpenedClaims != null : "fx:id=\"colOpenedClaims\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
+    assert colOpened != null : "fx:id=\"colOpenedClaims\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
     assert colRejected != null : "fx:id=\"colRejected\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
     assert colRefunded != null : "fx:id=\"colRefunded\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
     
     // Columns cell value factories
     colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
     colQuarter.setCellValueFactory(new PropertyValueFactory<>("Quarter"));
-    colOpenedClaims.setCellValueFactory(new PropertyValueFactory<>("Opened claims"));
+    colOpened.setCellValueFactory(new PropertyValueFactory<>("Opened claims"));
     colRejected.setCellValueFactory(new PropertyValueFactory<>("Rejected claims"));
     colRefunded.setCellValueFactory(new PropertyValueFactory<>("Refunded claims"));
     
