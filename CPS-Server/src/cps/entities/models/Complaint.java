@@ -32,8 +32,10 @@ public class Complaint implements Serializable {
    * @param id the id
    * @param customerID the customer ID
    * @param employeeID the employee ID
+   * @param lotID the lot ID
    * @param status the status
    * @param description the description
+   * @param reason the reason
    * @param createdAt the created at
    * @param resolvedAt the resolved at
    * @param refundAmount the refund amount */
@@ -134,12 +136,16 @@ public class Complaint implements Serializable {
   /** Creates a new complaint entry in the database.
    * @param conn the SQL connection
    * @param customerID the customer ID
+   * @param employeeID the employee ID
+   * @param lotID the lot ID
+   * @param status the status
    * @param description the description
+   * @param reason the reason
    * @param createdAt the created at
    * @param resolvedAt the resolved at
+   * @param refundAmount the refund amount
    * @return the complaint
-   * @throws SQLException on error */
-  
+   * @throws SQLException on error */  
   public static Complaint create(Connection conn, int customerID, int employeeID, int lotID, int status, String description, String reason, Timestamp createdAt, Timestamp resolvedAt, float refundAmount) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_COMPLAINT, Statement.RETURN_GENERATED_KEYS);
 

@@ -151,7 +151,7 @@ public class SubscriptionService implements ParkingService {
   }
 
   /** Creates a new SubscriptionService entry in the database.
-   * @param conn the conn
+   * @param conn the SQL connection
    * @param type the type
    * @param customerID int - Customer ID
    * @param email the email
@@ -165,7 +165,7 @@ public class SubscriptionService implements ParkingService {
    * @param canceled the canceled
    * @param warned the warned
    * @return the subscription service
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID, int lotID, LocalDate startDate,
       LocalDate endDate, LocalTime dailyExitTime, boolean parked, boolean completed, boolean canceled, boolean warned) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_SUBSCRIPTION_SERVICE, Statement.RETURN_GENERATED_KEYS);
@@ -199,8 +199,17 @@ public class SubscriptionService implements ParkingService {
   }
   
   /** A shorter version of create.
+   * @param conn the SQL connection
+   * @param type the type
+   * @param customerID the customer ID
+   * @param email the email
+   * @param carID the car ID
+   * @param lotID the lot ID
+   * @param startDate the start date
+   * @param endDate the end date
+   * @param dailyExitTime the daily exit time
    * @return the new subscription service
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID, int lotID, LocalDate startDate,
       LocalDate endDate, LocalTime dailyExitTime) throws SQLException {
     return create(conn, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime, false, false, false, false);
@@ -302,9 +311,9 @@ public class SubscriptionService implements ParkingService {
     return item;
   }
 
-  /** CHeck if Overlap exists.
+  /** Check if overlap exists.
    * @param conn
-   *        the conn
+   *        the SQL connection
    * @param carID
    *        the car ID
    * @param subsType
@@ -315,10 +324,10 @@ public class SubscriptionService implements ParkingService {
    *        the start date
    * @param endDate
    *        the end date
-   * @return True if exists subscription of the same type for the same car id in
+   * @return true if there is a subscription record of the same type for the same car id in
    *         the same parking lot
    * @throws SQLException
-   *         the SQL exception */
+   *         on error */
   public static boolean overlapExists(Connection conn, String carID, int subsType, int lotId, LocalDate startDate, LocalDate endDate) throws SQLException {
     PreparedStatement stmt = null;
     boolean result = false;

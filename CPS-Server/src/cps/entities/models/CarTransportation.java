@@ -203,16 +203,14 @@ public class CarTransportation implements Serializable {
     return result;
   }
 
-  /** Is used to check whether a car with this ID (licencse plate number) is already parked.
+  /** Is used to check whether a car with this ID (license plate number) is already parked.
    * 
    * Finds a car transportation entry that matches the following conditions:
    * 1. same car id
    * 2. the car has not been retrieved yet.
    * 
    * @param conn the SQL connection
-   * @param customerID the customer ID
    * @param carID the car ID
-   * @param lotID the lot ID
    * @return the car transportation
    * @throws SQLException on error */
   public static CarTransportation findParked(Connection conn, String carID) throws SQLException {

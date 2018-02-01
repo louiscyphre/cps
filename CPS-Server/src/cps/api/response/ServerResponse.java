@@ -97,7 +97,7 @@ public abstract class ServerResponse extends Response implements Serializable {
   /**
    * Sets status = STATUS_ERROR and updates the description
    * 
-   * @param description
+   * @param description the description
    */
   public void setError(String description) {
     this.status = STATUS_ERROR;
@@ -107,7 +107,7 @@ public abstract class ServerResponse extends Response implements Serializable {
   /**
    * Sets status = STATUS_OK and updates the description
    * 
-   * @param description
+   * @param description the description
    */
   public void setSuccess(String description) {
     this.status = STATUS_OK;

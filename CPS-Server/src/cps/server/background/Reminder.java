@@ -76,7 +76,7 @@ public class Reminder extends Thread {
   /**
    * Find and warn customers who reserved a parking and did not show up yet.
    * 
-   * @throws ServerException
+   * @throws ServerException on error
    */
   private void warnLateCustomers() throws ServerException {
     db.performAction(conn -> {
@@ -98,7 +98,7 @@ public class Reminder extends Thread {
    * Find users that are late more than 30 minutes and cancel their reservation
    * if they did not confirm that they are still interested.
    * 
-   * @throws ServerException
+   * @throws ServerException on error
    */
   private void cancelLateReservations() throws ServerException {
     db.performAction(conn -> {

@@ -17,7 +17,7 @@ import cps.server.ServerException;
 import cps.server.database.QueryBuilder;
 
 /**
- * The Class ParkingLot.
+ * Represents a parking lot as a data object that can be sent through the network and persisted in the database.
  */
 public class ParkingLot implements Serializable {
   /** The Constant serialVersionUID. */
@@ -49,27 +49,15 @@ public class ParkingLot implements Serializable {
 
   private boolean lotFull;
 
-  /**
-   * Instantiates a new parking lot.
-   *
-   * @param id
-   *          Parking lot id
-   * @param streetAddress
-   *          Parking lot street address
-   * @param size
-   *          Amount of columns
-   * @param content
-   *          Serialized three dimensional array that reflects status of the
-   *          parking spots
-   * @param price1
-   *          Price of incidental parking
-   * @param price2
-   *          Price of one time parking
-   * @param alternativeLots
-   *          List of alternative parking lots
-   * @param robotIP
-   *          IP address of the robot
-   */
+  /** Instantiates a new parking lot.
+   * @param id Parking lot id
+   * @param streetAddress Parking lot street address
+   * @param size Amount of columns
+   * @param price1 Price of incidental parking
+   * @param price2 Price of one time parking
+   * @param alternativeLots List of alternative parking lots
+   * @param robotIP IP address of the robot
+   * @param lotfull signifies that the lot is full */
   public ParkingLot(int id, String streetAddress, int size, float price1, float price2, String alternativeLots,
       String robotIP, boolean lotfull) {
     this.id = id;
@@ -88,7 +76,7 @@ public class ParkingLot implements Serializable {
    * @param rs
    *          the Result set
    * @throws SQLException
-   *           the SQL exception
+   *           on error
    */
   public ParkingLot(ResultSet rs) throws SQLException {
     this(rs.getInt("id"), rs.getString("street_address"), rs.getInt("size"), rs.getFloat("price1"),
@@ -168,10 +156,12 @@ public class ParkingLot implements Serializable {
     return getWidth() * getHeight() * getDepth();
   }
 
-  /**
+  /** Construct content array.
+   * @param conn the SQL connection
    * @return a three dimensional array that reflects status of the parking
    *         spots.
-   */
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public ParkingCell[][][] constructContentArray(Connection conn) throws SQLException, ServerException {
     ParkingCell[][][] result = new ParkingCell[width][3][3];
     ParkingCell.lotForEach(conn, id, cell -> result[cell.width][cell.height][cell.depth] = cell);
@@ -272,8 +262,7 @@ public class ParkingLot implements Serializable {
   }
 
   /**
-   * Insert new parking lot into the database and create a new parking lot
-   * object.
+   * Create a new parking lot record in the database.
    *
    * @param conn
    *          Connection to database server
@@ -287,10 +276,10 @@ public class ParkingLot implements Serializable {
    *          The price one time parking
    * @param robotIP
    *          IP address of the robot
-   * @return New parking lot object
+   * @return new parking lot object with the same data as the created record
    * @throws SQLException
-   *           the SQL exception
-   * @throws ServerException
+   *           on error
+   * @throws ServerException on error
    */
   public static ParkingLot create(Connection conn, String streetAddress, int size, float price1, float price2,
       String robotIP) throws SQLException, ServerException {
@@ -348,7 +337,7 @@ public class ParkingLot implements Serializable {
    *          the id
    * @return the parking lot
    * @throws SQLException
-   *           the SQL exception
+   *           on error
    */
   public static ParkingLot findByID(Connection conn, int id) throws SQLException {
     ParkingLot result = null;
@@ -377,21 +366,14 @@ public class ParkingLot implements Serializable {
     return result;
   }
 
-  /**
-   * Counts the number of cells that will need to be available for
-   * OnetimeService customers at a given point in time
-   *
-   * @param conn
-   *          the conn
-   * @param lotId
-   *          the lot id
-   * @param startTime
-   *          the start time
-   * @param hoursInAdvance
-   *          The hours in advance - default should be 1
-   * @return the int
-   * @throws SQLException
-   */
+  /** Counts the number of cells that will need to be available for
+   * OnetimeService customers at a given point in time.
+   * @param conn the SQL connection
+   * @param lotId the lot id
+   * @param startTime the start time
+   * @param endTime the end time
+   * @return the number of ordered cells
+   * @throws SQLException on error */
   public static int countOrderedCells(Connection conn, int lotId, Timestamp startTime, Timestamp endTime)
       throws SQLException {
     int result = 0;
@@ -414,9 +396,9 @@ public class ParkingLot implements Serializable {
   /**
    * Update.
    *
-   * @param conn the conn
-   * @throws SQLException the SQL exception
-   * @throws ServerException the server exception
+   * @param conn the SQL connection
+   * @throws SQLException on error
+   * @throws ServerException on error
    */
   public void update(Connection conn) throws SQLException, ServerException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_PARKING_LOT);
@@ -437,11 +419,11 @@ public class ParkingLot implements Serializable {
   }
 
   /**
-   * Find all.
+   * Find all parking lot records.
    *
-   * @param conn the conn
+   * @param conn the SQL connection
    * @return the collection
-   * @throws SQLException the SQL exception
+   * @throws SQLException on error
    */
   public static Collection<ParkingLot> findAll(Connection conn) throws SQLException {
     LinkedList<ParkingLot> results = new LinkedList<ParkingLot>();
