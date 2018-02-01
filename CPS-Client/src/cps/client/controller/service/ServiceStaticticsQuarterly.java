@@ -115,7 +115,7 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
   @FXML
   private ComboBox<String> parkingLotsList;
 
-  private HashMap<String, ParkingLot> parkingLotsMap;
+  private HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
 
   @FXML
   private DatePicker startDatePicker;
