@@ -20,7 +20,6 @@ import cps.client.controller.ReportsController;
 import cps.common.Constants;
 import cps.entities.models.MonthlyReport;
 import cps.entities.models.ParkingLot;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,14 +31,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-// TODO extract controller for each tab to a separate class
-
 public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     implements ParkingLotsController, ReportsController {
-
-  // @FXML
-  // private TableColumn<TableQuarterlyEntry, String> complaintsColLotID;//NOT
-  // needed because user already chose a lot by street address
 
   @FXML
   private TableColumn<TableQuarterlyEntry, String> complaintsColMonth;
@@ -217,6 +210,7 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     disabledCellsTableView.setItems(this.obsEntriesList);
     ordersTableView.setItems(this.obsEntriesList);
 
+    // use set/get value property value factories
     complaintsColMonth.setCellValueFactory(new PropertyValueFactory<>("month"));
     complaintsColQuarter.setCellValueFactory(new PropertyValueFactory<>("quarter"));
     complaintsColOpenedClaims.setCellValueFactory(new PropertyValueFactory<>("openedClaims"));
@@ -236,12 +230,6 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     ordersColFullSubscriptions.setCellValueFactory(new PropertyValueFactory<>("fullSubscriptions"));
     ordersColYear.setCellValueFactory(new PropertyValueFactory<>("year"));
 
-    // complaintsColYear.setCellValueFactory(cellData ->
-    // Bindings.select(cellData.getValue().getYear(), "Year"));// TODO
-    // // trying
-    // // to
-    // // bind
-
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_STATISTICS_QUARTERLY);
   }
 
@@ -254,7 +242,6 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     parkingLotsList.setDisable(true);
     parkingLotsMap.clear();
     obsEntriesList.clear();
-    // refresh();
   }
 
   /** Validates that the fields and Sends API request to the server. */
@@ -303,15 +290,6 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
       return null;
     }
   }
-
-  /*
-   * private void refresh() { if (parkingLotsMap.isEmpty()) {
-   * ListParkingLotsRequest request = new ListParkingLotsRequest(); // Toggle
-   * processing state on turnProcessingStateOn();
-   * ControllersClientAdapter.getClient().sendRequest(request); } else if
-   * (obsEntriesList.isEmpty()) { validateAndSend(); }//FIXME check this
-   * function logic and when it's being called }
-   */
 
   @Override
   public ServerResponse handle(ListParkingLotsResponse response) {
