@@ -211,8 +211,8 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     complaintsColQuarter.setCellValueFactory(new PropertyValueFactory<>("quarter"));
     complaintsColOpenedClaims.setCellValueFactory(new PropertyValueFactory<>("openedClaims"));
     complaintsColClosedClaims.setCellValueFactory(new PropertyValueFactory<>("closedClaims"));
-    complaintsColRefundedClaims.setCellValueFactory(new PropertyValueFactory<>("rejectedClaims"));
-    complaintsColRejectedClaims.setCellValueFactory(new PropertyValueFactory<>("refunded"));
+    complaintsColRefundedClaims.setCellValueFactory(new PropertyValueFactory<>("refunded"));
+    complaintsColRejectedClaims.setCellValueFactory(new PropertyValueFactory<>("rejectedClaims"));
     complaintsColYear.setCellValueFactory(new PropertyValueFactory<>("year"));
     disabledCellsColMonth.setCellValueFactory(new PropertyValueFactory<>("month"));
     disabledCellsColNumberOfDisabledCells.setCellValueFactory(new PropertyValueFactory<>("numberOfDisabledCells"));
