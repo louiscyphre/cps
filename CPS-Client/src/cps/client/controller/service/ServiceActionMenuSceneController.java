@@ -1,9 +1,15 @@
 package cps.client.controller.service;
 
+import cps.api.action.ServiceLogoutAction;
+import cps.api.response.RefundResponse;
+import cps.api.response.ServerResponse;
+import cps.api.response.SimpleResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
+import cps.client.utils.InternalClientException;
 import cps.entities.people.CompanyPerson;
 import cps.entities.people.LocalEmployee;
+import cps.entities.people.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -86,9 +92,27 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
    * @param event
    */
   @FXML
-  void handleLogoutButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOGIN);
-    ControllersClientAdapter.getEmployeeContext().logContextOut();
+  void handleLogoutButton(ActionEvent event) {    
+    // Send logout request
+    try {
+      User user = ControllersClientAdapter.getEmployeeContext().requireCompanyPerson();
+      sendRequest(new ServiceLogoutAction(user.getId()), false);
+      ControllersClientAdapter.getEmployeeContext().logContextOut();
+      ControllersClientAdapter.setStage(SceneCode.SERVICE_ACTION_LOGIN);
+    } catch (Exception e) {
+      displayError(e.getMessage());
+    }
+  }
+  
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.SimpleResponse)
+   */ 
+  @Override
+  public ServerResponse handle(SimpleResponse response) {
+    // TODO change to ServiceLogoutResponse
+    super.handleGenericResponse(response);
+    cleanCtrl();
+    return null;
   }
 
   /**
@@ -117,6 +141,9 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
       } else {
         jobTitleLabel.setText(companyPerson.getJobTitle());
       }
+    } else { // companyPerson == null
+      usernameLabel.setText("Not logged in");
+      jobTitleLabel.setText("");
     }
   }
 }
