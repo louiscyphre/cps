@@ -28,21 +28,11 @@
 				<Insets bottom="20.0" left="20.0" right="20.0" top="15.0" />
 			</padding>
 			<children>
-            <Label alignment="CENTER" styleClass="statisticsLabelUnderTables" text="Claims status" />
-            <HBox alignment="CENTER" spacing="20.0">
-               <children>
-                  <DatePicker fx:id="startDatePicker" minWidth="100.0" onAction="#handleStartDateChoice" prefHeight="40.0" prefWidth="300.0" promptText="Report start date" styleClass="datePickerStatistics" />
-                  <DatePicker fx:id="endDatePicker" disable="true" layoutX="10.0" layoutY="25.0" minWidth="100.0" onAction="#handleEndDateChoice" prefHeight="40.0" prefWidth="300.0" promptText="Report end date" styleClass="datePickerStatistics" />
-                  <ComboBox fx:id="parkingLotsList" disable="true" minHeight="40.0" minWidth="300.0" onAction="#handleLotChoice" prefHeight="40.0" prefWidth="240.0" promptText="Choose lot address" styleClass="comboBox" />
-               </children>
-            </HBox>
+            <Label alignment="CENTER" styleClass="statisticsLabelUnderTables" text="Current Performance" />
             <TableView fx:id="tableView" minWidth="613.0" prefHeight="327.0" prefWidth="614.0" style="-fx-border-radius: 8 8 8 8; -fx-background-radius: 8 8 8 8;" styleClass="statisticsTable">
                <columns>
-                  <TableColumn fx:id="colYear" editable="false" prefWidth="102.0" text="Year" />
-                  <TableColumn fx:id="colMonth" editable="false" prefWidth="106.0" text="Month" />
-                  <TableColumn fx:id="colOpened" editable="false" minWidth="0.0" prefWidth="153.0" text="Opened claims" />
-                  <TableColumn fx:id="colRejected" editable="false" minWidth="0.0" prefWidth="155.0" text="Rejected claims" />
-                  <TableColumn fx:id="colRefunded" editable="false" minWidth="0.0" prefWidth="142.0" text="Refunded" />
+                  <TableColumn fx:id="colNumberOfSubscriptions" editable="false" prefWidth="330.0" text="Number of Subscriptions" />
+                  <TableColumn fx:id="colNumberOfSubscriptionsWithMultipleCars" editable="false" prefWidth="329.0" text="Number of Subscriptions with Multiple Cars" />
                </columns>
             </TableView>
 				<VBox fx:id="infoBox" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="113.0" prefWidth="299.0" spacing="0.0" styleClass="bigInfoLabel">

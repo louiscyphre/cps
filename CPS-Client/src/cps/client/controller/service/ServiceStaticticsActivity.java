@@ -37,6 +37,7 @@ public class ServiceStaticticsActivity extends ServiceStatitisticsBase {
   @Override
   public ServerResponse handle(PeriodicReportResponse response) {
     // TODO Auto-generated method stub
+    response.getData();
     return super.handle(response);
   }
 }

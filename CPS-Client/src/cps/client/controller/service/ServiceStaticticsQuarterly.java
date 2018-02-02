@@ -203,7 +203,6 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
 
     // binding to list of monthly reports
     obsEntriesList = FXCollections.observableArrayList();
-    this.obsEntriesList = FXCollections.observableArrayList();
     complaintsTableView.setItems(this.obsEntriesList);
     disabledCellsTableView.setItems(this.obsEntriesList);
     ordersTableView.setItems(this.obsEntriesList);
