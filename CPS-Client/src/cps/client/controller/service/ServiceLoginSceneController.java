@@ -1,7 +1,6 @@
 package cps.client.controller.service;
 
 import cps.api.action.ServiceLoginAction;
-import cps.api.response.ServerResponse;
 import cps.api.response.ServiceLoginResponse;
 import cps.client.controller.ControllerConstants.InputVerification;
 import cps.client.controller.ControllerConstants.SceneCode;
@@ -94,7 +93,7 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ServiceLoginResponse)
    */
   @Override
-  public ServerResponse handle(ServiceLoginResponse response) {
+  public void handle(ServiceLoginResponse response) {
     ControllersClientAdapter.getEmployeeContext().setCompanyPerson(response.getUser());
     turnProcessingStateOff();
 
@@ -103,7 +102,5 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
     } else {
       displayError(response.getDescription());
     }
-
-    return null;
   }
 }

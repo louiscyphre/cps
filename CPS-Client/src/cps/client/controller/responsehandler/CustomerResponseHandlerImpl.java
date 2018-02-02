@@ -12,7 +12,6 @@ import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
 import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.ReservedParkingResponse;
-import cps.api.response.ServerResponse;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
 
@@ -29,8 +28,8 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
    * api.response.CancelOnetimeParkingResponse)
    */
   @Override
-  public ServerResponse handle(CancelOnetimeParkingResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(CancelOnetimeParkingResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   /*
@@ -40,8 +39,8 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
    * api.response.ComplaintResponse)
    */
   @Override
-  public ServerResponse handle(ComplaintResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(ComplaintResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   /*
@@ -51,8 +50,8 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
    * api.response.IncidentalParkingResponse)
    */
   @Override
-  public ServerResponse handle(IncidentalParkingResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(IncidentalParkingResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   /*
@@ -62,8 +61,8 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
    * api.response.ListOnetimeEntriesResponse)
    */
   @Override
-  public ServerResponse handle(ListOnetimeEntriesResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(ListOnetimeEntriesResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   /*
@@ -73,8 +72,8 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
    * api.response.LoginResponse)
    */
   @Override
-  public ServerResponse handle(LoginResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(LoginResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   /*
@@ -84,8 +83,8 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
    * api.response.ParkingEntryResponse)
    */
   @Override
-  public ServerResponse handle(ParkingEntryResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(ParkingEntryResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   /*
@@ -95,21 +94,20 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
    * api.response.ParkingExitResponse)
    */
   @Override
-  public ServerResponse handle(ParkingExitResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(ParkingExitResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   /**
    * Using the generic ListParking response.
    */
   @Override
-  public ServerResponse handle(ListParkingLotsResponse response) {
+  public void handle(ListParkingLotsResponse response) {
     if (ControllersClientAdapter.getCurrentCtrl() instanceof ParkingLotsController) {
       ParkingLotsController ctrl = (ParkingLotsController) ControllersClientAdapter.getCurrentCtrl();
       ctrl.setParkingLots(response.getData());
       ctrl.turnProcessingStateOff();
     }
-    return response;
   }
 
   /*
@@ -119,8 +117,8 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
    * api.response.ReservedParkingResponse)
    */
   @Override
-  public ServerResponse handle(ReservedParkingResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(ReservedParkingResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   /*
@@ -130,8 +128,8 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
    * api.response.RegularSubscriptionResponse)
    */
   @Override
-  public ServerResponse handle(RegularSubscriptionResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(RegularSubscriptionResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   /*
@@ -141,8 +139,8 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
    * api.response.FullSubscriptionResponse)
    */
   @Override
-  public ServerResponse handle(FullSubscriptionResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(FullSubscriptionResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   /*
@@ -152,8 +150,8 @@ class CustomerResponseHandlerImpl implements CustomerResponseHandler {
    * api.response.FullSubscriptionResponse)
    */
   @Override
-  public ServerResponse handle(ListMyComplaintsResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(ListMyComplaintsResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
 }

@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import cps.api.action.SetFullLotAction;
 import cps.api.request.ListParkingLotsRequest;
-import cps.api.response.ServerResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
@@ -163,8 +162,8 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
    * SetFullLotResponse)
    */
   @Override
-  public ServerResponse handle(SetFullLotResponse response) {
-    return super.handleGenericResponse(response);
+  public void handle(SetFullLotResponse response) {
+    super.handleGenericResponse(response);
   }
 
   /*

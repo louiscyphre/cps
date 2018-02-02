@@ -247,7 +247,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.RegularSubscriptionResponse)
    */
   @Override
-  public ServerResponse handle(RegularSubscriptionResponse response) {
+  public void handle(RegularSubscriptionResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
 
@@ -294,7 +294,6 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
       // Display the whole formatted message, as an error
       ctrl.displayError(formattedMessage);
     }
-    return response;
   }
 
   /* (non-Javadoc)

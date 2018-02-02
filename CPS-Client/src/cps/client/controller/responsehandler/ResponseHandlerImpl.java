@@ -24,7 +24,6 @@ import cps.api.response.ReserveParkingSlotsResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.Response;
 import cps.api.response.ResponseHandler;
-import cps.api.response.ServerResponse;
 import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.SimpleResponse;
@@ -52,16 +51,14 @@ public class ResponseHandlerImpl implements ResponseHandler {
   /** Customer Response Handler */
   private CustomerResponseHandler customerResponseHandler;
 
-  /*
-   * (non-Javadoc)
-   * @see cps.api.response.ResponseHandler#dispatch(cps.api.response.Response)
-   */
+  /** Find the appropriate handler for the response and run it.
+   * @param resp the response
+   * @see cps.api.response.ResponseHandler#dispatch(cps.api.response.Response) */
   @Override
-  public ServerResponse dispatch(Response resp) {
+  public void dispatch(Response resp) {
     Platform.runLater(() -> {
       resp.handle(this);
     });
-    return null;
   }
 
   /*
@@ -70,8 +67,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * cps.api.response.ResponseHandler#handle(cps.api.response.SimpleResponse)
    */
   @Override
-  public ServerResponse handle(SimpleResponse response) {
-    return ControllersClientAdapter.getCurrentCtrl().handle(response);
+  public void handle(SimpleResponse response) {
+    ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   // // // // // // // // // // // // // // // // // // // // // // // //
@@ -82,8 +79,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * DisableParkingSlotsResponse)
    */
   @Override
-  public ServerResponse handle(DisableParkingSlotsResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(DisableParkingSlotsResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   /*
@@ -92,8 +89,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * cps.api.response.ResponseHandler#handle(cps.api.response.InitLotResponse)
    */
   @Override
-  public ServerResponse handle(InitLotResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(InitLotResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   /*
@@ -102,8 +99,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * cps.api.response.ResponseHandler#handle(cps.api.response.RefundResponse)
    */
   @Override
-  public ServerResponse handle(RefundResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(RefundResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   /*
@@ -112,8 +109,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * RequestLotStateResponse)
    */
   @Override
-  public ServerResponse handle(RequestLotStateResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(RequestLotStateResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   /*
@@ -122,8 +119,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * ReserveParkingSlotsResponse)
    */
   @Override
-  public ServerResponse handle(ReserveParkingSlotsResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(ReserveParkingSlotsResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   /*
@@ -132,8 +129,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * SetFullLotResponse)
    */
   @Override
-  public ServerResponse handle(SetFullLotResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(SetFullLotResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   /*
@@ -142,8 +139,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * UpdatePricesResponse)
    */
   @Override
-  public ServerResponse handle(UpdatePricesResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(UpdatePricesResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   /*
@@ -152,8 +149,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * ServiceLoginResponse)
    */
   @Override
-  public ServerResponse handle(ServiceLoginResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(ServiceLoginResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   /*
@@ -162,8 +159,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * RejectComplaintResponse)
    */
   @Override
-  public ServerResponse handle(RejectComplaintResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(RejectComplaintResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
   
   /*
@@ -172,34 +169,34 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * ListComplaintsResponse)
    */
   @Override
-  public ServerResponse handle(ListComplaintsResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(ListComplaintsResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.WeeklyReportResponse)
    */
   @Override
-  public ServerResponse handle(WeeklyReportResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(WeeklyReportResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.QuarterlyReportResponse)
    */
   @Override
-  public ServerResponse handle(QuarterlyReportResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(QuarterlyReportResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   @Override
-  public ServerResponse handle(CurrentPerformanceResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(CurrentPerformanceResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   @Override
-  public ServerResponse handle(PeriodicReportResponse response) {
-    return this.serviceResponseHandler.handle(response);
+  public void handle(PeriodicReportResponse response) {
+    this.serviceResponseHandler.handle(response);
   }
 
   // // // // // // // // // // // // // // // // // // // // // // // //
@@ -210,8 +207,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * CancelOnetimeParkingResponse)
    */
   @Override
-  public ServerResponse handle(CancelOnetimeParkingResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(CancelOnetimeParkingResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 
   /*
@@ -220,8 +217,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * cps.api.response.ResponseHandler#handle(cps.api.response.ComplaintResponse)
    */
   @Override
-  public ServerResponse handle(ComplaintResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(ComplaintResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 
   /*
@@ -230,8 +227,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * FullSubscriptionResponse)
    */
   @Override
-  public ServerResponse handle(FullSubscriptionResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(FullSubscriptionResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 
   /*
@@ -240,8 +237,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * IncidentalParkingResponse)
    */
   @Override
-  public ServerResponse handle(IncidentalParkingResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(IncidentalParkingResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 
   /*
@@ -250,8 +247,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * ListOnetimeEntriesResponse)
    */
   @Override
-  public ServerResponse handle(ListOnetimeEntriesResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(ListOnetimeEntriesResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 
   /*
@@ -260,8 +257,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * ListParkingLotsResponse)
    */
   @Override
-  public ServerResponse handle(ListParkingLotsResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(ListParkingLotsResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 
   /*
@@ -270,8 +267,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * cps.api.response.ResponseHandler#handle(cps.api.response.LoginResponse)
    */
   @Override
-  public ServerResponse handle(LoginResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(LoginResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 
   /*
@@ -280,8 +277,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * ParkingEntryResponse)
    */
   @Override
-  public ServerResponse handle(ParkingEntryResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(ParkingEntryResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 
   /*
@@ -290,8 +287,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * ParkingExitResponse)
    */
   @Override
-  public ServerResponse handle(ParkingExitResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(ParkingExitResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 
   /*
@@ -300,8 +297,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * RegularSubscriptionResponse)
    */
   @Override
-  public ServerResponse handle(RegularSubscriptionResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(RegularSubscriptionResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 
   /*
@@ -310,8 +307,8 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * ReservedParkingResponse)
    */
   @Override
-  public ServerResponse handle(ReservedParkingResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(ReservedParkingResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 
   /*
@@ -320,7 +317,7 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * ListMyComplaintsResponse)
    */
   @Override
-  public ServerResponse handle(ListMyComplaintsResponse response) {
-    return this.customerResponseHandler.handle(response);
+  public void handle(ListMyComplaintsResponse response) {
+    this.customerResponseHandler.handle(response);
   }
 }

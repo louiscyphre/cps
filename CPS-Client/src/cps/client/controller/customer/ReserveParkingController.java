@@ -370,7 +370,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ReservedParkingResponse)
    */
   @Override
-  public ServerResponse handle(ReservedParkingResponse response) {
+  public void handle(ReservedParkingResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
 
@@ -410,6 +410,5 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
       ctrl.displayError(formattedMessage);
     }
 
-    return response;
   }
 }

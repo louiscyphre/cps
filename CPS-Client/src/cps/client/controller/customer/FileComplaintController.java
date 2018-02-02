@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import cps.api.request.ComplaintRequest;
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.ComplaintResponse;
-import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
@@ -70,12 +69,11 @@ public class FileComplaintController extends CustomerActionControllerBaseSubmitA
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ComplaintResponse)
    */
   @Override
-  public ServerResponse handle(ComplaintResponse response) {
+  public void handle(ComplaintResponse response) {
     super.handleGenericResponse(response);
     if (response.success()) {
       setFinishInsteadOfSubmit(true);
     }
-    return null;
   }
 
   /* (non-Javadoc)

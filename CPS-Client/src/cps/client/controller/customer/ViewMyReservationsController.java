@@ -330,7 +330,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
    * and populates inner data structures accordingly.
    */
   @Override
-  public ServerResponse handle(ListOnetimeEntriesResponse response) {
+  public void handle(ListOnetimeEntriesResponse response) {
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
 
     List<Text> formattedMessage = new LinkedList<Text>();
@@ -354,8 +354,6 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
       ctrl.turnProcessingStateOff();
       ctrl.displayError(formattedMessage);
     }
-
-    return null;
   }
 
   /**
@@ -363,7 +361,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
    * be cancelled and populates inner data structures accordingly.
    */
   @Override
-  public ServerResponse handle(CancelOnetimeParkingResponse response) {
+  public void handle(CancelOnetimeParkingResponse response) {
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
 
     List<Text> formattedMessage = new LinkedList<Text>();
@@ -382,6 +380,5 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
       ctrl.displayError(formattedMessage);
     }
 
-    return response;
   }
 }

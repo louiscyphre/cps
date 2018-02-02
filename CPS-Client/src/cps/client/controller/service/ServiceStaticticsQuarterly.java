@@ -8,12 +8,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-
 import cps.api.action.GetQuarterlyReportAction;
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.QuarterlyReportResponse;
-import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
@@ -283,7 +281,7 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
   }*/
 
   @Override
-  public ServerResponse handle(ListParkingLotsResponse response) {
+  public void handle(ListParkingLotsResponse response) {
     if (response.success()) {
       setParkingLots(response.getData());
       displayInfo("Parking lots list retrieved successfully");
@@ -291,11 +289,10 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
       displayError("Can't retrieve parking lots");
     }
     turnProcessingStateOff();
-    return response;
   }
 
   @Override
-  public ServerResponse handle(QuarterlyReportResponse response) {
+  public void handle(QuarterlyReportResponse response) {
     if (response.success()) {
       fillReportTable(response.getData());
       displayInfo("Reports retrieved successfully");
@@ -303,7 +300,6 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
       displayError("Can't retrieve quarterly report");
     }
     turnProcessingStateOff();
-    return response;
   }
 
   /*

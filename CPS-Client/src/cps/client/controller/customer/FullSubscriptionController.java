@@ -225,7 +225,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
    * Display the Subscription Details Request was succesful, and user
    * credentials if new user, otherwise - error.
    */
-  public ServerResponse handle(FullSubscriptionResponse response) {
+  public void handle(FullSubscriptionResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
 
@@ -272,7 +272,6 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
       // Display the whole formatted message, as an error
       ctrl.displayError(formattedMessage);
     }
-    return response;
   }
 
   /*

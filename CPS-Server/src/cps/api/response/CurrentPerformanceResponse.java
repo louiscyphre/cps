@@ -33,8 +33,8 @@ public class CurrentPerformanceResponse extends ServerResponse {
   }
 
   @Override
-  public ServerResponse handle(ResponseHandler handler) {
-    return handler.handle(this);
+  public void handle(ResponseHandler handler) {
+    handler.handle(this);
   }
 
 }

@@ -134,7 +134,7 @@ public class LoginController extends CustomerActionControllerBase {
    * LoginResponse)
    */
   @Override
-  public ServerResponse handle(LoginResponse response) {
+  public void handle(LoginResponse response) {
 
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
@@ -171,6 +171,5 @@ public class LoginController extends CustomerActionControllerBase {
       ctrl.displayError(response.getDescription());
     }
 
-    return response;
   }
 }

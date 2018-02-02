@@ -13,7 +13,7 @@ public class ParkingEntryResponse extends CustomerResponse {
   }
 
   @Override
-  public ServerResponse handle(ResponseHandler handler) {
-    return handler.handle(this);
+  public void handle(ResponseHandler handler) {
+    handler.handle(this);
   }
 }

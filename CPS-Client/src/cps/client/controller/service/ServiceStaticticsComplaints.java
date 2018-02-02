@@ -239,7 +239,7 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
   /* (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.QuarterlyReportResponse) */
   @Override
-  public ServerResponse handle(QuarterlyReportResponse response) {
+  public void handle(QuarterlyReportResponse response) {
 
     List<Text> formattedMessage = new LinkedList<Text>();
 
@@ -255,16 +255,14 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
       turnProcessingStateOff();
       displayError(formattedMessage);
     }
-    return response;
   }
 
   /* (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ListParkingLotsResponse) */
   @Override
-  public ServerResponse handle(ListParkingLotsResponse response) {
+  public void handle(ListParkingLotsResponse response) {
     setParkingLots(response.getData());
     turnProcessingStateOff();
-    return response;
   }
 
   /* (non-Javadoc)

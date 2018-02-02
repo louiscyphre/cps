@@ -157,7 +157,7 @@ public class EnterCarController extends CustomerActionControllerBaseSubmitAndFin
    * Display parking entry granted if Request was succesful, error - otherwise.
    */
   @Override
-  public ServerResponse handle(ParkingEntryResponse response) {
+  public void handle(ParkingEntryResponse response) {
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
 
     List<Text> formattedMessage = new LinkedList<Text>();
@@ -173,6 +173,5 @@ public class EnterCarController extends CustomerActionControllerBaseSubmitAndFin
       ctrl.turnProcessingStateOff();
       ctrl.displayError(formattedMessage);
     }
-    return response;
   }
 }

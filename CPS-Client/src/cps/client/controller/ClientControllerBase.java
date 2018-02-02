@@ -257,7 +257,7 @@ public abstract class ClientControllerBase implements ViewController {
    * Displays the info/error on the display.
    * @param response
    */
-  public ServerResponse handleGenericResponse(ServerResponse response) {
+  public void handleGenericResponse(ServerResponse response) {
 
     if (response.success()) {
       turnProcessingStateOff();
@@ -267,7 +267,6 @@ public abstract class ClientControllerBase implements ViewController {
       displayError(response.getDescription());
     }
 
-    return response;
   }
 
   /* (non-Javadoc)
@@ -278,230 +277,193 @@ public abstract class ClientControllerBase implements ViewController {
     return root;
   }
 
-  // ResponseHandler interface
-  // Every controller has its own specific handling of the responses.
-  /* (non-Javadoc)
-   * @see cps.api.response.ResponseHandler#dispatch(cps.api.response.Response)
-   */
-  @Override
-  public ServerResponse dispatch(Response response) {
-    return null;
-  }
-
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.CancelOnetimeParkingResponse)
    */
   @Override
-  public ServerResponse handle(CancelOnetimeParkingResponse response) {
-    return null;
+  public void handle(CancelOnetimeParkingResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ComplaintResponse)
    */
   @Override
-  public ServerResponse handle(ComplaintResponse response) {
-    return null;
+  public void handle(ComplaintResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.FullSubscriptionResponse)
    */
   @Override
-  public ServerResponse handle(FullSubscriptionResponse response) {
-    return null;
+  public void handle(FullSubscriptionResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.IncidentalParkingResponse)
    */
   @Override
-  public ServerResponse handle(IncidentalParkingResponse response) {
-    return null;
+  public void handle(IncidentalParkingResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ListComplaintsResponse)
    */
   @Override
-  public ServerResponse handle(ListComplaintsResponse response) {
-    return null;
+  public void handle(ListComplaintsResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ListMyComplaintsResponse)
    */
   @Override
-  public ServerResponse handle(ListMyComplaintsResponse response) {
-    return null;
+  public void handle(ListMyComplaintsResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ListOnetimeEntriesResponse)
    */
   @Override
-  public ServerResponse handle(ListOnetimeEntriesResponse response) {
-    return null;
+  public void handle(ListOnetimeEntriesResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ListParkingLotsResponse)
    */
   @Override
-  public ServerResponse handle(ListParkingLotsResponse response) {
-    return null;
+  public void handle(ListParkingLotsResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ParkingEntryResponse)
    */
   @Override
-  public ServerResponse handle(ParkingEntryResponse response) {
-    return null;
+  public void handle(ParkingEntryResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ParkingExitResponse)
    */
   @Override
-  public ServerResponse handle(ParkingExitResponse response) {
-    return null;
+  public void handle(ParkingExitResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.RegularSubscriptionResponse)
    */
   @Override
-  public ServerResponse handle(RegularSubscriptionResponse response) {
-    return null;
+  public void handle(RegularSubscriptionResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ReservedParkingResponse)
    */
   @Override
-  public ServerResponse handle(ReservedParkingResponse response) {
-    return null;
+  public void handle(ReservedParkingResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.LoginResponse)
    */
   @Override
-  public ServerResponse handle(LoginResponse response) {
-    return null;
+  public void handle(LoginResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.DisableParkingSlotsResponse)
    */
   @Override
-  public ServerResponse handle(DisableParkingSlotsResponse response) {
-    return null;
+  public void handle(DisableParkingSlotsResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.InitLotResponse)
    */
   @Override
-  public ServerResponse handle(InitLotResponse response) {
-    return null;
+  public void handle(InitLotResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.RefundResponse)
    */
   @Override
-  public ServerResponse handle(RefundResponse response) {
-    return null;
+  public void handle(RefundResponse response) {
   }
   
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ReserveParkingSlotsResponse)
    */
   @Override
-  public ServerResponse handle(ReserveParkingSlotsResponse response) {
-    return null;
+  public void handle(ReserveParkingSlotsResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.SetFullLotResponse)
    */
   @Override
-  public ServerResponse handle(SetFullLotResponse response) {
-    return null;
+  public void handle(SetFullLotResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.UpdatePricesResponse)
    */
   @Override
-  public ServerResponse handle(UpdatePricesResponse response) {
-    return null;
+  public void handle(UpdatePricesResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.RequestLotStateResponse)
    */
   @Override
-  public ServerResponse handle(RequestLotStateResponse response) {
-    return null;
+  public void handle(RequestLotStateResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.ServiceLoginResponse)
    */
   @Override
-  public ServerResponse handle(ServiceLoginResponse response) {
-    return null;
+  public void handle(ServiceLoginResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.SimpleResponse)
    */
   @Override
-  public ServerResponse handle(SimpleResponse simpleResponse) {
-    return null;
+  public void handle(SimpleResponse simpleResponse) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.RejectComplaintResponse)
    */
   @Override
-  public ServerResponse handle(RejectComplaintResponse response) {
-    return null;
+  public void handle(RejectComplaintResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.WeeklyReportResponse)
    */
   @Override
-  public ServerResponse handle(WeeklyReportResponse response) {
-    return null;
+  public void handle(WeeklyReportResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.QuarterlyReportResponse)
    */
   @Override
-  public ServerResponse handle(QuarterlyReportResponse response) {
-    return null;
+  public void handle(QuarterlyReportResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.CurrentPerformanceResponse)
    */
   @Override
-  public ServerResponse handle(CurrentPerformanceResponse response) {
-    return null;
+  public void handle(CurrentPerformanceResponse response) {
   }
 
   /* (non-Javadoc)
    * @see cps.api.response.ResponseHandler#handle(cps.api.response.PeriodicReportResponse)
    */
   @Override
-  public ServerResponse handle(PeriodicReportResponse response) {
-    return null;
+  public void handle(PeriodicReportResponse response) {
   }
   
   // Helper methods
@@ -698,5 +660,9 @@ public abstract class ClientControllerBase implements ViewController {
     } catch (Exception e) {
       return null;
     }
+  }
+
+  @Override
+  public void dispatch(Response response) {
   }
 }

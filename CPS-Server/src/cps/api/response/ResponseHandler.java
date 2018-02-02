@@ -3,62 +3,62 @@ package cps.api.response;
 public interface ResponseHandler {
 
   // Dispatch
-  public ServerResponse dispatch(Response response);
+  public void dispatch(Response response);
 
   // Customer Responses
-  public ServerResponse handle(CancelOnetimeParkingResponse response);
+  public void handle(CancelOnetimeParkingResponse response);
 
-  public ServerResponse handle(ComplaintResponse response);
+  public void handle(ComplaintResponse response);
 
-  public ServerResponse handle(FullSubscriptionResponse response);
+  public void handle(FullSubscriptionResponse response);
 
-  public ServerResponse handle(IncidentalParkingResponse response);
+  public void handle(IncidentalParkingResponse response);
   
-  public ServerResponse handle(ListMyComplaintsResponse response);
+  public void handle(ListMyComplaintsResponse response);
 
-  public ServerResponse handle(ListOnetimeEntriesResponse response);  
+  public void handle(ListOnetimeEntriesResponse response);  
 
-  public ServerResponse handle(ListParkingLotsResponse response);
+  public void handle(ListParkingLotsResponse response);
 
-  public ServerResponse handle(ParkingEntryResponse response);
+  public void handle(ParkingEntryResponse response);
 
-  public ServerResponse handle(ParkingExitResponse response);
+  public void handle(ParkingExitResponse response);
 
-  public ServerResponse handle(RegularSubscriptionResponse response);
+  public void handle(RegularSubscriptionResponse response);
 
-  public ServerResponse handle(ReservedParkingResponse response);
+  public void handle(ReservedParkingResponse response);
 
-  public ServerResponse handle(LoginResponse response);
+  public void handle(LoginResponse response);
 
   // Common responses - can be sent to Customers and Employees
-  public ServerResponse handle(SimpleResponse simpleResponse);
+  public void handle(SimpleResponse simpleResponse);
 
   // CompanyPerson responses
-  public ServerResponse handle(DisableParkingSlotsResponse response);
+  public void handle(DisableParkingSlotsResponse response);
 
-  public ServerResponse handle(InitLotResponse response);
+  public void handle(InitLotResponse response);
   
-  public ServerResponse handle(ListComplaintsResponse response);
+  public void handle(ListComplaintsResponse response);
 
-  public ServerResponse handle(RefundResponse response);
+  public void handle(RefundResponse response);
   
-  public ServerResponse handle(RejectComplaintResponse response);
+  public void handle(RejectComplaintResponse response);
 
-  public ServerResponse handle(ReserveParkingSlotsResponse response);
+  public void handle(ReserveParkingSlotsResponse response);
 
-  public ServerResponse handle(SetFullLotResponse response);
+  public void handle(SetFullLotResponse response);
 
-  public ServerResponse handle(UpdatePricesResponse response);
+  public void handle(UpdatePricesResponse response);
 
-  public ServerResponse handle(RequestLotStateResponse response);
+  public void handle(RequestLotStateResponse response);
   
-  public ServerResponse handle(ServiceLoginResponse response);
+  public void handle(ServiceLoginResponse response);
 
-  public ServerResponse handle(WeeklyReportResponse response);
+  public void handle(WeeklyReportResponse response);
 
-  public ServerResponse handle(QuarterlyReportResponse response);
+  public void handle(QuarterlyReportResponse response);
 
-  public ServerResponse handle(CurrentPerformanceResponse response);
+  public void handle(CurrentPerformanceResponse response);
 
-  public ServerResponse handle(PeriodicReportResponse response);
+  public void handle(PeriodicReportResponse response);
 }

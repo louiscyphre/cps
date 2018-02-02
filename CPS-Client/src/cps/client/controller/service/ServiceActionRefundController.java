@@ -10,7 +10,6 @@ import cps.api.action.RejectComplaintAction;
 import cps.api.response.ListComplaintsResponse;
 import cps.api.response.RefundResponse;
 import cps.api.response.RejectComplaintResponse;
-import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import cps.common.Constants;
@@ -207,27 +206,25 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.RefundResponse)
    */
   @Override
-  public ServerResponse handle(RefundResponse response) {
+  public void handle(RefundResponse response) {
     super.handleGenericResponse(response);
     cleanCtrl();
-    return null;
   }
 
   /* (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.RejectComplaintResponse)
    */
   @Override
-  public ServerResponse handle(RejectComplaintResponse response) {
+  public void handle(RejectComplaintResponse response) {
     super.handleGenericResponse(response);
     cleanCtrl();
-    return null;
   }
 
   /* (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ListComplaintsResponse)
    */
   @Override
-  public ServerResponse handle(ListComplaintsResponse response) {
+  public void handle(ListComplaintsResponse response) {
     turnProcessingStateOff();
     List<String> tmp = new ArrayList<String>();
     complaintsMap.clear();
@@ -246,7 +243,6 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
       handleComplaintSelected();
     });
     complaintsList.setDisable(false);
-    return null;
   }
 
 }

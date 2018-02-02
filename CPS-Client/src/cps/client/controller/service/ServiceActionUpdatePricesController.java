@@ -9,7 +9,6 @@ import java.util.List;
 import cps.api.action.UpdatePricesAction;
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.ListParkingLotsResponse;
-import cps.api.response.ServerResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
@@ -168,18 +167,18 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ListParkingLotsResponse)
    */
   @Override
-  public ServerResponse handle(ListParkingLotsResponse response) {
+  public void handle(ListParkingLotsResponse response) {
     if (response.success()) {
       setParkingLots(response.getData());
     }
-    return super.handleGenericResponse(response);
+    super.handleGenericResponse(response);
   }
 
   /* (non-Javadoc)
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.UpdatePricesResponse)
    */
   @Override
-  public ServerResponse handle(UpdatePricesResponse response) {
+  public void handle(UpdatePricesResponse response) {
     if (response.success()) {
       ParkingLot lot = parkingLotsMap.get(response.getStreetAddress());
 
@@ -190,6 +189,5 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     }
 
     super.handleGenericResponse(response);
-    return response;
   }
 }

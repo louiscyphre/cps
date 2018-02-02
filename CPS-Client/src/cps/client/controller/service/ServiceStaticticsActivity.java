@@ -1,7 +1,6 @@
 package cps.client.controller.service;
 
 import cps.api.response.PeriodicReportResponse;
-import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import javafx.fxml.FXML;
@@ -30,13 +29,11 @@ public class ServiceStaticticsActivity extends ServiceStatitisticsBase {
   
   @Override
   public void cleanCtrl() {
-    // TODO Auto-generated method stub
     super.cleanCtrl();
   }
   
   @Override
-  public ServerResponse handle(PeriodicReportResponse response) {
-    // TODO Auto-generated method stub
-    return super.handle(response);
+  public void handle(PeriodicReportResponse response) {
+    super.handle(response);
   }
 }

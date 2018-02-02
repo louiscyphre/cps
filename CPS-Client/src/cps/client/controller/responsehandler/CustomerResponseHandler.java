@@ -12,7 +12,6 @@ import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
 import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.ReservedParkingResponse;
-import cps.api.response.ServerResponse;
 
 /**
  * Customer Response Handler Class. Used to Handle generic and specific Responses.
@@ -24,82 +23,82 @@ public interface CustomerResponseHandler {
    * @param response
    * @return
    */
-  public ServerResponse handle(CancelOnetimeParkingResponse response);
+  public void handle(CancelOnetimeParkingResponse response);
 
   /**
    * Handles Complaint response.
    * @param response
    * @return
    */
-  public ServerResponse handle(ComplaintResponse response);
+  public void handle(ComplaintResponse response);
 
   /**
    * Handles FullSubscription response.
    * @param response
    * @return
    */
-  public ServerResponse handle(FullSubscriptionResponse response);
+  public void handle(FullSubscriptionResponse response);
 
   /**
    * Handles FullSubscription response.
    * @param response
    * @return
    */
-  public ServerResponse handle(IncidentalParkingResponse response);
+  public void handle(IncidentalParkingResponse response);
 
   /**
    * Handles ListOnetimeEntries response.
    * @param response
    * @return
    */
-  public ServerResponse handle(ListOnetimeEntriesResponse response);
+  public void handle(ListOnetimeEntriesResponse response);
 
   /**
    * Handles ParkingEntry response.
    * @param response
    * @return
    */
-  public ServerResponse handle(ParkingEntryResponse response);
+  public void handle(ParkingEntryResponse response);
 
   /**
    * Handles ParkingExit response.
    * @param response
    * @return
    */
-  public ServerResponse handle(ParkingExitResponse response);
+  public void handle(ParkingExitResponse response);
 
   /**
    * Handles ListParkingLots response.
    * @param response
    * @return
    */
-  public ServerResponse handle(ListParkingLotsResponse response);
+  public void handle(ListParkingLotsResponse response);
 
   /**
    * Handles RegularSubscription response.
    * @param response
    * @return
    */
-  public ServerResponse handle(RegularSubscriptionResponse response);
+  public void handle(RegularSubscriptionResponse response);
 
   /**
    * Handles ReservedParking response.
    * @param response
    * @return
    */
-  public ServerResponse handle(ReservedParkingResponse response);
+  public void handle(ReservedParkingResponse response);
 
   /**
    * Handles Login response.
    * @param response
    * @return
    */
-  public ServerResponse handle(LoginResponse response);
+  public void handle(LoginResponse response);
   
   /**
    * Handles ListMyComplaints response.
    * @param response
    * @return
    */
-  public ServerResponse handle(ListMyComplaintsResponse response);
+  public void handle(ListMyComplaintsResponse response);
 }

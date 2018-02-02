@@ -1,6 +1,5 @@
 package cps.client.controller.service;
 
-import cps.api.response.ServerResponse;
 import cps.api.response.WeeklyReportResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
@@ -50,8 +49,8 @@ public class ServiceStaticticsWeekly extends ServiceStatitisticsBase {
   }
   
   @Override
-  public ServerResponse handle(WeeklyReportResponse response) {
+  public void handle(WeeklyReportResponse response) {
     // TODO Auto-generated method stub
-    return super.handle(response);
+    super.handle(response);
   }
 }

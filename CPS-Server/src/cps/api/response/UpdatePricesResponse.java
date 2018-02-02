@@ -11,8 +11,8 @@ public class UpdatePricesResponse extends ServerResponse {
   private float  price2 = 0f;
 
   @Override
-  public ServerResponse handle(ResponseHandler handler) {
-    return handler.handle(this);
+  public void handle(ResponseHandler handler) {
+    handler.handle(this);
   }
 
   public float getPrice1() {

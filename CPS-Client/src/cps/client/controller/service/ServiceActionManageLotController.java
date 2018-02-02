@@ -12,7 +12,6 @@ import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.DisableParkingSlotsResponse;
 import cps.api.response.RequestLotStateResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
-import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
@@ -476,7 +475,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
    * RequestLotStateResponse)
    */
   @Override
-  public ServerResponse handle(RequestLotStateResponse response) {
+  public void handle(RequestLotStateResponse response) {
 
     if (response.success()) {
 
@@ -494,7 +493,6 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
       turnProcessingStateOff();
       displayError(response.getDescription());
     }
-    return null;
   }
 
   /**
@@ -628,13 +626,12 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
    * ReserveParkingSlotsResponse)
    */
   @Override
-  public ServerResponse handle(ReserveParkingSlotsResponse response) {
+  public void handle(ReserveParkingSlotsResponse response) {
     super.handleGenericResponse(response);
     if (response.success()) {
       selectedCell.setReserved(!selectedCell.isReserved());
       paintRectAccordingToCell(selectedCell, selectedCar);
     }
-    return null;
   }
 
   /*
@@ -643,13 +640,12 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
    * DisableParkingSlotsResponse)
    */
   @Override
-  public ServerResponse handle(DisableParkingSlotsResponse response) {
+  public void handle(DisableParkingSlotsResponse response) {
     super.handleGenericResponse(response);
     if (response.success()) {
       selectedCell.setDisabled(!selectedCell.isDisabled());
       paintRectAccordingToCell(selectedCell, selectedCar);
     }
-    return null;
   }
 
   /**

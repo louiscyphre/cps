@@ -2,7 +2,6 @@ package cps.client.controller.service;
 
 import cps.api.action.InitLotAction;
 import cps.api.response.InitLotResponse;
-import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
 import cps.entities.people.User;
@@ -60,11 +59,11 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
    * InitLotResponse)
    */
   @Override
-  public ServerResponse handle(InitLotResponse response) {
+  public void handle(InitLotResponse response) {
     if (response.success()) {
       setFinishInsteadOfSubmit(true);
     }
-    return super.handleGenericResponse(response);
+    super.handleGenericResponse(response);
   }
 
   /**

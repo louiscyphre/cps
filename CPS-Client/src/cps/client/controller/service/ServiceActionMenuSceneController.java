@@ -1,7 +1,6 @@
 package cps.client.controller.service;
 
 import cps.api.action.ServiceLogoutAction;
-import cps.api.response.ServerResponse;
 import cps.api.response.SimpleResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
@@ -106,11 +105,10 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.SimpleResponse)
    */ 
   @Override
-  public ServerResponse handle(SimpleResponse response) {
+  public void handle(SimpleResponse response) {
     // TODO change to ServiceLogoutResponse
     super.handleGenericResponse(response);
     cleanCtrl();
-    return null;
   }
 
   /**

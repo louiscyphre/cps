@@ -11,7 +11,6 @@ import java.util.List;
 
 import cps.api.request.IncidentalParkingRequest;
 import cps.api.response.IncidentalParkingResponse;
-import cps.api.response.ServerResponse;
 import cps.client.context.CustomerContext;
 import cps.client.controller.ControllerConstants;
 import cps.client.controller.ControllersClientAdapter;
@@ -280,7 +279,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
    * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.
    * IncidentalParkingResponse)
    */
-  public ServerResponse handle(IncidentalParkingResponse response) {
+  public void handle(IncidentalParkingResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
 
@@ -337,7 +336,6 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
       ctrl.displayError(formattedMessage);
     }
 
-    return response;
   }
 
 }

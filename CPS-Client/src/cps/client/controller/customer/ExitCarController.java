@@ -123,7 +123,7 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
    * Display parking retrieval granted if Request was succesful, error - otherwise.
    */
   @Override
-  public ServerResponse handle(ParkingExitResponse response) {
+  public void handle(ParkingExitResponse response) {
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();
 
     List<Text> formattedMessage = new LinkedList<Text>();
@@ -148,6 +148,5 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
       ctrl.turnProcessingStateOff();
       ctrl.displayError(formattedMessage);
     }
-    return response;
   }
 }

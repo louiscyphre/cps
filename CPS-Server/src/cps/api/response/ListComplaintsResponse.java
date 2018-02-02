@@ -9,8 +9,8 @@ public class ListComplaintsResponse extends ServerResponse {
   Collection<Complaint> data = null;
 
   @Override
-  public ServerResponse handle(ResponseHandler handler) {
-    return handler.handle(this);
+  public void handle(ResponseHandler handler) {
+    handler.handle(this);
   }
 
   public Collection<Complaint> getData() {
