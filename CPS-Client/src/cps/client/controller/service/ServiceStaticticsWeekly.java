@@ -8,6 +8,7 @@ import java.util.List;
 
 import cps.api.action.GetWeeklyReportAction;
 import cps.api.request.ListParkingLotsRequest;
+import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.WeeklyReportResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
@@ -83,6 +84,17 @@ public class ServiceStaticticsWeekly extends ServiceStatitisticsBase implements 
     obsEntriesList.clear();
   }
 
+  @Override
+  public void handle(ListParkingLotsResponse response) {
+    if (response.success()) {
+      setParkingLots(response.getData());
+      displayInfo("Parking lots list retrieved successfully");
+    } else {
+      displayError("Can't retrieve parking lots");
+    }
+    turnProcessingStateOff();
+  }
+  
   @Override
   public void handle(WeeklyReportResponse response) {
     if (response.success()) {
