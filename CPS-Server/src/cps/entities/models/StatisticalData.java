@@ -3,6 +3,8 @@ package cps.entities.models;
 import java.io.Serializable;
 import java.util.Arrays;
 
+/** Represents a column of data used for statistical reports.
+ * Contains mean, median, total and distribution fields for the data. */
 public class StatisticalData implements Serializable {
   private static final long serialVersionUID = 1L;
 
@@ -29,6 +31,8 @@ public class StatisticalData implements Serializable {
     this.median = median;
   }
 
+  /** Instantiates a new statistical data object.
+   * @param values the raw data for which statistics are calculated */
   public StatisticalData(double[] values) {
     this.total = sumOf(values);
     this.mean = this.total / values.length;
@@ -44,6 +48,9 @@ public class StatisticalData implements Serializable {
     this.total = total;
   }
 
+  /** Calculate the sum of a data array.
+   * @param array the array
+   * @return the sum */
   static double sumOf(double[] array) {
     double sum = 0;
 
@@ -54,6 +61,9 @@ public class StatisticalData implements Serializable {
     return sum;
   }
 
+  /** Calculate the median of a data array.
+   * @param array the array
+   * @return the double */
   static double medianOf(double[] array) {
     double[] copy = array.clone();
     Arrays.sort(copy);

@@ -228,7 +228,7 @@ public class ParkingCell implements Serializable {
     public void call(ParkingCell argument) throws ServerException;
   }
 
-  /** Lot for each.
+  /** Find all parking cells that belong to the specified lot and perform a callback function on each.
    * @param conn
    *        the SQL connection
    * @param lotID
@@ -252,6 +252,11 @@ public class ParkingCell implements Serializable {
     statement.close();
   }
 
+  /** Count the number of parking cells that do not have cars in them and are not disabled or reserved.
+   * @param conn the SQL connection
+   * @param lotID the lot ID
+   * @return the number of available cells
+   * @throws SQLException on error */
   public static int countAvailable(Connection conn, int lotID) throws SQLException {
     int count = 0;
 

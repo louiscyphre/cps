@@ -83,8 +83,8 @@ public class Customer implements Serializable, User {
     this.debit = debit;
   }
 
-  /** Adds the debit.
-   * @param debit the debit */
+  /** Add debit to customer's account.
+   * @param debit the amount of debit */
   public void addDebit(float debit) {
     this.debit += debit;
   }
@@ -97,8 +97,8 @@ public class Customer implements Serializable, User {
     this.credit = credit;
   }
 
-  /** Adds the credit.
-   * @param credit the credit */
+  /** Add credit to customer's account.
+   * @param credit the amount of credit */
   public void addCredit(float credit) {
     this.credit += credit;
   }
@@ -107,7 +107,7 @@ public class Customer implements Serializable, User {
    * @param conn the SQL connection
    * @param email the email
    * @param password the password
-   * @return the customer
+   * @return the new customer
    * @throws SQLException on error */
   public static Customer create(Connection conn, String email, String password) throws SQLException {
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_CUSTOMER, Statement.RETURN_GENERATED_KEYS);
@@ -169,7 +169,7 @@ public class Customer implements Serializable, User {
     return result;
   }
 
-  /** Find customer by email.
+  /** Find customer by email address.
    * @param conn the SQL connection
    * @param email the email
    * @return the customer
@@ -191,7 +191,7 @@ public class Customer implements Serializable, User {
     return result;
   }
 
-  /** Find by email and password.
+  /** Find by email and password. Used to verify login requests.
    * @param conn the SQL connection
    * @param email the email
    * @param password the password

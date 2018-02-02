@@ -30,6 +30,7 @@ import cps.api.response.SetFullLotResponse;
 import cps.api.response.SimpleResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.api.response.WeeklyReportResponse;
+import cps.client.controller.ControllersClientAdapter;
 import javafx.application.Platform;
 
 /**
@@ -70,7 +71,7 @@ public class ResponseHandlerImpl implements ResponseHandler {
    */
   @Override
   public ServerResponse handle(SimpleResponse response) {
-    return null;
+    return ControllersClientAdapter.getCurrentCtrl().handle(response);
   }
 
   // // // // // // // // // // // // // // // // // // // // // // // //
@@ -172,6 +173,32 @@ public class ResponseHandlerImpl implements ResponseHandler {
    */
   @Override
   public ServerResponse handle(ListComplaintsResponse response) {
+    return this.serviceResponseHandler.handle(response);
+  }
+
+  /* (non-Javadoc)
+   * @see cps.api.response.ResponseHandler#handle(cps.api.response.WeeklyReportResponse)
+   */
+  @Override
+  public ServerResponse handle(WeeklyReportResponse response) {
+    return this.serviceResponseHandler.handle(response);
+  }
+
+  /* (non-Javadoc)
+   * @see cps.api.response.ResponseHandler#handle(cps.api.response.QuarterlyReportResponse)
+   */
+  @Override
+  public ServerResponse handle(QuarterlyReportResponse response) {
+    return this.serviceResponseHandler.handle(response);
+  }
+
+  @Override
+  public ServerResponse handle(CurrentPerformanceResponse response) {
+    return this.serviceResponseHandler.handle(response);
+  }
+
+  @Override
+  public ServerResponse handle(PeriodicReportResponse response) {
     return this.serviceResponseHandler.handle(response);
   }
 
@@ -296,34 +323,4 @@ public class ResponseHandlerImpl implements ResponseHandler {
   public ServerResponse handle(ListMyComplaintsResponse response) {
     return this.customerResponseHandler.handle(response);
   }
-
-  /* (non-Javadoc)
-   * @see cps.api.response.ResponseHandler#handle(cps.api.response.WeeklyReportResponse)
-   */
-  @Override
-  public ServerResponse handle(WeeklyReportResponse response) {
-    return null;
-  }
-
-
-  /* (non-Javadoc)
-   * @see cps.api.response.ResponseHandler#handle(cps.api.response.QuarterlyReportResponse)
-   */
-  @Override
-  public ServerResponse handle(QuarterlyReportResponse response) {
-    return null;
-  }
-
-  @Override
-  public ServerResponse handle(CurrentPerformanceResponse response) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public ServerResponse handle(PeriodicReportResponse response) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
 }

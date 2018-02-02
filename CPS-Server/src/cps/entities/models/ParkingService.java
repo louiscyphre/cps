@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+/** A common set of methods to OnetimeService and SubscriptionService entities, that can be called without knowing what is the underlying type of the parking service.
+ * This interface is needed because OnetimeService and SubscriptionService are backed by different database tables, but share a lot of common functionality. */
 public interface ParkingService extends Serializable {
   public int getId();
 
@@ -28,9 +30,14 @@ public interface ParkingService extends Serializable {
   
   public void setWarned(boolean warned);
 
+  /** Synchronize the underlying entity object with the database.
+   * @param conn the SQL connection
+   * @throws SQLException on error */
   public void update(Connection conn) throws SQLException;
 
   public int getParkingType();
 
+  /** Should the service be marked as complete after the customer exits parking.
+   * @return true if should be marked as complete */
   public boolean shouldCompleteAfterExit();
 }

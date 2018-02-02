@@ -237,7 +237,7 @@ public class MonthlyReport implements Serializable {
     stmt.close();
   }
 
-  /** Increase reserved.
+  /** Increase number of parking reservations.
    * @param conn the SQL connection
    * @param year the year
    * @param month the month
@@ -251,7 +251,7 @@ public class MonthlyReport implements Serializable {
     rep.update(conn);
   }
 
-  /** Increase incidental.
+  /** Increase number of incidental parkings.
    * @param conn the SQL connection
    * @param year the year
    * @param month the month
@@ -265,7 +265,7 @@ public class MonthlyReport implements Serializable {
     rep.update(conn);
   }
 
-  /** Increase count of regular subscriptions.
+  /** Increase number of regular subscriptions.
    * @param conn the SQL connection
    * @param year the year
    * @param month the month
@@ -279,7 +279,7 @@ public class MonthlyReport implements Serializable {
     rep.update(conn);
   }
 
-  /** Increase count of full subscriptions.
+  /** Increase number of full subscriptions.
    * @param conn the SQL connection
    * @param year the year
    * @param month the month
@@ -293,7 +293,7 @@ public class MonthlyReport implements Serializable {
     rep.update(conn);
   }
 
-  /** Increase complaints.
+  /** Increase number of complaints.
    * @param conn the SQL connection
    * @param year the year
    * @param month the month
@@ -339,7 +339,7 @@ public class MonthlyReport implements Serializable {
    * @param conn the SQL connection
    * @param year the year
    * @param month the month
-   * @param lotid the lotid
+   * @param lotid the lot id
    * @throws SQLException on error
    * @throws ServerException on error */
   public static void countDisabledCells(Connection conn, int year, int month, int lotid)

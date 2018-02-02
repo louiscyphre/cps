@@ -184,12 +184,12 @@ public class DailyStatistics implements Serializable {
     }
   }
 
-  /** Return seven successive daily statistics entries.
+  /** Return seven successive daily statistics entries for a specified lot.
    * Used for calculated weekly statistics.
    * @param conn the SQL connection
    * @param firstDay the first day
    * @param lotId the lot id
-   * @return the seven days
+   * @return the entries
    * @throws SQLException on error */
   public static DailyStatistics[] getSevenDays(Connection conn, LocalDate firstDay, int lotId) throws SQLException {
     DailyStatistics[] item = new DailyStatistics[7];
@@ -217,6 +217,12 @@ public class DailyStatistics implements Serializable {
     return item;
   }
 
+  /** Return seven successive daily statistics entries for all lots.
+   * Used for producing periodic reports.
+   * @param conn the SQL connection
+   * @param firstDay the first day
+   * @return the entries
+   * @throws SQLException on error */
   public static DailyStatistics[] getSevenDaysForPeriodic(Connection conn, LocalDate firstDay) throws SQLException {
     DailyStatistics[] item = new DailyStatistics[7];
     PreparedStatement st = null;

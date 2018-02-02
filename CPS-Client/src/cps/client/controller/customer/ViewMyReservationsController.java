@@ -343,8 +343,7 @@ public class ViewMyReservationsController extends CustomerActionControllerBase
       customerIdText.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));
       formattedMessage.add(customerIdText);
 
-      OnetimeEntriesController casted = (OnetimeEntriesController) ctrl;
-      casted.setOnetimeEntries(response.getData());
+      setOnetimeEntries(response.getData());
 
       ctrl.turnProcessingStateOff();
       ctrl.displayInfo(formattedMessage);

@@ -394,7 +394,8 @@ public class ParkingLot implements Serializable {
   }
 
   /**
-   * Update.
+   * Update this parking lot record.
+   * Synchronizes instance data with the database.
    *
    * @param conn the SQL connection
    * @throws SQLException on error
@@ -441,6 +442,11 @@ public class ParkingLot implements Serializable {
     return results;
   }
 
+  /** Count the number of parking cells that do not have cars in them and are not disabled or reserved.
+   * @param conn the SQL connection
+   * @return the number of available cells
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public int countFreeCells(Connection conn) throws SQLException, ServerException {
     int count = ParkingCell.countAvailable(conn, id);
 
@@ -452,6 +458,10 @@ public class ParkingLot implements Serializable {
     return count;
   }
 
+  /** Synchronize parking cell array with the database.
+   * @param conn the SQL connection
+   * @param content the array of parking cells
+   * @throws SQLException on error */
   public void updateContent(Connection conn, ParkingCell[][][] content) throws SQLException {
     for (ParkingCell[][] slice1 : content) {
       for (ParkingCell[] slice2 : slice1) {
@@ -462,6 +472,12 @@ public class ParkingLot implements Serializable {
     }
   }
 
+  /** Retrieve a list of alternative parking lots, to which the customer can be redirected in case this parking is full.
+   * @param conn the SQL connection
+   * @param gson Gson object for deserializing the data
+   * @return the collection
+   * @throws SQLException the SQL exception
+   * @throws ServerException the server exception */
   public Collection<ParkingLot> retrieveAlternativeLots(Connection conn, Gson gson)
       throws SQLException, ServerException {
     int[] lotIDs;
@@ -488,12 +504,22 @@ public class ParkingLot implements Serializable {
     return lots;
   }
 
+  /** Find a parking lot by street address.
+   * Street addresses are intended to be unique for each lot.
+   * @param conn the SQL connection
+   * @param streetAddress the street address
+   * @return the parking lot
+   * @throws SQLException on error */
   public static ParkingLot findByStreetAddress(Connection conn, String streetAddress) throws SQLException {
     return new QueryBuilder<ParkingLot>("SELECT * FROM parking_lot where street_address=?")
         .withFields(statement -> statement.setString(1, streetAddress))
         .fetchResult(conn, result -> new ParkingLot(result));
   }
   
+  /** Check if a car with the given ID (license plate number) is contained in one of the parking cells.
+   * @param content the content
+   * @param carID the car ID
+   * @return true, if successful */
   public boolean contains(ParkingCell[][][] content, String carID) {
     for (ParkingCell[][] slice1 : content) {
       for (ParkingCell[] slice2 : slice1) {

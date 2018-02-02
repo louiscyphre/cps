@@ -99,7 +99,7 @@ public class DisabledCellsStatistics {
     stmt.executeUpdate();
   }
 
-  /** Count the number of disabled cells during a given period.
+  /** Count the number of disabled cells during a given period in the specified parking lot.
    * @param conn the SQL connection
    * @param lotid the lot id
    * @param from starting point of the period
@@ -128,6 +128,12 @@ public class DisabledCellsStatistics {
     }).fetchResult(conn, result -> result.getInt(1));
   }
 
+  /** Count the amount of hours that cells were disabled during a specified period.
+   * @param conn the SQL connection
+   * @param from starting point of the period
+   * @param to ending point of the period
+   * @return the amount of hours during which cells were disabled
+   * @throws SQLException the SQL exception */
   public static double countDisableHours(Connection conn, LocalDate from, LocalDate to) throws SQLException {
     long helper = 0;
     LocalDateTime start, end;

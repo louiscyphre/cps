@@ -12,8 +12,8 @@ import java.util.Arrays;
 import cps.common.Constants;
 import cps.common.Utilities;
 
-// TODO: Auto-generated Javadoc
-/** The Class WeeklyStatistics. */
+/** Database entity for storing weekly statistics.
+ * Gathered from analyzing daily statistics. */
 public class WeeklyStatistics implements Serializable {
   private static final long serialVersionUID = 1L;
   // `start` date NOT NULL,
@@ -39,8 +39,8 @@ public class WeeklyStatistics implements Serializable {
   private String    canceledOrdersDist;
   private String    lateArrivalsDist;
 
-  /** Instantiates a new weekly statistics.
-   * @param start the start
+  /** Instantiates a new weekly statistics object.
+   * @param start the starting date
    * @param lotID the lot ID
    * @param realizedOrdersMean the realized orders mean
    * @param canceledOrdersMean the canceled orders mean
@@ -48,9 +48,9 @@ public class WeeklyStatistics implements Serializable {
    * @param realizedOrdersMedian the realized orders median
    * @param canceledOrdersMedian the canceled orders median
    * @param lateArrivalsMedian the late arrivals median
-   * @param realizedOrdersDist the realized orders dist
-   * @param canceledOrdersDist the canceled orders dist
-   * @param lateArrivalsDist the late arrivals dist */
+   * @param realizedOrdersDist the realized orders distribution
+   * @param canceledOrdersDist the canceled orders distribution
+   * @param lateArrivalsDist the late arrivals distribution */
   public WeeklyStatistics(LocalDate start, int lotID, float realizedOrdersMean, float canceledOrdersMean, float lateArrivalsMean, float realizedOrdersMedian,
       float canceledOrdersMedian, float lateArrivalsMedian, String realizedOrdersDist, String canceledOrdersDist, String lateArrivalsDist) {
     super();
@@ -67,17 +67,17 @@ public class WeeklyStatistics implements Serializable {
     this.lateArrivalsDist = lateArrivalsDist;
   }
 
-  /** Instantiates a new weekly statistics.
-   * @param rs the rs
-   * @throws SQLException the SQL exception */
+  /** Instantiates a new weekly statistics object from an SQL ResultSet.
+   * @param rs the SQL ResultSet
+   * @throws SQLException on error */
   public WeeklyStatistics(ResultSet rs) throws SQLException {
     this(rs.getDate(1).toLocalDate(), rs.getInt(2), rs.getFloat(3), rs.getFloat(4), rs.getFloat(5), rs.getFloat(6), rs.getFloat(7), rs.getFloat(8),
         rs.getString(9), rs.getString(10), rs.getString(11));
   }
 
-  /** Creates the.
-   * @param conn the conn
-   * @param start the start
+  /** Create a new weekly statistics record in the database.
+   * @param conn the SQL connection
+   * @param start the starting date
    * @param lotID the lot ID
    * @param realizedOrdersMean the realized orders mean
    * @param canceledOrdersMean the canceled orders mean
@@ -85,11 +85,11 @@ public class WeeklyStatistics implements Serializable {
    * @param realizedOrdersMedian the realized orders median
    * @param canceledOrdersMedian the canceled orders median
    * @param lateArrivalsMedian the late arrivals median
-   * @param realizedOrdersDist the realized orders dist
-   * @param canceledOrdersDist the canceled orders dist
-   * @param lateArrivalsDist the late arrivals dist
-   * @return the weekly statistics
-   * @throws SQLException the SQL exception */
+   * @param realizedOrdersDist the realized orders distribution
+   * @param canceledOrdersDist the canceled orders distribution
+   * @param lateArrivalsDist the late arrivals distribution
+   * @return the new weekly statistics object
+   * @throws SQLException on error */
   public static WeeklyStatistics create(Connection conn, LocalDate start, int lotID, float realizedOrdersMean, float canceledOrdersMean, float lateArrivalsMean,
       float realizedOrdersMedian, float canceledOrdersMedian, float lateArrivalsMedian, String realizedOrdersDist, String canceledOrdersDist,
       String lateArrivalsDist) throws SQLException {
@@ -116,7 +116,14 @@ public class WeeklyStatistics implements Serializable {
         lateArrivalsMedian, realizedOrdersDist, canceledOrdersDist, lateArrivalsDist);
   }
 
+  /** Create or update weekly statistics for the specified date and parking lot.
+   * @param conn the SQL connection
+   * @param start the starting date
+   * @param lotid the lot ID
+   * @return the weekly statistics object
+   * @throws SQLException on error */
   public static WeeklyStatistics createUpdateWeeklyReport(Connection conn, LocalDate start, int lotid) throws SQLException {
+    // TODO test if the weekly statistics work
     // Find this week's Sunday
     start = Utilities.findWeekStart(start);
     WeeklyStatistics result = findOrCreate(conn, start, lotid);
@@ -162,12 +169,17 @@ public class WeeklyStatistics implements Serializable {
     result.canceledOrdersDist += String.format("%f", days[6].getCanceledOrders() / numCanceledOrders);
     result.lateArrivalsDist += String.format("%f", days[6].getLateArrivals() / numLateArrivals);
 
-    /* Distributions now recorded as comma separated values from sunday to saturday */
+    /* Distributions now recorded as comma separated values from Sunday to Saturday */
     result.update(conn);
 
     return result;
   }
 
+  /** Collect the weekly statistics that are needed for producing a periodic activity report.
+   * @param conn the SQL connection
+   * @param start the starting date
+   * @return the weekly statistics object
+   * @throws SQLException the SQL exception */
   public static WeeklyStatistics getWeeklyReportForPeriodic(Connection conn, LocalDate start) throws SQLException {
     // Find this week's Sunday
     start = Utilities.findWeekStart(start);
@@ -203,12 +215,12 @@ public class WeeklyStatistics implements Serializable {
     return result;
   }
 
-  /** Find.
-   * @param conn the conn
-   * @param start the start
+  /** Find a weekly statistics record for the specified starting time and parking lot id, or create new if doesn't exist.
+   * @param conn the SQL connection
+   * @param start the starting date
    * @param lotID the lot ID
-   * @return the weekly statistics
-   * @throws SQLException the SQL exception */
+   * @return the weekly statistics object
+   * @throws SQLException on error */
   public static WeeklyStatistics findOrCreate(Connection conn, LocalDate start, int lotID) throws SQLException {
     WeeklyStatistics item = null;
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_WEEKLY_STATISTICS);
@@ -233,13 +245,13 @@ public class WeeklyStatistics implements Serializable {
 
   }
 
-  /** Update.
-   * @param conn the conn
-   * @throws SQLException the SQL exception */
+  /** Synchronize this weekly statistics object with its associated database record.
+   * @param conn the SQL connection
+   * @throws SQLException on error */
   public void update(Connection conn) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_UPDATE_WEEKLY_STATISTICS);
 
-    int field = 0;
+    int field = 1;
 
     statement.setFloat(field++, realizedOrdersMean);
     statement.setFloat(field++, canceledOrdersMean);

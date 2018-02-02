@@ -28,7 +28,6 @@ import cps.entities.models.ParkingLot;
 import cps.entities.people.CompanyPerson;
 import cps.entities.people.User;
 import cps.server.ServerController;
-import cps.server.ServerException;
 import cps.server.database.DatabaseController.DatabaseAction;
 import cps.server.session.ServiceSession;
 import cps.server.session.UserSession;

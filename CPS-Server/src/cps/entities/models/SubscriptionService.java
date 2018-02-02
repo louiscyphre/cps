@@ -15,27 +15,66 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import cps.common.Constants;
+import cps.server.ServerException;
 import cps.server.database.QueryBuilder;
 
-// Database entity for monthly parking subscriptions - regular or full both stored in the same table.
-
+/** Database entity for monthly parking subscriptions - regular or full both stored in the same table. */
 public class SubscriptionService implements ParkingService {
   private static final long serialVersionUID = 1L;
 
+  /** The id. */
   int             id;
+  
+  /** The subscription type. */
   int             subscriptionType; // 1 = regular, 2 = full
+  
+  /** The email. */
   String          email;
+  
+  /** The customer ID. */
   int             customerID;
+  
+  /** The car ID. */
   String          carID;
+  
+  /** The lot ID. */
   int             lotID;            // if null then full, else regular
+  
+  /** The start date. */
   LocalDate       startDate;
+  
+  /** The end date. */
   LocalDate       endDate;
+  
+  /** The daily exit time. */
   LocalTime       dailyExitTime;    // null for full subscription
+  
+  /** Whether the car is currently parked with this subscription. */
   boolean         parked;
+  
+  /** Whether this subscription is completed (can't be used anymore). */
   private boolean completed;
+  
+  /** Whether this subscription was canceled. */
   private boolean canceled;
+  
+  /** Whether the customer was warned that the subscription is about to expire. */
   private boolean warned;
 
+  /** Instantiates a new subscription service object.
+   * @param id the subscription id
+   * @param type the subscription type - full or monthly
+   * @param customerID the customer ID
+   * @param email the email
+   * @param carID the car ID
+   * @param lotID the lot ID
+   * @param startDate the start date
+   * @param endDate the end date
+   * @param dailyExitTime the daily exit time
+   * @param parked the parked flag
+   * @param completed the completed flag
+   * @param canceled the canceled flag
+   * @param warned the warned flag */
   public SubscriptionService(int id, int type, int customerID, String email, String carID, int lotID, LocalDate startDate, LocalDate endDate,
       LocalTime dailyExitTime, boolean parked, boolean completed, boolean canceled, boolean warned) {
     this.id = id;
@@ -53,11 +92,25 @@ public class SubscriptionService implements ParkingService {
     this.warned = warned;
   }
 
+  /** Instantiates a new subscription service object.
+   * Shorter version of the constructor.
+   * @param id the subscription id
+   * @param type the subscription type - full or monthly
+   * @param customerID the customer ID
+   * @param email the email
+   * @param carID the car ID
+   * @param lotID the lot ID
+   * @param startDate the start date
+   * @param endDate the end date
+   * @param dailyExitTime the daily exit time */
   public SubscriptionService(int id, int type, int customerID, String email, String carID, int lotID, LocalDate startDate, LocalDate endDate,
       LocalTime dailyExitTime) {
     this(id, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime, false, false, false, false);
   }
 
+  /** Instantiates a new subscription service from an SQL ResultSet.
+   * @param rs the SQL ResultSet
+   * @throws SQLException on error */
   public SubscriptionService(ResultSet rs) throws SQLException {
     this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getInt(6), rs.getDate(7).toLocalDate(), rs.getDate(8).toLocalDate(),
         rs.getTime(9).toLocalTime(), rs.getBoolean(10), rs.getBoolean(11), rs.getBoolean(12), rs.getBoolean(13));
@@ -152,19 +205,19 @@ public class SubscriptionService implements ParkingService {
 
   /** Creates a new SubscriptionService entry in the database.
    * @param conn the SQL connection
-   * @param type the type
-   * @param customerID int - Customer ID
+   * @param type the subscription type - full or monthly
+   * @param customerID the customer ID
    * @param email the email
-   * @param carID String - The car ID
-   * @param lotID int - The lot ID
-   * @param startDate LocalDate - The start date
-   * @param endDate LocalDate - The end date
-   * @param dailyExitTime LocalTime - The daily exit time
-   * @param parked the parked
-   * @param completed the completed
-   * @param canceled the canceled
-   * @param warned the warned
-   * @return the subscription service
+   * @param carID the car ID
+   * @param lotID the lot ID
+   * @param startDate the start date
+   * @param endDate the end date
+   * @param dailyExitTime the daily exit time
+   * @param parked the parked flag
+   * @param completed the completed flag
+   * @param canceled the canceled flag
+   * @param warned the warned flag
+   * @return the new subscription service
    * @throws SQLException on error */
   public static SubscriptionService create(Connection conn, int type, int customerID, String email, String carID, int lotID, LocalDate startDate,
       LocalDate endDate, LocalTime dailyExitTime, boolean parked, boolean completed, boolean canceled, boolean warned) throws SQLException {
@@ -215,6 +268,14 @@ public class SubscriptionService implements ParkingService {
     return create(conn, type, customerID, email, carID, lotID, startDate, endDate, dailyExitTime, false, false, false, false);
   }
 
+  /** Find a SubscriptionService record that could qualify a customer for entry into the parking lot.
+   * Checks if a SubscriptionService with the specified customer ID, car ID and subscription ID exists in the database.
+   * @param conn the SQL connection
+   * @param customerID the customer ID
+   * @param carID the car ID
+   * @param subsID the subscription ID
+   * @return the subscription service
+   * @throws SQLException on error */
   public static SubscriptionService findForEntry(Connection conn, int customerID, String carID, int subsID) throws SQLException {
     SubscriptionService item = null;
 
@@ -238,6 +299,11 @@ public class SubscriptionService implements ParkingService {
     return item;
   }
 
+  /** Find subscriptions by customer ID.
+   * @param conn the SQL connection
+   * @param customerID the customer ID
+   * @return a list of all subscriptions that the specified customer has purchased
+   * @throws SQLException on error */
   public static Collection<SubscriptionService> findByCustomerID(Connection conn, int customerID) throws SQLException {
     LinkedList<SubscriptionService> items = new LinkedList<SubscriptionService>();
 
@@ -255,6 +321,10 @@ public class SubscriptionService implements ParkingService {
     return items;
   }
 
+  /** Return the daily exit time for this subscription.
+   * For regular subscription: specified at creation
+   * For full subscription: always return midnight 
+   * @see cps.entities.models.ParkingService#getExitTime() */
   @Override
   public LocalDateTime getExitTime() {
     if (this.subscriptionType == Constants.SUBSCRIPTION_TYPE_FULL) {
@@ -263,11 +333,16 @@ public class SubscriptionService implements ParkingService {
     return this.dailyExitTime.atDate(LocalDate.now());
   }
 
-  public static SubscriptionService findByID(Connection conn, int authID) throws SQLException {
+  /** Find a subscription service record by ID.
+   * @param conn the SQL connection
+   * @param id the subscription ID to search
+   * @return the subscription service
+   * @throws SQLException on error */
+  public static SubscriptionService findByID(Connection conn, int id) throws SQLException {
     SubscriptionService item = null;
 
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_GET_SUBSCRIPTION_SERVICE_BY_ID);
-    statement.setInt(1, authID);
+    statement.setInt(1, id);
     ResultSet result = statement.executeQuery();
 
     if (result.next()) {
@@ -281,6 +356,12 @@ public class SubscriptionService implements ParkingService {
 
   }
 
+  /** Count the number of subscriptions of the specified type that the customer has purchased.
+   * @param conn the SQL connection
+   * @param customerID the customer ID
+   * @param subscriptionType the subscription type
+   * @return the number of subscriptions purchased by the customer
+   * @throws SQLException on error */
   public static int countForCustomer(Connection conn, int customerID, int subscriptionType) throws SQLException {
     PreparedStatement statement = conn.prepareStatement("SELECT count(id) FROM subscription_service WHERE customer_id = ? AND subs_type = ?");
 
@@ -301,11 +382,17 @@ public class SubscriptionService implements ParkingService {
     return count;
   }
 
-  public static SubscriptionService findByIDNotNull(Connection conn, int id) throws SQLException, RuntimeException {
+  /** Find a subscription service record by ID, throw an exception if not found.
+   * @param conn the SQL connection
+   * @param id the id
+   * @return the subscription service
+   * @throws SQLException on error
+   * @throws ServerException the runtime exception */
+  public static SubscriptionService findByIDNotNull(Connection conn, int id) throws SQLException, ServerException {
     SubscriptionService item = findByID(conn, id);
 
     if (item == null) {
-      throw new RuntimeException("SubscriptionService with id " + id + " does not exist");
+      throw new ServerException("SubscriptionService with id " + id + " does not exist");
     }
 
     return item;
@@ -361,6 +448,9 @@ public class SubscriptionService implements ParkingService {
     return result;
   }
 
+  /** Update the database record for this SubscriptionService.
+   * @see cps.entities.models.ParkingService#update(java.sql.Connection)
+   */
   @Override
   public void update(Connection conn) throws SQLException {
     java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_SUBSCRIPTION_BY_ID);
@@ -383,6 +473,10 @@ public class SubscriptionService implements ParkingService {
     
   }
   
+  /** Whether the subscription service record should be marked as complete after the customer exits from parking.
+   * @return true if this was the last time that the customer could use the subscription
+   * @see cps.entities.models.ParkingService#shouldCompleteAfterExit()
+   */
   @Override
   public boolean shouldCompleteAfterExit() {
     return LocalDateTime.of(endDate, dailyExitTime).isBefore(LocalDateTime.now()) && !parked;    
@@ -423,11 +517,19 @@ public class SubscriptionService implements ParkingService {
     return Constants.PARKING_TYPE_RESERVED;
   }
 
+  /** Count all active subscription service records.
+   * @param conn the SQL connection
+   * @return the number of subscription service records in the database
+   * @throws SQLException on error */
   public static int countAll(Connection conn) throws SQLException {
-    return new QueryBuilder<Integer>("SELECT count(*) FROM subscription_service")
+    return new QueryBuilder<Integer>("SELECT count(*) FROM subscription_service WHERE not completed AND not canceled AND adddate(curdate(), interval 1 month) <= end_date")
         .fetchResult(conn, result -> result.getInt(1));
   }
 
+  /** Count all customers that own an active subscription for more than one car.
+   * @param conn the SQL connection
+   * @return the number of multiple car subscriptions in the database
+   * @throws SQLException on error */
   public static int countWithMultipleCars(Connection conn) throws SQLException {
     return new QueryBuilder<Integer>(String.join(" ",
       "SELECT count(a.id) FROM subscription_service a INNER JOIN subscription_service b",
@@ -435,6 +537,12 @@ public class SubscriptionService implements ParkingService {
       .fetchResult(conn, result -> result.getInt(1));
   }
 
+  /** Find all subscriptions that are going to expire after the specified period of time.
+   * @param conn the SQL connection
+   * @param delta the period of time
+   * @param warned whether to search records where the customer was already warned, or records where the customer has not been warned yet
+   * @return the collection
+   * @throws SQLException on error */
   public static Collection<SubscriptionService> findExpiringAfter(Connection conn, Duration delta, boolean warned) throws SQLException {
     return new QueryBuilder<SubscriptionService>(String.join(" ",
       "SELECT *", "FROM subscription_service os", "WHERE end_date <= ? ",

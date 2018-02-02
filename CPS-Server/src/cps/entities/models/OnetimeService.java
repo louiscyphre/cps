@@ -74,7 +74,7 @@ public class OnetimeService implements ParkingService {
   }
 
   /** Instantiates a new onetime service from an SQL ResultSet.
-   * @param rs the ResultSet
+   * @param rs the SQL ResultSet
    * @throws SQLException on error */
   public OnetimeService(ResultSet rs) throws SQLException {
     this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getInt(6), rs.getTimestamp(7), rs.getTimestamp(8), rs.getBoolean(9),
@@ -475,7 +475,7 @@ public class OnetimeService implements ParkingService {
    * Is used to warn customers that their scheduled reservation has started, and wait for a reply for 30 minutes.
    * Is used again to retrieve a list of all the OnetimeService records that should be canceled because their customers did not respond to the warning within 30 minutes.
    * @param conn the SQL connection
-   * @param delta the delta
+   * @param delta the time interval within which the starting time of the reservation should be located
    * @param warned whether to search records where the customer was already warned, or records where the customer has not been warned yet
    * @return the collection
    * @throws SQLException on error */

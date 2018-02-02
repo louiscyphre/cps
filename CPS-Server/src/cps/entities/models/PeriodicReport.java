@@ -8,16 +8,23 @@ import java.util.LinkedList;
 
 import cps.common.Utilities;;
 
+/** Aggregates data that is used for producing and displaying periodic activity reports to the Global Manager. */
 public class PeriodicReport extends GenericReport<StatisticalData> {
   private static final long serialVersionUID = 1L;
   
+  /** The row names. */
   String[] rowNames;
 
+  /** Instantiates a new periodic report.
+   * @param rowNames the row names */
   public PeriodicReport(String[] rowNames) {
     super(rowNames.length, "realizedOrders", "canceledOrders", "disabledParkingHours");
     this.rowNames = rowNames;
   }
   
+  /** Set the values for a data column.
+   * @param name the name
+   * @param values the values */
   public void setColumn(String name, double[] values) {
     setData(name, new StatisticalData(values));
   }
@@ -30,6 +37,9 @@ public class PeriodicReport extends GenericReport<StatisticalData> {
     this.rowNames = rowNames;
   }
   
+  /** Retrieve a row of data.
+   * @param i the i
+   * @return the row */
   public Collection<Double> getRow(int i) {
     LinkedList<Double> row = new LinkedList<>();
     
@@ -46,6 +56,12 @@ public class PeriodicReport extends GenericReport<StatisticalData> {
     return row;
   }
   
+  /** Generate report for the given month by querying the database, collecting the necessary data and calculating the statistics.
+   * @param conn the SQL connection
+   * @param year the year
+   * @param month the month
+   * @return the periodic report
+   * @throws SQLException on error */
   public static PeriodicReport generate(Connection conn, int year, int month) throws SQLException {    
     /* The length of the report is bound to number of weeks in the month so we will count weeks in month */
     int weeks = Utilities.countWeeksInMonth(year, month);

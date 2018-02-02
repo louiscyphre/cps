@@ -245,7 +245,7 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     }
     int lotID = ControllersClientAdapter.getEmployeeContext().getChosenLotID();
     int userID = ControllersClientAdapter.getEmployeeContext().getCompanyPerson().getId();
-    GetQuarterlyReportAction request = new GetQuarterlyReportAction(userID, Constants.REPORT_TYPE_QUARTERLY, reportEndDate, reportEndDate, lotID);
+    GetQuarterlyReportAction request = new GetQuarterlyReportAction(userID, Constants.REPORT_TYPE_QUARTERLY, reportStartDate, reportEndDate, lotID);
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
@@ -355,7 +355,8 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
           numberOfDisabledCells);
       newEntriesList.add(toAdd);
     });
-
+    
+//    obsEntriesList.setAll(newEntriesList); // TODO uncomment when the binding works
   }
 
   public class TableQuarterlyEntry {
