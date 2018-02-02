@@ -12,6 +12,7 @@ import cps.api.action.RefundAction;
 import cps.api.action.RejectComplaintAction;
 import cps.api.action.RequestLotStateAction;
 import cps.api.action.ServiceLoginAction;
+import cps.api.action.ServiceLogoutAction;
 import cps.api.action.SetFullLotAction;
 import cps.api.action.UpdatePricesAction;
 import cps.api.request.CancelOnetimeParkingRequest;
@@ -229,6 +230,15 @@ public class ServerController implements RequestHandler<SessionHolder> {
     return userController.handle(action, context.acquireServiceSession());
   }
 
+  public void removeSession(SessionHolder context) {
+    userController.removeSession(context);    
+  }
+
+  @Override
+  public ServerResponse handle(ServiceLogoutAction action, SessionHolder context) {
+    return userController.handle(action, context.getServiceSession());
+  }
+
   @Override
   public ServerResponse handle(SetFullLotAction action, SessionHolder context) {
     return lotController.handle(action, context.acquireServiceSession());
@@ -257,9 +267,5 @@ public class ServerController implements RequestHandler<SessionHolder> {
   @Override
   public ServerResponse handle(GetPeriodicReportAction action, SessionHolder context) {
     return reportController.handle(action, context.acquireServiceSession());
-  }
-
-  public void removeSession(SessionHolder context) {
-    userController.removeSession(context);    
   }
 }

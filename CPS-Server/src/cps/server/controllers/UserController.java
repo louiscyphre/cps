@@ -5,10 +5,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import cps.api.action.ServiceLoginAction;
+import cps.api.action.ServiceLogoutAction;
 import cps.api.request.LoginRequest;
 import cps.api.response.LoginResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.ServiceLoginResponse;
+import cps.api.response.SimpleResponse;
 import cps.entities.models.Customer;
 import cps.entities.people.CompanyPerson;
 import cps.entities.people.User;
@@ -71,7 +73,7 @@ public class UserController extends RequestController {
       errorIf(loggedInEmployees.contains(person.getId()), "You are already logged in");
       
       // Mark user as logged in
-      loggedInEmployees.add(person.getId()); 
+      loggedInEmployees.add(person.getId());   
       
       // Success
       response.setUser(person);
@@ -91,8 +93,28 @@ public class UserController extends RequestController {
     if (context.getServiceSession() != null) {
       User user = context.getServiceSession().getUser();
       if (user != null) {
-        loggedInEmployees.remove(user.getId());
+        loggedInEmployees.remove(user.getId()); 
       }
     }
+  }
+
+  public ServerResponse handle(ServiceLogoutAction action, ServiceSession session) {
+    // Check if we have a valid session
+    if (session == null) {
+      return SimpleResponse.error("Invalid parameters");
+    }
+    
+    // Check if the user is logged in
+    User user = session.getUser();
+    
+    if (user == null || !loggedInEmployees.contains(user.getId())) {
+      return SimpleResponse.error("Not logged in");
+    }
+    
+    // Remove logged in user
+    loggedInEmployees.remove(user.getId()); 
+    
+    // Success    
+    return SimpleResponse.ok("Logged out");
   }
 }

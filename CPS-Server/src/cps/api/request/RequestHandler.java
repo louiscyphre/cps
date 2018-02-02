@@ -58,4 +58,6 @@ public interface RequestHandler<SessionType> {
   public ServerResponse handle(GetCurrentPerformanceAction action, SessionType session);
 
   public ServerResponse handle(GetPeriodicReportAction action, SessionType session);
+
+  public ServerResponse handle(ServiceLogoutAction action, SessionType session);
 }
