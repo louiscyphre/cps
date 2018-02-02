@@ -2,10 +2,8 @@ package cps.api.response;
 
 import java.io.Serializable;
 
-/**
- * The Class ServerResponse.
- */
-public abstract class ServerResponse extends Response implements Serializable {
+/** Base class for all server responses. */
+public abstract class ServerResponse implements Serializable {
 
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 1L;
@@ -114,24 +112,6 @@ public abstract class ServerResponse extends Response implements Serializable {
     this.description = description;
   }
 
-  /**
-   * Parse status property to String
-   */
-  @Override
-  public String toString() {
-    String statusRepr;
-
-    if (status == STATUS_OK) {
-      statusRepr = "OK";
-    } else if (status == STATUS_ERROR) {
-      statusRepr = "ERROR";
-    } else {
-      statusRepr = Integer.toString(status);
-    }
-
-    return "{status: " + statusRepr + ", description: " + description + "})";
-  }
-
   public boolean success() {
     return this.status == STATUS_OK;
   }
@@ -139,4 +119,11 @@ public abstract class ServerResponse extends Response implements Serializable {
   public boolean isError() {
     return this.status == STATUS_ERROR;
   }
+  
+  /** Call the handler for this response.
+   * Response handlers are implemented in the client, in order to be able to process server responses and perform some kind of action when a response is received.
+   * (Such as update a UI widget with the data in the response.)
+   * This is an abstract method and it has to be implemented in each concrete subclass to call the right type of handler for that subclass.
+   * @param handler the handler */
+  public abstract void handle(ResponseHandler handler);
 }

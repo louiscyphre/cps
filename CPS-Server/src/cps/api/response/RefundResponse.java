@@ -1,5 +1,6 @@
 package cps.api.response;
 
+/** Is sent in response to a Refund action. */
 public class RefundResponse extends ServerResponse {
   private static final long serialVersionUID = 1L;
 
@@ -18,6 +19,9 @@ public class RefundResponse extends ServerResponse {
     this(false, "", 0, 0, 0f);
   }
 
+  /* (non-Javadoc)
+   * @see cps.api.response.Response#handle(cps.api.response.ResponseHandler)
+   */
   @Override
   public void handle(ResponseHandler handler) {
     handler.handle(this);

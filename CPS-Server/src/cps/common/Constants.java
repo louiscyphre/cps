@@ -1,5 +1,6 @@
 package cps.common;
 
+/** Central place for defining various constants that are used throughout the application. */
 public interface Constants {
   // TODO disable on release
   // public final boolean DEBUG_MODE = true;

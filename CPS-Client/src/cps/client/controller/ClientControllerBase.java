@@ -29,7 +29,6 @@ import cps.api.response.RejectComplaintResponse;
 import cps.api.response.RequestLotStateResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
 import cps.api.response.ReservedParkingResponse;
-import cps.api.response.Response;
 import cps.api.response.ServerResponse;
 import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
@@ -662,7 +661,9 @@ public abstract class ClientControllerBase implements ViewController {
     }
   }
 
+  /** Dummy method for complying to the ResponseHandler interface.
+   * @see cps.api.response.ResponseHandler#dispatch(cps.api.response.ServerResponse) */
   @Override
-  public void dispatch(Response response) {
+  public void dispatch(ServerResponse response) {
   }
 }

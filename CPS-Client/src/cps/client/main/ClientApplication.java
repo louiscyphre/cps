@@ -8,8 +8,8 @@ import java.util.Locale;
 
 import org.apache.commons.cli.ParseException;
 
-import cps.api.response.Response;
 import cps.api.response.ResponseHandler;
+import cps.api.response.ServerResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.customer.CustomerMainMenuController;
@@ -216,7 +216,9 @@ public class ClientApplication extends Application implements INetworkClient {
    */
   @Override
   public void receiveResponse(Object resp) {
-    responseHandler.dispatch((Response) resp);
+    if (resp instanceof ServerResponse) {
+      responseHandler.dispatch((ServerResponse) resp);
+    }
   }
 
   /**

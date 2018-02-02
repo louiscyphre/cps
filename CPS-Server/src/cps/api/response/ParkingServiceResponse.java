@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import cps.entities.models.ParkingLot;
 
+/** Base class for responses to requests for buying a parking service. */
 public abstract class ParkingServiceResponse extends CustomerPasswordResponse {
   private static final long serialVersionUID = 1L;
   private int               serviceID        = 0;

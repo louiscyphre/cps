@@ -3,6 +3,7 @@ package cps.api.response;
 import java.util.Collection;
 import cps.entities.models.OnetimeService;
 
+/** Is sent in response to a ListOnetimeEntries request. */
 public class ListOnetimeEntriesResponse extends ServerResponse {
   private static final long          serialVersionUID = 1L;
   private Collection<OnetimeService> data             = null;
@@ -24,6 +25,9 @@ public class ListOnetimeEntriesResponse extends ServerResponse {
     this.customerID = customerID;
   }
 
+  /* (non-Javadoc)
+   * @see cps.api.response.Response#handle(cps.api.response.ResponseHandler)
+   */
   @Override
   public void handle(ResponseHandler handler) {
     handler.handle(this);
