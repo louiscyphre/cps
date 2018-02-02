@@ -1,5 +1,9 @@
 package cps.server.controllers;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import cps.api.action.ServiceLoginAction;
 import cps.api.request.LoginRequest;
 import cps.api.response.LoginResponse;
@@ -7,12 +11,16 @@ import cps.api.response.ServerResponse;
 import cps.api.response.ServiceLoginResponse;
 import cps.entities.models.Customer;
 import cps.entities.people.CompanyPerson;
+import cps.entities.people.User;
 import cps.server.ServerController;
 import cps.server.session.CustomerSession;
 import cps.server.session.ServiceSession;
+import cps.server.session.SessionHolder;
 
 /** Processes login requests. */
 public class UserController extends RequestController {
+  private Set<Integer> loggedInCustomers = Collections.synchronizedSet(new HashSet<Integer>());
+  private Set<Integer> loggedInEmployees = Collections.synchronizedSet(new HashSet<Integer>());
 
   /** Instantiates a new user controller.
    * @param serverController the server controller */
@@ -30,6 +38,12 @@ public class UserController extends RequestController {
       // Check credentials
       Customer customer = Customer.findByEmailAndPassword(conn, request.getEmail(), request.getPassword());
       errorIfNull(customer, "Login failed, invalid email or password.");
+      
+      // Check if not already logged in
+      errorIf(loggedInCustomers.contains(customer.getId()), "You are already logged in");
+      
+      // Mark user as logged in
+      loggedInCustomers.add(customer.getId());
       
       // Success
       session.setCustomer(customer);
@@ -49,11 +63,36 @@ public class UserController extends RequestController {
    * @return the server response */
   public ServerResponse handle(ServiceLoginAction action, ServiceSession session) {
     return database.performQuery(new ServiceLoginResponse(), (conn, response) -> {
+      // Check credentials
       CompanyPerson person = session.login(action.getUsername(), action.getPassword());
       errorIfNull(person, "Login failed, invalid username or password.");
+      
+      // Check if not already logged in
+      errorIf(loggedInEmployees.contains(person.getId()), "You are already logged in");
+      
+      // Mark user as logged in
+      loggedInEmployees.add(person.getId()); 
+      
+      // Success
       response.setUser(person);
       response.setSuccess("Login successful");
       return response;
     });
+  }
+
+  public void removeSession(SessionHolder context) {
+    if (context.getCustomerSession() != null) {
+      User user = context.getCustomerSession().getUser();
+      if (user != null) {
+        loggedInCustomers.remove(user.getId());
+      }
+    }
+    
+    if (context.getServiceSession() != null) {
+      User user = context.getServiceSession().getUser();
+      if (user != null) {
+        loggedInEmployees.remove(user.getId());
+      }
+    }
   }
 }
