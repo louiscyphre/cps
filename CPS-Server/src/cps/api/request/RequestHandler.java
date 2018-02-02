@@ -3,6 +3,10 @@ package cps.api.request;
 import cps.api.action.*;
 import cps.api.response.*;
 
+/** Is used to implement request dispatching.
+ * Each request class has a handle() method which receives an object that implements this interface.
+ * The class-specific method calls a handler method of the appropriate type for that class.
+ * @param <SessionType> the generic type of the user session */
 public interface RequestHandler<SessionType> {
   // Customer requests - only Customer can use these
   public ServerResponse handle(CancelOnetimeParkingRequest request, SessionType session);

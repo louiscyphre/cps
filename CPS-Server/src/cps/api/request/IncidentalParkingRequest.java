@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
 
+/** Is sent by the client application when a customer wants to park right now, without making a reservation or buying a subscription. */
 public class IncidentalParkingRequest extends OnetimeParkingRequest {
   private static final long serialVersionUID = 1L;
 
@@ -12,18 +13,9 @@ public class IncidentalParkingRequest extends OnetimeParkingRequest {
     super(customerID, email, carID, lotID, plannedEndTime);
   }
 
-  @Override
-  public String toString() {
-    StringBuilder buffer = new StringBuilder();
-    buffer.append("{");
-    buffer.append("customerID: " + getCustomerID() + ", ");
-    buffer.append("email: " + getEmail() + ", ");
-    buffer.append("carID: " + getCarID() + ", ");
-    buffer.append("lotID: " + getLotID() + ", ");
-    buffer.append("plannedEndTime: " + getPlannedEndTime() + "}");
-    return buffer.toString();
-  }
-
+  /** Call the handler for this request.
+   * @see cps.api.request.Request#handle(cps.api.request.RequestHandler, java.lang.Object)
+   */
   @Override
   public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
     return handler.handle(this, session);

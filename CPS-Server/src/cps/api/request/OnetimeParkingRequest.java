@@ -2,6 +2,7 @@ package cps.api.request;
 
 import java.time.LocalDateTime;
 
+/** Base class for one-time parking service requests: incidental parking (park now) or reserved parking. */ 
 public abstract class OnetimeParkingRequest extends CustomerRequest {
   private static final long serialVersionUID = 1L;
 

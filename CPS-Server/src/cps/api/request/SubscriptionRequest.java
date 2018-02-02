@@ -2,6 +2,7 @@ package cps.api.request;
 
 import java.time.LocalDate;
 
+/** Base class for monthly subscription purchase requests - full or regular. */
 public abstract class SubscriptionRequest extends CustomerRequest {
   private static final long serialVersionUID = 1L;
   private String            email;

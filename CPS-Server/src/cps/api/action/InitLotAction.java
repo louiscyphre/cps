@@ -3,6 +3,7 @@ package cps.api.action;
 import cps.api.request.RequestHandler;
 import cps.api.response.ServerResponse;
 
+/** Is sent by the client application when a local employee wants to initialize a parking lot. */
 public class InitLotAction extends ServiceAction {
   private static final long serialVersionUID = 1L;
 
@@ -11,7 +12,7 @@ public class InitLotAction extends ServiceAction {
   private float  price1;
   private float  price2;
   private String robotIP;
-
+  
   public InitLotAction(int userID, String streetAddress, int size, float price1, float price2, String robotIP) {
     super(userID);
     this.streetAddress = streetAddress;
@@ -61,6 +62,9 @@ public class InitLotAction extends ServiceAction {
     this.robotIP = robotIP;
   }
 
+  /** Call the handler for this request.
+   * @see cps.api.request.Request#handle(cps.api.request.RequestHandler, java.lang.Object)
+   */
   @Override
   public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
     return handler.handle(this, session);

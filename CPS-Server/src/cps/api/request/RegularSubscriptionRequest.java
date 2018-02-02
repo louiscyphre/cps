@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import cps.api.response.ServerResponse;
 import cps.common.Constants;
 
+/** Is sent by the client application when a customer wants to purchase a regular monthly subscription. */
 public class RegularSubscriptionRequest extends SubscriptionRequest {
   private static final long serialVersionUID = 1L;
   private int               lotID;
@@ -45,6 +46,9 @@ public class RegularSubscriptionRequest extends SubscriptionRequest {
     this.dailyExitTime = endTime;
   }
 
+  /** Call the handler for this request.
+   * @see cps.api.request.Request#handle(cps.api.request.RequestHandler, java.lang.Object)
+   */
   @Override
   public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
     return handler.handle(this, session);

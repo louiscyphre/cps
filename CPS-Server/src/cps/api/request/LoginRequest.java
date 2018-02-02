@@ -2,6 +2,7 @@ package cps.api.request;
 
 import cps.api.response.ServerResponse;
 
+/** Is sent by the client application when a customer wants to login with their email and password that they received from previously buying a service. */
 public class LoginRequest extends Request {
   private static final long serialVersionUID = 1L;
 
@@ -13,6 +14,9 @@ public class LoginRequest extends Request {
     this.setPassword(password);
   }
 
+  /** Call the handler for this request.
+   * @see cps.api.request.Request#handle(cps.api.request.RequestHandler, java.lang.Object)
+   */
   @Override
   public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
     return handler.handle(this, session);

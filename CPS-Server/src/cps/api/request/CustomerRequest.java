@@ -1,5 +1,6 @@
 package cps.api.request;
 
+/** Base class for client requests that represent customer actions. */
 public abstract class CustomerRequest extends Request {
   private static final long serialVersionUID = 1L;
 

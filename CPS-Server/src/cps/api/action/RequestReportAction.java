@@ -2,6 +2,7 @@ package cps.api.action;
 
 import java.time.LocalDate;
 
+/** Base Class for actions that request statistical reports. */
 public abstract class RequestReportAction extends ServiceAction {
   private static final long serialVersionUID = 1L;
   private int               reportType;

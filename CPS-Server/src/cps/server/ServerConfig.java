@@ -2,29 +2,13 @@ package cps.server;
 
 import java.util.HashMap;
 
-/**
- * The Class ServerConfig.
- */
+/** Encapsulates configuration parameters for the server application. */
 @SuppressWarnings("serial")
 public class ServerConfig extends HashMap<String, String> {
-
-  /**
-   * The Interface Init.
-   */
   interface Init {
-
-    /**
-     * Visit.
-     *
-     * @param config
-     *          the config
-     */
     void visit(ServerConfig config);
   }
 
-  /**
-   * The Class InitLocal.
-   */
   static class InitLocal implements Init {
 
     /*
@@ -39,9 +23,6 @@ public class ServerConfig extends HashMap<String, String> {
     }
   }
 
-  /**
-   * The Class InitRemote.
-   */
   static class InitRemote implements Init {
 
     /*
@@ -65,34 +46,25 @@ public class ServerConfig extends HashMap<String, String> {
     }
   }
 
-  /**
-   * Instantiates a new server config.
-   *
-   * @param init
-   *          the init
-   */
   private ServerConfig(Init init) {
     init.visit(this);
   }
 
-  /**
-   * Gets the local.
-   *
-   * @return the local
-   */
+  /** Get the configuration settings to run the server with a local database.
+   * @return the configuration settings */
   public static ServerConfig local() {
     return new ServerConfig(new InitLocal());
   }
 
-  /**
-   * Gets the remote.
-   *
-   * @return the remote
-   */
+  /** Get the configuration settings to run the server with a remote database.
+   * @return the configuration settings */
   public static ServerConfig remote() {
     return new ServerConfig(new InitRemote());
   }
 
+
+  /** Get the configuration settings to run the server with a testing database.
+   * @return the configuration settings */
   public static ServerConfig testing() {
     return new ServerConfig(new InitTesting());
   }

@@ -2,6 +2,7 @@ package cps.api.request;
 
 import cps.api.response.ServerResponse;
 
+/** Is sent by the client application when a customer wants to file a complaint. */
 public class ComplaintRequest extends CustomerRequest {
   private static final long serialVersionUID = 1L;
 
@@ -27,6 +28,9 @@ public class ComplaintRequest extends CustomerRequest {
     this.content = content;
   }
 
+  /** Call the handler for this request.
+   * @see cps.api.request.Request#handle(cps.api.request.RequestHandler, java.lang.Object)
+   */
   @Override
   public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
     return handler.handle(this, session);

@@ -1,5 +1,6 @@
 package cps.api.action;
 
+/** Base class for actions that toggle boolean flags in parking cells. */
 public abstract class ParkingCellToggleAction extends LotAction {
   private static final long serialVersionUID = 1L;
   private int               locationI;

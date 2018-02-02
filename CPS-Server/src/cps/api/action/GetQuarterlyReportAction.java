@@ -5,9 +5,10 @@ import java.time.LocalDate;
 import cps.api.request.RequestHandler;
 import cps.api.response.ServerResponse;
 
+/** Is sent by the client application when the Global Manager wants to receive a quarterly statistical report. */
 public class GetQuarterlyReportAction extends RequestReportAction {
   private static final long serialVersionUID = 1L;
-
+  
   int lotID;
 
   public GetQuarterlyReportAction(int userID, int reportType, LocalDate periodStart, LocalDate periodEnd, int lotID) {
@@ -15,6 +16,9 @@ public class GetQuarterlyReportAction extends RequestReportAction {
     this.lotID = lotID;
   }
 
+  /** Call the handler for this request.
+   * @see cps.api.request.Request#handle(cps.api.request.RequestHandler, java.lang.Object)
+   */
   @Override
   public <T> ServerResponse handle(RequestHandler<T> handler, T session) {
     return handler.handle(this, session);

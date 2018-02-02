@@ -118,16 +118,12 @@ public class Reminder extends Thread {
 
   private void sendWarning(Connection conn, OnetimeService late) {
     // TODO optional - send an email to email address
-    /*
-     * Email should be sent from this function when the client provides smtp
-     * server
-     */
+    // Email should be sent from this function when the client provides an SMTP server
     System.out.printf(
         "\nSending message to customer %d, to email %s.\n We are waiting for your car %s, at lot %s, at %s\n",
         late.getCustomerID(), late.getEmail(), late.getCarID(), late.getLotID(), late.getPlannedStartTime());
   }
 
-  // TODO add warned and completed flags to subscription schema
   private void warnSubscriptionOwners() throws ServerException {
     db.performAction(conn -> {
       debugPrint("Searching customers who have 1 week left on their subscription");
