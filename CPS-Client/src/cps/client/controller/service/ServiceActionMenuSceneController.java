@@ -1,12 +1,10 @@
 package cps.client.controller.service;
 
 import cps.api.action.ServiceLogoutAction;
-import cps.api.response.RefundResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.SimpleResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
-import cps.client.utils.InternalClientException;
 import cps.entities.people.CompanyPerson;
 import cps.entities.people.LocalEmployee;
 import cps.entities.people.User;

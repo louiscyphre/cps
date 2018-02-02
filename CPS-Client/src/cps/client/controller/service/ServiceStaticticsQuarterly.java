@@ -111,8 +111,6 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
   /** List holding the entries */
   private ObservableList<TableQuarterlyEntry> obsEntriesList;
 
-  // private Collection<Complaint> complaints;
-
   /*
    * (non-Javadoc)
    * @see
