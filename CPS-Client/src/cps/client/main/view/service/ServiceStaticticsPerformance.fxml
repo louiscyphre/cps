@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="705.0" style="-fx-background-color: E6DDD4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceStaticticsComplaints">
+<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="705.0" style="-fx-background-color: E6DDD4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceStaticticsPerformance">
 	<center>
 		<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="699.0" spacing="20.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
 			<padding>
@@ -38,12 +38,11 @@
             </HBox>
             <TableView fx:id="tableView" minWidth="613.0" prefHeight="327.0" prefWidth="614.0" style="-fx-border-radius: 8 8 8 8; -fx-background-radius: 8 8 8 8;" styleClass="statisticsTable">
                <columns>
-                  <TableColumn fx:id="colYear" editable="false" prefWidth="72.0" text="Year" />
-                  <TableColumn fx:id="colQuarter" editable="false" prefWidth="83.0" text="Quarter" />
-                  <TableColumn fx:id="colLotID" editable="false" minWidth="0.0" prefWidth="78.0" text="Lot ID" />
+                  <TableColumn fx:id="colYear" editable="false" prefWidth="102.0" text="Year" />
+                  <TableColumn fx:id="colMonth" editable="false" prefWidth="106.0" text="Month" />
                   <TableColumn fx:id="colOpened" editable="false" minWidth="0.0" prefWidth="153.0" text="Opened claims" />
-                  <TableColumn fx:id="colRejected" editable="false" minWidth="0.0" prefWidth="141.0" text="Rejected claims" />
-                  <TableColumn fx:id="colRefunded" editable="false" minWidth="0.0" prefWidth="140.0" text="Refunded" />
+                  <TableColumn fx:id="colRejected" editable="false" minWidth="0.0" prefWidth="155.0" text="Rejected claims" />
+                  <TableColumn fx:id="colRefunded" editable="false" minWidth="0.0" prefWidth="142.0" text="Refunded" />
                </columns>
             </TableView>
 				<VBox fx:id="infoBox" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="113.0" prefWidth="299.0" spacing="0.0" styleClass="bigInfoLabel">

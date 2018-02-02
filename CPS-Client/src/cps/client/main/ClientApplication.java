@@ -112,11 +112,10 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_ACTION_UPDATE_PRICES);
       // Statistics
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_CHOICE);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_COMPLAINTS);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_DISABLED_PARKING_CELLS);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_MONTHLY);
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_QUARTERLY);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_WEEKLY);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_ORDERS);
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_ACTIVITY);
+      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_PERFORMANCE);
       ControllersClientAdapter.turnLoggedInStateOff();
       initializeStage(SceneCode.SERVICE_ACTION_LOGIN, "CPS Service Client");
     } catch (IOException e) {

@@ -4,15 +4,12 @@
 package cps.client.controller.service;
 
 import cps.client.controller.ControllerConstants.SceneCode;
-import cps.client.controller.customer.ViewMyReservationsController.TableOnetimeService;
 import cps.common.Constants;
 import cps.entities.models.MonthlyReport;
 import cps.entities.models.ParkingLot;
 
-import java.sql.Timestamp;
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cps.api.action.GetQuarterlyReportAction;
-import cps.api.request.ListOnetimeEntriesRequest;
 import cps.api.request.ListParkingLotsRequest;
 import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.QuarterlyReportResponse;
@@ -45,10 +41,13 @@ import javafx.scene.text.Text;
 public class ServiceStaticticsComplaints extends ServiceActionControllerBase implements ParkingLotsController, ReportsController {
 
   @FXML
-  private TableColumn<ReportsTable, String> colQuarter;
-
-  @FXML
   private TableColumn<ReportsTable, String> colYear;
+  
+  @FXML
+  private TableColumn<ReportsTable, String> colQuarter;
+  
+  @FXML
+  private TableColumn<ReportsTable, String> colMonth;
 
   @FXML
   private TableColumn<ReportsTable, String> colRejected;
@@ -145,6 +144,7 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
   }
 
   /** Validates that the fields and Sends API request to the server. */
+  @Override
   void validateAndSend() {
     // validation in same order as order in the form
     LocalDate reportStartDate = getReportStartDate();
@@ -204,14 +204,14 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
     assert parkingLotsList != null : "fx:id=\"parkingLotsList\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
     assert tableView != null : "fx:id=\"tableView\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
     assert colYear != null : "fx:id=\"colYear\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
-    assert colQuarter != null : "fx:id=\"colQuarter\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
+    assert colMonth != null : "fx:id=\"colMonth\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
     assert colOpened != null : "fx:id=\"colOpenedClaims\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
     assert colRejected != null : "fx:id=\"colRejected\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
     assert colRefunded != null : "fx:id=\"colRefunded\" was not injected: check your FXML file 'ServiceStatisticsComplaints.fxml'.";
     
     // Columns cell value factories
     colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
-    colQuarter.setCellValueFactory(new PropertyValueFactory<>("Quarter"));
+    colMonth.setCellValueFactory(new PropertyValueFactory<>("Month"));
     colOpened.setCellValueFactory(new PropertyValueFactory<>("Opened claims"));
     colRejected.setCellValueFactory(new PropertyValueFactory<>("Rejected claims"));
     colRefunded.setCellValueFactory(new PropertyValueFactory<>("Refunded claims"));
@@ -220,7 +220,7 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
     this.reportsTableEntriesList = FXCollections.observableArrayList();
     tableView.setItems(this.reportsTableEntriesList);
 
-    ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_STATISTICS_COMPLAINTS);
+//    ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_STATISTICS_COMPLAINTS); // TODO 
   }
 
   /* (non-Javadoc)
@@ -297,10 +297,10 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
   @Override
   public void fillReportTable(Collection<MonthlyReport> list) {
     List<ReportsTable> newEntriesList = new LinkedList<ReportsTable>();
-    Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-    list.forEach(e -> {//TODO//FIXME//Server side code needed
-      //ReportsTable toAdd = new ReportsTable((e.getYear()), e.getCoplaintsCount(), e.getComplaintsRejectedCount(), e.getComplaintsRefundedCount());
-      //newEntriesList.add(toAdd);
+    list.forEach(e -> {
+      Integer rejectedComplaints = e.getComplaintsClosedCount() - e.getComplaintsRefundedCount(); //FIXME//TODO Please add server-side function getComplaintsRejectedCount().
+      ReportsTable toAdd = new ReportsTable((e.getYear()), e.getMonth(), e.getComplaintsClosedCount(), rejectedComplaints, e.getComplaintsRefundedCount());
+      newEntriesList.add(toAdd);
     });
     this.reportsTableEntriesList.setAll(newEntriesList);
   }
@@ -308,8 +308,8 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
   /** Table row entry. */
   public class ReportsTable {
     private final SimpleStringProperty year;
-    private final SimpleStringProperty quarter;
-    private final SimpleStringProperty openedClaims;
+    private final SimpleStringProperty month;
+    private final SimpleStringProperty closedClaims;
     private final SimpleStringProperty rejectedClaims;
     private final SimpleStringProperty refundedClaims;
 
@@ -319,10 +319,10 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
      * @param openedClaims the opened claims
      * @param rejectedClaims the rejected claims
      * @param refundedClaims the refunded claims */
-    public ReportsTable(Integer year, Integer quarter/* FIXME */, Integer openedClaims, Integer rejectedClaims, Integer refundedClaims) {
+    public ReportsTable(Integer year, Integer month, Integer closedClaims, Integer rejectedClaims, Integer refundedClaims) {
       this.year = new SimpleStringProperty(year.toString());
-      this.quarter = new SimpleStringProperty(quarter.toString());
-      this.openedClaims = new SimpleStringProperty(openedClaims.toString());
+      this.month = new SimpleStringProperty(month.toString());
+      this.closedClaims = new SimpleStringProperty(closedClaims.toString());
       this.rejectedClaims = new SimpleStringProperty(rejectedClaims.toString());
       this.refundedClaims = new SimpleStringProperty(refundedClaims.toString());
     }
@@ -331,12 +331,12 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
       return year.get();
     }
 
-    public String getQuarter() {
-      return quarter.get();
+    public String getMonth() {
+      return month.get();
     }
 
-    public String getOpenedClaims() {
-      return openedClaims.get();
+    public String getClosedClaims() {
+      return closedClaims.get();
     }
 
     public String getRejectedClaims() {
@@ -351,12 +351,12 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
       this.year.set(year);
     }
 
-    public void setQuarter(String quarter) {
-      this.quarter.set(quarter);
+    public void setMonth(String month) {
+      this.month.set(month);
     }
 
     public void setOpenedClaims(String openedClaims) {
-      this.openedClaims.set(openedClaims);
+      this.closedClaims.set(openedClaims);
     }
 
     public void setRejectedClaims(String rejectedClaims) {
