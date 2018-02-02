@@ -135,8 +135,14 @@ public class ServerApplication extends AbstractServer {
   }
 
   @Override
-  protected synchronized void clientDisconnected(ConnectionToClient client) {
-    System.out.println("Client disconnected: " + client);
+  protected synchronized void clientException(ConnectionToClient client, Throwable exception) {
+    System.out.println("Client disconnected: " + client.getName());
+    
+    SessionHolder context = (SessionHolder) client.getInfo("Context");
+    
+    if (context != null) {
+      serverController.removeSession(context);
+    }
   }
 
   public static void main(String[] args) {
@@ -172,5 +178,4 @@ public class ServerApplication extends AbstractServer {
     reminder = new Reminder(config);
     reminder.start();
   }
-
 }

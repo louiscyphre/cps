@@ -1,11 +1,47 @@
 package cps.server;
 
-import cps.api.action.*;
-import cps.api.request.*;
-import cps.api.response.*;
-import cps.server.controllers.*;
+import cps.api.action.GetCurrentPerformanceAction;
+import cps.api.action.GetPeriodicReportAction;
+import cps.api.action.GetQuarterlyReportAction;
+import cps.api.action.GetWeeklyReportAction;
+import cps.api.action.InitLotAction;
+import cps.api.action.ListComplaintsAction;
+import cps.api.action.ParkingCellSetDisabledAction;
+import cps.api.action.ParkingCellSetReservedAction;
+import cps.api.action.RefundAction;
+import cps.api.action.RejectComplaintAction;
+import cps.api.action.RequestLotStateAction;
+import cps.api.action.ServiceLoginAction;
+import cps.api.action.SetFullLotAction;
+import cps.api.action.UpdatePricesAction;
+import cps.api.request.CancelOnetimeParkingRequest;
+import cps.api.request.ComplaintRequest;
+import cps.api.request.FullSubscriptionRequest;
+import cps.api.request.IncidentalParkingRequest;
+import cps.api.request.ListMyComplaintsRequest;
+import cps.api.request.ListOnetimeEntriesRequest;
+import cps.api.request.ListParkingLotsRequest;
+import cps.api.request.LoginRequest;
+import cps.api.request.ParkingEntryRequest;
+import cps.api.request.ParkingExitRequest;
+import cps.api.request.RegularSubscriptionRequest;
+import cps.api.request.Request;
+import cps.api.request.RequestHandler;
+import cps.api.request.ReservedParkingRequest;
+import cps.api.response.ServerResponse;
+import cps.api.response.SimpleResponse;
+import cps.server.controllers.CarTransportationController;
+import cps.server.controllers.CarTransportationControllerA;
+import cps.server.controllers.ComplaintController;
+import cps.server.controllers.LotController;
+import cps.server.controllers.OnetimeParkingController;
+import cps.server.controllers.ParkingEntryController;
+import cps.server.controllers.ParkingExitController;
+import cps.server.controllers.ReportController;
+import cps.server.controllers.SubscriptionController;
+import cps.server.controllers.UserController;
 import cps.server.database.DatabaseController;
-import cps.server.session.*;
+import cps.server.session.SessionHolder;
 
 public class ServerController implements RequestHandler<SessionHolder> {
   private final ServerConfig                config;
@@ -221,5 +257,9 @@ public class ServerController implements RequestHandler<SessionHolder> {
   @Override
   public ServerResponse handle(GetPeriodicReportAction action, SessionHolder context) {
     return reportController.handle(action, context.acquireServiceSession());
+  }
+
+  public void removeSession(SessionHolder context) {
+    userController.removeSession(context);    
   }
 }
