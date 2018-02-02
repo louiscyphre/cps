@@ -6,12 +6,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextFlow;
 
 public class ServiceStaticticsPerformance extends ServiceStatitisticsBase {
 

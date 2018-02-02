@@ -14,8 +14,7 @@ import java.util.LinkedList;
 import cps.common.Constants;
 import cps.server.ServerException;
 
-// Database entity for one-time parking services - incidental parking or reserved parking both stored in the same table.
-
+/** Database entity for one-time parking services - incidental parking or reserved parking both stored in the same table. */
 public class OnetimeService implements ParkingService {
   private static final long serialVersionUID = 1L;
 
@@ -32,6 +31,19 @@ public class OnetimeService implements ParkingService {
   private boolean   canceled;
   private boolean   warned;
 
+  /** Instantiates a new onetime service.
+   * @param id the id
+   * @param type the type
+   * @param customerID the customer ID
+   * @param email the email
+   * @param carID the car ID
+   * @param lotID the lot ID
+   * @param plannedStartTime the planned start time
+   * @param plannedEndTime the planned end time
+   * @param parked the parked
+   * @param completed the completed
+   * @param canceled the canceled
+   * @param warned the warned */
   public OnetimeService(int id, int type, int customerID, String email, String carID, int lotID, Timestamp plannedStartTime, Timestamp plannedEndTime,
       boolean parked, boolean completed, boolean canceled, boolean warned) {
     this.id = id;
@@ -48,10 +60,22 @@ public class OnetimeService implements ParkingService {
     this.warned = warned;
   }
 
+  /** Instantiates a new onetime service.
+   * @param id the id
+   * @param type the type
+   * @param customerID the customer ID
+   * @param email the email
+   * @param carID the car ID
+   * @param lotID the lot ID
+   * @param plannedStartTime the planned start time
+   * @param plannedEndTime the planned end time */
   public OnetimeService(int id, int type, int customerID, String email, String carID, int lotID, Timestamp plannedStartTime, Timestamp plannedEndTime) {
     this(id, type, customerID, email, carID, lotID, plannedStartTime, plannedEndTime, false, false, false, false);
   }
 
+  /** Instantiates a new onetime service from an SQL ResultSet.
+   * @param rs the ResultSet
+   * @throws SQLException on error */
   public OnetimeService(ResultSet rs) throws SQLException {
     this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getString(5), rs.getInt(6), rs.getTimestamp(7), rs.getTimestamp(8), rs.getBoolean(9),
         rs.getBoolean(10), rs.getBoolean(11), rs.getBoolean(12));
@@ -159,28 +183,21 @@ public class OnetimeService implements ParkingService {
     return Constants.LICENSE_TYPE_ONETIME;
   }
 
-  /** Creates Onetime Service.
-   * @param conn
-   *        the Connection
-   * @param type
-   *        Constants.ServiceType
-   * @param customerID
-   *        the customer ID
-   * @param email
-   *        the email
-   * @param carID
-   *        the car ID
-   * @param lotID
-   *        the lot ID
-   * @param plannedStartTime
-   *        the planned start time
-   * @param plannedEndTime
-   *        the planned end time
-   * @param canceled
-   *        If the service was canceled (default false)
+  /** Create a new Onetime Service record in the database.
+   * @param conn the SQL connection
+   * @param type Constants.ServiceType
+   * @param customerID the customer ID
+   * @param email the email
+   * @param carID the car ID
+   * @param lotID the lot ID
+   * @param plannedStartTime the planned start time
+   * @param plannedEndTime the planned end time
+   * @param parked the parked
+   * @param completed the completed
+   * @param canceled If the service was canceled (default false)
+   * @param warned the warned
    * @return the onetime service
-   * @throws SQLException
-   *         the SQL exception */
+   * @throws SQLException on error */
   public static OnetimeService create(Connection conn, int type, int customerID, String email, String carID, int lotID, Timestamp plannedStartTime,
       Timestamp plannedEndTime, boolean parked, boolean completed, boolean canceled, boolean warned) throws SQLException {
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_ONETIME_SERVICE, Statement.RETURN_GENERATED_KEYS);
@@ -213,13 +230,26 @@ public class OnetimeService implements ParkingService {
   }
 
   /** A shorter version of create.
+   * @param conn the SQL connection
+   * @param type the type
+   * @param customerID the customer ID
+   * @param email the email
+   * @param carID the car ID
+   * @param lotID the lot ID
+   * @param plannedStartTime the planned start time
+   * @param plannedEndTime the planned end time
    * @return the new onetime service
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static OnetimeService create(Connection conn, int type, int customerID, String email, String carID, int lotID, Timestamp plannedStartTime,
       Timestamp plannedEndTime) throws SQLException {
     return create(conn, type, customerID, email, carID, lotID, plannedStartTime, plannedEndTime, false, false, false, false);
   }
 
+  /** Find a OnetimeService record by customer ID.
+   * @param conn the SQL connection
+   * @param userID the user ID
+   * @return the collection
+   * @throws SQLException on error */
   public static Collection<OnetimeService> findByCustomerID(Connection conn, int userID) throws SQLException {
     LinkedList<OnetimeService> results = new LinkedList<OnetimeService>();
 
@@ -237,6 +267,13 @@ public class OnetimeService implements ParkingService {
     return results;
   }
 
+  /** Find a OnetimeService record that could qualify a customer for entry into the parking lot.
+   * @param conn the SQL connection
+   * @param customerID the customer ID
+   * @param carID the car ID
+   * @param lotID the lot ID
+   * @return the onetime service
+   * @throws SQLException on error */
   public static OnetimeService findForEntry(Connection conn, int customerID, String carID, int lotID) throws SQLException {
     OnetimeService result = null;
 
@@ -258,8 +295,14 @@ public class OnetimeService implements ParkingService {
     return result;
   }
 
-  // Return a list of all entries whose time period overlaps with the given
-  // period
+  // 
+  /** Return a list of all entries whose time period overlaps with the given period.
+   * @param conn the SQL connection
+   * @param carID the car ID
+   * @param startTime the start time
+   * @param plannedEndTime the planned end time
+   * @return a list of overlapping entries
+   * @throws SQLException on error */
   public static ArrayList<OnetimeService> findForOverlap(Connection conn, String carID, Timestamp startTime, Timestamp plannedEndTime) throws SQLException {
     ArrayList<OnetimeService> result = new ArrayList<OnetimeService>();
 
@@ -290,8 +333,13 @@ public class OnetimeService implements ParkingService {
     return result;
   }
 
-  // Return true if there is at least one entry whose time period overlaps with
-  // the given period
+  /** Return true if there is at least one record whose time period overlaps with the given period.
+   * @param conn the SQL connection
+   * @param carID the car ID
+   * @param startTime the start time
+   * @param endTime the end time
+   * @return true if an overlapping record was found
+   * @throws SQLException on error */
   public static boolean overlapExists(Connection conn, String carID, Timestamp startTime, Timestamp endTime) throws SQLException {
     boolean result = false;
 
@@ -324,12 +372,17 @@ public class OnetimeService implements ParkingService {
     return result;
   }
 
-  public static OnetimeService findByID(Connection conn, int sId) throws SQLException {
+  /** Find a OnetimeService record by ID.
+   * @param conn the SQL connection
+   * @param serviceID the id to find
+   * @return the onetime service
+   * @throws SQLException on error */
+  public static OnetimeService findByID(Connection conn, int serviceID) throws SQLException {
     OnetimeService result = null;
 
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_GET_ONETIME_SERVICE_BY_ID);
 
-    stmt.setInt(1, sId);
+    stmt.setInt(1, serviceID);
 
     ResultSet rs = stmt.executeQuery();
 
@@ -343,12 +396,11 @@ public class OnetimeService implements ParkingService {
     return result;
   }
 
-  /** Finds onetime service in database by it's id and updates all fields in db
-   * to match fields in instance.
-   * @param conn
-   *        the conn
-   * @throws SQLException
-   *         the SQL exception */
+  /** Update the database record for this OnetimeService.
+   * Finds onetime service in the database by the instance's id attribute and updates all fields in the database record
+   * to match the fields in the instance.
+   * @param conn the SQL connection
+   * @throws SQLException on error */
   @Override
   public void update(Connection conn) throws SQLException {
     java.sql.PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_ONETIME_BY_ID);
@@ -374,20 +426,36 @@ public class OnetimeService implements ParkingService {
     return this.plannedEndTime.toLocalDateTime();
   }
 
-  public static OnetimeService findByIDNotNull(Connection conn, int id) throws SQLException, RuntimeException {
+  /** Find a OnetimeService record by ID, throw ServerException if not found.
+   * @param conn the SQL connection
+   * @param id the id
+   * @return the onetime service
+   * @throws SQLException on error
+   * @throws ServerException if not found */
+  public static OnetimeService findByIDNotNull(Connection conn, int id) throws SQLException, ServerException {
     OnetimeService item = findByID(conn, id);
 
     if (item == null) {
-      throw new RuntimeException("OnetimeService with id " + id + " does not exist");
+      throw new ServerException("OnetimeService with id " + id + " does not exist");
     }
 
     return item;
   }
 
+  /** Find the associated parking lot record in the database.
+   * @param conn the SQL connection
+   * @return the parking lot
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public ParkingLot getParkingLot(Connection conn) throws SQLException, ServerException {
     return ParkingLot.findByIDNotNull(conn, lotID);
   }
 
+  /** Find the associated customer record in the database.
+   * @param conn the SQL connection
+   * @return the customer
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public Customer getCustomer(Connection conn) throws SQLException, ServerException {
     return Customer.findByIDNotNull(conn, customerID);
   }
@@ -396,10 +464,21 @@ public class OnetimeService implements ParkingService {
     return Duration.between(plannedStartTime.toLocalDateTime(), plannedEndTime.toLocalDateTime());
   }
 
+  /** Calculate payment for this service.
+   * @param pricePerHour the price per hour
+   * @return the float */
   public float calculatePayment(float pricePerHour) {
     return pricePerHour * getPlannedDuration().getSeconds() / 3600f;
   }
 
+  /** Find OnetimeService records where the customer is late to their reservation.
+   * Is used to warn customers that their scheduled reservation has started, and wait for a reply for 30 minutes.
+   * Is used again to retrieve a list of all the OnetimeService records that should be canceled because their customers did not respond to the warning within 30 minutes.
+   * @param conn the SQL connection
+   * @param delta the delta
+   * @param warned whether to search records where the customer was already warned, or records where the customer has not been warned yet
+   * @return the collection
+   * @throws SQLException on error */
   public static Collection<OnetimeService> findLateCustomers(Connection conn, Duration delta, boolean warned) throws SQLException {
     LinkedList<OnetimeService> items = new LinkedList<OnetimeService>();
     
@@ -422,6 +501,9 @@ public class OnetimeService implements ParkingService {
     return items;
   }
 
+  /* (non-Javadoc)
+   * @see cps.entities.models.ParkingService#shouldCompleteAfterExit()
+   */
   @Override
   public boolean shouldCompleteAfterExit() {
     return true;

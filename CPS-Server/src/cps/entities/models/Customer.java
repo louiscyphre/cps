@@ -46,7 +46,7 @@ public class Customer implements Serializable, User {
 
   /** Instantiates a new customer from an SQL ResultSet.
    * @param rs the SQL ResultSet
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public Customer(ResultSet rs) throws SQLException {
     this(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getFloat(4), rs.getFloat(5));
   }
@@ -103,12 +103,12 @@ public class Customer implements Serializable, User {
     this.credit += credit;
   }
 
-  /** Creates the.
-   * @param conn the conn
+  /** Create a new customer record in the database.
+   * @param conn the SQL connection
    * @param email the email
    * @param password the password
    * @return the customer
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static Customer create(Connection conn, String email, String password) throws SQLException {
     PreparedStatement stmt = conn.prepareStatement(Constants.SQL_CREATE_CUSTOMER, Statement.RETURN_GENERATED_KEYS);
 
@@ -131,11 +131,11 @@ public class Customer implements Serializable, User {
 
   }
 
-  /** Find by ID.
-   * @param conn the conn
+  /** Find customer by ID.
+   * @param conn the SQL connection
    * @param id the id
    * @return the customer
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static Customer findByID(Connection conn, int id) throws SQLException {
     Customer result = null;
     PreparedStatement st = conn.prepareStatement(Constants.SQL_FIND_CUSTOMER_BY_ID);
@@ -153,12 +153,12 @@ public class Customer implements Serializable, User {
     return result;
   }
 
-  /** Find by ID not null.
-   * @param conn the conn
+  /** Find customer by ID, throw ServerException if not found.
+   * @param conn the SQL connection
    * @param id the id
    * @return the customer
-   * @throws SQLException the SQL exception
-   * @throws ServerException the server exception */
+   * @throws SQLException on error
+   * @throws ServerException if not found */
   public static Customer findByIDNotNull(Connection conn, int id) throws SQLException, ServerException {
     Customer result = findByID(conn, id);
 
@@ -169,11 +169,11 @@ public class Customer implements Serializable, User {
     return result;
   }
 
-  /** Find by email.
-   * @param conn the conn
+  /** Find customer by email.
+   * @param conn the SQL connection
    * @param email the email
    * @return the customer
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static Customer findByEmail(Connection conn, String email) throws SQLException {
     Customer result = null;
     PreparedStatement st = conn.prepareStatement(Constants.SQL_FIND_CUSTOMER_BY_EMAIL);
@@ -192,11 +192,11 @@ public class Customer implements Serializable, User {
   }
 
   /** Find by email and password.
-   * @param conn the conn
+   * @param conn the SQL connection
    * @param email the email
    * @param password the password
    * @return the customer
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static Customer findByEmailAndPassword(Connection conn, String email, String password) throws SQLException {
     Customer result = null;
     PreparedStatement st = conn.prepareStatement(Constants.SQL_FIND_CUSTOMER_BY_EMAIL_AND_PASSWORD);
@@ -215,10 +215,10 @@ public class Customer implements Serializable, User {
     return result;
   }
 
-  /** Update.
-   * @param conn the conn
-   * @throws SQLException the SQL exception
-   * @throws ServerException the server exception */
+  /** Update the database record for this customer.
+   * @param conn the SQL connection
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public void update(Connection conn) throws SQLException, ServerException {
     PreparedStatement st = conn.prepareStatement(Constants.SQL_UPDATE_CUSTOMER);
 
@@ -235,21 +235,21 @@ public class Customer implements Serializable, User {
     st.close();
   }
 
-  /** Pay.
-   * @param conn the conn
+  /** Simulates payment. Add sum as a debit to the client's account and update the database record.
+   * @param conn the SQL connection
    * @param sum the sum
-   * @throws SQLException the SQL exception
-   * @throws ServerException the server exception */
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public void pay(Connection conn, float sum) throws SQLException, ServerException {
     addDebit(sum);
     update(conn);
   }
 
-  /** Receive refund.
-   * @param conn the conn
+  /** Simulates receiving refund. Add sum as a credit to the client's account and update the database record.
+   * @param conn the SQL connection
    * @param sum the sum
-   * @throws SQLException the SQL exception
-   * @throws ServerException the server exception */
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public void receiveRefund(Connection conn, float sum) throws SQLException, ServerException {
     addCredit(sum);
     update(conn);

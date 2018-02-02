@@ -20,7 +20,6 @@ import cps.api.response.RefundResponse;
 import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.RejectComplaintResponse;
 import cps.api.response.RequestLotStateResponse;
-import cps.api.response.RequestReportResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.Response;

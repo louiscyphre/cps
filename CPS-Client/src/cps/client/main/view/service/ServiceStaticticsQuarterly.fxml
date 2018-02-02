@@ -21,9 +21,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="789.0" style="-fx-background-color: E6DDD4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceStaticticsQuarterly">
+<BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="890.0" style="-fx-background-color: E6DDD4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.service.ServiceStaticticsQuarterly">
 	<center>
-		<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="758.0" spacing="20.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+		<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="868.0" spacing="20.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
 			<padding>
 				<Insets bottom="20.0" left="20.0" right="20.0" top="15.0" />
 			</padding>
@@ -42,14 +42,13 @@
                      <content>
                         <TableView fx:id="ordersTableView" prefHeight="346.0" prefWidth="614.0" styleClass="statisticsTable">
                            <columns>
-                              <TableColumn fx:id="ordersColYear" editable="false" prefWidth="50.0" text="Year" />
-                              <TableColumn fx:id="ordersColQuarter" editable="false" prefWidth="50.0" text="Quarter" />
-                              <TableColumn fx:id="ordersColMonth" editable="false" minWidth="0.0" prefWidth="50.0" text="Month" />
-                              <TableColumn fx:id="ordersColLotID" editable="false" minWidth="0.0" prefWidth="50.0" text="Lot ID" />
-                              <TableColumn fx:id="ordersColReservedParkings" editable="false" prefWidth="130.0" text="Reserved Parkings" />
-                              <TableColumn fx:id="ordersColIncidentalParkings" editable="false" prefWidth="130.0" text="Incidental Parkings" />
-                              <TableColumn fx:id="ordersColRegularSubscriptions" editable="false" minWidth="0.0" prefWidth="130.0" text="Regular Subscriptions" />
-                              <TableColumn fx:id="ordersColFullSubscriptions" editable="false" minWidth="0.0" prefWidth="130.0" text="Full Subscriptions" />
+                              <TableColumn fx:id="ordersColYear" editable="false" prefWidth="77.0" text="Year" />
+                              <TableColumn fx:id="ordersColQuarter" editable="false" prefWidth="66.0" text="Quarter" />
+                              <TableColumn fx:id="ordersColMonth" editable="false" minWidth="0.0" prefWidth="61.0" text="Month" />
+                              <TableColumn fx:id="ordersColReservedParkings" editable="false" prefWidth="146.0" text="Reserved Parkings" />
+                              <TableColumn fx:id="ordersColIncidentalParkings" editable="false" prefWidth="163.0" text="Incidental Parkings" />
+                              <TableColumn fx:id="ordersColRegularSubscriptions" editable="false" minWidth="0.0" prefWidth="174.0" text="Regular Subscriptions" />
+                              <TableColumn fx:id="ordersColFullSubscriptions" editable="false" minWidth="0.0" prefWidth="140.0" text="Full Subscriptions" />
                            </columns>
                         </TableView>
                      </content>
@@ -58,13 +57,13 @@
                      <content>
                         <TableView fx:id="complaintsTableView" minWidth="613.0" prefHeight="373.0" prefWidth="668.0" style="-fx-border-radius: 8 8 8 8; -fx-background-radius: 8 8 8 8;" styleClass="statisticsTable">
                            <columns>
-                              <TableColumn fx:id="complaintsColYear" editable="false" prefWidth="50.0" text="Year" />
-                              <TableColumn fx:id="complaintsColQuarter" editable="false" prefWidth="50.0" text="Quarter" />
-                              <TableColumn fx:id="complaintsColMonth" editable="false" minWidth="0.0" prefWidth="50.0" text="Month" />
-                              <TableColumn fx:id="complaintsColLotID" editable="false" minWidth="0.0" prefWidth="50.0" text="Lot ID" />
-                              <TableColumn fx:id="complaintsColOpenedClaims" editable="false" minWidth="0.0" prefWidth="172.0" text="Opened claims" />
-                              <TableColumn fx:id="complaintsColRejectedClaims" editable="false" minWidth="0.0" prefWidth="172.0" text="Rejected claims" />
-                              <TableColumn fx:id="complaintsColRefundedClaims" editable="false" minWidth="0.0" prefWidth="172.0" text="Refunded" />
+                              <TableColumn fx:id="complaintsColYear" editable="false" prefWidth="78.0" text="Year" />
+                              <TableColumn fx:id="complaintsColQuarter" editable="false" prefWidth="76.0" text="Quarter" />
+                              <TableColumn fx:id="complaintsColMonth" editable="false" minWidth="0.0" prefWidth="66.0" text="Month" />
+                              <TableColumn fx:id="complaintsColOpenedClaims" editable="false" minWidth="0.0" prefWidth="119.0" text="Opened claims" />
+                              <TableColumn fx:id="complaintsColClosedClaims1" editable="false" minWidth="0.0" prefWidth="138.0" text="Closed claims" />
+                              <TableColumn fx:id="complaintsColRejectedClaims" editable="false" minWidth="0.0" prefWidth="139.0" text="Rejected claims" />
+                              <TableColumn fx:id="complaintsColRefundedClaims" editable="false" minWidth="0.0" prefWidth="212.0" text="Refunded claims" />
                            </columns>
                         </TableView>
                      </content>
@@ -73,11 +72,10 @@
                      <content>
                         <TableView fx:id="disabledCellsTableView" prefHeight="346.0" prefWidth="614.0" styleClass="statisticsTable">
                            <columns>
-                              <TableColumn fx:id="disabledCellsColYear" editable="false" prefWidth="50.0" text="Year" />
-                              <TableColumn fx:id="disabledCellsColQuarter" editable="false" prefWidth="50.0" text="Quarter" />
-                              <TableColumn fx:id="disabledCellsColMonth" editable="false" minWidth="0.0" prefWidth="50.0" text="Month" />
-                              <TableColumn fx:id="disabledCellsColLotID" editable="false" minWidth="0.0" prefWidth="50.0" text="Lot ID" />
-                              <TableColumn fx:id="disabledCellsColNumberOfDisabledCells" editable="false" minWidth="0.0" prefWidth="516.0" text="Number of disabled cells" />
+                              <TableColumn fx:id="disabledCellsColYear" editable="false" prefWidth="121.0" text="Year" />
+                              <TableColumn fx:id="disabledCellsColQuarter" editable="false" prefWidth="124.0" text="Quarter" />
+                              <TableColumn fx:id="disabledCellsColMonth" editable="false" minWidth="0.0" prefWidth="188.0" text="Month" />
+                              <TableColumn fx:id="disabledCellsColNumberOfDisabledCells" editable="false" minWidth="0.0" prefWidth="395.0" text="Number of disabled cells" />
                            </columns>
                         </TableView>
                      </content>
@@ -96,7 +94,7 @@
 				</VBox>
 				<HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="90.0" prefWidth="614.0" spacing="60.0">
 					<children>
-						<Button id="" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="backButton" text="Close" textAlignment="CENTER" />
+						<Button id="" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="backButton" text="Back" textAlignment="CENTER" />
 					</children>
 				</HBox>
 			</children>

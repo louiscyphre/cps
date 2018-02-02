@@ -8,11 +8,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+
 import cps.api.action.GetQuarterlyReportAction;
-import cps.api.action.ListComplaintsAction;
-import cps.api.request.ListOnetimeEntriesRequest;
 import cps.api.request.ListParkingLotsRequest;
-import cps.api.response.ListComplaintsResponse;
 import cps.api.response.ListParkingLotsResponse;
 import cps.api.response.QuarterlyReportResponse;
 import cps.api.response.ServerResponse;
@@ -20,11 +18,10 @@ import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
 import cps.client.controller.ReportsController;
-import cps.client.utils.InternalClientException;
 import cps.common.Constants;
-import cps.entities.models.Complaint;
 import cps.entities.models.MonthlyReport;
 import cps.entities.models.ParkingLot;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,18 +37,21 @@ import javafx.scene.control.TableView;
 public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     implements ParkingLotsController, ReportsController {
 
-  @FXML
-  private TableColumn<TableQuarterlyEntry, String> complaintsColLotID;
+  //@FXML
+  //private TableColumn<TableQuarterlyEntry, String> complaintsColLotID;//NOT needed because user already chose a lot by street address
 
   @FXML
   private TableColumn<TableQuarterlyEntry, String> complaintsColMonth;
 
   @FXML
-  private TableColumn<TableQuarterlyEntry, String> complaintsColOpenedClaims;
-
-  @FXML
   private TableColumn<TableQuarterlyEntry, String> complaintsColQuarter;
 
+  @FXML
+  private TableColumn<TableQuarterlyEntry, String> complaintsColOpenedClaims;
+  
+  @FXML
+  private TableColumn<TableQuarterlyEntry, String> complaintsColClosedClaims;
+  
   @FXML
   private TableColumn<TableQuarterlyEntry, String> complaintsColRefundedClaims;
 
@@ -83,9 +83,6 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
   private TableView<TableQuarterlyEntry> disabledCellsTableView;
 
   @FXML
-  private DatePicker endDatePicker;
-
-  @FXML
   private TableColumn<TableQuarterlyEntry, String> ordersColLotID;
 
   @FXML
@@ -113,42 +110,71 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
   private TableView<TableQuarterlyEntry> ordersTableView;
 
   @FXML
+  private DatePicker startDatePicker;
+  
+  @FXML
+  private DatePicker endDatePicker;
+  
+  @FXML
   private ComboBox<String> parkingLotsList;
 
   private HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
 
-  @FXML
-  private DatePicker startDatePicker;
-
   /** List holding the entries */
   private ObservableList<TableQuarterlyEntry> obsEntriesList;
 
-  private Collection<Complaint> complaints;
+  //private Collection<Complaint> complaints;
 
+  /* (non-Javadoc)
+   * @see cps.client.controller.service.ServiceActionControllerBase#handleBackButton(javafx.event.ActionEvent) */
   @FXML
   void handleBackButton(ActionEvent event) {
-
+    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE);
   }
 
-  @FXML
-  void handleEndDateChoice(ActionEvent event) {
-
-  }
-
-  @FXML
-  void handleLotChoice(ActionEvent event) {
-
-  }
-
+  /** Handle start date choice.
+   * @param event the event */
   @FXML
   void handleStartDateChoice(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    endDatePicker.setDisable(false);
+  }
+  
+  /** Handle end date choice.
+   * @param event the event */
+  @FXML
+  void handleEndDateChoice(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    parkingLotsList.setDisable(false);
 
+    if (!parkingLotsList.getItems().isEmpty()) {
+      parkingLotsList.getItems().clear();
+      parkingLotsMap.clear();
+    }
+    // Get the list of parking lots
+    turnProcessingStateOn();
+    sendRequest(new ListParkingLotsRequest());
+  }
+
+  /** Handle lot choice.
+   * @param event the event */
+  @FXML
+  void handleLotChoice(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
+    ControllersClientAdapter.getEmployeeContext().setChosenLotID(userChosenLotID);
+    validateAndSend();
   }
 
   @FXML
   void initialize() {
     super.baseInitialize();
-    assert complaintsColLotID != null : "fx:id=\"complaintsColLotID\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert complaintsColMonth != null : "fx:id=\"complaintsColMonth\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert complaintsColOpenedClaims != null : "fx:id=\"complaintsColOpenedClaims\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert complaintsColQuarter != null : "fx:id=\"complaintsColQuarter\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
@@ -182,17 +208,48 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     disabledCellsTableView.setItems(this.obsEntriesList);
     ordersTableView.setItems(this.obsEntriesList);
 
+    complaintsColYear.setCellValueFactory(cellData -> Bindings.select(cellData.getValue().getYear(), "Year"));//TODO trying to bind 
+    
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_STATISTICS_QUARTERLY);
   }
 
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
+    startDatePicker.setValue(null);
+    endDatePicker.setValue(null);
+    endDatePicker.setDisable(true);
+    parkingLotsList.setDisable(true);
     parkingLotsMap.clear();
     obsEntriesList.clear();
-    refresh();
+    //refresh();
   }
-
+  
+  /** Validates that the fields and Sends API request to the server. */
+  @Override
+  void validateAndSend() {
+    // validation in same order as order in the form
+    LocalDate reportStartDate = getReportStartDate();
+    if (reportStartDate == null) {
+      displayError("Start date invalid");
+      return;
+    }
+    LocalDate reportEndDate = getReportEndDate();
+    if (reportEndDate == null) {
+      displayError("End date invalid");
+      return;
+    }
+    if (reportStartDate.compareTo(reportEndDate) >= 0) {
+      displayError("End date must be greater than start date");
+      return;
+    }
+    int lotID = ControllersClientAdapter.getEmployeeContext().getChosenLotID();
+    int userID = ControllersClientAdapter.getEmployeeContext().getCompanyPerson().getId();
+    GetQuarterlyReportAction request = new GetQuarterlyReportAction(userID, Constants.REPORT_TYPE_QUARTERLY, reportEndDate, reportEndDate, lotID);
+    turnProcessingStateOn();
+    ControllersClientAdapter.getClient().sendRequest(request);
+  }
+  
   /** @return report start date or null if empty */
   private LocalDate getReportStartDate() {
     return getDate(startDatePicker);
@@ -214,71 +271,39 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     }
   }
 
-  private void refresh() {
-    try {
+  /*private void refresh() {
       if (parkingLotsMap.isEmpty()) {
         ListParkingLotsRequest request = new ListParkingLotsRequest();
         // Toggle processing state on
         turnProcessingStateOn();
         ControllersClientAdapter.getClient().sendRequest(request);
-      } else if (complaints.isEmpty()) {
-        ListComplaintsAction request = new ListComplaintsAction();
-        // Toggle processing state on
-        turnProcessingStateOn();
-        ControllersClientAdapter.getClient().sendRequest(request);
       } else if (obsEntriesList.isEmpty()) {
-        int userID;
-        userID = ControllersClientAdapter.getEmployeeContext().requireCompanyPerson().getId();
-        int reportType = Constants.REPORT_TYPE_QUARTERLY;
-        LocalDate periodStart = getReportStartDate();
-        LocalDate periodEnd = getReportEndDate();
-        int lotID = ControllersClientAdapter.getLotID();
-        GetQuarterlyReportAction request = new GetQuarterlyReportAction(userID, reportType, periodStart, periodEnd,
-            lotID);
-        // Toggle processing state on
-        turnProcessingStateOn();
-        ControllersClientAdapter.getClient().sendRequest(request);
-      }
-    } catch (InternalClientException e) {
-      displayError(e.getMessage());
-      turnProcessingStateOff();
-    }
-  }
+        validateAndSend();
+      }//FIXME check this function logic and when it's being called
+  }*/
 
   @Override
   public ServerResponse handle(ListParkingLotsResponse response) {
     if (response.success()) {
       setParkingLots(response.getData());
-      refresh();
+      displayInfo("Parking lots list retrieved successfully");
     } else {
-      displayError("Can't parking lots");
-      turnProcessingStateOff();
+      displayError("Can't retrieve parking lots");
     }
+    turnProcessingStateOff();
     return response;
-  }
-
-  @Override
-  public ServerResponse handle(ListComplaintsResponse response) {
-    if (response.success()) {
-      complaints = response.getData();
-      refresh();
-    } else {
-      displayError("Can't retrieve complaints");
-      turnProcessingStateOff();
-    }
-    return null;
   }
 
   @Override
   public ServerResponse handle(QuarterlyReportResponse response) {
     if (response.success()) {
       fillReportTable(response.getData());
-      turnProcessingStateOff();
+      displayInfo("Reports retrieved successfully");
     } else {
       displayError("Can't retrieve quarterly report");
-      turnProcessingStateOff();
     }
-    return null;
+    turnProcessingStateOff();
+    return response;
   }
 
   /*
@@ -314,20 +339,19 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
 
       int year = monthlyReport.getYear();
       int quarter = monthlyReport.getMonth() / 4;
-      int lotId = monthlyReport.getLotId();
       int month = monthlyReport.getMonth();
       int reservedParkings = monthlyReport.getOrdReserved();
       int incidentalParkings = monthlyReport.getOrdIncidental();
       int regularSubscriptions = monthlyReport.getOrdRegular();
       int fullSubscriptions = monthlyReport.getOrdFull();
-      int openedClaims = monthlyReport.getCoplaintsCount(); // TODO fix with get
-                                                            // complaints
-      int rejectedClaims = monthlyReport.getCoplaintsCount(); // TODO same
-      int refunded = monthlyReport.getCoplaintsCount(); // TODO same
+      int openedClaims = monthlyReport.getComplaintsCount();
+      int closedClaims = monthlyReport.getComplaintsClosedCount();
+      int refunded = monthlyReport.getComplaintsRefundedCount();
+      int rejectedClaims = closedClaims - refunded;
       int numberOfDisabledCells = monthlyReport.getDisabledSlots();
 
-      TableQuarterlyEntry toAdd = new TableQuarterlyEntry(year, quarter, lotId, month, reservedParkings,
-          incidentalParkings, regularSubscriptions, fullSubscriptions, openedClaims, rejectedClaims, refunded,
+      TableQuarterlyEntry toAdd = new TableQuarterlyEntry(year, quarter, month, reservedParkings,
+          incidentalParkings, regularSubscriptions, fullSubscriptions, openedClaims, closedClaims, rejectedClaims, refunded,
           numberOfDisabledCells);
       newEntriesList.add(toAdd);
     });
@@ -338,30 +362,30 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
 
     private SimpleStringProperty year;
     private SimpleStringProperty quarter;
-    private SimpleStringProperty lotId;
     private SimpleStringProperty month;
     private SimpleStringProperty reservedParkings;
     private SimpleStringProperty incidentalParkings;
     private SimpleStringProperty regularSubscriptions;
     private SimpleStringProperty fullSubscriptions;
     private SimpleStringProperty openedClaims;
+    private SimpleStringProperty closedClaims;
     private SimpleStringProperty rejectedClaims;
     private SimpleStringProperty refunded;
     private SimpleStringProperty numberOfDisabledCells;
 
-    public TableQuarterlyEntry(int year, int quarter, int lotId, int month, int reservedParkings,
-        int incidentalParkings, int regularSubscriptions, int fullSubscriptions, int openedClaims, int rejectedClaims,
+    public TableQuarterlyEntry(int year, int quarter, int month, int reservedParkings,
+        int incidentalParkings, int regularSubscriptions, int fullSubscriptions, int openedClaims, int closedClaims, int rejectedClaims,
         int refunded, int numberOfDisabledCells) {
       super();
       this.year = new SimpleStringProperty(Integer.toString(year));
       this.quarter = new SimpleStringProperty(Integer.toString(quarter));
-      this.lotId = new SimpleStringProperty(Integer.toString(lotId));
       this.month = new SimpleStringProperty(Integer.toString(month));
       this.reservedParkings = new SimpleStringProperty(Integer.toString(reservedParkings));
       this.incidentalParkings = new SimpleStringProperty(Integer.toString(incidentalParkings));
       this.regularSubscriptions = new SimpleStringProperty(Integer.toString(regularSubscriptions));
       this.fullSubscriptions = new SimpleStringProperty(Integer.toString(fullSubscriptions));
       this.openedClaims = new SimpleStringProperty(Integer.toString(openedClaims));
+      this.closedClaims = new SimpleStringProperty(Integer.toString(closedClaims));
       this.rejectedClaims = new SimpleStringProperty(Integer.toString(rejectedClaims));
       this.refunded = new SimpleStringProperty(Integer.toString(refunded));
       this.numberOfDisabledCells = new SimpleStringProperty(Integer.toString(numberOfDisabledCells));
@@ -381,14 +405,6 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
 
     public void setQuarter(SimpleStringProperty quarter) {
       this.quarter = quarter;
-    }
-
-    public SimpleStringProperty getLotId() {
-      return lotId;
-    }
-
-    public void setLotId(SimpleStringProperty lotId) {
-      this.lotId = lotId;
     }
 
     public SimpleStringProperty getMonth() {
@@ -431,12 +447,21 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
       this.fullSubscriptions = fullSubscriptions;
     }
 
+
     public SimpleStringProperty getOpenedClaims() {
       return openedClaims;
     }
 
     public void setOpenedClaims(SimpleStringProperty openedClaims) {
       this.openedClaims = openedClaims;
+    }
+    
+    public SimpleStringProperty getClosedClaims() {
+      return closedClaims;
+    }
+
+    public void setClosedClaims(SimpleStringProperty closedClaims) {
+      this.closedClaims = closedClaims;
     }
 
     public SimpleStringProperty getRejectedClaims() {

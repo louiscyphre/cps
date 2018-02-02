@@ -2,8 +2,6 @@ package cps.client.network;
 
 import java.io.IOException;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import ocsf.client.AbstractClient;
 
 /**
