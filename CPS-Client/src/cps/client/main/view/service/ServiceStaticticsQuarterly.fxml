@@ -42,13 +42,11 @@
                      <content>
                         <TableView fx:id="ordersTableView" prefHeight="346.0" prefWidth="614.0" styleClass="statisticsTable">
                            <columns>
-                              <TableColumn fx:id="ordersColYear" editable="false" prefWidth="77.0" text="Year" />
-                              <TableColumn fx:id="ordersColQuarter" editable="false" prefWidth="66.0" text="Quarter" />
-                              <TableColumn fx:id="ordersColMonth" editable="false" minWidth="0.0" prefWidth="61.0" text="Month" />
-                              <TableColumn fx:id="ordersColReservedParkings" editable="false" prefWidth="146.0" text="Reserved Parkings" />
-                              <TableColumn fx:id="ordersColIncidentalParkings" editable="false" prefWidth="163.0" text="Incidental Parkings" />
-                              <TableColumn fx:id="ordersColRegularSubscriptions" editable="false" minWidth="0.0" prefWidth="174.0" text="Regular Subscriptions" />
-                              <TableColumn fx:id="ordersColFullSubscriptions" editable="false" minWidth="0.0" prefWidth="140.0" text="Full Subscriptions" />
+                              <TableColumn fx:id="ordersColDate" editable="false" prefWidth="165.6" text="Date" />
+                              <TableColumn fx:id="ordersColReservedParkings" editable="false" prefWidth="165.6" text="Reserved Parkings" />
+                              <TableColumn fx:id="ordersColIncidentalParkings" editable="false" prefWidth="165.6" text="Incidental Parkings" />
+                              <TableColumn fx:id="ordersColRegularSubscriptions" editable="false" minWidth="0.0" prefWidth="165.6" text="Regular Subscriptions" />
+                              <TableColumn fx:id="ordersColFullSubscriptions" editable="false" minWidth="0.0" prefWidth="165.6" text="Full Subscriptions" />
                            </columns>
                         </TableView>
                      </content>
@@ -57,13 +55,11 @@
                      <content>
                         <TableView fx:id="complaintsTableView" minWidth="613.0" prefHeight="373.0" prefWidth="668.0" style="-fx-border-radius: 8 8 8 8; -fx-background-radius: 8 8 8 8;" styleClass="statisticsTable">
                            <columns>
-                              <TableColumn fx:id="complaintsColYear" editable="false" prefWidth="78.0" text="Year" />
-                              <TableColumn fx:id="complaintsColQuarter" editable="false" prefWidth="76.0" text="Quarter" />
-                              <TableColumn fx:id="complaintsColMonth" editable="false" minWidth="0.0" prefWidth="66.0" text="Month" />
-                              <TableColumn fx:id="complaintsColOpenedClaims" editable="false" minWidth="0.0" prefWidth="119.0" text="Opened claims" />
-                              <TableColumn fx:id="complaintsColClosedClaims" editable="false" minWidth="0.0" prefWidth="138.0" text="Closed claims" />
-                              <TableColumn fx:id="complaintsColRejectedClaims" editable="false" minWidth="0.0" prefWidth="139.0" text="Rejected claims" />
-                              <TableColumn fx:id="complaintsColRefundedClaims" editable="false" minWidth="0.0" prefWidth="212.0" text="Refunded claims" />
+                              <TableColumn fx:id="complaintsColDate" editable="false" prefWidth="165.6" text="Date" />
+                              <TableColumn fx:id="complaintsColOpenedClaims" editable="false" minWidth="0.0" prefWidth="165.6" text="Opened claims" />
+                              <TableColumn fx:id="complaintsColClosedClaims" editable="false" minWidth="0.0" prefWidth="165.6" text="Closed claims" />
+                              <TableColumn fx:id="complaintsColRejectedClaims" editable="false" minWidth="0.0" prefWidth="165.6" text="Rejected claims" />
+                              <TableColumn fx:id="complaintsColRefundedClaims" editable="false" minWidth="0.0" prefWidth="165.6" text="Refunded claims" />
                            </columns>
                         </TableView>
                      </content>
@@ -72,10 +68,8 @@
                      <content>
                         <TableView fx:id="disabledCellsTableView" prefHeight="346.0" prefWidth="614.0" styleClass="statisticsTable">
                            <columns>
-                              <TableColumn fx:id="disabledCellsColYear" editable="false" prefWidth="121.0" text="Year" />
-                              <TableColumn fx:id="disabledCellsColQuarter" editable="false" prefWidth="124.0" text="Quarter" />
-                              <TableColumn fx:id="disabledCellsColMonth" editable="false" minWidth="0.0" prefWidth="188.0" text="Month" />
-                              <TableColumn fx:id="disabledCellsColNumberOfDisabledCells" editable="false" minWidth="0.0" prefWidth="395.0" text="Number of disabled cells" />
+                              <TableColumn fx:id="disabledCellsColDate" editable="false" prefWidth="414.0" text="Date" />
+                              <TableColumn fx:id="disabledCellsColNumberOfDisabledCells" editable="false" minWidth="0.0" prefWidth="414.0" text="Number of disabled cells" />
                            </columns>
                         </TableView>
                      </content>

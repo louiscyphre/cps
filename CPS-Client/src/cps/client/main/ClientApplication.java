@@ -137,7 +137,7 @@ public class ClientApplication extends Application implements INetworkClient {
         System.exit(1);
       }
 
-      Locale.setDefault(Locale.Category.FORMAT, Locale.ENGLISH);
+      Locale.setDefault(Locale.Category.FORMAT, Locale.UK);
 
       this.client = new CPSNetworkClient(parser.getHost(), parser.getPort(), this);
 
