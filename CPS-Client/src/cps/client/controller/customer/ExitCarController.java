@@ -120,7 +120,7 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
   }
 
   /**
-   * Display parking retrieval granted if Request was succesful, error - otherwise.
+   * Display parking retrieval granted if Request was successful, error - otherwise.
    */
   @Override
   public void handle(ParkingExitResponse response) {
@@ -128,15 +128,15 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
 
     List<Text> formattedMessage = new LinkedList<Text>();
 
-    if (response.getStatus() == ServerResponse.STATUS_OK) {
+    if (response.getStatus() == ServerResponse.STATUS_OK) {      
       formattedMessage.add(new Text("The car retrieval is granted!\nRobot will retrieve your car shortly.\n"));
       if (response.getPayment() > 0) {
-        formattedMessage.add(new Text("You have been credited "));
-        formattedMessage.add(new Text(Float.toString(Math.abs(response.getPayment()))));
+        formattedMessage.add(new Text("You have been debited "));
+        formattedMessage.add(new Text(decimal(Math.abs(response.getPayment()))));
         formattedMessage.add(new Text(" ILS\n"));
       } else if (response.getPayment() < 0) {
-        formattedMessage.add(new Text("You have been debited "));
-        formattedMessage.add(new Text(Float.toString(Math.abs(response.getPayment()))));
+        formattedMessage.add(new Text("You have been credited "));
+        formattedMessage.add(new Text(decimal(Math.abs(response.getPayment()))));
         formattedMessage.add(new Text(" ILS\n"));
       }
       ctrl.turnProcessingStateOff();

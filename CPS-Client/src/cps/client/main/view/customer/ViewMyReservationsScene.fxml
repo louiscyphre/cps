@@ -23,18 +23,19 @@
 
 <BorderPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="748.0" prefWidth="705.0" style="-fx-background-color: E6DDD4;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cps.client.controller.customer.ViewMyReservationsController">
 	<center>
-		<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="654.0" spacing="10.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
+		<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="850.0" spacing="10.0" styleClass="shadowedBox" BorderPane.alignment="CENTER">
 			<padding>
 				<Insets bottom="20.0" left="20.0" right="20.0" top="15.0" />
 			</padding>
 			<children>
-				<TableView fx:id="tableView" prefHeight="454.0" prefWidth="615.0">
+				<TableView fx:id="tableView" prefHeight="454.0" prefWidth="800.0">
 					<columns>
-						<TableColumn fx:id="colType" editable="false" prefWidth="100.0" text="Type" />
-						<TableColumn fx:id="colCarId" editable="false" minWidth="0.0" prefWidth="100.0" text="Car ID" />
-						<TableColumn fx:id="colLot" editable="false" prefWidth="100.0" text="Lot" />
-						<TableColumn fx:id="colStart" editable="false" prefWidth="100.0" text="Start Date" />
-						<TableColumn fx:id="colLeave" editable="false" prefWidth="100.0" text="Leave Date" />
+						<TableColumn fx:id="colType" editable="false" prefWidth="75.0" text="Type" />
+						<TableColumn fx:id="colCarId" editable="false" prefWidth="75.0" text="Car ID" />
+						<TableColumn fx:id="colLot" editable="false" prefWidth="150.0" text="Lot" />
+						<TableColumn fx:id="colStart" editable="false" prefWidth="150.0" text="Start Date" />
+						<TableColumn fx:id="colLeave" editable="false" prefWidth="150.0" text="Leave Date" />
+						<TableColumn fx:id="colStatus" editable="false" prefWidth="100.0" text="Status" />
 						<TableColumn fx:id="colCancel" editable="false" minWidth="0.0" prefWidth="100.0" resizable="false" text="Cancel" />
 					</columns>
 				</TableView>

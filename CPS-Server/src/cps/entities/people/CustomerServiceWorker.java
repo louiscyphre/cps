@@ -2,6 +2,7 @@ package cps.entities.people;
 
 import cps.common.Constants;
 
+/** Able to perform actions that require a Customer Service permission. */
 public class CustomerServiceWorker extends CustomerServiceEmployee {
   private static final long serialVersionUID = 1L;
 

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import cps.common.Constants;
 
+/** Base class for all system users (employees). */
 public abstract class CompanyPerson implements User, Serializable {
   private static final long serialVersionUID = 1L;
 

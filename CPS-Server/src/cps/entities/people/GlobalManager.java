@@ -2,6 +2,7 @@ package cps.entities.people;
 
 import cps.common.Constants;
 
+/** The manager of the entire network. Has access to all actions. */
 public class GlobalManager extends CompanyPerson {
   private static final long serialVersionUID = 1L;
 

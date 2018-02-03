@@ -1,5 +1,7 @@
 package cps.api.response;
 
+/** A basic response that can signify error or success and contains a textual description.
+ * Does not specify which request the response is for. */
 public class SimpleResponse extends ServerResponse {
   private static final long serialVersionUID = 1L;
 

@@ -1,5 +1,6 @@
 package cps.api.response;
 
+/** Is sent in response to a CancelOnetimeParking request. */
 public class CancelOnetimeParkingResponse extends CustomerResponse {
   private static final long serialVersionUID = 1L;
   private int               onetimeServiceID = 0;
@@ -21,6 +22,9 @@ public class CancelOnetimeParkingResponse extends CustomerResponse {
     this.refundAmount = refundAmount;
   }
 
+  /* (non-Javadoc)
+   * @see cps.api.response.Response#handle(cps.api.response.ResponseHandler)
+   */
   @Override
   public void handle(ResponseHandler handler) {
     handler.handle(this);

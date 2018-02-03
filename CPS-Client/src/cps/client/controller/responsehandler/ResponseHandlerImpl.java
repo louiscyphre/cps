@@ -22,8 +22,8 @@ import cps.api.response.RejectComplaintResponse;
 import cps.api.response.RequestLotStateResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
 import cps.api.response.ReservedParkingResponse;
-import cps.api.response.Response;
 import cps.api.response.ResponseHandler;
+import cps.api.response.ServerResponse;
 import cps.api.response.ServiceLoginResponse;
 import cps.api.response.SetFullLotResponse;
 import cps.api.response.SimpleResponse;
@@ -55,7 +55,7 @@ public class ResponseHandlerImpl implements ResponseHandler {
    * @param resp the response
    * @see cps.api.response.ResponseHandler#dispatch(cps.api.response.Response) */
   @Override
-  public void dispatch(Response resp) {
+  public void dispatch(ServerResponse resp) {
     Platform.runLater(() -> {
       resp.handle(this);
     });

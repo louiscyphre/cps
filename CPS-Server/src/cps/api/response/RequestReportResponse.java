@@ -3,6 +3,7 @@ package cps.api.response;
 import java.time.Duration;
 import java.time.LocalDate;
 
+/** Base class for responses to actions that request a statistical report. */
 public abstract class RequestReportResponse<T> extends ServerResponseWithData<T> {
   private static final long serialVersionUID = 1L;
   private int               lotID            = 0;

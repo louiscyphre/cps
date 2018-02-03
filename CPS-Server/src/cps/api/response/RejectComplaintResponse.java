@@ -1,5 +1,6 @@
 package cps.api.response;
 
+/** Is sent in response to a RejectComplaint action. */
 public class RejectComplaintResponse extends ServerResponse {
   private static final long serialVersionUID = 1L;
 
@@ -7,6 +8,9 @@ public class RejectComplaintResponse extends ServerResponse {
   private int    customerID  = 0;
   private String reason      = null;
 
+  /* (non-Javadoc)
+   * @see cps.api.response.Response#handle(cps.api.response.ResponseHandler)
+   */
   @Override
   public void handle(ResponseHandler handler) {
     handler.handle(this);

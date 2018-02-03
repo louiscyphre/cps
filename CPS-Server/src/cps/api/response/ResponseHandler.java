@@ -1,9 +1,15 @@
 package cps.api.response;
 
+/** Used to implement dispatching and handling of responses by type in the client.
+ * When the client receives a response from the server,
+ * it calls the handle() method of the response object
+ * and supplies an instance of a concrete implementation of this interface.
+ * The concrete implementation contains code for handling each type of response
+ * (such as updating UI widgets with the data from the response). */
 public interface ResponseHandler {
 
   // Dispatch
-  public void dispatch(Response response);
+  public void dispatch(ServerResponse response);
 
   // Customer Responses
   public void handle(CancelOnetimeParkingResponse response);

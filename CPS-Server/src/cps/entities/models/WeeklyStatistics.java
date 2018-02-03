@@ -95,7 +95,7 @@ public class WeeklyStatistics implements Serializable {
       String lateArrivalsDist) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_WEEKLY_STATISTICS);
 
-    int field = 0;
+    int field = 1;
 
     statement.setDate(field++, Date.valueOf(start));
     statement.setInt(field++, lotID);
@@ -225,7 +225,7 @@ public class WeeklyStatistics implements Serializable {
     WeeklyStatistics item = null;
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_WEEKLY_STATISTICS);
 
-    int field = 0;
+    int field = 1;
 
     statement.setDate(field++, Date.valueOf(start));
     statement.setInt(field++, lotID);

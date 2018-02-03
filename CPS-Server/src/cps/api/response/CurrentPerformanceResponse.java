@@ -2,6 +2,7 @@ package cps.api.response;
 
 import java.time.LocalDate;
 
+/** Is sent in response to a GetCurrentPerformance action. */
 public class CurrentPerformanceResponse extends ServerResponse {
   private static final long serialVersionUID = 1L;
   private LocalDate         date;
@@ -32,6 +33,9 @@ public class CurrentPerformanceResponse extends ServerResponse {
     this.numberOfSubscriptionsWithMultipleCars = numberOfSubscriptionsWithMultipleCars;
   }
 
+  /* (non-Javadoc)
+   * @see cps.api.response.Response#handle(cps.api.response.ResponseHandler)
+   */
   @Override
   public void handle(ResponseHandler handler) {
     handler.handle(this);

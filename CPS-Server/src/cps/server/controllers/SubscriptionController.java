@@ -20,7 +20,7 @@ import cps.server.ServerController;
 import cps.server.session.CustomerSession;
 import cps.server.statistics.StatisticsCollector;
 
-/** The Class SubscriptionController. */
+/** Processes customer requests for purchasing a monthly subscription - full or regular. */
 public class SubscriptionController extends RequestController {
 
   /** Instantiates a new subscription controller.

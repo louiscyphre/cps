@@ -1,5 +1,6 @@
 package cps.entities.people;
 
+/** Base class for Parking Lot employees - workers and managers. Is assigned to a specific Parking Lot, represented by the departmentID field. */
 public abstract class LocalEmployee extends Employee {
   private static final long serialVersionUID = 1L;
 

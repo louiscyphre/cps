@@ -1,14 +1,16 @@
 package cps.common;
 
+/** Central place for defining various constants that are used throughout the application. */
 public interface Constants {
   // TODO disable on release
   // public final boolean DEBUG_MODE = true;
   public final boolean DEBUG_MODE = false;
 
-  public final int    DEFAULT_LOT_NUMBER = 0;
-  public final int    DEFAULT_PORT       = 5555;
-  public final String DEFAULT_HOST       = "127.0.0.1";
-  public final String DATETIME_FORMAT    = "yyyy-MM-dd HH:mm:ss.SSS";
+  public final int    DEFAULT_LOT_NUMBER      = 0;
+  public final int    DEFAULT_PORT            = 5555;
+  public final String DEFAULT_HOST            = "127.0.0.1";
+  public final String DATETIME_FORMAT         = "yyyy-MM-dd HH:mm:ss";
+  public final String DATETIME_FORMAT_PRECISE = "yyyy-MM-dd HH:mm:ss.SSS";
 
   public final int LICENSE_TYPE_ONETIME      = 1;
   public final int LICENSE_TYPE_SUBSCRIPTION = 2;
@@ -49,7 +51,7 @@ public interface Constants {
   // SQL queries - OnetimeService
   public final String SQL_CREATE_ONETIME_SERVICE             = "INSERT INTO onetime_service values(default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   public final String SQL_GET_ONETIME_SERVICE_BY_CUSTOMER_ID = "SELECT * FROM onetime_service WHERE customer_id=? ORDER BY id";
-  public final String SQL_FIND_ONETIME_SERVICE_FOR_ENTRY     = "SELECT * FROM onetime_service WHERE customer_id=? AND car_id=? AND lot_id=? ORDER BY id DESC LIMIT 1";
+  public final String SQL_FIND_ONETIME_SERVICE_FOR_ENTRY     = "SELECT * FROM onetime_service WHERE customer_id=? AND car_id=? AND lot_id=? AND not parked AND not completed AND not canceled ORDER BY id DESC LIMIT 1";
   public final String SQL_GET_ONETIME_SERVICE_BY_ID          = "SELECT * FROM onetime_service WHERE id=?";
   public final String SQL_OVERLAPPING_ONETIME_SERVICE_CLAUSE = "car_id=? AND ((planned_start_time < ? AND ? < planned_end_time) OR (? < planned_start_time AND planned_start_time < ?)) AND not canceled AND not completed";
   public final String SQL_FIND_OVERLAPPING_ONETIME_SERVICE   = "SELECT * FROM onetime_service WHERE " + SQL_OVERLAPPING_ONETIME_SERVICE_CLAUSE;

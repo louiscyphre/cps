@@ -2,6 +2,7 @@ package cps.api.response;
 
 import cps.entities.models.ParkingLot;
 
+/** Is sent in response to an UpdatePrices action. */
 public class UpdatePricesResponse extends ServerResponse {
   private static final long serialVersionUID = 1L;
 
@@ -10,6 +11,9 @@ public class UpdatePricesResponse extends ServerResponse {
   private float  price1 = 0f;
   private float  price2 = 0f;
 
+  /* (non-Javadoc)
+   * @see cps.api.response.ServerResponse#handle(cps.api.response.ResponseHandler)
+   */
   @Override
   public void handle(ResponseHandler handler) {
     handler.handle(this);

@@ -30,7 +30,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `parking_lot` WRITE;
 /*!40000 ALTER TABLE `parking_lot` DISABLE KEYS */;
-INSERT INTO `parking_lot` VALUES (1,'Sesame, 1',4,5,4,NULL,'1.0.0.1','\0'),(2,'Morocoo, 2',8,10,8,NULL,'1.0.0.2','\0'),(3,'France, 3',4,2,1,NULL,'1.0.0.3','\0');
+INSERT INTO `parking_lot` VALUES (1,'Sesame, 1',4,5,4,NULL,'1.0.0.1','\0'),(2,'Morocco, 2',8,10,8,NULL,'1.0.0.2','\0'),(3,'France, 3',4,2,1,NULL,'1.0.0.3','\0');
 /*!40000 ALTER TABLE `parking_lot` ENABLE KEYS */;
 UNLOCK TABLES;
 
