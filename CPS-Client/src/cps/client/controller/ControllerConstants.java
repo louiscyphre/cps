@@ -54,8 +54,6 @@ public class ControllerConstants {
     
     SERVICE_STATISTICS_CHOICE("view/service/ServiceStatisticsChoice.fxml"),
     
-    SERVICE_STATISTICS_WEEKLY("view/service/ServiceStaticticsWeekly.fxml"),
-
     SERVICE_STATISTICS_QUARTERLY("view/service/ServiceStaticticsQuarterly.fxml"),
     
     SERVICE_STATISTICS_ACTIVITY("view/service/ServiceStaticticsActivity.fxml"),

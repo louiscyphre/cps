@@ -30,6 +30,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+// TODO represent date as 1 column
+// TODO "TOTAL" row is the last int the table and passed with fieldText = "Total"
+
 public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     implements ParkingLotsController, ReportsController {
 
