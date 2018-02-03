@@ -117,7 +117,7 @@ public class ParkingEntryController extends RequestController {
       errorIf(service.isParked(), "You are already parking with this reservation");
       errorIf(service.isCompleted(), "This reservation was already completed");
       errorIf(service.isCanceled(), "This reservation was canceled");
-      errorIf(service.getPlannedStartTime().toLocalDateTime().isAfter(LocalDateTime.now()),
+      errorIf(service.getPlannedStartTime().toLocalDateTime().isAfter(now()),
           "Trying to enter before the starting time that was specified for this reservation");
 
       return service;

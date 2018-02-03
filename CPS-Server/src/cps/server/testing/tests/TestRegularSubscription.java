@@ -2,8 +2,6 @@ package cps.server.testing.tests;
 
 import static cps.common.Utilities.isWeekend;
 
-import java.time.LocalDateTime;
-
 import org.junit.Test;
 
 import cps.server.ServerException;
@@ -24,7 +22,7 @@ public class TestRegularSubscription extends ServerControllerTest {
 
     initParkingLot();
     requestRegularSubscription(data, getContext());
-    if (requestParkingEntry(data, getContext(), isWeekend(LocalDateTime.now().getDayOfWeek()))) {
+    if (requestParkingEntry(data, getContext(), isWeekend(getClock().now().getDayOfWeek()))) {
       requestParkingExit(data, getContext());
     }
   }

@@ -53,7 +53,7 @@ public class TestReservedParking extends ServerControllerTest {
 
     initParkingLot();
     requestReservedParking(data, getContext());
-    Thread.sleep(1500); // TODO Cauchy find a better way to adjust time
+    getClock().set(getClock().now().plusSeconds(3));
     
     requestParkingEntry(data, getContext());
     requestParkingExit(data, getContext());
@@ -72,7 +72,7 @@ public class TestReservedParking extends ServerControllerTest {
 
     initParkingLot();
     requestReservedParking(data, getContext());
-    Thread.sleep(1500);
+    getClock().set(getClock().now().plusSeconds(3));
     
     requestParkingEntry(data, getContext());
 

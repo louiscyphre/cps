@@ -44,8 +44,7 @@ public class ServerApplication extends AbstractServer {
    */
   public ServerApplication(int port, ServerConfig config) throws Exception {
     super(port);
-    this.serverController = new ServerController(config);
-
+    this.serverController = new ServerController(config, new RealTimeProvider());
   }
 
   private void initialize(ServerConfig config) throws Exception {

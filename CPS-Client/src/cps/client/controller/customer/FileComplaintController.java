@@ -59,7 +59,8 @@ public class FileComplaintController extends CustomerActionControllerBaseSubmitA
     try {
       int customerId = notNull(ControllersClientAdapter.getCustomerContext(), "CustomerContext").getCustomerId();
       String content = requireField(complaintContent, "Complaint Content");
-      sendRequest(new ComplaintRequest(customerId, content));
+      int lotId = ControllersClientAdapter.getLotID();
+      sendRequest(new ComplaintRequest(customerId, lotId, content));
     } catch (Exception e) {
       displayError(e.getMessage());
     }

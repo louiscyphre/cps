@@ -97,13 +97,13 @@ public class ExitCarController extends CustomerActionControllerBaseSubmitAndFini
     return carIdTextField.getText();
   }
 
-  // returns lot id or -1 if empty
+  // returns lot id or 0 if empty
   /**
    * @return
    */
   private int getLotId() {
-    if (ControllersClientAdapter.getLotID() == 0) {
-      return -1;
+    if (ControllersClientAdapter.getLotID() == -1) {
+      return 0;
     }
     return ControllersClientAdapter.getLotID();
   }
