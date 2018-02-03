@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,14 +34,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 // TODO represent date as 1 column
 // TODO "TOTAL" row is the last int the table and passed with fieldText = "Total"
 
-public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
-    implements ParkingLotsController, ReportsController {
-
-  @FXML
-  private TableColumn<TableQuarterlyEntry, String> complaintsColMonth;
-
-  @FXML
-  private TableColumn<TableQuarterlyEntry, String> complaintsColQuarter;
+public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implements ParkingLotsController, ReportsController {
 
   @FXML
   private TableColumn<TableQuarterlyEntry, String> complaintsColOpenedClaims;
@@ -55,31 +49,19 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
   private TableColumn<TableQuarterlyEntry, String> complaintsColRejectedClaims;
 
   @FXML
-  private TableColumn<TableQuarterlyEntry, String> complaintsColYear;
+  private TableColumn<TableQuarterlyEntry, String> complaintsColDate;
 
   @FXML
   private TableView<TableQuarterlyEntry> complaintsTableView;
 
   @FXML
-  private TableColumn<TableQuarterlyEntry, String> disabledCellsColMonth;
-
-  @FXML
   private TableColumn<TableQuarterlyEntry, String> disabledCellsColNumberOfDisabledCells;
 
   @FXML
-  private TableColumn<TableQuarterlyEntry, String> disabledCellsColQuarter;
-
-  @FXML
-  private TableColumn<TableQuarterlyEntry, String> disabledCellsColYear;
+  private TableColumn<TableQuarterlyEntry, String> disabledCellsColDate;
 
   @FXML
   private TableView<TableQuarterlyEntry> disabledCellsTableView;
-
-  @FXML
-  private TableColumn<TableQuarterlyEntry, String> ordersColMonth;
-
-  @FXML
-  private TableColumn<TableQuarterlyEntry, String> ordersColQuarter;
 
   @FXML
   private TableColumn<TableQuarterlyEntry, String> ordersColReservedParkings;
@@ -94,7 +76,7 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
   private TableColumn<TableQuarterlyEntry, String> ordersColFullSubscriptions;
 
   @FXML
-  private TableColumn<TableQuarterlyEntry, String> ordersColYear;
+  private TableColumn<TableQuarterlyEntry, String> ordersColDate;
 
   @FXML
   private TableView<TableQuarterlyEntry> ordersTableView;
@@ -113,23 +95,18 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
   /** List holding the entries */
   private ObservableList<TableQuarterlyEntry> obsEntriesList;
 
-  /*
-   * (non-Javadoc)
+  /* (non-Javadoc)
    * @see
    * cps.client.controller.service.ServiceActionControllerBase#handleBackButton(
-   * javafx.event.ActionEvent)
-   */
+   * javafx.event.ActionEvent) */
   @FXML
   void handleBackButton(ActionEvent event) {
     ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE);
   }
 
-  /**
-   * Handle start date choice.
-   * 
+  /** Handle start date choice.
    * @param event
-   *          the event
-   */
+   *        the event */
   @FXML
   void handleStartDateChoice(ActionEvent event) {
     if (processing) {
@@ -138,12 +115,9 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     endDatePicker.setDisable(false);
   }
 
-  /**
-   * Handle end date choice.
-   * 
+  /** Handle end date choice.
    * @param event
-   *          the event
-   */
+   *        the event */
   @FXML
   void handleEndDateChoice(ActionEvent event) {
     if (processing) {
@@ -160,12 +134,9 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     sendRequest(new ListParkingLotsRequest());
   }
 
-  /**
-   * Handle lot choice.
-   * 
+  /** Handle lot choice.
    * @param event
-   *          the event
-   */
+   *        the event */
   @FXML
   void handleLotChoice(ActionEvent event) {
     if (processing) {
@@ -179,26 +150,20 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
   @FXML
   void initialize() {
     super.baseInitialize();
-    assert complaintsColMonth != null : "fx:id=\"complaintsColMonth\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
+    assert complaintsColDate != null : "fx:id=\"complaintsCol\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert complaintsColOpenedClaims != null : "fx:id=\"complaintsColOpenedClaims\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
-    assert complaintsColQuarter != null : "fx:id=\"complaintsColQuarter\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert complaintsColRefundedClaims != null : "fx:id=\"complaintsColRefundedClaims\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert complaintsColRejectedClaims != null : "fx:id=\"complaintsColRejectedClaims\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
-    assert complaintsColYear != null : "fx:id=\"complaintsColYear\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert complaintsTableView != null : "fx:id=\"complaintsTableView\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
-    assert disabledCellsColMonth != null : "fx:id=\"disabledCellsColMonth\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert disabledCellsColNumberOfDisabledCells != null : "fx:id=\"disabledCellsColNumberOfDisabledCells\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
-    assert disabledCellsColQuarter != null : "fx:id=\"disabledCellsColQuarter\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
-    assert disabledCellsColYear != null : "fx:id=\"disabledCellsColYear\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
+    assert disabledCellsColDate != null : "fx:id=\"disabledCellsColDate\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert disabledCellsTableView != null : "fx:id=\"disabledCellsTableView\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert endDatePicker != null : "fx:id=\"endDatePicker\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
-    assert ordersColMonth != null : "fx:id=\"ordersColMonth\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
-    assert ordersColQuarter != null : "fx:id=\"ordersColQuarter\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert ordersColFullSubscriptions != null : "fx:id=\"ordersColFullSubscriptions\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert ordersColRegularSubscriptions != null : "fx:id=\"ordersColRegularSubscriptions\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert ordersColIncidentalParkings != null : "fx:id=\"ordersColIncidentalParkings\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert ordersColReservedParkings != null : "fx:id=\"ordersColReservedParkings\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
-    assert ordersColYear != null : "fx:id=\"ordersColYear\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
+    assert ordersColDate != null : "fx:id=\"ordersColDate\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert ordersTableView != null : "fx:id=\"ordersTableView\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert parkingLotsList != null : "fx:id=\"parkingLotsList\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
     assert startDatePicker != null : "fx:id=\"startDatePicker\" was not injected: check your FXML file 'ServiceStaticticsQuarterly.fxml'.";
@@ -210,24 +175,18 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     ordersTableView.setItems(this.obsEntriesList);
 
     // use set/get value property value factories
-    complaintsColMonth.setCellValueFactory(new PropertyValueFactory<>("month"));
-    complaintsColQuarter.setCellValueFactory(new PropertyValueFactory<>("quarter"));
     complaintsColOpenedClaims.setCellValueFactory(new PropertyValueFactory<>("openedClaims"));
     complaintsColClosedClaims.setCellValueFactory(new PropertyValueFactory<>("closedClaims"));
     complaintsColRefundedClaims.setCellValueFactory(new PropertyValueFactory<>("refunded"));
     complaintsColRejectedClaims.setCellValueFactory(new PropertyValueFactory<>("rejectedClaims"));
-    complaintsColYear.setCellValueFactory(new PropertyValueFactory<>("year"));
-    disabledCellsColMonth.setCellValueFactory(new PropertyValueFactory<>("month"));
+    complaintsColDate.setCellValueFactory(new PropertyValueFactory<>("date"));
     disabledCellsColNumberOfDisabledCells.setCellValueFactory(new PropertyValueFactory<>("numberOfDisabledCells"));
-    disabledCellsColQuarter.setCellValueFactory(new PropertyValueFactory<>("quarter"));
-    disabledCellsColYear.setCellValueFactory(new PropertyValueFactory<>("year"));
-    ordersColMonth.setCellValueFactory(new PropertyValueFactory<>("month"));
-    ordersColQuarter.setCellValueFactory(new PropertyValueFactory<>("quarter"));
+    disabledCellsColDate.setCellValueFactory(new PropertyValueFactory<>("date"));
     ordersColReservedParkings.setCellValueFactory(new PropertyValueFactory<>("reservedParkings"));
     ordersColIncidentalParkings.setCellValueFactory(new PropertyValueFactory<>("incidentalParkings"));
     ordersColRegularSubscriptions.setCellValueFactory(new PropertyValueFactory<>("regularSubscriptions"));
     ordersColFullSubscriptions.setCellValueFactory(new PropertyValueFactory<>("fullSubscriptions"));
-    ordersColYear.setCellValueFactory(new PropertyValueFactory<>("year"));
+    ordersColDate.setCellValueFactory(new PropertyValueFactory<>("date"));
 
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_STATISTICS_QUARTERLY);
   }
@@ -311,11 +270,9 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     turnProcessingStateOff();
   }
 
-  /*
-   * (non-Javadoc)
+  /* (non-Javadoc)
    * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.
-   * Collection)
-   */
+   * Collection) */
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
 
@@ -340,10 +297,14 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
   @Override
   public void fillReportTable(Collection<MonthlyReport> list) {
     List<TableQuarterlyEntry> newEntriesList = new LinkedList<TableQuarterlyEntry>();
-    list.forEach(monthlyReport -> {
+
+    // All besides total
+    Iterator<MonthlyReport> itr = list.iterator();
+    for (int i = 0; i < list.size() - 1; i++) {
+      MonthlyReport monthlyReport = itr.next();
 
       int year = monthlyReport.getYear();
-      int quarter = monthlyReport.getMonth() / 4;
+      boolean total = false;
       int month = monthlyReport.getMonth();
       int reservedParkings = monthlyReport.getOrdReserved();
       int incidentalParkings = monthlyReport.getOrdIncidental();
@@ -355,20 +316,24 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
       int rejectedClaims = closedClaims - refunded;
       int numberOfDisabledCells = monthlyReport.getDisabledSlots();
 
-      TableQuarterlyEntry toAdd = new TableQuarterlyEntry(year, quarter, month, reservedParkings, incidentalParkings,
-          regularSubscriptions, fullSubscriptions, openedClaims, closedClaims, rejectedClaims, refunded,
-          numberOfDisabledCells);
+      TableQuarterlyEntry toAdd = new TableQuarterlyEntry(year, total, month, reservedParkings, incidentalParkings, regularSubscriptions, fullSubscriptions,
+          openedClaims, closedClaims, rejectedClaims, refunded, numberOfDisabledCells);
       newEntriesList.add(toAdd);
-    });
-    
+    }
+
+    // Total
+    MonthlyReport last = itr.next();
+
+    newEntriesList.add(new TableQuarterlyEntry(last.getYear(), true, last.getMonth(), last.getOrdReserved(), last.getOrdIncidental(), last.getOrdRegular(),
+        last.getOrdFull(), last.getComplaintsCount(), last.getComplaintsClosedCount(), last.getComplaintsRefundedCount(),
+        last.getComplaintsClosedCount() - last.getComplaintsRefundedCount(), last.getDisabledSlots()));
+
     obsEntriesList.setAll(newEntriesList);
   }
 
   public class TableQuarterlyEntry {
 
-    private SimpleStringProperty year;
-    private SimpleStringProperty quarter;
-    private SimpleStringProperty month;
+    private SimpleStringProperty date;
     private SimpleStringProperty reservedParkings;
     private SimpleStringProperty incidentalParkings;
     private SimpleStringProperty regularSubscriptions;
@@ -379,13 +344,15 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
     private SimpleStringProperty refunded;
     private SimpleStringProperty numberOfDisabledCells;
 
-    public TableQuarterlyEntry(int year, int quarter, int month, int reservedParkings, int incidentalParkings,
-        int regularSubscriptions, int fullSubscriptions, int openedClaims, int closedClaims, int rejectedClaims,
-        int refunded, int numberOfDisabledCells) {
+    public TableQuarterlyEntry(int year, boolean total, int month, int reservedParkings, int incidentalParkings, int regularSubscriptions,
+        int fullSubscriptions, int openedClaims, int closedClaims, int rejectedClaims, int refunded, int numberOfDisabledCells) {
       super();
-      this.year = new SimpleStringProperty(Integer.toString(year));
-      this.quarter = new SimpleStringProperty(Integer.toString(quarter));
-      this.month = new SimpleStringProperty(Integer.toString(month));
+      if (!total) {
+        LocalDate dateLocalDate = LocalDate.of(year, month, 1);
+        this.date = new SimpleStringProperty(dateLocalDate.toString());
+      } else {
+        this.date = new SimpleStringProperty("TOTAL");
+      }
       this.reservedParkings = new SimpleStringProperty(Integer.toString(reservedParkings));
       this.incidentalParkings = new SimpleStringProperty(Integer.toString(incidentalParkings));
       this.regularSubscriptions = new SimpleStringProperty(Integer.toString(regularSubscriptions));
@@ -397,28 +364,12 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase
       this.numberOfDisabledCells = new SimpleStringProperty(Integer.toString(numberOfDisabledCells));
     }
 
-    public String getYear() {
-      return year.get();
+    public String getDate() {
+      return this.date.get();
     }
 
-    public void setYear(SimpleStringProperty year) {
-      this.year = year;
-    }
-
-    public String getQuarter() {
-      return quarter.get();
-    }
-
-    public void setQuarter(SimpleStringProperty quarter) {
-      this.quarter = quarter;
-    }
-
-    public String getMonth() {
-      return month.get();
-    }
-
-    public void setMonth(SimpleStringProperty month) {
-      this.month = month;
+    public void setDate(SimpleStringProperty date) {
+      this.date = date;
     }
 
     public String getReservedParkings() {
