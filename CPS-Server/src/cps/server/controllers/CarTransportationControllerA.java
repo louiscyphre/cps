@@ -278,7 +278,7 @@ public class CarTransportationControllerA extends RequestController implements C
     }
   }
 
-  /** This function will calculate how much cars we need to move in order to
+  /** This function will calculate how many cars we need to move in order to
    * insert a car into the specified cell.
    * @param content
    *        Lot content as array

@@ -13,20 +13,12 @@ import cps.server.ServerException;
 import cps.common.Utilities.VisitorWithException;
 import cps.common.Utilities.VisitorWithExceptionAndReturnType;
 
-// TODO: Auto-generated Javadoc
 /** Manages database-related operations. */
 public class DatabaseController {
 
-  /** The host address. */
   String host;
-
-  /** Database name. */
   String dbName;
-
-  /** Username. */
   String username;
-
-  /** Password. */
   String password;
 
   /** Used to run a user-specified action with an SQL connection as parameter. */
@@ -34,7 +26,7 @@ public class DatabaseController {
 
     /** Perform the action.
      * @param conn the SQL connection
-     * @throws SQLException the SQL exception
+     * @throws SQLException on error
      * @throws ServerException on error */
     void perform(Connection conn) throws SQLException, ServerException;
   }
@@ -47,7 +39,7 @@ public class DatabaseController {
     /** Perform the query.
      * @param conn the SQL connection
      * @return the result object
-     * @throws SQLException the SQL exception
+     * @throws SQLException on error
      * @throws ServerException on error */
     T perform(Connection conn) throws SQLException, ServerException;
   }
@@ -62,7 +54,7 @@ public class DatabaseController {
      * @param conn the SQL connection
      * @param response the response
      * @return the result object
-     * @throws SQLException the SQL exception
+     * @throws SQLException on error
      * @throws ServerException on error */
     T perform(Connection conn, T response) throws SQLException, ServerException;
   }
@@ -105,7 +97,7 @@ public class DatabaseController {
    *
    * @return the SQL connection
    * @throws SQLException
-   *           the SQL exception
+   *           on error
    */
   public Connection getConnection() throws SQLException {
     return DriverManager.getConnection("jdbc:mysql://" + host + "/" + dbName, username, password);
@@ -148,10 +140,11 @@ public class DatabaseController {
     }
   }
 
-  /** Perform query.
-   * @param <T> the generic type
-   * @param query the query
-   * @return the t
+  /** Perform a query on the database and return a result object.
+   * Is used to facilitate database access in request handlers.
+   * @param <T> the result type
+   * @param query a lambda function that contains the code of the query
+   * @return the query result
    * @throws ServerException on error */
   public <T> T performQuery(DatabaseQuery<T> query) throws ServerException {
     Connection conn = null;
@@ -169,7 +162,9 @@ public class DatabaseController {
     return result;
   }
 
-  /** Perform query.
+  /** Perform a query on the database and return a result object.
+   * Is used to facilitate database access in request handlers.
+   * Automatically handles server exceptions, making it possible to write handler code in a stream-lined way.
    * @param <T> the generic type
    * @param response the response
    * @param query the query
@@ -233,7 +228,7 @@ public class DatabaseController {
    * @param conn the SQL connection
    * @param table the table name
    * @return the number of rows
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public int countEntities(Connection conn, String table) throws SQLException {
     Statement stmt = conn.createStatement();
     ResultSet rs = stmt.executeQuery("SELECT count(*) FROM " + table);
@@ -266,7 +261,7 @@ public class DatabaseController {
    * @param orderBy which field to order by
    * @param builder the builder
    * @return the collection
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public <T> Collection<T> findAll(Connection conn, String table, String orderBy, ResultVisitor<T> builder) throws SQLException {
     LinkedList<T> results = new LinkedList<T>();
 
@@ -289,7 +284,7 @@ public class DatabaseController {
    * @param sqlCommand the SQL command
    * @param withStatement the with statement
    * @param withResult the with result
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static <R> void statementForEach(Connection conn, String sqlCommand, StatementVisitor withStatement, ResultVisitor<R> withResult) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(sqlCommand);
 
@@ -305,14 +300,14 @@ public class DatabaseController {
 
   }
 
-  /** Gets the (transformed) result of an SQL query.
+  /** Get the (transformed) result of an SQL query.
    * @param <T> the generic type
    * @param conn the SQL connection
    * @param sqlCommand the SQL query to perform 
    * @param withStatement defines query fields substitution
-   * @param withResult uses the query result to perfrom a custom action
+   * @param withResult uses the query result to perform a custom action
    * @return the statement result
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static <T> T getStatementResult(Connection conn, String sqlCommand, VisitorWithException<PreparedStatement, SQLException> withStatement,
       VisitorWithExceptionAndReturnType<ResultSet, SQLException, T> withResult) throws SQLException {
     T item = null;

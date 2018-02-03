@@ -289,7 +289,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     if (responseCustomerId != ControllersClientAdapter.getCustomerContext().getCustomerId() && response.success()) {
       // Customer ID
       context.setCustomerId(responseCustomerId);
-      formattedMessage.add(new Text("Your Customer ID:"));
+      formattedMessage.add(new Text("Your Customer ID: "));
       Text customerIdText = new Text(Integer.toString(response.getCustomerID()));
       // Making bold font
       Font defaultFont = customerIdText.getFont();
@@ -297,7 +297,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
       formattedMessage.add(customerIdText);
       formattedMessage.add(new Text("\n"));
       // Password
-      formattedMessage.add(new Text("Your Password:"));
+      formattedMessage.add(new Text("Your Password: "));
       Text password = new Text(response.getPassword());
       defaultFont = password.getFont();
       // Making bold font

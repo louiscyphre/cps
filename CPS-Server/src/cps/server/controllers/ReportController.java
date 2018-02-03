@@ -23,12 +23,19 @@ import cps.entities.people.CompanyPerson;
 import cps.server.ServerController;
 import cps.server.session.ServiceSession;
 
+/** The Class ReportController. */
 public class ReportController extends RequestController {
 
+  /** Instantiates a new report controller.
+   * @param serverController the server controller */
   public ReportController(ServerController serverController) {
     super(serverController);
   }
 
+  /** Invoked when the Global Manager wants to receive a weekly statistical report.
+   * @param action the action
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(GetWeeklyReportAction action, ServiceSession session) {
     return database.performQuery(new WeeklyReportResponse(), (conn, response) -> {
       CompanyPerson user = session.requireCompanyPerson();
@@ -47,6 +54,10 @@ public class ReportController extends RequestController {
     });
   }
 
+  /** Invoked when the Global Manager wants to receive a quarterly statistical report..
+   * @param action the action
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(GetQuarterlyReportAction action, ServiceSession session) {
     return database.performQuery(new QuarterlyReportResponse(), (conn, response) -> {
       CompanyPerson user = session.requireCompanyPerson();
@@ -83,6 +94,10 @@ public class ReportController extends RequestController {
     });
   }
 
+  /** Invoked when the Global Manager wants to see current performance statistics..
+   * @param action the action
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(GetCurrentPerformanceAction action, ServiceSession session) {
     return database.performQuery(new CurrentPerformanceResponse(), (conn, response) -> {
       CompanyPerson user = session.requireCompanyPerson();
@@ -98,6 +113,10 @@ public class ReportController extends RequestController {
     });
   }
 
+  /** Invoked when the Global Manager wants to see periodic activity statistics.
+   * @param action the action
+   * @param session the session
+   * @return the server response */
   public ServerResponse handle(GetPeriodicReportAction action, ServiceSession session) {
     return database.performQuery(new PeriodicReportResponse(), (conn, response) -> {
       CompanyPerson user = session.requireCompanyPerson();

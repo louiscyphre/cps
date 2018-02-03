@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import cps.common.Constants;
 import cps.server.ServerException;
 
+// TODO: Auto-generated Javadoc
 /** Database entity for one-time parking services - incidental parking or reserved parking both stored in the same table. */
 public class OnetimeService implements ParkingService {
   private static final long serialVersionUID = 1L;
@@ -507,5 +508,36 @@ public class OnetimeService implements ParkingService {
   @Override
   public boolean shouldCompleteAfterExit() {
     return true;
+  }
+  
+  /** Return a textual description of the service status.
+   * @param parked the parked flag
+   * @param completed the completed flag
+   * @param canceled the canceled flag
+   * @param warned the warned flag
+   * @return the status description */
+  public static String getStatusDescription(boolean parked, boolean completed,
+      boolean canceled, boolean warned) {    
+    String description = "Reserved";
+    
+    if (parked) {
+      description = "Active";
+    }
+    
+    if (completed) {
+      description = "Completed";
+    }
+    
+    if (canceled) {
+      description = "Canceled";
+    }
+    
+    return description;
+  }
+  
+  /** Return a textual description of the service status.
+   * @return the status description */
+  public String getStatusDescription() {
+    return getStatusDescription(parked, completed, canceled, warned);
   }
 }
