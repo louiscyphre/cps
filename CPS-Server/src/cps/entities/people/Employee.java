@@ -1,5 +1,6 @@
 package cps.entities.people;
 
+/** Base class for all employees. */
 public abstract class Employee extends CompanyPerson {
   private static final long serialVersionUID = 1L;
 

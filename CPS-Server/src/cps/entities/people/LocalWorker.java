@@ -2,6 +2,7 @@ package cps.entities.people;
 
 import cps.common.Constants;
 
+/** Has access to Parking Lot actions for the assigned lot (department ID). */
 public class LocalWorker extends LocalEmployee {
   private static final long serialVersionUID = 1L;
 
