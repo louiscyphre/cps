@@ -123,9 +123,9 @@ public class ReportController extends RequestController {
       
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER, "Only the Global Manager can perform this action");
      
-      LocalDate start = action.getPeriodStart();
-      int year = start.getYear();
-      int month = start.getMonthValue();
+      LocalDate period = action.getPeriodEnd();
+      int year = period.getYear();
+      int month = period.getMonthValue();
       
       response.setSuccess("Periodic Report retrieved succesfully");
       response.setData(PeriodicReport.generate(conn, year, month));

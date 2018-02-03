@@ -230,7 +230,7 @@ public abstract class Utilities {
    * @return the number of weeks */
   public static int countWeeksInMonth(int year, int month) {
     // TODO should this be aligned on whole weeks?
-    return (int) Math.ceil(YearMonth.of(year, month).lengthOfMonth() / 4);
+    return (int) Math.ceil(YearMonth.of(year, month).lengthOfMonth() / 7.f);
   }
 
 }

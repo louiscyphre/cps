@@ -398,7 +398,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
    */
   private void updateCellInfo(ParkingCell cell) {
 
-    cellInfo.set(1, new Text("[" + (cell.height + 1) + "," + (cell.depth + 1) + "," + (cell.width + 1) + "]"));
+    cellInfo.set(1, new Text("[" + (cell.height + 1) + "," + (cell.width + 1) + "," + (cell.depth + 1) + "]"));
     if (cell.getCarID() != null) {
       cellInfo.set(4, new Text(cell.getCarID()));
     } else {
