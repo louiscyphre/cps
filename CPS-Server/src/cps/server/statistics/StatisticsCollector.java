@@ -24,6 +24,24 @@ public class StatisticsCollector {
   public static void increaseCanceledOrder(Connection conn, LocalDate date, int lotID) throws SQLException, ServerException {
     DailyStatistics.increaseCanceledOrder(conn, date, lotID);
   }
+
+  /** Increase realized order count by one for today in specific parking lot.
+   * @param conn the SQL connection
+   * @param lotID the lot ID
+   * @throws SQLException on error
+   * @throws ServerException on error */
+  public static void increaseRealizedOrder(Connection conn, int serviceID, int licenseType, int parkingType, int lotID, boolean warned) throws SQLException, ServerException {
+    if (licenseType == Constants.LICENSE_TYPE_ONETIME) {
+      if (parkingType == Constants.PARKING_TYPE_INCIDENTAL) {
+        DailyStatistics.increaseRealizedOrder(conn, lotID);
+      } else { // PARKING_TYPE_RESERVED
+        // Daily statistics - late arrival
+        if (warned) {
+          DailyStatistics.increaseLateArrival(conn, serviceID);
+        }
+      }
+    }  
+  }
   
   /** Increase the number of complaints filed this month.
    * @param conn the SQL connection
@@ -63,12 +81,10 @@ public class StatisticsCollector {
   public static void increaseOnetime(Connection conn, int serviceID, int licenseType, int parkingType, int lotID, boolean warned)
       throws SQLException, ServerException {
     if (licenseType == Constants.LICENSE_TYPE_ONETIME) {
-      // Update daily statistics - realized orders
-      DailyStatistics.increaseRealizedOrder(conn, lotID);
       if (parkingType == Constants.PARKING_TYPE_INCIDENTAL) {
         // Monthly statistics
         MonthlyReport.increaseIncidental(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), lotID);
-      } else {
+      } else { // PARKING_TYPE_RESERVED
         // Daily statistics - late arrival
         if (warned) {
           DailyStatistics.increaseLateArrival(conn, serviceID);

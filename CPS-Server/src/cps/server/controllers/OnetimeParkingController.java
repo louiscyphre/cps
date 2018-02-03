@@ -116,6 +116,9 @@ public class OnetimeParkingController extends RequestController {
           error("Internal error: unknown parking type");
       }
 
+      // XXX Statistics
+      StatisticsCollector.increaseOnetime(conn, service.getId(), service.getLicenseType(), service.getParkingType(), lot.getId(), service.isWarned());
+
       // success
       response.setCustomerData(customer);
       response.setServiceID(service.getId());

@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import cps.api.request.ParkingEntryRequest;
 import cps.api.response.ParkingEntryResponse;
@@ -81,9 +80,9 @@ public class ParkingEntryController extends RequestController {
     // placed
     CarTransportationController transportationController = serverController.getTransportationController();
     transportationController.insertCar(conn, lot, carID, service.getExitTime());
-
-    // XXX Statistics
-    StatisticsCollector.increaseOnetime(conn, service.getId(), service.getLicenseType(), service.getParkingType(), lot.getId(), service.isWarned());
+    
+    // XXX Statistics - realized orders
+    StatisticsCollector.increaseRealizedOrder(conn, service.getId(), service.getLicenseType(), service.getParkingType(), lot.getId(), service.isWarned());
 
     if (!service.isParked()) {
       service.setParked(true);
