@@ -15,6 +15,7 @@ public class CustomerActionControllerBase extends ClientControllerBase {
 
   private DecimalFormat decimalFormat = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 
+  /** Instantiates a new customer action controller base. */
   public CustomerActionControllerBase() {
     decimalFormat.setMaximumFractionDigits(3);
   }
