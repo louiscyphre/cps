@@ -50,6 +50,9 @@ public class TestComplaint extends ServerControllerTest {
     // Create user
     CustomerData data = new CustomerData(0, "user@email", "1234", "IL11-222-33", 1, 0);
     Customer customer = makeCustomer(data);
+    
+    // Create parking lot
+    initParkingLot();
 
     // Test complaint request
     Complaint complaint = makeComplaint(customer, getContext());
@@ -64,7 +67,7 @@ public class TestComplaint extends ServerControllerTest {
     session.setCustomer(customer);
 
     // Make request
-    ComplaintRequest request = new ComplaintRequest(customer.getId(), "My car was damaged");
+    ComplaintRequest request = new ComplaintRequest(customer.getId(), 1, "My car was damaged");
 
     // Test response
     ServerResponse response = server.dispatch(request, context);

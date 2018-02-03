@@ -127,7 +127,7 @@ public abstract class ServerControllerTest extends TestCase {
     assertEquals(entry.getCarID(), request.getCarID());
     assertEquals(entry.getLotID(), request.getLotID());
     assertEquals(entry.getStartDate(), request.getStartDate());
-    assertEquals(entry.getEndDate(), request.getStartDate().plusDays(28));
+    assertEquals(entry.getEndDate(), request.getStartDate().plusDays(27));
 
     holder.setA(entry);
     holder.setB(specificResponse);
