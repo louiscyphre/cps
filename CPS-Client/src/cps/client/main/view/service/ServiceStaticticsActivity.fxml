@@ -29,12 +29,18 @@
 			</padding>
 			<children>
             <Label alignment="CENTER" styleClass="statisticsLabelUnderTables" text="Monthly statistics" />
-            <TableView fx:id="tableView1" prefHeight="346.0" prefWidth="614.0" styleClass="statisticsTable">
+            <HBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <DatePicker fx:id="startDatePicker" minWidth="100.0" onAction="#handleStartDateChoice" prefHeight="40.0" prefWidth="300.0" promptText="Report start date" styleClass="datePickerStatistics" />
+                  <DatePicker fx:id="endDatePicker" disable="true" layoutX="10.0" layoutY="25.0" minWidth="100.0" onAction="#handleEndDateChoice" prefHeight="40.0" prefWidth="300.0" promptText="Report end date" styleClass="datePickerStatistics" />
+               </children>
+            </HBox>
+            <TableView fx:id="tableView" prefHeight="346.0" prefWidth="614.0" styleClass="statisticsTable">
                <columns>
                   <TableColumn fx:id="colIdentifier" editable="false" prefWidth="204.0" />
-                  <TableColumn fx:id="colWeeklyDayOfTheWeek" editable="false" prefWidth="204.0" text="realizedOrders" />
-                  <TableColumn fx:id="colWeeklyProcessed" editable="false" prefWidth="207.0" text="canceledOrders" />
-                  <TableColumn fx:id="colWeeklyCancelled" editable="false" minWidth="0.0" prefWidth="203.0" text="disabledParkingHours" />
+                  <TableColumn fx:id="colRealizedOrders" editable="false" prefWidth="204.0" text="Realized Orders" />
+                  <TableColumn fx:id="colCanceledOrders" editable="false" prefWidth="207.0" text="Canceled Orders" />
+                  <TableColumn fx:id="colDisabledParkingHours" editable="false" minWidth="0.0" prefWidth="203.0" text="Disabled Parking Hours" />
                </columns>
             </TableView>
 				<VBox fx:id="infoBox" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="113.0" prefWidth="299.0" spacing="0.0" styleClass="bigInfoLabel">

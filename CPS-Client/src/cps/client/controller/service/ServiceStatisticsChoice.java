@@ -22,11 +22,6 @@ public class ServiceStatisticsChoice extends ServiceActionControllerBase {
   }
 
   @FXML
-  void handleWeeklyReportsButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_WEEKLY);
-  }
-
-  @FXML
   void handleActivityReportsButton(ActionEvent event) {
     ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_ACTIVITY);
   }

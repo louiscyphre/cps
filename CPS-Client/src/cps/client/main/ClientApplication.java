@@ -113,7 +113,6 @@ public class ClientApplication extends Application implements INetworkClient {
       // Statistics
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_CHOICE);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_QUARTERLY);
-      ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_WEEKLY);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_ACTIVITY);
       ControllersClientAdapter.registerScene(SceneCode.SERVICE_STATISTICS_PERFORMANCE);
       ControllersClientAdapter.turnLoggedInStateOff();
