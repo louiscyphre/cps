@@ -22,6 +22,7 @@ import cps.common.Constants;
 import cps.entities.models.Complaint;
 import cps.entities.models.Customer;
 import cps.entities.models.MonthlyReport;
+import cps.entities.models.ParkingLot;
 import cps.entities.people.User;
 import cps.server.ServerController;
 import cps.server.session.CustomerSession;
@@ -42,7 +43,14 @@ public class ComplaintController extends RequestController {
    * @return the server response */
   public ServerResponse handle(ComplaintRequest request, UserSession session) {
     return database.performQuery(new ComplaintResponse(), (conn, response) -> {
-      Complaint complaint = Complaint.create(conn, request.getCustomerID(), request.getLotID(), request.getContent(),
+      // Check if user is logged in
+      User customer = session.requireUser();
+      
+      // Check if lot exists
+      ParkingLot lot = ParkingLot.findByID(conn, request.getLotID());
+      errorIfNull(lot, String.format("Parking Lot with id %d does not exist", request.getLotID()));
+      
+      Complaint complaint = Complaint.create(conn, customer.getId(), request.getLotID(), request.getContent(),
           Timestamp.valueOf(LocalDateTime.now()), null);
 
       errorIfNull(complaint, "Failed to create complaint");
@@ -67,8 +75,7 @@ public class ComplaintController extends RequestController {
       User employee = session.requireUser();
 
       errorIf(!employee.canAccessDomain(Constants.ACCESS_DOMAIN_CUSTOMER_SERVICE), "You cannot perform this action");
-      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER,
-          "You cannot perform this action");
+      errorIf(employee.getAccessLevel() < Constants.ACCESS_LEVEL_CUSTOMER_SERVICE_WORKER, "You cannot perform this action");
 
       Complaint complaint = Complaint.findByIDNotNull(conn, action.getComplaintID());
 
@@ -85,8 +92,7 @@ public class ComplaintController extends RequestController {
       //XXX Statistics
       // Count as closed and refunded
       MonthlyReport.increaseClosed(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());
-      MonthlyReport.increaseRefunded(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());
-      
+      MonthlyReport.increaseRefunded(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());      
 
       response.setComplaintID(complaint.getId());
       response.setCustomerID(customer.getId());

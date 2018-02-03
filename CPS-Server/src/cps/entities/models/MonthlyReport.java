@@ -172,7 +172,7 @@ public class MonthlyReport implements Serializable {
 
     if (report == null) {
       throw new ServerException(
-          String.format("Failed to get report from Monthly report. year=%d,month=%d,lot=%d", year, month, lotid));
+          String.format("Failed to find information for monthly report: year=%d, month=%d, lot=%d", year, month, lotid));
     }
 
     return report;
@@ -220,7 +220,7 @@ public class MonthlyReport implements Serializable {
    * @throws SQLException on error */
   public void update(Connection conn) throws SQLException {
     String helper = "UPDATE monthly_report SET ordered_reserved=?, ordered_incidental=?, ordered_regular=?, ";
-    helper += "ordered_full=?, complaints_count=?, disabled_slots=?";
+    helper += "ordered_full=?, complaints_count=?, complaints_closed_count=?, complaints_refunded_count=?, disabled_slots=?";
     helper += " WHERE year=? AND month=? AND lot_id=?";
     PreparedStatement stmt = conn.prepareStatement(helper);
     int i = 1;
@@ -229,6 +229,8 @@ public class MonthlyReport implements Serializable {
     stmt.setInt(i++, this.ordRegular);
     stmt.setInt(i++, this.ordFull);
     stmt.setInt(i++, this.complaintsCount);
+    stmt.setInt(i++, this.complaintsClosedCount);
+    stmt.setInt(i++, this.complaintsRefundedCount);
     stmt.setInt(i++, this.disabledSlots);
     stmt.setInt(i++, this.year);
     stmt.setInt(i++, this.month);
