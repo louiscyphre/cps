@@ -75,9 +75,9 @@ public class ReportController extends RequestController {
       MonthlyReport total = new MonthlyReport(action.getPeriodStart().getYear(), action.getPeriodStart().getMonthValue(), 0, 0, 0, 0, 0, 0, 0, 0, 0, "Total");
       MonthlyReport report = null;
 
-      while (!start.isAfter(end)) {
-        int year = action.getPeriodStart().getYear();
-        int month = action.getPeriodStart().getMonthValue();
+      while (start.isBefore(end)) {
+        int year = start.getYear();
+        int month = start.getMonthValue();
         report = MonthlyReport.getMonthlyReport(conn, year, month, action.getLotID());
         total.add(report);
         data.add(report);
