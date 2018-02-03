@@ -29,13 +29,13 @@
 			</padding>
 			<children>
             <Label alignment="CENTER" styleClass="statisticsLabelUnderTables" text="Monthly statistics" />
-            <HBox alignment="CENTER" spacing="20.0">
+            <HBox alignment="CENTER" minHeight="40.0" prefHeight="40.0" prefWidth="821.0" spacing="60.0">
                <children>
                   <DatePicker fx:id="startDatePicker" minWidth="100.0" onAction="#handleStartDateChoice" prefHeight="40.0" prefWidth="300.0" promptText="Report start date" styleClass="datePickerStatistics" />
                   <DatePicker fx:id="endDatePicker" disable="true" layoutX="10.0" layoutY="25.0" minWidth="100.0" onAction="#handleEndDateChoice" prefHeight="40.0" prefWidth="300.0" promptText="Report end date" styleClass="datePickerStatistics" />
                </children>
             </HBox>
-            <TableView fx:id="tableView" prefHeight="346.0" prefWidth="614.0" styleClass="statisticsTable">
+            <TableView fx:id="tableView" prefHeight="356.0" prefWidth="816.0" styleClass="statisticsTable">
                <columns>
                   <TableColumn fx:id="colIdentifier" editable="false" prefWidth="204.0" />
                   <TableColumn fx:id="colRealizedOrders" editable="false" prefWidth="204.0" text="Realized Orders" />
@@ -55,7 +55,7 @@
 				</VBox>
 				<HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="90.0" prefWidth="614.0" spacing="60.0">
 					<children>
-						<Button id="" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="backButton" text="Close" textAlignment="CENTER" />
+						<Button id="" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="backButton" text="Back" textAlignment="CENTER" />
 					</children>
 				</HBox>
 			</children>
