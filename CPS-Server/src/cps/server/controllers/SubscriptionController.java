@@ -36,7 +36,7 @@ public class SubscriptionController extends RequestController {
    * @return the server response */
   public ServerResponse handle(FullSubscriptionRequest request, CustomerSession session) {
     LocalDate startDate = request.getStartDate();
-    LocalDate endDate = startDate.plusDays(28);
+    LocalDate endDate = startDate.plusDays(27);
     LocalTime dailyExitTime = LocalTime.of(0, 0, 0);
     FullSubscriptionResponse response = new FullSubscriptionResponse();
     return handle(request, session, response, startDate, endDate, dailyExitTime);
@@ -49,7 +49,7 @@ public class SubscriptionController extends RequestController {
    * @return the server response */
   public ServerResponse handle(RegularSubscriptionRequest request, CustomerSession session) {
     LocalDate startDate = request.getStartDate();
-    LocalDate endDate = startDate.plusDays(28);
+    LocalDate endDate = startDate.plusDays(27);
     LocalTime dailyExitTime = request.getDailyExitTime();
     RegularSubscriptionResponse response = new RegularSubscriptionResponse();
     return handle(request, session, response, startDate, endDate, dailyExitTime);
