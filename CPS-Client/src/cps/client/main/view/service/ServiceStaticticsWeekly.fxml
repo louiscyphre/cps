@@ -28,18 +28,32 @@
 				<Insets bottom="20.0" left="20.0" right="20.0" top="15.0" />
 			</padding>
 			<children>
-            <Label alignment="CENTER" styleClass="statisticsLabelUnderTables" text="Weekly statistics for (lot ID), (Year), (Week)" />
-            <TableView fx:id="tableView1" prefHeight="416.0" prefWidth="624.0" styleClass="statisticsTable">
+            <Label alignment="CENTER" styleClass="statisticsLabelUnderTables" text="Weekly statistics" />
+            <HBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <DatePicker fx:id="weekDatePicker" minWidth="100.0" onAction="#handleWeekDateChoice" prefHeight="40.0" prefWidth="300.0" promptText="Week pick" styleClass="datePickerStatistics" />
+                  <ComboBox fx:id="parkingLotsList" disable="true" minHeight="40.0" minWidth="300.0" onAction="#handleLotChoice" prefHeight="40.0" prefWidth="240.0" promptText="Choose lot address" styleClass="comboBox" />
+               </children>
+            </HBox>
+            <TableView fx:id="tableViewMean" prefHeight="125.0" prefWidth="624.0" styleClass="statisticsTable">
                <columns>
-                  <TableColumn fx:id="colAverage" editable="false" prefWidth="69.0" text="Average" />
-                  <TableColumn fx:id="colMedian" editable="false" prefWidth="62.0" text="Median" />
-                  <TableColumn fx:id="colSun" editable="false" minWidth="0.0" prefWidth="58.0" text="Sun" />
-                  <TableColumn fx:id="colMon" editable="false" minWidth="0.0" prefWidth="57.0" text="Mon" />
-                  <TableColumn fx:id="colThu" editable="false" minWidth="0.0" prefWidth="67.0" text="Tue" />
-                  <TableColumn fx:id="colWed" editable="false" minWidth="0.0" text="Wed" />
-                  <TableColumn fx:id="colThu" editable="false" minWidth="0.0" prefWidth="71.0" text="Thu" />
-                  <TableColumn fx:id="colFri" editable="false" minWidth="0.0" prefWidth="83.0" text="Fri" />
-                  <TableColumn fx:id="colSat" editable="false" minWidth="0.0" prefWidth="67.0" text="Sat" />
+                  <TableColumn fx:id="meanColRealized" editable="false" prefWidth="208.0" text="Realized Orders Mean" />
+                  <TableColumn fx:id="meanColCancelled" editable="false" prefWidth="208.0" text="Canceled Orders Mean" />
+                  <TableColumn fx:id="meanColLateArrivals" editable="false" minWidth="0.0" prefWidth="208.0" text="Late Arrivals Mean" />
+               </columns>
+            </TableView>
+            <TableView fx:id="tableViewMedian" layoutX="30.0" layoutY="62.0" prefHeight="125.0" prefWidth="624.0" styleClass="statisticsTable">
+               <columns>
+                  <TableColumn fx:id="medianColRealized" editable="false" minWidth="0.0" prefWidth="208.0" text="Realized Orders Median" />
+                  <TableColumn fx:id="medianColCancelled" editable="false" minWidth="0.0" prefWidth="208.0" text="Canceled Orders Median" />
+                  <TableColumn fx:id="medianColLateArrivals" editable="false" minWidth="0.0" prefWidth="208.0" text="Late Arrivals Median" />
+               </columns>
+            </TableView>
+            <TableView fx:id="tableViewDist" layoutX="30.0" layoutY="320.0" prefHeight="125.0" prefWidth="624.0" styleClass="statisticsTable">
+               <columns>
+                  <TableColumn fx:id="distColRealized" editable="false" minWidth="0.0" prefWidth="208.0" text="Realized Orders Dist" />
+                  <TableColumn fx:id="distColCancelled" editable="false" minWidth="0.0" prefWidth="208.0" text="Canceled Orders Dist" />
+                  <TableColumn fx:id="distColLateArrivals" editable="false" minWidth="0.0" prefWidth="208.0" text="Late Arrivals Dist" />
                </columns>
             </TableView>
 				<VBox fx:id="infoBox" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="113.0" prefWidth="299.0" spacing="0.0" styleClass="bigInfoLabel">

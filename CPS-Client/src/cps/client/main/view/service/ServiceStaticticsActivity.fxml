@@ -31,9 +31,9 @@
             <Label alignment="CENTER" styleClass="statisticsLabelUnderTables" text="Monthly statistics" />
             <TableView fx:id="tableView1" prefHeight="346.0" prefWidth="614.0" styleClass="statisticsTable">
                <columns>
-                  <TableColumn fx:id="colWeeklyDayOfTheWeek" editable="false" prefWidth="204.0" text="Day of the week" />
-                  <TableColumn fx:id="colWeeklyProcessed" editable="false" prefWidth="207.0" text="Processed orders" />
-                  <TableColumn fx:id="colWeeklyCancelled" editable="false" minWidth="0.0" prefWidth="203.0" text="Cancelled orders" />
+                  <TableColumn fx:id="colWeeklyDayOfTheWeek" editable="false" prefWidth="204.0" text="realizedOrders" />
+                  <TableColumn fx:id="colWeeklyProcessed" editable="false" prefWidth="207.0" text="canceledOrders" />
+                  <TableColumn fx:id="colWeeklyCancelled" editable="false" minWidth="0.0" prefWidth="203.0" text="disabledParkingHours" />
                </columns>
             </TableView>
             <Label alignment="CENTER" styleClass="statisticsLabelUnderTables" text="Number of overall hours for disabled parking places: (integer)" />
