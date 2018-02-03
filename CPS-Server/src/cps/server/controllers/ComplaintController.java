@@ -51,7 +51,7 @@ public class ComplaintController extends RequestController {
       errorIfNull(lot, String.format("Parking Lot with id %d does not exist", request.getLotID()));
       
       Complaint complaint = Complaint.create(conn, customer.getId(), request.getLotID(), request.getContent(),
-          Timestamp.valueOf(LocalDateTime.now()), null);
+          Timestamp.valueOf(now()), null);
 
       errorIfNull(complaint, "Failed to create complaint");
 
@@ -60,7 +60,7 @@ public class ComplaintController extends RequestController {
       
       // XXX Statistics
       // Add complaint to monthly statistics
-      StatisticsCollector.increaseComplaints(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), request.getLotID());
+      StatisticsCollector.increaseComplaints(conn, now().getYear(), now().getMonthValue(), request.getLotID());
 
       return response;
     });
@@ -85,14 +85,14 @@ public class ComplaintController extends RequestController {
       complaint.setEmployeeID(employee.getId());
       complaint.setRefundAmount(action.getAmount());
       complaint.setReason(action.getReason());
-      complaint.setResolvedAt(Timestamp.valueOf(LocalDateTime.now()));
+      complaint.setResolvedAt(Timestamp.valueOf(now()));
       complaint.setStatus(Constants.COMPLAINT_STATUS_ACCEPTED);
       complaint.update(conn);
 
       //XXX Statistics
       // Count as closed and refunded
-      MonthlyReport.increaseClosed(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());
-      MonthlyReport.increaseRefunded(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());      
+      MonthlyReport.increaseClosed(conn, now().getYear(), now().getMonthValue(), complaint.getLotID());
+      MonthlyReport.increaseRefunded(conn, now().getYear(), now().getMonthValue(), complaint.getLotID());      
 
       response.setComplaintID(complaint.getId());
       response.setCustomerID(customer.getId());
@@ -120,13 +120,13 @@ public class ComplaintController extends RequestController {
 
       complaint.setEmployeeID(employee.getId());
       complaint.setReason(action.getReason());
-      complaint.setResolvedAt(Timestamp.valueOf(LocalDateTime.now()));
+      complaint.setResolvedAt(Timestamp.valueOf(now()));
       complaint.setStatus(Constants.COMPLAINT_STATUS_REJECTED);
       complaint.update(conn);
       
       //XXX Statistics
       //Count as closed
-      MonthlyReport.increaseClosed(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), complaint.getLotID());
+      MonthlyReport.increaseClosed(conn, now().getYear(), now().getMonthValue(), complaint.getLotID());
 
       response.setComplaintID(complaint.getId());
       response.setCustomerID(customer.getId());

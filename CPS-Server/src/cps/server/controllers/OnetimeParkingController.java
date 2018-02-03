@@ -146,7 +146,7 @@ public class OnetimeParkingController extends RequestController {
     Timestamp startTime = Timestamp.valueOf(request.getPlannedStartTime());
     Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
     ReservedParkingResponse response = new ReservedParkingResponse();
-    ServerResponse toRet = handle(request, session, response, startTime, plannedEndTime, LocalDateTime.now());
+    ServerResponse toRet = handle(request, session, response, startTime, plannedEndTime, now());
     if (toRet.success()) {
       // TODO Tegra - increase daily statistics for ReservedParkingRequest
     }
@@ -171,7 +171,7 @@ public class OnetimeParkingController extends RequestController {
       // Calculate refund amount based on how late the cancel request was
       // submitted
       // relative to the parking start time
-      Duration duration = Duration.between(LocalDateTime.now(), service.getPlannedStartTime().toLocalDateTime());
+      Duration duration = Duration.between(now(), service.getPlannedStartTime().toLocalDateTime());
 
       float refundValue = 1.0f;
 

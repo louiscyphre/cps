@@ -1,5 +1,7 @@
 package cps.server.controllers;
 
+import java.time.LocalDateTime;
+
 import com.google.gson.Gson;
 
 import cps.server.ServerController;
@@ -44,5 +46,9 @@ public abstract class RequestController {
 
   void errorIfNull(Object object, String message) throws ServerException {
     errorIf(object == null, message);
+  }
+  
+  LocalDateTime now() {
+    return serverController.getClock().now();
   }
 }

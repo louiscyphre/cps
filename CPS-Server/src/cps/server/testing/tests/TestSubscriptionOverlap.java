@@ -1,36 +1,18 @@
 package cps.server.testing.tests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import cps.common.Constants;
 import cps.entities.models.Customer;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
-import cps.server.ServerConfig;
-import cps.server.ServerController;
 import cps.server.ServerException;
-import cps.server.database.DatabaseController;
-import cps.server.session.SessionHolder;
+import cps.server.testing.utilities.ServerControllerTest;
 
-public class TestSubscriptionOverlap {
-
-  ServerController   server;
-  DatabaseController db;
-  SessionHolder      context = new SessionHolder();
-
-  @Before
-  public void setUp() throws Exception {
-    this.server = new ServerController(ServerConfig.testing());
-    this.db = server.getDatabaseController();
-    db.truncateTables();
-  }
+public class TestSubscriptionOverlap extends ServerControllerTest {
 
   @Test
   public void testSubscriptionOverlap()

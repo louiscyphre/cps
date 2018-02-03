@@ -38,20 +38,10 @@ import cps.server.database.DatabaseController;
 import cps.server.session.CustomerSession;
 import cps.server.session.SessionHolder;
 import cps.server.testing.utilities.CustomerData;
+import cps.server.testing.utilities.ServerControllerTest;
 
 @SuppressWarnings("unused")
-public class TestInsertionAlgorithm {
-
-  ServerController   server;
-  DatabaseController db;
-  SessionHolder      context = new SessionHolder();
-
-  @Before
-  public void setUp() throws Exception {
-    this.server = new ServerController(ServerConfig.testing());
-    this.db = server.getDatabaseController();
-    db.truncateTables();
-  }
+public class TestInsertionAlgorithm extends ServerControllerTest {
 
   @Test
   public void testInsertCars() throws ServerException {
@@ -80,7 +70,7 @@ public class TestInsertionAlgorithm {
      */
 
     Timestamp[] a = new Timestamp[10];
-    // Begining of a car park
+    // Beginning of a car park
     a[0] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(5));
     // exit in two hours
     a[1] = Timestamp.valueOf(LocalDateTime.now().plusHours(2));
@@ -179,7 +169,7 @@ public class TestInsertionAlgorithm {
   private CarTransportation newParkingEntry(OnetimeService _cdata) {
     ParkingEntryRequest request = new ParkingEntryRequest(_cdata.getCustomerID(), 0, _cdata.getLotID(),
         _cdata.getCarID());
-    ParkingEntryResponse respo = (ParkingEntryResponse) server.dispatch(request, context);
+    ParkingEntryResponse respo = (ParkingEntryResponse) server.dispatch(request, getContext());
     assertNotNull(respo);
     assertTrue(ServerResponse.STATUS_OK == respo.getStatus());
     return new CarTransportation(respo.getCustomerID(), _cdata.getCarID(), Constants.LICENSE_TYPE_ONETIME,

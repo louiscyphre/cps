@@ -39,13 +39,14 @@ import cps.server.database.DatabaseController;
 import cps.server.session.SessionHolder;
 import junit.framework.TestCase;
 
-//@SuppressWarnings("unused")
+// @SuppressWarnings("unused")
 public abstract class ServerControllerTest extends TestCase {
   protected ServerController   server;
   protected DatabaseController db;
   protected Gson               gson   = new Gson();
   private boolean              silent = false;
   private SessionHolder        context;
+  private MockTimeProvider     clock;
 
   public boolean isSilent() {
     return silent;
@@ -59,10 +60,19 @@ public abstract class ServerControllerTest extends TestCase {
     return context;
   }
 
+  public MockTimeProvider getClock() {
+    return clock;
+  }
+
+  public void setClock(MockTimeProvider clock) {
+    this.clock = clock;
+  }
+
   @Override
   protected void setUp() throws Exception {
     this.context = new SessionHolder();
-    this.server = new ServerController(ServerConfig.testing());
+    this.clock = new MockTimeProvider();
+    this.server = new ServerController(ServerConfig.testing(), clock);
     this.db = server.getDatabaseController();
     db.truncateTables();
   }
@@ -105,8 +115,7 @@ public abstract class ServerControllerTest extends TestCase {
     assertEquals(1, db.countEntities("customer"));
     assertEquals(1, db.countEntities("subscription_service"));
 
-    Collection<SubscriptionService> entries = db
-        .performQuery(conn -> SubscriptionService.findByCustomerID(conn, data.customerID));
+    Collection<SubscriptionService> entries = db.performQuery(conn -> SubscriptionService.findByCustomerID(conn, data.customerID));
     assertEquals(1, entries.size());
 
     SubscriptionService entry = entries.iterator().next();
@@ -146,8 +155,7 @@ public abstract class ServerControllerTest extends TestCase {
     // Make the request
     LocalDate startDate = LocalDate.now();
     LocalTime dailyExitTime = LocalTime.of(17, 30);
-    RegularSubscriptionRequest request = new RegularSubscriptionRequest(data.customerID, data.email, data.carID,
-        startDate, data.lotID, dailyExitTime);
+    RegularSubscriptionRequest request = new RegularSubscriptionRequest(data.customerID, data.email, data.carID, startDate, data.lotID, dailyExitTime);
 
     // Run general tests
     requestSubscription(request, context, data, holder);
@@ -178,8 +186,7 @@ public abstract class ServerControllerTest extends TestCase {
     assertEquals(1, db.countEntities("customer"));
     assertEquals(1, db.countEntities("onetime_service"));
 
-    Collection<OnetimeService> entries = db
-        .performQuery(conn -> OnetimeService.findByCustomerID(conn, data.customerID));
+    Collection<OnetimeService> entries = db.performQuery(conn -> OnetimeService.findByCustomerID(conn, data.customerID));
     assertEquals(1, entries.size());
 
     OnetimeService entry = entries.iterator().next();
@@ -203,8 +210,7 @@ public abstract class ServerControllerTest extends TestCase {
 
     // Make the request
     LocalDateTime plannedEndTime = LocalDateTime.now().plusHours(8).withNano(0);
-    IncidentalParkingRequest request = new IncidentalParkingRequest(data.customerID, data.email, data.carID, data.lotID,
-        plannedEndTime);
+    IncidentalParkingRequest request = new IncidentalParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedEndTime);
 
     // Run general tests
     requestOnetimeParking(request, context, data, holder);
@@ -220,8 +226,7 @@ public abstract class ServerControllerTest extends TestCase {
     // Make the request
     LocalDateTime plannedStartTime = LocalDateTime.now().plus(delta).withNano(0);
     LocalDateTime plannedEndTime = plannedStartTime.plusHours(8);
-    ReservedParkingRequest request = new ReservedParkingRequest(data.customerID, data.email, data.carID, data.lotID,
-        plannedStartTime, plannedEndTime);
+    ReservedParkingRequest request = new ReservedParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedStartTime, plannedEndTime);
 
     // Run general tests
     requestOnetimeParking(request, context, data, holder);
@@ -243,7 +248,7 @@ public abstract class ServerControllerTest extends TestCase {
     assertEquals(1, db.countEntities("parking_lot"));
     return lot;
   }
-  
+
   protected ParkingLot initParkingLot(String lotAddress, int width, float price1, float price2, String robotIP) throws ServerException {
     return db.performQuery(conn -> ParkingLot.create(conn, lotAddress, width, price1, price2, "12.f.t43"));
   }
@@ -254,7 +259,7 @@ public abstract class ServerControllerTest extends TestCase {
     ServerResponse response = server.dispatch(request, context);
     assertNotNull(response);
     printObject(response);
-    
+
     if (!weekend) {
       assertTrue(response.success());
       assertEquals(1, db.countEntities("car_transportation"));
@@ -263,10 +268,10 @@ public abstract class ServerControllerTest extends TestCase {
     } else {
       assertFalse(response.success());
     }
-    
+
     return response.success();
   }
-  
+
   protected boolean requestParkingEntry(CustomerData data, SessionHolder context) throws ServerException {
     return requestParkingEntry(data, context, false);
   }

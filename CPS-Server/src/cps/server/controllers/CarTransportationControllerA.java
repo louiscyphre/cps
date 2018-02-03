@@ -406,14 +406,14 @@ public class CarTransportationControllerA extends RequestController implements C
       priority = worstPriority;
     } else {
       // if more than two days - worst priority
-      if (exitTime.isAfter(LocalDateTime.now().plusDays(2))) {
+      if (exitTime.isAfter(now().plusDays(2))) {
         priority = worstPriority;
       } else {
         /* if less that two days divide minutes until exit by minutes in two
          * days it will give us a number between 0 and 1 multiply by size and
          * add 3 this means that we will attempt to inserts the car further back
          * before trying to put it somewhere in the way of transportation */
-        priority = (int) (3 + (lotSize) * (LocalDateTime.now().until(exitTime, ChronoUnit.MINUTES)) / (LocalTime.MAX.toSecondOfDay() * 2 / 60));
+        priority = (int) (3 + (lotSize) * (now().until(exitTime, ChronoUnit.MINUTES)) / (LocalTime.MAX.toSecondOfDay() * 2 / 60));
         // if there was an error in calculations we want to know for debug
         if (priority > worstPriority || priority < 0) {
           System.out.printf("Error in calculations!!! Priority = %d", priority);

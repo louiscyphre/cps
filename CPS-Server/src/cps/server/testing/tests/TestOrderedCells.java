@@ -1,34 +1,17 @@
 package cps.server.testing.tests;
 
-import static org.junit.Assert.assertTrue;
-
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import cps.common.Constants;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
-import cps.server.ServerConfig;
-import cps.server.ServerController;
 import cps.server.ServerException;
-import cps.server.database.DatabaseController;
-import cps.server.session.SessionHolder;
+import cps.server.testing.utilities.ServerControllerTest;
 
-public class TestOrderedCells {
-
-	ServerController server;
-	DatabaseController db;
-	SessionHolder context = new SessionHolder();
-
-	@Before
-	public void setUp() throws Exception {
-		this.server = new ServerController(ServerConfig.testing());
-		this.db = server.getDatabaseController();
-		db.truncateTables();
-	}
+public class TestOrderedCells extends ServerControllerTest {
 
 	@Test
 	public void testCountOrderedCells() throws ServerException {

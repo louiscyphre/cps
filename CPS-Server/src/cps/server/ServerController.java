@@ -61,6 +61,7 @@ import cps.server.session.SessionHolder;
  * */
 public class ServerController implements RequestHandler<SessionHolder> {
   private final ServerConfig                config;
+  private final TimeProvider                clock;
   private final DatabaseController          databaseController;
   private final LotController               lotController;
   private final OnetimeParkingController    onetimeParkingController;
@@ -73,12 +74,11 @@ public class ServerController implements RequestHandler<SessionHolder> {
   private final ReportController            reportController;
 
   /** Constructs an instance of the server controller.
-   * @param config
-   *        the config
-   * @throws Exception
-   *         the exception */
-  public ServerController(ServerConfig config) throws Exception {
+   * @param config the configuration settings
+   * @throws Exception on error */
+  public ServerController(ServerConfig config, TimeProvider clock) throws Exception {
     this.config = config;
+    this.clock = clock;
     databaseController = new DatabaseController(config);
     lotController = new LotController(this);
     onetimeParkingController = new OnetimeParkingController(this);
@@ -93,6 +93,10 @@ public class ServerController implements RequestHandler<SessionHolder> {
 
   public ServerConfig getConfig() {
     return config;
+  }
+
+  public TimeProvider getClock() {
+    return clock;
   }
 
   public DatabaseController getDatabaseController() {
