@@ -155,6 +155,8 @@ public class DatabaseController {
       result = query.perform(conn);
     } catch (SQLException ex) {
       handleSQLException(ex);
+    } catch (Exception ex) {
+      ex.printStackTrace();
     } finally {
       closeConnection(conn);
     }
@@ -179,6 +181,10 @@ public class DatabaseController {
     } catch (SQLException ex) {
       handleSQLException(ex);
     } catch (ServerException ex) {
+      response.setError(ex.getMessage());
+      return response;
+    } catch (Exception ex) {
+      ex.printStackTrace();
       response.setError(ex.getMessage());
       return response;
     } finally {

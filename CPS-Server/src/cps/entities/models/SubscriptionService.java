@@ -522,8 +522,8 @@ public class SubscriptionService implements ParkingService {
    * @return the number of subscription service records in the database
    * @throws SQLException on error */
   public static int countAll(Connection conn) throws SQLException {
-    return new QueryBuilder<Integer>("SELECT count(*) FROM subscription_service WHERE not completed AND not canceled AND adddate(curdate(), interval 1 month) <= end_date")
-        .fetchResult(conn, result -> result.getInt(1));
+    return new QueryBuilder<Integer>("SELECT customer_id FROM subscription_service WHERE not completed AND not canceled AND adddate(curdate(), interval 1 month) <= end_date GROUP BY customer_id")
+        .countResults(conn);
   }
 
   /** Count all customers that own an active subscription for more than one car.
@@ -532,9 +532,9 @@ public class SubscriptionService implements ParkingService {
    * @throws SQLException on error */
   public static int countWithMultipleCars(Connection conn) throws SQLException {
     return new QueryBuilder<Integer>(String.join(" ",
-      "SELECT count(a.id) FROM subscription_service a INNER JOIN subscription_service b",
+      "SELECT a.customer_id FROM subscription_service a INNER JOIN subscription_service b",
       "ON a.customer_id = b.customer_id AND a.car_id != b.car_id GROUP BY a.customer_id"))
-      .fetchResult(conn, result -> result.getInt(1));
+      .countResults(conn);
   }
 
   /** Find all subscriptions that are going to expire after the specified period of time.

@@ -104,10 +104,10 @@ public class ReportController extends RequestController {
       
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER, "Only the Global Manager can perform this action");
       
-      response.setSuccess("Performance Report retrieved succesfully");
       response.setDate(LocalDate.now());
       response.setNumberOfSubscriptions(SubscriptionService.countAll(conn));
       response.setNumberOfSubscriptionsWithMultipleCars(SubscriptionService.countWithMultipleCars(conn));
+      response.setSuccess("Performance Report retrieved succesfully");
       
       return response;
     });
