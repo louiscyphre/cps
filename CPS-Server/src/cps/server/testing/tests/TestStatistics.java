@@ -12,6 +12,7 @@ import static org.junit.Assert.assertThat;
 import cps.api.request.Request;
 import cps.api.response.ServerResponse;
 import cps.entities.models.ParkingLot;
+import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.session.CompanyPersonService;
@@ -28,6 +29,11 @@ public class TestStatistics extends ServerControllerTest implements World {
   int numParkingLots;
   int numEmployees;
   Duration timeSlice;
+  
+  public TestStatistics() {
+    super(ServerConfig.testing());
+//    super(ServerConfig.local());
+  }
 
   @Before
   public void setUp() throws Exception {
@@ -79,22 +85,24 @@ public class TestStatistics extends ServerControllerTest implements World {
     // Initialize parking lots
     makeLots();
     
-    // Run in a loop for 1 year
+    // Run in a loop for a specified period
     setTime(LocalDateTime.now());
     
-//    LocalDateTime endOfTime = getTime().plusMonths(12);
-    LocalDateTime endOfTime = getTime().plusDays(30);
+    LocalDateTime endOfTime = getTime().plusMonths(3);
     
     int epoch = 1;
     int j = 0;
     
     // Make sure that the initial actions are in order, so that the IDs match the tokens    
     for (; getTime().isBefore(endOfTime) && j < customers.length; tick()) {
-      System.out.printf("Epoch: %d\n", epoch++);      
+      System.out.printf("Epoch: %d\n", epoch);
+      
       customers[j].act(this);
       if (customers[j].getCustomerID() != 0) {
         j++;
       }
+      
+      epoch++;
     }
     
     // Do the rest of actions in random order (whoever decides to act first gets to act)

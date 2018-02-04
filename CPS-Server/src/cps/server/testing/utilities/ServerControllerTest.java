@@ -47,6 +47,7 @@ public abstract class ServerControllerTest extends TestCase {
   private boolean              silent = false;
   private SessionHolder        context;
   private MockTimeProvider     clock;
+  private ServerConfig         config = null;
 
   public boolean isSilent() {
     return silent;
@@ -67,20 +68,36 @@ public abstract class ServerControllerTest extends TestCase {
   public void setClock(MockTimeProvider clock) {
     this.clock = clock;
   }
-  
+
   public LocalDateTime getTime() {
     return clock.now();
   }
-  
+
   public void setTime(LocalDateTime time) {
     clock.set(time);
+  }
+
+  public ServerConfig getConfig() {
+    return config;
+  }
+
+  public void setConfig(ServerConfig config) {
+    this.config = config;
+  }
+
+  public ServerControllerTest() {
+    this.config = ServerConfig.testing();
+  }
+
+  public ServerControllerTest(ServerConfig config) {
+    this.config = config;
   }
 
   @Override
   protected void setUp() throws Exception {
     this.context = new SessionHolder();
     this.clock = new MockTimeProvider();
-    this.server = new ServerController(ServerConfig.testing(), clock);
+    this.server = new ServerController(config, clock);
     this.db = server.getDatabaseController();
     db.truncateTables();
   }
@@ -96,7 +113,7 @@ public abstract class ServerControllerTest extends TestCase {
       System.out.println(String.format("%s: %s", object.getClass().getSimpleName(), gson.toJson(object)));
     }
   }
-  
+
   public String formatObject(Object object) {
     return String.format("%s: %s", object.getClass().getSimpleName(), gson.toJson(object));
   }
