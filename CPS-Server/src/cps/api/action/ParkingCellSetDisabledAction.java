@@ -10,7 +10,7 @@ public class ParkingCellSetDisabledAction extends ParkingCellToggleAction {
   }
   
   public ParkingCellSetDisabledAction(int userID, int lotID, int locationI, int locationJ, int locationK) {
-    super(userID, lotID, locationI, locationJ, locationK);
+    super(userID, lotID, locationI, locationJ, locationK, true);
   }
 
   private static final long serialVersionUID = 1L;

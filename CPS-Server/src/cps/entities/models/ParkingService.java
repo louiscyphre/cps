@@ -3,6 +3,7 @@ package cps.entities.models;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /** A common set of methods to OnetimeService and SubscriptionService entities, that can be called without knowing what is the underlying type of the parking service.
@@ -12,7 +13,7 @@ public interface ParkingService extends Serializable {
 
   public int getLicenseType();
 
-  public LocalDateTime getExitTime();
+  public LocalDateTime getExitTime(LocalDate now);
   
   public boolean isParked();
 
@@ -39,5 +40,5 @@ public interface ParkingService extends Serializable {
 
   /** Should the service be marked as complete after the customer exits parking.
    * @return true if should be marked as complete */
-  public boolean shouldCompleteAfterExit();
+  public boolean shouldCompleteAfterExit(LocalDateTime now);
 }

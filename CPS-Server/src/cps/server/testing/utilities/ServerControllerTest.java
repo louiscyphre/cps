@@ -167,7 +167,7 @@ public abstract class ServerControllerTest extends TestCase {
     Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    LocalDate startDate = LocalDate.now();
+    LocalDate startDate = getTime().toLocalDate();
     FullSubscriptionRequest request = new FullSubscriptionRequest(data.customerID, data.email, data.carID, startDate);
 
     // Run general tests
@@ -182,7 +182,7 @@ public abstract class ServerControllerTest extends TestCase {
     Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    LocalDate startDate = LocalDate.now();
+    LocalDate startDate = getTime().toLocalDate();
     LocalTime dailyExitTime = LocalTime.of(17, 30);
     RegularSubscriptionRequest request = new RegularSubscriptionRequest(data.customerID, data.email, data.carID, startDate, data.lotID, dailyExitTime);
 
@@ -238,7 +238,7 @@ public abstract class ServerControllerTest extends TestCase {
     Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    LocalDateTime plannedEndTime = LocalDateTime.now().plusHours(8).withNano(0);
+    LocalDateTime plannedEndTime = getTime().plusHours(8).withNano(0);
     IncidentalParkingRequest request = new IncidentalParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedEndTime);
 
     // Run general tests
@@ -253,7 +253,7 @@ public abstract class ServerControllerTest extends TestCase {
     Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    LocalDateTime plannedStartTime = LocalDateTime.now().plus(delta).withNano(0);
+    LocalDateTime plannedStartTime = getTime().plus(delta).withNano(0);
     LocalDateTime plannedEndTime = plannedStartTime.plusHours(8);
     ReservedParkingRequest request = new ReservedParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedStartTime, plannedEndTime);
 

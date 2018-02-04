@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 
 import cps.api.request.ParkingEntryRequest;
 import cps.api.response.ParkingEntryResponse;
@@ -62,15 +61,13 @@ public class ParkingEntryController extends RequestController {
     });
   }
 
-  void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service)
-      throws SQLException, ServerException {
+  void registerEntry(Connection conn, ParkingLot lot, int customerID, String carID, ParkingService service) throws SQLException, ServerException {
     // Check that the lot does not already contain the car
     errorIf(lot.contains(lot.constructContentArray(conn), carID), "This car is already parked in the chosen lot");
-    
 
     // Check that other lots don't already contain the car
-     CarTransportation transportation = CarTransportation.findParked(conn, carID);
-     errorIf(transportation != null, "The car with the specified ID was already parked");
+    CarTransportation transportation = CarTransportation.findParked(conn, carID);
+    errorIf(transportation != null, "The car with the specified ID was already parked");
 
     // Attempt to insert the car into the lot.
     // Optimal coordinates are calculated before insertion.
@@ -80,10 +77,11 @@ public class ParkingEntryController extends RequestController {
     // The function will create table entry to record where the car was
     // placed
     CarTransportationController transportationController = serverController.getTransportationController();
-    transportationController.insertCar(conn, lot, carID, service.getExitTime());
-    
+    transportationController.insertCar(conn, lot, carID, service.getExitTime(now().toLocalDate()));
+
     // XXX Statistics - realized orders
-    StatisticsCollector.increaseRealizedOrder(conn, service.getId(), service.getLicenseType(), service.getParkingType(), lot.getId(), service.isWarned());
+    StatisticsCollector.increaseRealizedOrder(conn, now().toLocalDate(), service.getId(), service.getLicenseType(), service.getParkingType(), lot.getId(),
+        service.isWarned());
 
     if (!service.isParked()) {
       service.setParked(true);
@@ -98,8 +96,7 @@ public class ParkingEntryController extends RequestController {
 
   }
 
-  private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request)
-      throws SQLException, ServerException {
+  private ParkingService findEntryLicense(Connection conn, ServerResponse response, ParkingEntryRequest request) throws SQLException, ServerException {
     int customerID = request.getCustomerID();
     String carID = request.getCarID();
     int lotID = request.getLotID();
@@ -112,8 +109,7 @@ public class ParkingEntryController extends RequestController {
 
       // Check that an entry license exists
       OnetimeService service = OnetimeService.findForEntry(conn, customerID, carID, lotID);
-      errorIfNull(service,
-          "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      errorIfNull(service, "OnetimeService entry license not found for customer ID " + customerID + " with car ID " + carID);
       errorIf(service.isParked(), "You are already parking with this reservation");
       errorIf(service.isCompleted(), "This reservation was already completed");
       errorIf(service.isCanceled(), "This reservation was canceled");
@@ -128,29 +124,27 @@ public class ParkingEntryController extends RequestController {
       SubscriptionService service = SubscriptionService.findForEntry(conn, customerID, carID, subsID);
       errorIf(service.isParked(), "You are already parking with this subscription");
       errorIf(service.isCompleted(), "This subscription has expired");
-      
+
       // TODO is it possible to cancel a subscription?
       errorIf(service.isCanceled(), "This subscription was canceled");
 
       // Allow entry only once a day for regular subscription
       if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
-        CarTransportation transportation = CarTransportation.findCompletedSubscriptionEntryByDate(
-            conn, customerID, carID, lotID, service.getId(), LocalDate.now());
+        CarTransportation transportation = CarTransportation.findCompletedSubscriptionEntryByDate(conn, customerID, carID, lotID, service.getId(),
+            now().toLocalDate());
         errorIf(transportation != null, "This subscription was already used today");
       }
 
       // Check that entry an license exists
-      errorIfNull(service,
-          "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      errorIfNull(service, "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
 
       // Check that the lot ID is correct for regular subscription
       errorIf(service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && lotID != service.getLotID(),
-          String.format("Requested parking in lotID = %s, but subscription is for lotID = %s", lotID,
-              service.getLotID()));
+          String.format("Requested parking in lotID = %s, but subscription is for lotID = %s", lotID, service.getLotID()));
 
       // Check that the user is not trying to enter with a regular subscription
       // on a weekend
-      DayOfWeek currentDay = LocalDate.now().getDayOfWeek();
+      DayOfWeek currentDay = now().toLocalDate().getDayOfWeek();
       errorIf(service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && isWeekend(currentDay),
           "Regular subscription cannot be used to park during weekends");
 

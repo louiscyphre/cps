@@ -3,8 +3,6 @@ package cps.server.controllers;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import cps.api.request.ParkingExitRequest;
 import cps.api.response.ParkingExitResponse;
@@ -59,7 +57,7 @@ public class ParkingExitController extends RequestController {
       ParkingService service = transportation.getParkingService(conn);
       service.setParked(false);
       
-      if (service.shouldCompleteAfterExit()) {
+      if (service.shouldCompleteAfterExit(now())) {
         service.setCompleted(true);
       }
       
@@ -80,7 +78,7 @@ public class ParkingExitController extends RequestController {
     });
   }
 
-  static float calculatePayment(Connection conn, CarTransportation carTransportation,
+  float calculatePayment(Connection conn, CarTransportation carTransportation,
       ParkingExitRequest exitRequest) throws SQLException, ServerException {
 
     // Determine if this is a subscription or one time
@@ -148,10 +146,10 @@ public class ParkingExitController extends RequestController {
     return sum;
   }
 
-  static float calculatePayment(Connection conn, CarTransportation carTransportation,
+  float calculatePayment(Connection conn, CarTransportation carTransportation,
       ParkingExitRequest exitRequest, SubscriptionService service) throws SQLException, ServerException {
     if (service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
-      Timestamp plannedExitTime = Timestamp.valueOf(LocalDateTime.of(LocalDate.now(), service.getDailyExitTime()));
+      Timestamp plannedExitTime = Timestamp.valueOf(service.getExitTime(now().toLocalDate()));
 
       long removedAt = carTransportation.getRemovedAt().getTime();
       long lateMinutes = (removedAt - plannedExitTime.getTime()) / 60 / 1000;

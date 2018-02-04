@@ -85,10 +85,8 @@ public class TestStatistics extends ServerControllerTest implements World {
     // Initialize parking lots
     makeLots();
     
-    // Run in a loop for a specified period
-    setTime(LocalDateTime.now());
-    
-    LocalDateTime endOfTime = getTime().plusMonths(3);
+    // Run in a loop for a specified period    
+    LocalDateTime endOfTime = getTime().plusMonths(2);
     
     int epoch = 1;
     int j = 0;

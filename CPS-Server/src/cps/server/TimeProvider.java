@@ -8,4 +8,5 @@ public interface TimeProvider {
   /** Return the current date-time.
    * @return the local date time */
   public LocalDateTime now();
+  public TimeProvider copy();
 }

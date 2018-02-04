@@ -33,4 +33,9 @@ public class MockTimeProvider implements TimeProvider {
     this.value = value;
   }
 
+  @Override
+  public TimeProvider copy() {
+    return new MockTimeProvider(value);
+  }
+
 }

@@ -12,4 +12,9 @@ public class RealTimeProvider implements TimeProvider {
     return LocalDateTime.now();
   }
 
+  @Override
+  public TimeProvider copy() {
+    return new RealTimeProvider();
+  }
+
 }

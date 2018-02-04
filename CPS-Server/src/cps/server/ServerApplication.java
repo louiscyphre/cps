@@ -49,7 +49,7 @@ public class ServerApplication extends AbstractServer {
 
   private void initialize(ServerConfig config) throws Exception {
     // Create background thread to poll the database every minute
-    reminder = new Reminder(config);
+    reminder = new Reminder(config, new RealTimeProvider());
     reminder.start();
   }
 

@@ -140,7 +140,7 @@ public class DailyStatistics implements Serializable {
     st.setInt(2, lotId);
     ResultSet rs = st.executeQuery();
 
-    if (rs.wasNull()) {
+    if (!rs.next()) {
       item = create(conn, _date, lotId);
       // if doesn't exists - create empty line with zeroes
     }
@@ -150,24 +150,16 @@ public class DailyStatistics implements Serializable {
     return item;
   }
 
-  /** Increase realized order count by one for today in specific parking lot.
-   * @param conn the SQL connection
-   * @param lotId the lot id
-   * @throws SQLException on error
-   * @throws ServerException on error */
-  public static void increaseRealizedOrder(Connection conn, int lotId) throws SQLException, ServerException {
-    increaseRealizedOrder(conn, LocalDate.now(), lotId);
-  }
-
   /** Increase realized order count by one for the specified parking lot and date.
    * @param conn the SQL connection
-   * @param _date the date
+   * @param date the date
    * @param lotId the lot id
    * @throws SQLException on error
    * @throws ServerException on error */
-  public static void increaseRealizedOrder(Connection conn, LocalDate _date, int lotId) throws SQLException, ServerException {
+  public static void increaseRealizedOrder(Connection conn, LocalDate date, int lotId) throws SQLException, ServerException {
+    System.out.println("DailyStatistics::increaseRealizedOrder");
     // check if line exists in database
-    DailyStatistics entry = createIfNotExists(conn, _date, lotId);
+    DailyStatistics entry = createIfNotExists(conn, date, lotId);
 
     if (entry != null) {
       int index = 1;
@@ -175,7 +167,7 @@ public class DailyStatistics implements Serializable {
 
       // Increase the number of realized orders
       stmt.setInt(index++, entry.getRealizedOrders() + 1);
-      stmt.setDate(index++, Date.valueOf(_date));
+      stmt.setDate(index++, Date.valueOf(date));
       stmt.setInt(index++, lotId);
 
       stmt.executeUpdate();
@@ -203,7 +195,7 @@ public class DailyStatistics implements Serializable {
       st.setInt(2, lotId);
       rs = st.executeQuery();
 
-      if (!rs.wasNull()) {
+      if (rs.next()) {
         item[i] = new DailyStatistics(rs);
 
       } else {
@@ -275,24 +267,15 @@ public class DailyStatistics implements Serializable {
     }
   }
 
-  /** Increase Late Arrival count by one for today in the specified parking lot.
-   * @param conn the SQL connection
-   * @param lotId the lot id
-   * @throws SQLException on error
-   * @throws ServerException on error */
-  public static void increaseLateArrival(Connection conn, int lotId) throws SQLException, ServerException {
-    increaseLateArrival(conn, LocalDate.now(), lotId);
-  }
-
   /** Increase Late Arrival count by one for the specified parking lot and date.
    * @param conn the SQL connection
-   * @param _date the date
+   * @param date the date
    * @param lotId the lot id
    * @throws SQLException on error
    * @throws ServerException on error */
-  public static void increaseLateArrival(Connection conn, LocalDate _date, int lotId) throws SQLException, ServerException {
+  public static void increaseLateArrival(Connection conn, LocalDate date, int lotId) throws SQLException, ServerException {
     // check if line exists in database
-    DailyStatistics entry = createIfNotExists(conn, _date, lotId);
+    DailyStatistics entry = createIfNotExists(conn, date, lotId);
 
     if (entry != null) {
       int index = 1;
@@ -300,7 +283,7 @@ public class DailyStatistics implements Serializable {
 
       // Increase the number of late arrivals
       stmt.setInt(index++, entry.getLateArrivals() + 1);
-      stmt.setDate(index++, Date.valueOf(_date));
+      stmt.setDate(index++, Date.valueOf(date));
       stmt.setInt(index++, lotId);
 
       stmt.executeUpdate();

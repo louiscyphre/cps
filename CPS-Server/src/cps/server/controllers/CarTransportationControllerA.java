@@ -397,7 +397,7 @@ public class CarTransportationControllerA extends RequestController implements C
 
   private int calculatePriority(LocalDateTime exitTime, int worstPriority, int lotSize) {
     int priority = worstPriority;
-    LocalDateTime fullSubscriptionTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+    LocalDateTime fullSubscriptionTime = LocalDateTime.of(now().toLocalDate(), LocalTime.MIDNIGHT);
     /* Calculate exit priority if there is no exit time - it means we deal with
      * FULL SUBSCRIPTION which will perhaps stay for long hours or even more
      * than one day */

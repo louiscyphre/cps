@@ -11,6 +11,7 @@ import cps.entities.models.OnetimeService;
 import cps.entities.models.SubscriptionService;
 import cps.server.ServerConfig;
 import cps.server.ServerException;
+import cps.server.TimeProvider;
 import cps.server.database.DatabaseController;
 
 import static cps.common.Utilities.debugPrint;
@@ -23,13 +24,15 @@ import static cps.common.Utilities.debugPrintln;
  */
 public class Reminder extends Thread {
   DatabaseController db = null;
+  private TimeProvider clock;
 
   /** Number of milliseconds to wait until the next check. */
   private static final long INTERVAL = 60000; // Once in 1 minute
   // private static final long INTERVAL = 6000; // Once in 6 seconds
 
-  public Reminder(ServerConfig config) throws Exception {
+  public Reminder(ServerConfig config, TimeProvider clock) throws Exception {
     db = new DatabaseController(config);
+    this.clock = clock;
   }
 
   /*
@@ -81,7 +84,7 @@ public class Reminder extends Thread {
   private void warnLateCustomers() throws ServerException {
     db.performAction(conn -> {
       debugPrint("Searching late customers ");
-      Collection<OnetimeService> items = OnetimeService.findLateCustomers(conn, Duration.ofMinutes(0), false);
+      Collection<OnetimeService> items = OnetimeService.findLateCustomers(conn, clock.now(), Duration.ofMinutes(0), false);
 
       for (OnetimeService entry : items) {
         sendWarning(conn, entry);
@@ -103,7 +106,7 @@ public class Reminder extends Thread {
   private void cancelLateReservations() throws ServerException {
     db.performAction(conn -> {
       debugPrint("Searching customers who forfeited their reservation");
-      Collection<OnetimeService> items = OnetimeService.findLateCustomers(conn, Duration.ofMinutes(30), true);
+      Collection<OnetimeService> items = OnetimeService.findLateCustomers(conn, clock.now(), Duration.ofMinutes(30), true);
 
       for (OnetimeService entry : items) {
         entry.setCanceled(true);
@@ -127,7 +130,7 @@ public class Reminder extends Thread {
   private void warnSubscriptionOwners() throws ServerException {
     db.performAction(conn -> {
       debugPrint("Searching customers who have 1 week left on their subscription");
-      Collection<SubscriptionService> items = SubscriptionService.findExpiringAfter(conn, Duration.ofDays(7), true);
+      Collection<SubscriptionService> items = SubscriptionService.findExpiringAfter(conn, clock.now(), Duration.ofDays(7), true);
 
       for (SubscriptionService entry : items) {
         entry.setWarned(true);

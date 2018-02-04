@@ -73,7 +73,7 @@ public class SubscriptionController extends RequestController {
     return database.performQuery(serverResponse, (conn, response) -> {
 
       // Check that the start date is not in the past
-      errorIf(request.getStartDate().isBefore(LocalDate.now()), "The specified starting date is in the past");
+      errorIf(request.getStartDate().isBefore(now().toLocalDate()), "The specified starting date is in the past");
 
       if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
         // Check that lot exists
@@ -101,7 +101,7 @@ public class SubscriptionController extends RequestController {
       errorIfNull(service, "Failed to create SubscriptionService entry");
 
       // XXX Statistics
-      StatisticsCollector.increaseSubscription(conn, service.getSubscriptionType(), service.getLotID());
+      StatisticsCollector.increaseSubscription(conn, now().toLocalDate(), service.getSubscriptionType(), service.getLotID());
 
       // Calculate payment
       float payment = paymentForSubscription(conn, customer, service);

@@ -26,7 +26,7 @@ public class TestStatisticalReports extends ServerControllerTest {
     assertTrue(user == session.getUser());
     assertNotNull(session.getUser());
     
-    LocalDate start = LocalDate.now();
+    LocalDate start = getTime().toLocalDate();
     LocalDate end = start.plusMonths(1);
     
     GetPeriodicReportAction action = new GetPeriodicReportAction(user.getId(), start, end);

@@ -44,7 +44,7 @@ public class ReportController extends RequestController {
       errorIf(user.getAccessLevel() <= Constants.ACCESS_LEVEL_LOCAL_MANAGER && user.getDepartmentID() != action.getLotID(),
           "A LocalEmployee can perform this action only on their lot");
       
-      LocalDate weekStart = Utilities.findWeekStart(LocalDate.now());
+      LocalDate weekStart = Utilities.findWeekStart(now().toLocalDate());
       
       response.setSuccess("Weekly Report retrieved succesfully");
       response.setPeriod(weekStart, weekStart.plusDays(7), Duration.ofDays(7));
@@ -104,7 +104,7 @@ public class ReportController extends RequestController {
       
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER, "Only the Global Manager can perform this action");
       
-      response.setDate(LocalDate.now());
+      response.setDate(now().toLocalDate());
       response.setNumberOfSubscriptions(SubscriptionService.countAll(conn));
       response.setNumberOfSubscriptionsWithMultipleCars(SubscriptionService.countWithMultipleCars(conn));
       response.setSuccess("Performance Report retrieved succesfully");

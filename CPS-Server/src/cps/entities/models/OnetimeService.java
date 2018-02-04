@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -423,8 +424,8 @@ public class OnetimeService implements ParkingService {
   }
 
   @Override
-  public LocalDateTime getExitTime() {
-    return this.plannedEndTime.toLocalDateTime();
+  public LocalDateTime getExitTime(LocalDate now) {
+    return plannedEndTime.toLocalDateTime();
   }
 
   /** Find a OnetimeService record by ID, throw ServerException if not found.
@@ -478,9 +479,10 @@ public class OnetimeService implements ParkingService {
    * @param conn the SQL connection
    * @param delta the time interval within which the starting time of the reservation should be located
    * @param warned whether to search records where the customer was already warned, or records where the customer has not been warned yet
+   * @param now current date-time
    * @return the collection
    * @throws SQLException on error */
-  public static Collection<OnetimeService> findLateCustomers(Connection conn, Duration delta, boolean warned) throws SQLException {
+  public static Collection<OnetimeService> findLateCustomers(Connection conn, LocalDateTime now, Duration delta, boolean warned) throws SQLException {
     LinkedList<OnetimeService> items = new LinkedList<OnetimeService>();
     
     PreparedStatement stmt = conn.prepareStatement(
@@ -488,7 +490,7 @@ public class OnetimeService implements ParkingService {
             "SELECT os.*", "FROM onetime_service os", "WHERE os.planned_start_time <= ? ",
             "AND not parked AND not completed AND os.warned=? AND not os.canceled"));
     
-    stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now().minus(delta)));
+    stmt.setTimestamp(1, Timestamp.valueOf(now.minus(delta)));
     stmt.setBoolean(2, warned);
     ResultSet rs = stmt.executeQuery();
 
@@ -506,7 +508,7 @@ public class OnetimeService implements ParkingService {
    * @see cps.entities.models.ParkingService#shouldCompleteAfterExit()
    */
   @Override
-  public boolean shouldCompleteAfterExit() {
+  public boolean shouldCompleteAfterExit(LocalDateTime now) {
     return true;
   }
   

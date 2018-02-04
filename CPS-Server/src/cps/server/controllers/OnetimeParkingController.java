@@ -5,7 +5,6 @@ package cps.server.controllers;
 
 import java.sql.Timestamp;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -35,7 +34,6 @@ import cps.server.statistics.StatisticsCollector;
  * - Reserved Parking (Order now and park later) */
 public class OnetimeParkingController extends RequestController {
 
-  
   /** Instantiates a new onetime parking controller.
    * @param serverController the server application */
   public OnetimeParkingController(ServerController serverController) {
@@ -43,10 +41,8 @@ public class OnetimeParkingController extends RequestController {
   }
 
   /** Generalized handler for both types of Onetime Parking requests.
-   * 
    * Checks input parameters, updates database records, calculates payment, if applicable (Reserved Parking),
    * and charges the customer's account (if a payment was required).
-   * 
    * If the user was not logged in while making this request, will create a new user and send them the password.
    * After this, the user will be able to log in with their email address and the generated password.
    * @param request the request
@@ -56,8 +52,8 @@ public class OnetimeParkingController extends RequestController {
    * @param plannedEndTime the planned end time
    * @param now the now
    * @return the server response */
-  private ServerResponse handle(OnetimeParkingRequest request, CustomerSession session,
-      OnetimeParkingResponse serverResponse, Timestamp startTime, Timestamp plannedEndTime, LocalDateTime now) {
+  private ServerResponse handle(OnetimeParkingRequest request, CustomerSession session, OnetimeParkingResponse serverResponse, Timestamp startTime,
+      Timestamp plannedEndTime, LocalDateTime now) {
     return database.performQuery(serverResponse, (conn, response) -> {
       // Check that the same car is not going to be parked in different
       // locations at the same time
@@ -76,10 +72,8 @@ public class OnetimeParkingController extends RequestController {
 
       // Check that lot is not full
       // session.requireLotNotFull(conn, gson, lot, response);
-      int availableCells = lot.countFreeCells(conn)
-          - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
-      errorIf(lot.isLotFull() || availableCells <= 0,
-          "The specified lot is full; please try one of the alternative lots");
+      int availableCells = lot.countFreeCells(conn) - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
+      errorIf(lot.isLotFull() || availableCells <= 0, "The specified lot is full; please try one of the alternative lots");
 
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
@@ -89,9 +83,8 @@ public class OnetimeParkingController extends RequestController {
       boolean setParked = request.getParkingType() == Constants.PARKING_TYPE_INCIDENTAL;
 
       // Create the service
-      OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(),
-          request.getEmail(), request.getCarID(), request.getLotID(), startTime, plannedEndTime, setParked, false,
-          false, false);
+      OnetimeService service = OnetimeService.create(conn, request.getParkingType(), customer.getId(), request.getEmail(), request.getCarID(),
+          request.getLotID(), startTime, plannedEndTime, setParked, false, false, false);
       errorIfNull(service, "Failed to create OnetimeService entry");
 
       // Calculate payment for service
@@ -102,22 +95,23 @@ public class OnetimeParkingController extends RequestController {
       response.setPayment(payment);
 
       switch (service.getParkingType()) {
-        case Constants.PARKING_TYPE_RESERVED:
-          // If this was a reserved parking, customer has to pay in advance
-          customer.pay(conn, payment);
-          break;
-        case Constants.PARKING_TYPE_INCIDENTAL:
-          // If this was an incidental parking, customer's will be parked
-          // automatically
-          ParkingEntryController entryController = serverController.getEntryController();
-          entryController.registerEntry(conn, lot, customer.getId(), request.getCarID(), service);
-          break;
-        default:
-          error("Internal error: unknown parking type");
+      case Constants.PARKING_TYPE_RESERVED:
+        // If this was a reserved parking, customer has to pay in advance
+        customer.pay(conn, payment);
+        break;
+      case Constants.PARKING_TYPE_INCIDENTAL:
+        // If this was an incidental parking, customer's will be parked
+        // automatically
+        ParkingEntryController entryController = serverController.getEntryController();
+        entryController.registerEntry(conn, lot, customer.getId(), request.getCarID(), service);
+        break;
+      default:
+        error("Internal error: unknown parking type");
       }
 
       // XXX Statistics
-      StatisticsCollector.increaseOnetime(conn, service.getId(), service.getLicenseType(), service.getParkingType(), lot.getId(), service.isWarned());
+      StatisticsCollector.increaseOnetime(conn, now().toLocalDate(), service.getId(), service.getLicenseType(), service.getParkingType(), lot.getId(),
+          service.isWarned());
 
       // success
       response.setCustomerData(customer);
@@ -203,7 +197,7 @@ public class OnetimeParkingController extends RequestController {
 
         // XXX Statistics
         // Increase daily counter of canceled orders
-        StatisticsCollector.increaseCanceledOrder(conn, LocalDate.now(), service.getLotID());
+        StatisticsCollector.increaseCanceledOrder(conn, now().toLocalDate(), service.getLotID());
 
         // Refund customer
         Customer customer = service.getCustomer(conn);

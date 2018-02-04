@@ -21,12 +21,12 @@ public class TestOrderedCells extends ServerControllerTest {
 		ParkingLot lot = initParkingLot();
 
 		Timestamp[] a = new Timestamp[10];
-		a[0] = Timestamp.valueOf(LocalDateTime.now());
-		a[1] = Timestamp.valueOf(LocalDateTime.now().minusMinutes(10));
-		a[2] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(10));
-		a[3] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(20));
-		a[4] = Timestamp.valueOf(LocalDateTime.now().minusMinutes(20));
-		a[5] = Timestamp.valueOf(LocalDateTime.now().plusMinutes(4).plusDays(1));
+		a[0] = Timestamp.valueOf(getTime());
+		a[1] = Timestamp.valueOf(getTime().minusMinutes(10));
+		a[2] = Timestamp.valueOf(getTime().plusMinutes(10));
+		a[3] = Timestamp.valueOf(getTime().plusMinutes(20));
+		a[4] = Timestamp.valueOf(getTime().minusMinutes(20));
+		a[5] = Timestamp.valueOf(getTime().plusMinutes(4).plusDays(1));
 
 		db.performAction(conn -> {
 			OnetimeService.create(db.getConnection(), Constants.PARKING_TYPE_RESERVED, 3, "no@email.com", "123-sdf",

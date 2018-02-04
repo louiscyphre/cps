@@ -30,14 +30,15 @@ public class StatisticsCollector {
    * @param lotID the lot ID
    * @throws SQLException on error
    * @throws ServerException on error */
-  public static void increaseRealizedOrder(Connection conn, int serviceID, int licenseType, int parkingType, int lotID, boolean warned) throws SQLException, ServerException {
+  public static void increaseRealizedOrder(Connection conn, LocalDate date, int serviceID, int licenseType, int parkingType, int lotID, boolean warned) throws SQLException, ServerException {
     if (licenseType == Constants.LICENSE_TYPE_ONETIME) {
       if (parkingType == Constants.PARKING_TYPE_INCIDENTAL) {
-        DailyStatistics.increaseRealizedOrder(conn, lotID);
+        DailyStatistics.increaseRealizedOrder(conn, date, lotID);
       } else { // PARKING_TYPE_RESERVED
+        DailyStatistics.increaseRealizedOrder(conn, date, lotID);
         // Daily statistics - late arrival
         if (warned) {
-          DailyStatistics.increaseLateArrival(conn, serviceID);
+          DailyStatistics.increaseLateArrival(conn, date, serviceID);
         }
       }
     }  
@@ -60,17 +61,18 @@ public class StatisticsCollector {
    * @param lotID the lot ID
    * @throws SQLException on error
    * @throws ServerException on error */
-  public static void increaseSubscription(Connection conn, int subsType, int lotID) throws SQLException, ServerException {
+  public static void increaseSubscription(Connection conn, LocalDate date, int subsType, int lotID) throws SQLException, ServerException {
     if (subsType == Constants.SUBSCRIPTION_TYPE_REGULAR) {
-      MonthlyReport.increaseRegular(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), lotID);
+      MonthlyReport.increaseRegular(conn, date.getYear(), date.getMonthValue(), lotID);
     } else {
-      MonthlyReport.increaseFull(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), 0);
+      MonthlyReport.increaseFull(conn, date.getYear(), date.getMonthValue(), 0);
     }
   }
   
   /** Increase the number of one-time parking services ordered this month or today.
    * Used as an entry point for both daily and monthly statistics.
    * @param conn the SQL connection
+   * @param now the current date
    * @param serviceID the service ID
    * @param licenseType the license type
    * @param parkingType the parking type
@@ -78,19 +80,19 @@ public class StatisticsCollector {
    * @param warned used to check late arrivals
    * @throws SQLException on error
    * @throws ServerException on error */
-  public static void increaseOnetime(Connection conn, int serviceID, int licenseType, int parkingType, int lotID, boolean warned)
+  public static void increaseOnetime(Connection conn, LocalDate now, int serviceID, int licenseType, int parkingType, int lotID, boolean warned)
       throws SQLException, ServerException {
     if (licenseType == Constants.LICENSE_TYPE_ONETIME) {
       if (parkingType == Constants.PARKING_TYPE_INCIDENTAL) {
         // Monthly statistics
-        MonthlyReport.increaseIncidental(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), lotID);
+        MonthlyReport.increaseIncidental(conn, now.getYear(), now.getMonthValue(), lotID);
       } else { // PARKING_TYPE_RESERVED
         // Daily statistics - late arrival
         if (warned) {
-          DailyStatistics.increaseLateArrival(conn, serviceID);
+          DailyStatistics.increaseLateArrival(conn, now, serviceID);
         }
         // Monthly statistics
-        MonthlyReport.increaseReserved(conn, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(), lotID);
+        MonthlyReport.increaseReserved(conn, now.getYear(), now.getMonthValue(), lotID);
       }
     }
   }
@@ -104,11 +106,11 @@ public class StatisticsCollector {
    * @param j the j coordinate
    * @param k the k coordinate
    * @throws SQLException on error */
-  public static void registerCellDisableAction(Connection conn, boolean disabled, int lotID, int i, int j, int k) throws SQLException {
+  public static void registerCellDisableAction(Connection conn, LocalDateTime date, boolean disabled, int lotID, int i, int j, int k) throws SQLException {
     if (disabled) {
-      DisabledCellsStatistics.create(conn, lotID, i, j, k);
+      DisabledCellsStatistics.create(conn, date, lotID, i, j, k);
     } else {
-      DisabledCellsStatistics.markFixed(conn, lotID, i, j, k);
+      DisabledCellsStatistics.markFixed(conn, date, lotID, i, j, k);
     }
   }
 }
