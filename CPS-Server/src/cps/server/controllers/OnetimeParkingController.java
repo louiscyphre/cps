@@ -69,6 +69,7 @@ public class OnetimeParkingController extends RequestController {
 
       // Check that lot exists
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, request.getLotID());
+      response.setAlternativeLots(lot.retrieveAlternativeLots(conn, gson));
 
       // Check that lot is not full
       // session.requireLotNotFull(conn, gson, lot, response);
