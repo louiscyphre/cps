@@ -71,8 +71,9 @@ public class CustomerActionControllerBase extends ClientControllerBase {
 
   void addAlternativeLots(List<Text> formattedMessage, Collection<ParkingLot> alternativeLots) {
     if (alternativeLots != null) {
+      formattedMessage.add(new Text("\n"));
       for (ParkingLot lot : alternativeLots) {
-        formattedMessage.add(new Text(lot.getStreetAddress()));
+        formattedMessage.add(new Text(lot.getStreetAddress() + "\n"));
       }
     }
   }
