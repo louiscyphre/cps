@@ -76,6 +76,7 @@ public class OnetimeParkingController extends RequestController {
       int availableCells = lot.countFreeCells(conn) - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
       
       if (lot.isLotFull() || availableCells <= 0) {
+        response.setLotFull(true);
         response.setAlternativeLots(lot.retrieveAlternativeLots(conn, gson));
         throw new ServerException("The specified lot is full; please try one of the alternative lots");
       }

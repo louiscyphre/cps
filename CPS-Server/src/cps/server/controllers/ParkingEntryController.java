@@ -53,13 +53,7 @@ public class ParkingEntryController extends RequestController {
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, lotID);
 
       // Check that lot is not full
-      // session.requireLotNotFull(conn, gson, lot, response);
-      int availableCells = lot.countFreeCells(conn);
-      
-      if (lot.isLotFull() || availableCells <= 0) {
-        response.setAlternativeLots(lot.retrieveAlternativeLots(conn, gson));
-        throw new ServerException("The specified lot is full; please try one of the alternative lots");
-      }
+      session.requireLotNotFull(conn, gson, lot, response);
       
       registerEntry(conn, lot, customer.getId(), carID, service);
 
