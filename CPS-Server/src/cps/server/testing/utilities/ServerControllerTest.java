@@ -67,6 +67,14 @@ public abstract class ServerControllerTest extends TestCase {
   public void setClock(MockTimeProvider clock) {
     this.clock = clock;
   }
+  
+  public LocalDateTime getTime() {
+    return clock.now();
+  }
+  
+  public void setTime(LocalDateTime time) {
+    clock.set(time);
+  }
 
   @Override
   protected void setUp() throws Exception {
@@ -87,6 +95,10 @@ public abstract class ServerControllerTest extends TestCase {
     if (!silent) {
       System.out.println(String.format("%s: %s", object.getClass().getSimpleName(), gson.toJson(object)));
     }
+  }
+  
+  public String formatObject(Object object) {
+    return String.format("%s: %s", object.getClass().getSimpleName(), gson.toJson(object));
   }
 
   protected void header(String title) {
@@ -250,7 +262,7 @@ public abstract class ServerControllerTest extends TestCase {
   }
 
   protected ParkingLot initParkingLot(String lotAddress, int width, float price1, float price2, String robotIP) throws ServerException {
-    return db.performQuery(conn -> ParkingLot.create(conn, lotAddress, width, price1, price2, "12.f.t43"));
+    return db.performQuery(conn -> ParkingLot.create(conn, lotAddress, width, price1, price2, robotIP));
   }
 
   protected boolean requestParkingEntry(CustomerData data, SessionHolder context, boolean weekend) throws ServerException {

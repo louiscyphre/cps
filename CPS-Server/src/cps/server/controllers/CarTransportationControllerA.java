@@ -396,7 +396,7 @@ public class CarTransportationControllerA extends RequestController implements C
   }
 
   private int calculatePriority(LocalDateTime exitTime, int worstPriority, int lotSize) {
-    int priority = 0;
+    int priority = worstPriority;
     LocalDateTime fullSubscriptionTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
     /* Calculate exit priority if there is no exit time - it means we deal with
      * FULL SUBSCRIPTION which will perhaps stay for long hours or even more
@@ -422,7 +422,7 @@ public class CarTransportationControllerA extends RequestController implements C
         }
       }
     }
-    return priority;
+    return Math.max(priority, worstPriority);
   }
 
   private void pave(Stack<String> carIds, Stack<LocalDateTime> exitTimes, int maxSize, int maxHeight, int maxDepth, ParkingCell[][][] content,

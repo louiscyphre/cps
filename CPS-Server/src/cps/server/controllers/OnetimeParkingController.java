@@ -134,7 +134,7 @@ public class OnetimeParkingController extends RequestController {
    * @param session the session
    * @return the server response */
   public ServerResponse handle(IncidentalParkingRequest request, CustomerSession session) {
-    Timestamp startTime = new Timestamp(System.currentTimeMillis());
+    Timestamp startTime = Timestamp.valueOf(now());
     Timestamp plannedEndTime = Timestamp.valueOf(request.getPlannedEndTime());
     IncidentalParkingResponse response = new IncidentalParkingResponse();
     return handle(request, session, response, startTime, plannedEndTime, startTime.toLocalDateTime());

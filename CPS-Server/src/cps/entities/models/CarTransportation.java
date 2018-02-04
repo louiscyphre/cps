@@ -132,10 +132,11 @@ public class CarTransportation implements Serializable {
    * @param authType the auth type
    * @param authID the auth ID
    * @param lotID the lot ID
+   * @param insertedAt the moment of car insertion
    * @return the car transportation
    * @throws SQLException on error
    * @throws ServerException the server exception */
-  public static CarTransportation create(Connection conn, int customerID, String carID, int authType, int authID, int lotID)
+  public static CarTransportation create(Connection conn, int customerID, String carID, int authType, int authID, int lotID, Timestamp insertedAt)
       throws SQLException, ServerException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_CREATE_CAR_TRANSPORTATION, Statement.RETURN_GENERATED_KEYS);
 
@@ -145,24 +146,21 @@ public class CarTransportation implements Serializable {
     statement.setInt(field++, authType);
     statement.setInt(field++, authID);
     statement.setInt(field++, lotID);
+    statement.setTimestamp(field++, insertedAt);
 
     if (statement.executeUpdate() < 1) {
       throw new ServerException("Failed to create CarTransportation");
     }
 
     ResultSet keys = statement.getGeneratedKeys();
-    Timestamp insertedAt = null;
-    Timestamp removedAt = null;
 
     if (keys != null && keys.next()) {
-      insertedAt = keys.getTimestamp(1);
-      removedAt = keys.getTimestamp(2);
       keys.close();
     }
 
     statement.close();
 
-    return new CarTransportation(customerID, carID, authType, authID, lotID, insertedAt, removedAt);
+    return new CarTransportation(customerID, carID, authType, authID, lotID, insertedAt, null);
   }
 
   /** Is used to check whether a customer can retrieve a car with the parameters that they supplied.

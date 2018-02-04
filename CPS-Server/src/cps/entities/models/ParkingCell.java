@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Collections;
 
 import cps.common.Constants;
 import cps.server.ServerException;
@@ -14,7 +15,6 @@ import cps.server.ServerException;
  * A parking cell is the single unit of parking inside of a parking lot.
  * One parking cell contains one car. */
 public class ParkingCell implements Serializable {
-  /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 1L;
 
   public final int  lotID;
@@ -27,22 +27,14 @@ public class ParkingCell implements Serializable {
   private boolean   disabled;
 
   /** Instantiates a new parking cell.
-   * @param lotID
-   *        the lot ID
-   * @param width
-   *        the location I
-   * @param height
-   *        the location J
-   * @param depth
-   *        the location K
-   * @param carID
-   *        the car ID
-   * @param plannedExitTime
-   *        the planned exit time
-   * @param reserved
-   *        the reserved
-   * @param disabled
-   *        the disabled */
+   * @param lotID the lot ID
+   * @param width the width coordinate
+   * @param height the height coordinate
+   * @param depth the depth coordinate
+   * @param carID the car ID
+   * @param plannedExitTime the planned exit time of the car
+   * @param reserved the reserved flag
+   * @param disabled the disabled flag */
   public ParkingCell(int lotID, int width, int height, int depth, String carID, Timestamp plannedExitTime, boolean reserved, boolean disabled) {
     this.lotID = lotID;
     this.width = width;
@@ -54,11 +46,9 @@ public class ParkingCell implements Serializable {
     this.disabled = disabled;
   }
 
-  /** Instantiates a new parking cell.
-   * @param rs
-   *        the rs
-   * @throws SQLException
-   *         on error */
+  /** Instantiates a new parking cell from an SQL ResultSet.
+   * @param rs the SQL ResultSet
+   * @throws SQLException on error */
   public ParkingCell(ResultSet rs) throws SQLException {
     this(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5), rs.getTimestamp(6), rs.getBoolean(7), rs.getBoolean(8));
   }
@@ -115,29 +105,18 @@ public class ParkingCell implements Serializable {
   }
 
   /** Creates the.
-   * @param conn
-   *        the SQL connection
-   * @param lotID
-   *        the lot ID
-   * @param width
-   *        the location I
-   * @param height
-   *        the location J
-   * @param depth
-   *        the location K
-   * @param carID
-   *        the car ID
-   * @param plannedExitTime
-   *        the planned exit time
-   * @param reserved
-   *        the reserved
-   * @param disabled
-   *        the disabled
+   * @param conn the SQL connection
+   * @param lotID the lot ID
+   * @param width the width coordinate
+   * @param height the height coordinate
+   * @param depth the depth coordinate
+   * @param carID the car ID
+   * @param plannedExitTime the planned exit time of the car
+   * @param reserved the reserved flag
+   * @param disabled the disabled flag
    * @return the parking cell
-   * @throws SQLException
-   *         on error
-   * @throws ServerException
-   *         the server exception */
+   * @throws SQLException on error
+   * @throws ServerException on error */
   public static ParkingCell create(Connection conn, int lotID, int width, int height, int depth, String carID, Timestamp plannedExitTime, boolean reserved,
       boolean disabled) throws SQLException, ServerException {
     // Create SQL statement
@@ -164,20 +143,44 @@ public class ParkingCell implements Serializable {
     return new ParkingCell(lotID, width, height, depth, carID, plannedExitTime, reserved, disabled);
   }
 
+  public static void createArray(Connection conn, int lotID, int sizeI, int sizeJ, int sizeK) throws SQLException, ServerException {
+    String query = "INSERT INTO parking_cell VALUES"
+        + String.join(", ", Collections.nCopies(sizeI * sizeJ * sizeK, "(?, ?, ?, ?, default, default, default, default)"));
+    
+    // Create SQL statement
+    PreparedStatement statement = conn.prepareStatement(query);
+
+    // Fill in the fields of the SQL statement
+
+    int field = 1;
+
+    for (int i = 0; i < sizeI; i++) {
+      for (int j = 0; j < sizeJ; j++) {
+        for (int k = 0; k < sizeK; k++) {
+          statement.setInt(field++, lotID);
+          statement.setInt(field++, i);
+          statement.setInt(field++, j);
+          statement.setInt(field++, k);
+        }
+      }
+    }
+
+    // Execute SQL query
+    if (statement.executeUpdate() < 1) {
+      throw new ServerException("Failed to create ParkingCell array");
+    }
+
+    statement.close();
+  }
+
   /** Find.
-   * @param conn
-   *        the SQL connection
-   * @param lotID
-   *        the lot ID
-   * @param i
-   *        the i
-   * @param j
-   *        the j
-   * @param k
-   *        the k
+   * @param conn the SQL connection
+   * @param lotID the lot ID
+   * @param i the I coordinate
+   * @param j the J coordinate
+   * @param k the K coordinate
    * @return the parking cell
-   * @throws SQLException
-   *         on error */
+   * @throws SQLException on error */
   public static ParkingCell find(Connection conn, int lotID, int i, int j, int k) throws SQLException {
     ParkingCell item = null;
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_PARKING_CELL);
@@ -229,14 +232,10 @@ public class ParkingCell implements Serializable {
   }
 
   /** Find all parking cells that belong to the specified lot and perform a callback function on each.
-   * @param conn
-   *        the SQL connection
-   * @param lotID
-   *        the lot ID
-   * @param visitor
-   *        the visitor
-   * @throws SQLException
-   *         on error */
+   * @param conn the SQL connection
+   * @param lotID the lot ID
+   * @param visitor the visitor
+   * @throws SQLException on error */
   public static void lotForEach(Connection conn, int lotID, ParkingCellVisitor visitor) throws SQLException {
     PreparedStatement statement = conn.prepareStatement(Constants.SQL_FIND_PARKING_CELL_BY_LOT_ID);
 

@@ -4,6 +4,7 @@ import static cps.common.Utilities.isWeekend;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
@@ -93,7 +94,7 @@ public class ParkingEntryController extends RequestController {
     // that a successful parking was made.
     // Throws exception on failure, which will be automatically handled up in
     // the control chain.
-    CarTransportation.create(conn, customerID, carID, service.getLicenseType(), service.getId(), lot.getId());
+    CarTransportation.create(conn, customerID, carID, service.getLicenseType(), service.getId(), lot.getId(), Timestamp.valueOf(now()));
 
   }
 

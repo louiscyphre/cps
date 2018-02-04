@@ -317,14 +317,9 @@ public class ParkingLot implements Serializable {
     stmt.close();
 
     // Create parking cells
-    for (int i = 0; i < size; i++) {
-      for (int j = 0; j < 3; j++) {
-        for (int k = 0; k < 3; k++) {
-          ParkingCell.create(conn, newID, i, j, k, null, null, false, false);
-        }
-      }
-    }
+    ParkingCell.createArray(conn, newID, size, 3, 3);
 
+    // Done
     return new ParkingLot(newID, streetAddress, size, price1, price2, null, robotIP, false);
   }
 

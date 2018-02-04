@@ -53,7 +53,7 @@ public class TestReservedParking extends ServerControllerTest {
 
     initParkingLot();
     requestReservedParking(data, getContext());
-    getClock().set(getClock().now().plusSeconds(3));
+    setTime(getTime().plusSeconds(3));
     
     requestParkingEntry(data, getContext());
     requestParkingExit(data, getContext());
@@ -72,7 +72,7 @@ public class TestReservedParking extends ServerControllerTest {
 
     initParkingLot();
     requestReservedParking(data, getContext());
-    getClock().set(getClock().now().plusSeconds(3));
+    setTime(getTime().plusSeconds(3));
     
     requestParkingEntry(data, getContext());
 

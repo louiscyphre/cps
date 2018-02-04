@@ -25,4 +25,12 @@ public class CompanyPersonService {
     return null;
   }
 
+  public static int getNumberOfEmployees() {
+    return people.length;
+  }
+  
+  public static CompanyPerson getEmployee(int index) {
+    return people[index];
+  }
+
 }

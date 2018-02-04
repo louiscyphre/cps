@@ -66,7 +66,7 @@ public interface Constants {
   public final String SQL_UPDATE_SUBSCRIPTION_BY_ID               = "UPDATE subscription_service SET subs_type=?, customer_id=?, email=?, car_id=?, lot_id=?, start_date=?, end_date=?, daily_exit_time=?, parked=?, completed=?, canceled=?, warned=? WHERE id=?";
 
   // SQL queries - CarTransportation
-  public final String SQL_CREATE_CAR_TRANSPORTATION             = "INSERT INTO car_transportation values(?, ?, ?, ?, ?, default, default)";
+  public final String SQL_CREATE_CAR_TRANSPORTATION             = "INSERT INTO car_transportation values(?, ?, ?, ?, ?, ?, default)";
   public final String SQL_FIND_CAR_TRANSPORTATION_BY_LOT_ID     = "SELECT * FROM car_transportation WHERE lot_id=?";
   public final String SQL_UPDATE_REMOVED_AT                     = "UPDATE car_transportation SET removed_at=? WHERE customer_id=? AND car_id=? AND lot_id=? AND inserted_at=?";
   public final String SQL_FIND_CAR_TRANSPORTATION_PARKED        = "SELECT * FROM car_transportation WHERE car_id=? AND removed_at IS NULL LIMIT 1";

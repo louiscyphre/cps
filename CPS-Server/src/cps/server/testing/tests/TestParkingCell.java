@@ -53,7 +53,7 @@ public class TestParkingCell extends ServerControllerTest {
     ParkingLot lot = initParkingLot();
     assertNotNull(lot);
     
-    // Test db result
+    // Test database result
     assertEquals(lot.getVolume(), db.countEntities("parking_cell"));
     
     ParkingCell[][][] content = db.performQuery(conn -> lot.constructContentArray(conn));
