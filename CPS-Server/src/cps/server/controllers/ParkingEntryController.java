@@ -51,12 +51,15 @@ public class ParkingEntryController extends RequestController {
       // Entry license exists - continue
       // Find the parking lot that the customer wants to enter
       ParkingLot lot = ParkingLot.findByIDNotNull(conn, lotID);
-      response.setAlternativeLots(lot.retrieveAlternativeLots(conn, gson));
 
       // Check that lot is not full
       // session.requireLotNotFull(conn, gson, lot, response);
       int availableCells = lot.countFreeCells(conn);
-      errorIf(lot.isLotFull() || availableCells <= 0, "The specified lot is full; please try one of the alternative lots");
+      
+      if (lot.isLotFull() || availableCells <= 0) {
+        response.setAlternativeLots(lot.retrieveAlternativeLots(conn, gson));
+        throw new ServerException("The specified lot is full; please try one of the alternative lots");
+      }
       
       registerEntry(conn, lot, customer.getId(), carID, service);
 

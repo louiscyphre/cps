@@ -1,7 +1,6 @@
 package cps.server.testing.tests;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 import org.junit.Test;
 

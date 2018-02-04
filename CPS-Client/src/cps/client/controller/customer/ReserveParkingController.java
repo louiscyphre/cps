@@ -406,6 +406,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     } else if (response.getStatus() == ServerResponse.STATUS_ERROR) {
       formattedMessage.add(new Text("Could not reserve parking!\n"));
       formattedMessage.add(new Text(response.getDescription()));
+      addAlternativeLots(formattedMessage, response.getAlternativeLots());
       ctrl.turnProcessingStateOff();
       ctrl.displayError(formattedMessage);
     }

@@ -74,7 +74,11 @@ public class OnetimeParkingController extends RequestController {
       // Check that lot is not full
       // session.requireLotNotFull(conn, gson, lot, response);
       int availableCells = lot.countFreeCells(conn) - ParkingLot.countOrderedCells(conn, lot.getId(), startTime, plannedEndTime);
-      errorIf(lot.isLotFull() || availableCells <= 0, "The specified lot is full; please try one of the alternative lots");
+      
+      if (lot.isLotFull() || availableCells <= 0) {
+        response.setAlternativeLots(lot.retrieveAlternativeLots(conn, gson));
+        throw new ServerException("The specified lot is full; please try one of the alternative lots");
+      }
 
       // Handle login
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());

@@ -267,6 +267,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
       // Error message creation
       formattedMessage.add(new Text("Could not proceed with purchase!\n"));
       formattedMessage.add(new Text(response.getDescription()));
+      addAlternativeLots(formattedMessage, response.getAlternativeLots());
       // Turning off the processing state
       ctrl.turnProcessingStateOff();
       // Display the whole formatted message, as an error
