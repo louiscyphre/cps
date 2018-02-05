@@ -2,6 +2,7 @@ package cps.server.testing.utilities;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotEquals;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import cps.api.request.OnetimeParkingRequest;
 import cps.api.request.ParkingEntryRequest;
 import cps.api.request.ParkingExitRequest;
 import cps.api.request.RegularSubscriptionRequest;
+import cps.api.request.Request;
 import cps.api.request.ReservedParkingRequest;
 import cps.api.request.SubscriptionRequest;
 import cps.api.response.FullSubscriptionResponse;
@@ -47,6 +49,7 @@ public abstract class ServerControllerTest extends TestCase {
   private boolean              silent = false;
   private SessionHolder        context;
   private MockTimeProvider     clock;
+  private ServerConfig         config = null;
 
   public boolean isSilent() {
     return silent;
@@ -68,11 +71,35 @@ public abstract class ServerControllerTest extends TestCase {
     this.clock = clock;
   }
 
+  public LocalDateTime getTime() {
+    return clock.now();
+  }
+
+  public void setTime(LocalDateTime time) {
+    clock.set(time);
+  }
+
+  public ServerConfig getConfig() {
+    return config;
+  }
+
+  public void setConfig(ServerConfig config) {
+    this.config = config;
+  }
+
+  public ServerControllerTest() {
+    this.config = ServerConfig.testing();
+  }
+
+  public ServerControllerTest(ServerConfig config) {
+    this.config = config;
+  }
+
   @Override
   protected void setUp() throws Exception {
     this.context = new SessionHolder();
     this.clock = new MockTimeProvider();
-    this.server = new ServerController(ServerConfig.testing(), clock);
+    this.server = new ServerController(config, clock);
     this.db = server.getDatabaseController();
     db.truncateTables();
   }
@@ -87,6 +114,10 @@ public abstract class ServerControllerTest extends TestCase {
     if (!silent) {
       System.out.println(String.format("%s: %s", object.getClass().getSimpleName(), gson.toJson(object)));
     }
+  }
+
+  public String formatObject(Object object) {
+    return String.format("%s: %s", object.getClass().getSimpleName(), gson.toJson(object));
   }
 
   protected void header(String title) {
@@ -138,7 +169,7 @@ public abstract class ServerControllerTest extends TestCase {
     Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    LocalDate startDate = LocalDate.now();
+    LocalDate startDate = getTime().toLocalDate();
     FullSubscriptionRequest request = new FullSubscriptionRequest(data.customerID, data.email, data.carID, startDate);
 
     // Run general tests
@@ -153,7 +184,7 @@ public abstract class ServerControllerTest extends TestCase {
     Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    LocalDate startDate = LocalDate.now();
+    LocalDate startDate = getTime().toLocalDate();
     LocalTime dailyExitTime = LocalTime.of(17, 30);
     RegularSubscriptionRequest request = new RegularSubscriptionRequest(data.customerID, data.email, data.carID, startDate, data.lotID, dailyExitTime);
 
@@ -177,7 +208,7 @@ public abstract class ServerControllerTest extends TestCase {
     assertThat(response, instanceOf(OnetimeParkingResponse.class));
     OnetimeParkingResponse specificResponse = (OnetimeParkingResponse) response;
     data.customerID = specificResponse.getCustomerID();
-    assertEquals(1, data.customerID);
+    assertNotEquals(0, data.customerID);
 
     // Update service id
     data.onetimeServiceID = specificResponse.getServiceID();
@@ -209,7 +240,7 @@ public abstract class ServerControllerTest extends TestCase {
     Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    LocalDateTime plannedEndTime = LocalDateTime.now().plusHours(8).withNano(0);
+    LocalDateTime plannedEndTime = getTime().plusHours(8).withNano(0);
     IncidentalParkingRequest request = new IncidentalParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedEndTime);
 
     // Run general tests
@@ -224,7 +255,7 @@ public abstract class ServerControllerTest extends TestCase {
     Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    LocalDateTime plannedStartTime = LocalDateTime.now().plus(delta).withNano(0);
+    LocalDateTime plannedStartTime = getTime().plus(delta).withNano(0);
     LocalDateTime plannedEndTime = plannedStartTime.plusHours(8);
     ReservedParkingRequest request = new ReservedParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedStartTime, plannedEndTime);
 
@@ -250,7 +281,7 @@ public abstract class ServerControllerTest extends TestCase {
   }
 
   protected ParkingLot initParkingLot(String lotAddress, int width, float price1, float price2, String robotIP) throws ServerException {
-    return db.performQuery(conn -> ParkingLot.create(conn, lotAddress, width, price1, price2, "12.f.t43"));
+    return db.performQuery(conn -> ParkingLot.create(conn, lotAddress, width, price1, price2, robotIP));
   }
 
   protected boolean requestParkingEntry(CustomerData data, SessionHolder context, boolean weekend) throws ServerException {
@@ -298,5 +329,12 @@ public abstract class ServerControllerTest extends TestCase {
     assertNotNull(customer);
     printObject(customer);
     return customer;
+  }
+
+  public <T extends ServerResponse> T sendRequest(Request request, SessionHolder context, Class<T> type) {
+    ServerResponse response = server.dispatch(request, context);
+    assertNotNull(response);
+    assertThat(response, instanceOf(type));
+    return type.cast(response);
   }
 }

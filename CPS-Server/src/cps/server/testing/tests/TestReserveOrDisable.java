@@ -19,7 +19,7 @@ public class TestReserveOrDisable extends ServerControllerTest {
   public void testReserveOrDisable() throws ServerException {
     ParkingLot lot = initParkingLot();
     String carId = "IL-12-12";
-    LocalDateTime exitTime = LocalDateTime.now();
+    LocalDateTime exitTime = getTime();
     
     CarTransportationController transportationController = server.getTransportationController();
     
@@ -27,22 +27,22 @@ public class TestReserveOrDisable extends ServerControllerTest {
       transportationController.insertCar(conn, lot, carId, exitTime.plusMinutes(50));
     });
     
-    ParkingCellSetDisabledAction disableAction = new ParkingCellSetDisabledAction(1, 1, 0, 2, 2);
+    int i = 3, j = 2, k = 2;
+    
+    ParkingCellSetDisabledAction disableAction = new ParkingCellSetDisabledAction(1, 1, i, j, k);
     ServiceSession session = getContext().acquireServiceSession();
     session.login("sarit", "1234");
     
     ServerResponse res = server.handle(disableAction, getContext());
-    
     assertFalse(res.success());
     
-    
-    disableAction = new ParkingCellSetDisabledAction(1, 1, 0, 2, 1);
+    disableAction = new ParkingCellSetDisabledAction(1, 1, i, j, 1);
     res = server.handle(disableAction, getContext());
     assertTrue(res.success());
-    ParkingCellSetReservedAction reserveAction = new ParkingCellSetReservedAction(1, 1, 0, 2, 2);
+    ParkingCellSetReservedAction reserveAction = new ParkingCellSetReservedAction(1, 1, i, j, k);
     res = server.handle(reserveAction, getContext());
     assertFalse(res.success());
-    reserveAction = new ParkingCellSetReservedAction(1, 1, 0, 2, 0);
+    reserveAction = new ParkingCellSetReservedAction(1, 1, i, j, 0);
     res = server.handle(reserveAction, getContext());
     assertTrue(res.success());
   }

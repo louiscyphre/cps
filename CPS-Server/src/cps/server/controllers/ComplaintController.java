@@ -4,7 +4,6 @@
 package cps.server.controllers;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 import cps.api.action.ListComplaintsAction;

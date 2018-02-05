@@ -330,6 +330,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
       // Error message creation
       formattedMessage.add(new Text("Could not grant parking at this moment!\n"));
       formattedMessage.add(new Text(response.getDescription()));
+      addAlternativeLots(formattedMessage, response.getAlternativeLots());
       // Turning off the processing state
       ctrl.turnProcessingStateOff();
       // Display the whole formatted message, as an error

@@ -17,8 +17,8 @@ public class TestSubscriptionOverlap extends ServerControllerTest {
   @Test
   public void testSubscriptionOverlap()
       throws ServerException {
-    LocalDate starttime = LocalDate.now();
-    LocalDate endtime = LocalDate.now().plusDays(24);
+    LocalDate starttime = getTime().toLocalDate();
+    LocalDate endtime = starttime.plusDays(24);
     LocalTime dailyexittime = LocalTime.of(18, 0, 0);
     Customer mycust = initCustomer();
     ParkingLot lot = initParkingLot();

@@ -2,13 +2,17 @@ package cps.client.controller.customer;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import cps.client.controller.ClientControllerBase;
 import cps.client.controller.ControllerConstants.SceneCode;
+import cps.entities.models.ParkingLot;
 import cps.client.controller.ControllersClientAdapter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.text.Text;
 
 /** Base Class for Customer controllers, both Web and Kiosk. */
 public class CustomerActionControllerBase extends ClientControllerBase {
@@ -63,5 +67,14 @@ public class CustomerActionControllerBase extends ClientControllerBase {
   /** Stub for a main request function. */
   void sendMainRequest() {
 
+  }
+
+  void addAlternativeLots(List<Text> formattedMessage, Collection<ParkingLot> alternativeLots) {
+    if (alternativeLots != null) {
+      formattedMessage.add(new Text("\n"));
+      for (ParkingLot lot : alternativeLots) {
+        formattedMessage.add(new Text(lot.getStreetAddress() + "\n"));
+      }
+    }
   }
 }

@@ -66,7 +66,7 @@ public interface Constants {
   public final String SQL_UPDATE_SUBSCRIPTION_BY_ID               = "UPDATE subscription_service SET subs_type=?, customer_id=?, email=?, car_id=?, lot_id=?, start_date=?, end_date=?, daily_exit_time=?, parked=?, completed=?, canceled=?, warned=? WHERE id=?";
 
   // SQL queries - CarTransportation
-  public final String SQL_CREATE_CAR_TRANSPORTATION             = "INSERT INTO car_transportation values(?, ?, ?, ?, ?, default, default)";
+  public final String SQL_CREATE_CAR_TRANSPORTATION             = "INSERT INTO car_transportation values(?, ?, ?, ?, ?, ?, default)";
   public final String SQL_FIND_CAR_TRANSPORTATION_BY_LOT_ID     = "SELECT * FROM car_transportation WHERE lot_id=?";
   public final String SQL_UPDATE_REMOVED_AT                     = "UPDATE car_transportation SET removed_at=? WHERE customer_id=? AND car_id=? AND lot_id=? AND inserted_at=?";
   public final String SQL_FIND_CAR_TRANSPORTATION_PARKED        = "SELECT * FROM car_transportation WHERE car_id=? AND removed_at IS NULL LIMIT 1";
@@ -74,9 +74,9 @@ public interface Constants {
   public final String SQL_FIND_CAR_TRANSPORTATION_BY_CAR_NUMBER = "SELECT * FROM car_transportation WHERE car_id=? AND lot_id=? AND removed_at IS NULL ORDER BY inserted_at DESC LIMIT 1";
 
   // SQL queries - DailyStatistics
-  public final String SQL_CREATE_NEW_DAY          = "INSERT INTO daily_statistics values(? ,? ,default ,default ,default ,default,default)";
+  public final String SQL_CREATE_NEW_DAY          = "INSERT INTO daily_statistics values(? ,?, default, default, default, default)";
   public final String SQL_CHECK_DATE              = "SELECT * FROM daily_statistics WHERE day=? AND lot_id=?";
-  public final String SQL_GET_DATE                = "SELECT sum(realized_orders) as realized_orders,sum(canceled_orders) as canceled_orders,sum(late_arrivals) as late_arrivals,sum(inactive_slots) as inactive_slots FROM daily_statistics WHERE day=?";
+  public final String SQL_GET_DATE                = "SELECT sum(realized_orders) as realized_orders,sum(canceled_orders) as canceled_orders,sum(late_arrivals) as late_arrivals, sum(inactive_slots) as inactive_slots FROM daily_statistics WHERE day=?";
   public final String SQL_INCREASE_REALIZED_ORDER = "UPDATE daily_statistics SET realized_orders=? WHERE day=? AND lot_id=?";
   public final String SQL_INCREASE_CANCELED_ORDER = "UPDATE daily_statistics SET canceled_orders=? WHERE day=? AND lot_id=?";
   public final String SQL_INCREASE_LATE_ARRIVAL   = "UPDATE daily_statistics SET late_arrivals=? WHERE day=? AND lot_id=?";

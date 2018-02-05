@@ -326,11 +326,12 @@ public class SubscriptionService implements ParkingService {
    * For full subscription: always return midnight 
    * @see cps.entities.models.ParkingService#getExitTime() */
   @Override
-  public LocalDateTime getExitTime() {
-    if (this.subscriptionType == Constants.SUBSCRIPTION_TYPE_FULL) {
-      return LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+  public LocalDateTime getExitTime(LocalDate now) {
+    if (subscriptionType == Constants.SUBSCRIPTION_TYPE_FULL) {
+      return LocalDateTime.of(now, LocalTime.MIDNIGHT);
     }
-    return this.dailyExitTime.atDate(LocalDate.now());
+    
+    return dailyExitTime.atDate(now);
   }
 
   /** Find a subscription service record by ID.
@@ -478,8 +479,8 @@ public class SubscriptionService implements ParkingService {
    * @see cps.entities.models.ParkingService#shouldCompleteAfterExit()
    */
   @Override
-  public boolean shouldCompleteAfterExit() {
-    return LocalDateTime.of(endDate, dailyExitTime).isBefore(LocalDateTime.now()) && !parked;    
+  public boolean shouldCompleteAfterExit(LocalDateTime now) {
+    return LocalDateTime.of(endDate, dailyExitTime).isBefore(now) && !parked;    
   }
 
   @Override
@@ -539,16 +540,17 @@ public class SubscriptionService implements ParkingService {
 
   /** Find all subscriptions that are going to expire after the specified period of time.
    * @param conn the SQL connection
+   * @param now the current date-time
    * @param delta the period of time
    * @param warned whether to search records where the customer was already warned, or records where the customer has not been warned yet
    * @return the collection
    * @throws SQLException on error */
-  public static Collection<SubscriptionService> findExpiringAfter(Connection conn, Duration delta, boolean warned) throws SQLException {
+  public static Collection<SubscriptionService> findExpiringAfter(Connection conn, LocalDateTime now, Duration delta, boolean warned) throws SQLException {
     return new QueryBuilder<SubscriptionService>(String.join(" ",
       "SELECT *", "FROM subscription_service os", "WHERE end_date <= ? ",
       "AND not completed AND warned=? AND not canceled"
     )).withFields(statement -> {
-      statement.setDate(1, Date.valueOf(LocalDateTime.now().plus(delta).toLocalDate()));
+      statement.setDate(1, Date.valueOf(now.plus(delta).toLocalDate()));
       statement.setBoolean(2, warned);
     }).collectResults(conn, result -> new SubscriptionService(result));
   }

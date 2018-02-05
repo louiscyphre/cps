@@ -21,7 +21,7 @@ public class TestParkingCell extends ServerControllerTest {
     int i = 0, j = 0, k = 1;
     
     // Create cell
-    ParkingCell cell = db.performQuery(conn -> ParkingCell.create(conn, lotID, i, j, k, "IL11-222-33", Timestamp.valueOf(LocalDateTime.now()), false, false));
+    ParkingCell cell = db.performQuery(conn -> ParkingCell.create(conn, lotID, i, j, k, "IL11-222-33", Timestamp.valueOf(getTime()), false, false));
     assertNotNull(cell);
     printObject(cell);
     
@@ -53,7 +53,7 @@ public class TestParkingCell extends ServerControllerTest {
     ParkingLot lot = initParkingLot();
     assertNotNull(lot);
     
-    // Test db result
+    // Test database result
     assertEquals(lot.getVolume(), db.countEntities("parking_cell"));
     
     ParkingCell[][][] content = db.performQuery(conn -> lot.constructContentArray(conn));

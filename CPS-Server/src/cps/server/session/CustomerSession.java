@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.google.gson.Gson;
 
-import cps.api.response.ParkingServiceResponse;
+import cps.api.response.CustomerResponseWithLotStatus;
 import cps.entities.models.Customer;
 import cps.entities.models.ParkingLot;
 import cps.entities.people.User;
@@ -87,8 +87,9 @@ public class CustomerSession extends BasicSession {
     return registerCustomer(conn, email);
   }
   
-  public void requireLotNotFull(Connection conn, Gson gson, ParkingLot lot, ParkingServiceResponse response) throws SQLException, ServerException {
+  public void requireLotNotFull(Connection conn, Gson gson, ParkingLot lot, CustomerResponseWithLotStatus response) throws SQLException, ServerException {
     if (lot.isLotFull() || lot.countFreeCells(conn) < 1) {
+      response.setLotFull(true);
       response.setAlternativeLots(lot.retrieveAlternativeLots(conn, gson));
       throw new ServerException("The specified lot is full; please try one of the alternative lots");
     }

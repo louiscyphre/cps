@@ -69,11 +69,11 @@ public class DisabledCellsStatistics {
    * @param _height the height
    * @param _depth the depth
    * @throws SQLException the SQL exception */
-  public static void create(Connection conn, int _lotid, int _width, int _height, int _depth) throws SQLException {
+  public static void create(Connection conn, LocalDateTime date, int _lotid, int _width, int _height, int _depth) throws SQLException {
     PreparedStatement stmt = conn.prepareStatement("INSERT INTO disabled_slots_table VALUES(?,?,?,?,?,default)");
     int i = 1;
     stmt.setInt(i++, _lotid);
-    stmt.setTimestamp(i++, Timestamp.valueOf(LocalDateTime.now()));
+    stmt.setTimestamp(i++, Timestamp.valueOf(date));
     stmt.setInt(i++, _width);
     stmt.setInt(i++, _height);
     stmt.setInt(i++, _depth);
@@ -87,11 +87,11 @@ public class DisabledCellsStatistics {
    * @param _height the height
    * @param _depth the depth
    * @throws SQLException the SQL exception */
-  public static void markFixed(Connection conn, int _lotid, int _width, int _height, int _depth) throws SQLException {
+  public static void markFixed(Connection conn, LocalDateTime date, int _lotid, int _width, int _height, int _depth) throws SQLException {
     PreparedStatement stmt = conn
         .prepareStatement("UPDATE disabled_slots_table SET date_enabled=? WHERE lotid=? AND width=? AND height=? AND depth=? AND date_enabled is null");
     int i = 1;
-    stmt.setTimestamp(i++, Timestamp.valueOf(LocalDateTime.now()));
+    stmt.setTimestamp(i++, Timestamp.valueOf(date));
     stmt.setInt(i++, _lotid);
     stmt.setInt(i++, _width);
     stmt.setInt(i++, _height);

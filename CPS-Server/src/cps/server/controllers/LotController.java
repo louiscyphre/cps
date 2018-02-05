@@ -252,7 +252,7 @@ public class LotController extends RequestController {
         cell -> { cell.setDisabled(action.getValue()); },
         conn -> {
           // XXX Statistics
-          StatisticsCollector.registerCellDisableAction(conn, action.getValue(), action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK());
+          StatisticsCollector.registerCellDisableAction(conn, now(), action.getValue(), action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK());
         }, successMessage);
   }
 }
