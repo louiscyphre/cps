@@ -1,5 +1,7 @@
 package cps.entities.models;
 
+import static cps.common.Utilities.debugPrintln;
+
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -249,6 +251,7 @@ public class MonthlyReport implements Serializable {
   public static void increaseReserved(Connection conn, int year, int month, int lotid)
       throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
+    debugPrintln("MonthlyStatistics: incrementing ordReserved: %d -> %d", rep.ordReserved, rep.ordReserved + 1);
     rep.ordReserved++;
     rep.update(conn);
   }
@@ -263,6 +266,7 @@ public class MonthlyReport implements Serializable {
   public static void increaseIncidental(Connection conn, int year, int month, int lotid)
       throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
+    debugPrintln("MonthlyStatistics: incrementing ordIncidental: %d -> %d", rep.ordIncidental, rep.ordIncidental + 1);
     rep.ordIncidental++;
     rep.update(conn);
   }
@@ -277,6 +281,7 @@ public class MonthlyReport implements Serializable {
   public static void increaseRegular(Connection conn, int year, int month, int lotid)
       throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
+    debugPrintln("MonthlyStatistics: incrementing ordRegular: %d -> %d", rep.ordRegular, rep.ordRegular + 1);
     rep.ordRegular++;
     rep.update(conn);
   }
@@ -291,6 +296,7 @@ public class MonthlyReport implements Serializable {
   public static void increaseFull(Connection conn, int year, int month, int lotid)
       throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
+    debugPrintln("MonthlyStatistics: incrementing ordFull: %d -> %d", rep.ordFull, rep.ordFull + 1);
     rep.ordFull++;
     rep.update(conn);
   }
@@ -305,6 +311,7 @@ public class MonthlyReport implements Serializable {
   public static void increaseComplaints(Connection conn, int year, int month, int lotid)
       throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
+    debugPrintln("MonthlyStatistics: incrementing complaintsCount: %d -> %d", rep.complaintsCount, rep.complaintsCount + 1);
     rep.complaintsCount++;
     rep.update(conn);
   }
@@ -319,6 +326,7 @@ public class MonthlyReport implements Serializable {
   public static void increaseClosed(Connection conn, int year, int month, int lotid)
       throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
+    debugPrintln("MonthlyStatistics: incrementing complaintsClosedCount: %d -> %d", rep.complaintsClosedCount, rep.complaintsClosedCount + 1);
     rep.complaintsClosedCount++;
     rep.update(conn);
   }
@@ -333,6 +341,7 @@ public class MonthlyReport implements Serializable {
   public static void increaseRefunded(Connection conn, int year, int month, int lotid)
       throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
+    debugPrintln("MonthlyStatistics: incrementing complaintsRefundedCount: %d -> %d", rep.complaintsRefundedCount, rep.complaintsRefundedCount + 1);
     rep.complaintsRefundedCount++;
     rep.update(conn);
   }
@@ -349,6 +358,7 @@ public class MonthlyReport implements Serializable {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
     rep.disabledSlots = DisabledCellsStatistics.countDisabledCells(conn, lotid, LocalDateTime.of(year, month, 1, 0, 0),
         LocalDateTime.of(year, month + 1, 1, 0, 0).minusDays(1));
+    debugPrintln("MonthlyStatistics: counting disabledSlots: %d", rep.disabledSlots);
     rep.update(conn);
   }
 

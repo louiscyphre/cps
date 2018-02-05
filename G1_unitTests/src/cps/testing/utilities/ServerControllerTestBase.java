@@ -3,6 +3,7 @@ package cps.testing.utilities;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotEquals;
+import static cps.common.Utilities.getLastElement;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -220,7 +221,7 @@ public abstract class ServerControllerTestBase extends TestCase {
     Collection<OnetimeService> entries = db.performQuery(conn -> OnetimeService.findByCustomerID(conn, data.getCustomerID()));
     assertTrue(entries.size() > 0);
 
-    OnetimeService entry = entries.iterator().next();
+    OnetimeService entry = getLastElement(entries);
     assertNotNull(entry);
 
     assertEquals(request.getParkingType(), entry.getParkingType());

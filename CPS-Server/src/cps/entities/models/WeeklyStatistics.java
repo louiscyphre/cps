@@ -1,5 +1,7 @@
 package cps.entities.models;
 
+import static cps.common.Utilities.debugPrintln;
+
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.Date;
@@ -123,7 +125,6 @@ public class WeeklyStatistics implements Serializable {
    * @return the weekly statistics object
    * @throws SQLException on error */
   public static WeeklyStatistics createUpdateWeeklyReport(Connection conn, LocalDate start, int lotid) throws SQLException {
-    // TODO test if the weekly statistics work
     // Find this week's Sunday
     start = Utilities.findWeekStart(start);
     WeeklyStatistics result = findOrCreate(conn, start, lotid);
@@ -171,7 +172,7 @@ public class WeeklyStatistics implements Serializable {
 
     /* Distributions now recorded as comma separated values from Sunday to Saturday */
     result.update(conn);
-
+    debugPrintln("WeeklyStatistics: generated for %s", start);
     return result;
   }
 

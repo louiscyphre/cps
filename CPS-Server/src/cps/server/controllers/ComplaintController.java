@@ -88,7 +88,7 @@ public class ComplaintController extends RequestController {
       complaint.setStatus(Constants.COMPLAINT_STATUS_ACCEPTED);
       complaint.update(conn);
 
-      //XXX Statistics
+      // XXX Statistics
       // Count as closed and refunded
       MonthlyReport.increaseClosed(conn, now().getYear(), now().getMonthValue(), complaint.getLotID());
       MonthlyReport.increaseRefunded(conn, now().getYear(), now().getMonthValue(), complaint.getLotID());      
@@ -123,8 +123,8 @@ public class ComplaintController extends RequestController {
       complaint.setStatus(Constants.COMPLAINT_STATUS_REJECTED);
       complaint.update(conn);
       
-      //XXX Statistics
-      //Count as closed
+      // XXX Statistics
+      // Count as closed
       MonthlyReport.increaseClosed(conn, now().getYear(), now().getMonthValue(), complaint.getLotID());
 
       response.setComplaintID(complaint.getId());
