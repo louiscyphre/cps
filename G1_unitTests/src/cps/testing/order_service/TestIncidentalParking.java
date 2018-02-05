@@ -82,16 +82,9 @@ public class TestIncidentalParking extends ServerControllerTestBase {
     
     // Send Incidental Parking request    
     // After performing this request, the system should register our customer as a new customer
-    requestIncidentalParking(custData, getContext(), plannedEndTime);
-    
-    // Check that a new customer ID was created
-    assertNotEquals(0, custData.getCustomerID());
-    
-    // Check that a new password was created
-    assertNotNull(custData.getPassword());
-    
-    // The password should have a length of 4
-    assertEquals(4, custData.getPassword().length());
+    int numCustomers = db.countEntities("customer");
+    requestIncidentalParking(custData, getContext(), plannedEndTime);    
+    checkRegistered(custData, numCustomers);
     
     // Exit from parking - exit in time
     exitParking(custData, startTime, plannedEndTime);
@@ -109,20 +102,80 @@ public class TestIncidentalParking extends ServerControllerTestBase {
     startTime = getTime();
     plannedEndTime = startTime.plusHours(8);
     
-    // Send Incidental Parking request
+    // Save current state parameters
+    numCustomers = db.countEntities("customer");
     int previousID = custData.getCustomerID();
+    
+    // Send Incidental Parking request
     requestIncidentalParking(custData, getContext(), plannedEndTime);
     
     // Check that the customer ID stayed the same --  a new customer was NOT registered
     assertEquals(previousID, custData.getCustomerID());
     
-    // Check this in the database too
-    assertEquals(1, db.countEntities("customer"));
+    // Check this in the database too -- number of customers did NOT increase
+    assertEquals(numCustomers, db.countEntities("customer"));
     
     // Exit from parking - exit in time
     exitParking(custData, startTime, plannedEndTime);
   }
   
+  @Test
+  public void testReservationOverlap() throws ServerException {
+    // Order of incidental parking by existing customer. The incidental parking overlaps a reserved parking.
+    header("testIncidentalParking - overlap with reserved parking");
+
+    // Create Parking Lot
+    initParkingLot(lotData);
+    
+    // Planned time for parking
+    LocalDateTime plannedStartTime = getTime().plusHours(1);
+    LocalDateTime plannedEndTime = plannedStartTime.plusHours(8);
+    
+    // Save current state
+    int numCustomers = db.countEntities("customer"); // should be 0
+    assertEquals(0, numCustomers);
+    
+    // Send Reserved Parking request
+    requestReservedParking(custData, getContext(), plannedStartTime, plannedEndTime);
+
+    // The customer should now be registered
+    checkRegistered(custData, numCustomers);
+    
+    // Save current state
+    numCustomers = db.countEntities("customer"); // should be 1
+    assertEquals(1, numCustomers);
+    
+    int numServices = db.countEntities("onetime_service"); // should be 1
+    assertEquals(1, numServices);
+    
+    // Now try to order an incidental parking that overlaps with the previous parking reservation
+    plannedEndTime = getTime().plusHours(2);
+    IncidentalParkingRequest request = new IncidentalParkingRequest(custData.getCustomerID(), custData.getEmail(), custData.getCarID(), custData.getLotID(), plannedEndTime);
+    printObject(request);
+    IncidentalParkingResponse response = sendRequest(request, getContext(), IncidentalParkingResponse.class);
+    printObject(response);
+    
+    // The response should be a failure
+    assertFalse(response.success());
+    
+    // Test that no new parking service was added in the database
+    assertEquals(numServices, db.countEntities("onetime_service"));
+  }
+  
+  private void checkRegistered(CustomerData data, int numCustomers) throws ServerException {    
+    // Check that a new customer ID was created
+    assertNotEquals(0, custData.getCustomerID());
+    
+    // Check that a new password was created
+    assertNotNull(custData.getPassword());
+    
+    // The password should have a length of 4
+    assertEquals(4, custData.getPassword().length());
+    
+    // Test database result
+    assertEquals(numCustomers + 1, db.countEntities("customer"));
+  }
+
   private void exitParking(CustomerData custData2, LocalDateTime startTime, LocalDateTime endTime) throws ServerException {    
     // Send Parking Exit request
     setTime(endTime);
@@ -152,6 +205,7 @@ public class TestIncidentalParking extends ServerControllerTestBase {
 
     // Make the request
     IncidentalParkingRequest request = new IncidentalParkingRequest(data.getCustomerID(), data.getEmail(), data.getCarID(), data.getLotID(), plannedEndTime);
+    printObject(request);
 
     // Run general tests
     requestOnetimeParking(request, context, data, holder);
@@ -160,27 +214,18 @@ public class TestIncidentalParking extends ServerControllerTestBase {
     assertThat(holder.getB(), instanceOf(IncidentalParkingResponse.class));
   }
   
-  @Test
-  public void testDuplicateParking() throws ServerException {
-    /*
-     * Scenario: 1. Create Parking Lot 2. Send Incidental Parking request 3.
-     * Send Parking Entry request - license: IncidentalParking 4. Send Parking
-     * Exit request
-     */
+  private void requestReservedParking(CustomerData data, SessionHolder context, LocalDateTime plannedStartTime, LocalDateTime plannedEndTime) throws ServerException {
+    // Holder for data to be checked later with type-specific tests
+    Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 
-    header("testDuplicateParking -- incidental");
-    CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+    // Make the request
+    ReservedParkingRequest request = new ReservedParkingRequest(data.getCustomerID(), data.getEmail(), data.getCarID(), data.getLotID(), plannedStartTime, plannedEndTime);
+    printObject(request);
 
-    initParkingLot(lotData);
-    requestIncidentalParking(data, getContext());
+    // Run general tests
+    requestOnetimeParking(request, context, data, holder);
 
-
-    ParkingEntryRequest request = new ParkingEntryRequest(data.getCustomerID(), data.getSubsID(), data.getLotID(), data.getCarID());
-    ServerResponse response = server.dispatch(request, getContext());
-    assertNotNull(response);
-    printObject(response);
-    assertFalse(response.success());
-
-    requestParkingExit(data, getContext());
+    // Run type-specific tests
+    assertThat(holder.getB(), instanceOf(ReservedParkingResponse.class));
   }
 }

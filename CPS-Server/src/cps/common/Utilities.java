@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Iterator;
 
 /** Various utility methods and classes that are used throughout the application to facilitate writing common tasks. */
 public abstract class Utilities {
@@ -231,6 +233,16 @@ public abstract class Utilities {
   public static int countWeeksInMonth(int year, int month) {
     // TODO should this be aligned on whole weeks?
     return (int) Math.ceil(YearMonth.of(year, month).lengthOfMonth() / 7.f);
+  }
+  
+  /** Get the last element of a collection.
+   * @param <T> the generic type
+   * @param collection the collection
+   * @return the last element */
+  public static <T> T getLastElement(Collection<T> collection) {
+    T item = null;
+    for (Iterator<T> it = collection.iterator(); it.hasNext(); item = it.next());
+    return item;
   }
 
 }

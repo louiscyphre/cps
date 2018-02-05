@@ -1,12 +1,15 @@
 package cps.entities.models;
 
+import static cps.common.Utilities.debugPrintln;
+
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.sql.Date;
+
 import cps.common.Constants;
 import cps.server.ServerException;
 
@@ -157,11 +160,12 @@ public class DailyStatistics implements Serializable {
    * @throws SQLException on error
    * @throws ServerException on error */
   public static void increaseRealizedOrder(Connection conn, LocalDate date, int lotId) throws SQLException, ServerException {
-    System.out.println("DailyStatistics::increaseRealizedOrder");
     // check if line exists in database
     DailyStatistics entry = createIfNotExists(conn, date, lotId);
 
     if (entry != null) {
+      debugPrintln("DailyStatistics: incrementing realized orders: %d -> %d", entry.getRealizedOrders(), entry.getRealizedOrders() + 1);
+      
       int index = 1;
       PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_REALIZED_ORDER);
 
@@ -244,21 +248,23 @@ public class DailyStatistics implements Serializable {
 
   /** Increase canceled order count by one for the specified parking lot and date.
    * @param conn the SQL connection
-   * @param _date the date
+   * @param date the date
    * @param lotId the lot id
    * @throws SQLException on error
    * @throws ServerException on error */
-  public static void increaseCanceledOrder(Connection conn, LocalDate _date, int lotId) throws SQLException, ServerException {
+  public static void increaseCanceledOrder(Connection conn, LocalDate date, int lotId) throws SQLException, ServerException {
     // check if line exists in database
-    DailyStatistics entry = createIfNotExists(conn, _date, lotId);
+    DailyStatistics entry = createIfNotExists(conn, date, lotId);
 
     if (entry != null) {
+      debugPrintln("DailyStatistics: incrementing canceled orders: %d -> %d", entry.getCanceledOrders(), entry.getCanceledOrders() + 1);
+      
       int index = 1;
       PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_CANCELED_ORDER);
 
       // Increase the number of canceled orders
       stmt.setInt(index++, entry.getCanceledOrders() + 1);
-      stmt.setDate(index++, Date.valueOf(_date));
+      stmt.setDate(index++, Date.valueOf(date));
       stmt.setInt(index++, lotId);
 
       stmt.executeUpdate();
@@ -278,6 +284,8 @@ public class DailyStatistics implements Serializable {
     DailyStatistics entry = createIfNotExists(conn, date, lotId);
 
     if (entry != null) {
+      debugPrintln("DailyStatistics: incrementing late arrivals: %d -> %d", entry.getLateArrivals(), entry.getLateArrivals() + 1);
+      
       int index = 1;
       PreparedStatement stmt = conn.prepareStatement(Constants.SQL_INCREASE_LATE_ARRIVAL);
 

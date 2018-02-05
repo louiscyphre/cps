@@ -3,8 +3,8 @@ package cps.common;
 /** Central place for defining various constants that are used throughout the application. */
 public interface Constants {
   // TODO disable on release
-  // public final boolean DEBUG_MODE = true;
-  public final boolean DEBUG_MODE = false;
+  public final boolean DEBUG_MODE = true;
+//  public final boolean DEBUG_MODE = false;
 
   public final int    DEFAULT_LOT_NUMBER      = 0;
   public final int    DEFAULT_PORT            = 5555;
