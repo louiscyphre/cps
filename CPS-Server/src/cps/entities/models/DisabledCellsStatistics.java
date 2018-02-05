@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import cps.server.database.QueryBuilder;
+import static cps.common.Utilities.debugPrintln;
 
 /** Records statistical data about enable/disable actions performed on Parking Cells (car storage inside of a parking lot).
  * Allows calculating the number of disabled cells in a given period, and the amount of time during which cells were inactive. */
@@ -70,6 +71,7 @@ public class DisabledCellsStatistics {
    * @param _depth the depth
    * @throws SQLException the SQL exception */
   public static void create(Connection conn, LocalDateTime date, int _lotid, int _width, int _height, int _depth) throws SQLException {
+    debugPrintln("DisabledCellsStatistics: cell disabled: date = %s, lot = %s, location = %d, %d, %d", date, _lotid, _width, _height, _depth);
     PreparedStatement stmt = conn.prepareStatement("INSERT INTO disabled_slots_table VALUES(?,?,?,?,?,default)");
     int i = 1;
     stmt.setInt(i++, _lotid);
@@ -88,6 +90,7 @@ public class DisabledCellsStatistics {
    * @param _depth the depth
    * @throws SQLException the SQL exception */
   public static void markFixed(Connection conn, LocalDateTime date, int _lotid, int _width, int _height, int _depth) throws SQLException {
+    debugPrintln("DisabledCellsStatistics: cell enabled: date = %s, lot = %s, location = %d, %d, %d", date, _lotid, _width, _height, _depth);
     PreparedStatement stmt = conn
         .prepareStatement("UPDATE disabled_slots_table SET date_enabled=? WHERE lotid=? AND width=? AND height=? AND depth=? AND date_enabled is null");
     int i = 1;

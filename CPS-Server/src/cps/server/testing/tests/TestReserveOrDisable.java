@@ -29,21 +29,37 @@ public class TestReserveOrDisable extends ServerControllerTest {
     
     int i = 3, j = 2, k = 2;
     
-    ParkingCellSetDisabledAction disableAction = new ParkingCellSetDisabledAction(1, 1, i, j, k);
     ServiceSession session = getContext().acquireServiceSession();
     session.login("sarit", "1234");
     
+    ParkingCellSetDisabledAction disableAction = new ParkingCellSetDisabledAction(1, 1, i, j, k);
+    printObject(disableAction);    
     ServerResponse res = server.handle(disableAction, getContext());
+    printObject(res);
     assertFalse(res.success());
     
     disableAction = new ParkingCellSetDisabledAction(1, 1, i, j, 1);
+    printObject(disableAction);
     res = server.handle(disableAction, getContext());
+    printObject(res);
     assertTrue(res.success());
+    
+    disableAction = new ParkingCellSetDisabledAction(1, 1, i, j, 1, false);
+    printObject(disableAction);
+    res = server.handle(disableAction, getContext());
+    printObject(res);
+    assertTrue(res.success());
+    
     ParkingCellSetReservedAction reserveAction = new ParkingCellSetReservedAction(1, 1, i, j, k);
+    printObject(reserveAction);
     res = server.handle(reserveAction, getContext());
+    printObject(res);
     assertFalse(res.success());
+    
     reserveAction = new ParkingCellSetReservedAction(1, 1, i, j, 0);
+    printObject(reserveAction);
     res = server.handle(reserveAction, getContext());
+    printObject(res);
     assertTrue(res.success());
   }
 

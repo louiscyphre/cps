@@ -9,9 +9,11 @@ import java.util.Collection;
 
 import cps.server.ServerController;
 import cps.server.ServerException;
+import cps.server.controllers.CarTransportationController;
 import cps.server.database.DatabaseController;
 import cps.server.session.CompanyPersonService;
 import cps.server.session.CustomerSession;
+import cps.server.session.ServiceSession;
 import cps.server.session.SessionHolder;
 import cps.server.session.UserSession;
 import cps.server.testing.utilities.CustomerActor;
@@ -23,6 +25,7 @@ import cps.api.request.*;
 import cps.api.action.*;
 import cps.api.response.*;
 import cps.common.Constants;
+import cps.common.Utilities;
 import cps.common.Utilities.Pair;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.Complaint;
@@ -30,6 +33,7 @@ import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
+import cps.entities.people.User;
 import cps.server.ServerConfig;
 
 import junit.framework.TestCase;
@@ -49,7 +53,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @SuppressWarnings("unused")
 public class TestIncidentalParking extends ServerControllerTestBase {
   CustomerData custData;
-  ParkingLotData lotData;
+  ParkingLotData[] lotData = new ParkingLotData[2];
   
   @Before
   public void setUp() throws Exception {
@@ -60,7 +64,8 @@ public class TestIncidentalParking extends ServerControllerTestBase {
     custData = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
     
     // Setup Parking Lot data
-    lotData = new ParkingLotData(0, "Sesame, 1", 4, 5f, 4f, "1.0.0.1");
+    lotData[0] = new ParkingLotData(0, "Sesame, 1", 4, 5f, 4f, "1.0.0.1");
+    lotData[1] = new ParkingLotData(0, "Zanzibar, 2", 4, 5f, 4f, "1.0.0.2");
   }
   
   @Test
@@ -74,7 +79,7 @@ public class TestIncidentalParking extends ServerControllerTestBase {
     header("testIncidentalParking - new customer");
 
     // Create Parking Lot
-    initParkingLot(lotData);
+    initParkingLot(lotData[0]);
     
     // Planned time for parking
     LocalDateTime startTime = getTime();
@@ -125,7 +130,7 @@ public class TestIncidentalParking extends ServerControllerTestBase {
     header("testIncidentalParking - overlap with reserved parking");
 
     // Create Parking Lot
-    initParkingLot(lotData);
+    initParkingLot(lotData[0]);
     
     // Planned time for parking
     LocalDateTime plannedStartTime = getTime().plusHours(1);
@@ -162,6 +167,69 @@ public class TestIncidentalParking extends ServerControllerTestBase {
     assertEquals(numServices, db.countEntities("onetime_service"));
   }
   
+  @Test
+  public void testFullLot() throws ServerException {
+    // Order of incidental parking with no available parking slots and set alternative parking lots
+    header("testIncidentalParking - full parking lot");
+
+    // Create two Parking Lots
+    ParkingLot lot1 = initParkingLot(lotData[0]);
+    ParkingLot lot2 = initParkingLot(lotData[1]);
+    
+    // Fill lot1 with cars
+    fillLot(lot1);
+    
+    // Set redirect from lot1 to lot2
+    setRedirects(lot1, new int[] { lot2.getId() });
+    
+    // Attempt to park in this lot
+    
+    // Planned time for parking
+    LocalDateTime startTime = getTime();
+    LocalDateTime plannedEndTime = startTime.plusHours(8);
+    
+    // Send Incidental Parking request    
+    IncidentalParkingRequest request = new IncidentalParkingRequest(custData.getCustomerID(), custData.getEmail(), custData.getCarID(), custData.getLotID(), plannedEndTime);
+    printObject(request);    
+    IncidentalParkingResponse response = sendRequest(request, getContext(), IncidentalParkingResponse.class);
+    printObject(response);
+    
+    // The response must be a failure
+    assertFalse(response.success()); 
+    
+    // We should see a list of alternative parking lots in the response, that includes lot2
+    Collection<ParkingLot> alternativeLots = response.getAlternativeLots();
+    assertNotNull(alternativeLots);
+    assertTrue(alternativeLots.size() > 0);
+    ParkingLot firstElement = alternativeLots.iterator().next();
+    assertNotNull(firstElement);
+    assertEquals(lot2.getId(), firstElement.getId());
+  }
+  
+  private void setRedirects(ParkingLot lot, int[] alternativeLots) throws ServerException {
+    ServiceSession session = getContext().acquireServiceSession();
+    User user = session.login("sarit", "1234");
+    assertNotNull(user);
+    
+    SetFullLotAction action = new SetFullLotAction(user.getId(), lot.getId(), false, alternativeLots);
+    printObject(action);
+    SetFullLotResponse response = sendRequest(action, getContext(), SetFullLotResponse.class);
+    assertTrue(response.success());
+    printObject(response);
+    db.performAction(conn -> lot.update(conn));    
+  }
+  
+  private void fillLot(ParkingLot lot) throws ServerException {    
+    db.performAction(conn -> {
+      CarTransportationController tc = server.getTransportationController();
+      for (int i = 0, n = lot.getVolume(); i < n; i++) {
+        String carID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
+        LocalDateTime plannedExitTime = getTime().plusDays(10);
+        tc.insertCar(conn, lot, carID, plannedExitTime);
+      }
+    });
+  }
+
   private void checkRegistered(CustomerData data, int numCustomers) throws ServerException {    
     // Check that a new customer ID was created
     assertNotEquals(0, custData.getCustomerID());
@@ -182,7 +250,7 @@ public class TestIncidentalParking extends ServerControllerTestBase {
     ParkingExitResponse response = requestParkingExit(custData, getContext());
     
     // Check that the payment was correct
-    float expectedPrice = calculateFlatPayment(startTime, endTime, lotData.getPrice1());
+    float expectedPrice = calculateFlatPayment(startTime, endTime, lotData[0].getPrice1());
     assertEquals(expectedPrice, response.getPayment());
   }
 
