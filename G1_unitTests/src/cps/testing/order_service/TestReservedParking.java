@@ -44,7 +44,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @SuppressWarnings("unused")
 public class TestReservedParking extends ServerControllerTestBase {
   CustomerData custData;
-  ParkingLotData lotData;
+  ParkingLotData[] lotData = new ParkingLotData[2];
   
   @Before
   public void setUp() throws Exception {
@@ -55,7 +55,7 @@ public class TestReservedParking extends ServerControllerTestBase {
     custData = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
     
     // Setup Parking Lot data
-    lotData = new ParkingLotData(0, "Sesame, 1", 4, 5f, 4f, "1.0.0.1");
+    lotData[0] = new ParkingLotData(0, "Sesame, 1", 4, 5f, 4f, "1.0.0.1");
   }
   @Test
   public void testReservedParking() throws ServerException, InterruptedException {
@@ -67,7 +67,7 @@ public class TestReservedParking extends ServerControllerTestBase {
 
     header("testReservedParking");
 
-    initParkingLot(lotData);
+    initParkingLot(lotData[0]);
     requestReservedParking(custData, getContext());
     setTime(getTime().plusSeconds(3));
     
@@ -89,7 +89,7 @@ public class TestReservedParking extends ServerControllerTestBase {
     header("testDuplicateParking -- reserved");
     CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
 
-    initParkingLot(lotData);
+    initParkingLot(lotData[0]);
     requestReservedParking(data, getContext());
     setTime(getTime().plusSeconds(3));
     

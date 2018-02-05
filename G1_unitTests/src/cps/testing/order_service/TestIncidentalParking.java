@@ -216,7 +216,6 @@ public class TestIncidentalParking extends ServerControllerTestBase {
     SetFullLotResponse response = sendRequest(action, getContext(), SetFullLotResponse.class);
     assertTrue(response.success());
     printObject(response);
-    db.performAction(conn -> lot.update(conn));    
   }
   
   private void fillLot(ParkingLot lot) throws ServerException {    
