@@ -10,10 +10,14 @@ import java.util.Collection;
 import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.database.DatabaseController;
+import cps.server.session.CompanyPersonService;
 import cps.server.session.CustomerSession;
 import cps.server.session.SessionHolder;
 import cps.server.session.UserSession;
+import cps.server.testing.utilities.CustomerActor;
+import cps.server.testing.utilities.EmployeeActor;
 import cps.testing.utilities.CustomerData;
+import cps.testing.utilities.ParkingLotData;
 import cps.testing.utilities.ServerControllerTestBase;
 import cps.api.request.*;
 import cps.api.action.*;
@@ -34,6 +38,8 @@ import org.junit.Test;
 import com.google.gson.Gson;
 
 import org.junit.Assert;
+import org.junit.Before;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -42,6 +48,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @SuppressWarnings("unused")
 public class TestIncidentalParking extends ServerControllerTestBase {
+  CustomerData custData;
+  ParkingLotData lotData;
+  
+  @Before
+  public void setUp() throws Exception {
+    super.setUp();
+    
+    // Setup customer data
+    // Initially we set customer ID to 0, so that the system will create a new ID for us
+    custData = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+    
+    // Setup Parking Lot data
+    lotData = new ParkingLotData(0, "Sesame, 1", 4, 5f, 4f, "1.0.0.1");
+  }
+  
   @Test
   public void testIncidentalParking() throws ServerException {
     // Test 1 - Order of incidental parking by new customer (without ID and password)
@@ -51,42 +72,86 @@ public class TestIncidentalParking extends ServerControllerTestBase {
      * 3. Send Parking Exit request */
 
     header("testIncidentalParking - new customer");
-    
-    // Setup customer data
-    // Initially we set customer ID to 0, so that the system will create a new ID for us
-    CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
 
     // Create Parking Lot
-    initParkingLot();
+    initParkingLot(lotData);
     
     // Planned time for parking
-    LocalDateTime plannedEndTime = getTime().plusHours(8).withNano(0);
+    LocalDateTime startTime = getTime();
+    LocalDateTime plannedEndTime = startTime.plusHours(8);
     
     // Send Incidental Parking request    
     // After performing this request, the system should register our customer as a new customer
-    requestIncidentalParking(data, getContext(), plannedEndTime);
+    requestIncidentalParking(custData, getContext(), plannedEndTime);
     
     // Check that a new customer ID was created
-    assertNotEquals(0, data.customerID);
+    assertNotEquals(0, custData.getCustomerID());
     
     // Check that a new password was created
-    assertNotNull(data.password);
+    assertNotNull(custData.getPassword());
     
     // The password should have a length of 4
-    assertEquals(4, data.password.length());
+    assertEquals(4, custData.getPassword().length());
     
-    // Send Parking Exit request
-    // We will exit on time
-    setTime(plannedEndTime);
-    ParkingExitResponse response = requestParkingExit(data, getContext());
-  } 
+    // Exit from parking - exit in time
+    exitParking(custData, startTime, plannedEndTime);
+    
+    // Now we will try to order parking again, now as a registered customer
+    header("testIncidentalParking - registered customer");
+    
+    // Since the server currently considered us logged in, we clear out the session context, in order to simulate a clean login
+    getContext().setCustomerSession(null);
+    
+    // Attempt to login again with our email and password
+    requestLogin(custData, getContext());
+    
+    // Repeat the procedure
+    startTime = getTime();
+    plannedEndTime = startTime.plusHours(8);
+    
+    // Send Incidental Parking request
+    int previousID = custData.getCustomerID();
+    requestIncidentalParking(custData, getContext(), plannedEndTime);
+    
+    // Check that the customer ID stayed the same --  a new customer was NOT registered
+    assertEquals(previousID, custData.getCustomerID());
+    
+    // Check this in the database too
+    assertEquals(1, db.countEntities("customer"));
+    
+    // Exit from parking - exit in time
+    exitParking(custData, startTime, plannedEndTime);
+  }
   
+  private void exitParking(CustomerData custData2, LocalDateTime startTime, LocalDateTime endTime) throws ServerException {    
+    // Send Parking Exit request
+    setTime(endTime);
+    ParkingExitResponse response = requestParkingExit(custData, getContext());
+    
+    // Check that the payment was correct
+    float expectedPrice = calculateFlatPayment(startTime, endTime, lotData.getPrice1());
+    assertEquals(expectedPrice, response.getPayment());
+  }
+
+  private float calculateFlatPayment(LocalDateTime start, LocalDateTime end, float price) {
+    Duration duration = Duration.between(start, end);    
+    return price * duration.getSeconds() / 3600f;
+  }
+  
+  private void requestLogin(CustomerData data, SessionHolder context) {
+    LoginRequest request = new LoginRequest(data.getEmail(), data.getPassword());
+    printObject(request);
+    LoginResponse response = sendRequest(request, getContext(), LoginResponse.class);
+    assertTrue(response.success());
+    printObject(response);
+  }
+
   void requestIncidentalParking(CustomerData data, SessionHolder context, LocalDateTime plannedEndTime) throws ServerException {
     // Holder for data to be checked later with type-specific tests
     Pair<OnetimeService, OnetimeParkingResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    IncidentalParkingRequest request = new IncidentalParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedEndTime);
+    IncidentalParkingRequest request = new IncidentalParkingRequest(data.getCustomerID(), data.getEmail(), data.getCarID(), data.getLotID(), plannedEndTime);
 
     // Run general tests
     requestOnetimeParking(request, context, data, holder);
@@ -106,11 +171,11 @@ public class TestIncidentalParking extends ServerControllerTestBase {
     header("testDuplicateParking -- incidental");
     CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
 
-    initParkingLot();
+    initParkingLot(lotData);
     requestIncidentalParking(data, getContext());
 
 
-    ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, data.subsID, data.lotID, data.carID);
+    ParkingEntryRequest request = new ParkingEntryRequest(data.getCustomerID(), data.getSubsID(), data.getLotID(), data.getCarID());
     ServerResponse response = server.dispatch(request, getContext());
     assertNotNull(response);
     printObject(response);

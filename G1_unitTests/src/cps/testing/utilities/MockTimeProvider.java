@@ -10,7 +10,7 @@ public class MockTimeProvider implements TimeProvider {
   
   /** Instantiates a new mock time provider. */
   public MockTimeProvider() {
-    this.value = LocalDateTime.now(); 
+    this.value = LocalDateTime.now().withNano(0); 
   }
   
   /** Instantiates a new mock time provider.

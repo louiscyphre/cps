@@ -1,13 +1,13 @@
 package cps.testing.utilities;
 
 public class CustomerData {
-  public int    customerID;
-  public String email;
-  public String password;
-  public String carID;
-  public int    lotID;
-  public int    subsID;
-  public int    onetimeServiceID;
+  private int    customerID;
+  private String email;
+  private String password;
+  private String carID;
+  private int    lotID;
+  private int    subsID;
+  private int    onetimeServiceID;
 
   public CustomerData(int customerID, String email, String password, String carID, int lotID, int subsID) {
     this.customerID = customerID;

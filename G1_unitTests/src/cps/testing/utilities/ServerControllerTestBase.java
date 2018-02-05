@@ -18,6 +18,7 @@ import cps.api.request.OnetimeParkingRequest;
 import cps.api.request.ParkingEntryRequest;
 import cps.api.request.ParkingExitRequest;
 import cps.api.request.RegularSubscriptionRequest;
+import cps.api.request.Request;
 import cps.api.request.ReservedParkingRequest;
 import cps.api.request.SubscriptionRequest;
 import cps.api.response.FullSubscriptionResponse;
@@ -136,17 +137,17 @@ public abstract class ServerControllerTestBase extends TestCase {
     // Retrieve customer
     assertThat(response, instanceOf(SubscriptionResponse.class));
     SubscriptionResponse specificResponse = (SubscriptionResponse) response;
-    data.customerID = specificResponse.getCustomerID();
-    assertEquals(1, data.customerID);
+    data.setCustomerID(specificResponse.getCustomerID());
+    assertEquals(1, data.getCustomerID());
 
     // Update subscription ID
-    data.subsID = specificResponse.getServiceID();
+    data.setSubsID(specificResponse.getServiceID());
 
     // Test database result
     assertEquals(1, db.countEntities("customer"));
     assertEquals(1, db.countEntities("subscription_service"));
 
-    Collection<SubscriptionService> entries = db.performQuery(conn -> SubscriptionService.findByCustomerID(conn, data.customerID));
+    Collection<SubscriptionService> entries = db.performQuery(conn -> SubscriptionService.findByCustomerID(conn, data.getCustomerID()));
     assertEquals(1, entries.size());
 
     SubscriptionService entry = entries.iterator().next();
@@ -170,7 +171,7 @@ public abstract class ServerControllerTestBase extends TestCase {
 
     // Make the request
     LocalDate startDate = getTime().toLocalDate();
-    FullSubscriptionRequest request = new FullSubscriptionRequest(data.customerID, data.email, data.carID, startDate);
+    FullSubscriptionRequest request = new FullSubscriptionRequest(data.getCustomerID(), data.getEmail(), data.getCarID(), startDate);
 
     // Run general tests
     requestSubscription(request, context, data, holder);
@@ -186,7 +187,7 @@ public abstract class ServerControllerTestBase extends TestCase {
     // Make the request
     LocalDate startDate = getTime().toLocalDate();
     LocalTime dailyExitTime = LocalTime.of(17, 30);
-    RegularSubscriptionRequest request = new RegularSubscriptionRequest(data.customerID, data.email, data.carID, startDate, data.lotID, dailyExitTime);
+    RegularSubscriptionRequest request = new RegularSubscriptionRequest(data.getCustomerID(), data.getEmail(), data.getCarID(), startDate, data.getLotID(), dailyExitTime);
 
     // Run general tests
     requestSubscription(request, context, data, holder);
@@ -200,31 +201,30 @@ public abstract class ServerControllerTestBase extends TestCase {
   protected void requestOnetimeParking(OnetimeParkingRequest request, SessionHolder context, CustomerData data,
       Pair<OnetimeService, OnetimeParkingResponse> holder) throws ServerException {
     // Test the response
-    ServerResponse response = server.dispatch(request, context);
+    OnetimeParkingResponse response = sendRequest(request, context, OnetimeParkingResponse.class);
     printObject(response);
     assertTrue(response.success());
 
     // Retrieve customer
-    assertThat(response, instanceOf(OnetimeParkingResponse.class));
-    OnetimeParkingResponse specificResponse = (OnetimeParkingResponse) response;
-    data.customerID = specificResponse.getCustomerID();
-    assertNotEquals(0, data.customerID);
+    
+    if (response.getCustomerID() != 0) {
+      data.setCustomerID(response.getCustomerID());
+      data.setPassword(response.getPassword());
+    }
+    
+    assertNotEquals(0, data.getCustomerID());
 
     // Update service id
-    data.onetimeServiceID = specificResponse.getServiceID();
+    data.setOnetimeServiceID(response.getServiceID());
 
-    // Test database result
-    assertEquals(1, db.countEntities("customer"));
-    assertEquals(1, db.countEntities("onetime_service"));
-
-    Collection<OnetimeService> entries = db.performQuery(conn -> OnetimeService.findByCustomerID(conn, data.customerID));
-    assertEquals(1, entries.size());
+    Collection<OnetimeService> entries = db.performQuery(conn -> OnetimeService.findByCustomerID(conn, data.getCustomerID()));
+    assertTrue(entries.size() > 0);
 
     OnetimeService entry = entries.iterator().next();
     assertNotNull(entry);
 
     assertEquals(request.getParkingType(), entry.getParkingType());
-    assertEquals(specificResponse.getCustomerID(), entry.getCustomerID());
+    assertEquals(response.getCustomerID(), entry.getCustomerID());
     assertEquals(request.getEmail(), entry.getEmail());
     assertEquals(request.getCarID(), entry.getCarID());
     assertEquals(request.getLotID(), entry.getLotID());
@@ -232,7 +232,7 @@ public abstract class ServerControllerTestBase extends TestCase {
     assertEquals(false, entry.isCanceled());
 
     holder.setA(entry);
-    holder.setB(specificResponse);
+    holder.setB(response);
   }
 
   protected void requestIncidentalParking(CustomerData data, SessionHolder context) throws ServerException {
@@ -241,7 +241,7 @@ public abstract class ServerControllerTestBase extends TestCase {
 
     // Make the request
     LocalDateTime plannedEndTime = getTime().plusHours(8).withNano(0);
-    IncidentalParkingRequest request = new IncidentalParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedEndTime);
+    IncidentalParkingRequest request = new IncidentalParkingRequest(data.getCustomerID(), data.getEmail(), data.getCarID(), data.getLotID(), plannedEndTime);
 
     // Run general tests
     requestOnetimeParking(request, context, data, holder);
@@ -257,7 +257,7 @@ public abstract class ServerControllerTestBase extends TestCase {
     // Make the request
     LocalDateTime plannedStartTime = getTime().plus(delta).withNano(0);
     LocalDateTime plannedEndTime = plannedStartTime.plusHours(8);
-    ReservedParkingRequest request = new ReservedParkingRequest(data.customerID, data.email, data.carID, data.lotID, plannedStartTime, plannedEndTime);
+    ReservedParkingRequest request = new ReservedParkingRequest(data.getCustomerID(), data.getEmail(), data.getCarID(), data.getLotID(), plannedStartTime, plannedEndTime);
 
     // Run general tests
     requestOnetimeParking(request, context, data, holder);
@@ -272,21 +272,23 @@ public abstract class ServerControllerTestBase extends TestCase {
     requestReservedParking(data, Duration.ofMillis(1500), context);
   }
 
-  protected ParkingLot initParkingLot() throws ServerException {
-    ParkingLot lot = db.performQuery(conn -> ParkingLot.create(conn, "Lot Address", 3, 5, 4, "113.0.1.14"));
+  protected ParkingLot initParkingLot(String lotAddress, int width, float price1, float price2, String robotIP) throws ServerException {
+    ParkingLot lot = db.performQuery(conn -> ParkingLot.create(conn, lotAddress, width, price1, price2, robotIP));
     assertNotNull(lot);
-    printObject(lot);
-    assertEquals(1, db.countEntities("parking_lot"));
     return lot;
   }
 
-  protected ParkingLot initParkingLot(String lotAddress, int width, float price1, float price2, String robotIP) throws ServerException {
-    return db.performQuery(conn -> ParkingLot.create(conn, lotAddress, width, price1, price2, robotIP));
+  protected ParkingLot initParkingLot(ParkingLotData data) throws ServerException {
+    ParkingLot lot = initParkingLot(data.getStreetAddress(), data.getWidth(), data.getPrice1(), data.getPrice2(), data.getRobotIP());
+    if (lot != null) {
+      data.setLotID(lot.getId());
+    }
+    return lot;
   }
 
   protected boolean requestParkingEntry(CustomerData data, SessionHolder context, boolean weekend) throws ServerException {
     // subscriptionID = 0 means entry by OnetimeParking license
-    ParkingEntryRequest request = new ParkingEntryRequest(data.customerID, data.subsID, data.lotID, data.carID);
+    ParkingEntryRequest request = new ParkingEntryRequest(data.getCustomerID(), data.getSubsID(), data.getLotID(), data.getCarID());
     ServerResponse response = server.dispatch(request, context);
     assertNotNull(response);
     printObject(response);
@@ -294,7 +296,7 @@ public abstract class ServerControllerTestBase extends TestCase {
     if (!weekend) {
       assertTrue(response.success());
       assertEquals(1, db.countEntities("car_transportation"));
-      CarTransportation entry = db.performQuery(conn -> CarTransportation.findByCarId(conn, data.carID, data.lotID));
+      CarTransportation entry = db.performQuery(conn -> CarTransportation.findByCarId(conn, data.getCarID(), data.getLotID()));
       printObject(entry);
     } else {
       assertFalse(response.success());
@@ -308,32 +310,40 @@ public abstract class ServerControllerTestBase extends TestCase {
   }
 
   protected ParkingExitResponse requestParkingExit(CustomerData data, SessionHolder context) throws ServerException {
-    ParkingExitRequest request = new ParkingExitRequest(data.customerID, data.lotID, data.carID);
+    ParkingExitRequest request = new ParkingExitRequest(data.getCustomerID(), data.getLotID(), data.getCarID());
+    printObject(request);
+    
+    int numCarTransportations = db.countEntities("car_transportation");
 
-    ServerResponse response = server.dispatch(request, context);
+    ParkingExitResponse response = sendRequest(request, context, ParkingExitResponse.class);
     printObject(response);
     assertTrue(response.success());
     
     // Test database result
-    assertEquals(1, db.countEntities("car_transportation"));
-    Collection<CarTransportation> entries = db.performQuery(conn -> CarTransportation.findByLotID(conn, data.lotID));
-    assertEquals(1, entries.size());
+    assertEquals(numCarTransportations, db.countEntities("car_transportation"));
+    Collection<CarTransportation> entries = db.performQuery(conn -> CarTransportation.findByLotID(conn, data.getLotID()));
+    assertNotNull(entries);
+    assertTrue(entries.size() > 0);
 
     // Check that the car_transportation record's removed_at field was updated
     CarTransportation entry = entries.iterator().next();
     assertNotNull(entry);
     assertNotNull(entry.getRemovedAt());
-    printObject(entry);
     
-    // Return the type-specific response
-    assertThat(response, instanceOf(ParkingExitResponse.class));
-    return (ParkingExitResponse) response;
+    return response;
   }
 
   protected Customer makeCustomer(CustomerData data) throws ServerException {
-    Customer customer = db.performQuery(conn -> Customer.create(conn, data.email, data.password));
+    Customer customer = db.performQuery(conn -> Customer.create(conn, data.getEmail(), data.getPassword()));
     assertNotNull(customer);
     printObject(customer);
     return customer;
+  }
+
+  public <T extends ServerResponse> T sendRequest(Request request, SessionHolder context, Class<T> type) {
+    ServerResponse response = server.dispatch(request, context);
+    assertNotNull(response);
+    assertThat(response, instanceOf(type));
+    return type.cast(response);
   }
 }

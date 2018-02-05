@@ -6,17 +6,11 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
-
-import cps.api.request.Request;
-import cps.api.response.ServerResponse;
 import cps.entities.models.ParkingLot;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.ServerException;
 import cps.server.session.CompanyPersonService;
-import cps.server.session.SessionHolder;
 import cps.server.testing.utilities.CustomerActor;
 import cps.server.testing.utilities.EmployeeActor;
 import cps.server.testing.utilities.ParkingLotData;
@@ -127,14 +121,6 @@ public class TestStatistics extends ServerControllerTest implements World {
   @Override
   public Duration getTimeslice() {
     return timeSlice;
-  }
-
-  @Override
-  public <T extends ServerResponse> T sendRequest(Request request, SessionHolder context, Class<T> type) {
-    ServerResponse response = server.dispatch(request, context);
-    assertNotNull(response);
-    assertThat(response, instanceOf(type));
-    return type.cast(response);
   }
 
   @Override

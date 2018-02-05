@@ -18,6 +18,7 @@ import cps.api.request.OnetimeParkingRequest;
 import cps.api.request.ParkingEntryRequest;
 import cps.api.request.ParkingExitRequest;
 import cps.api.request.RegularSubscriptionRequest;
+import cps.api.request.Request;
 import cps.api.request.ReservedParkingRequest;
 import cps.api.request.SubscriptionRequest;
 import cps.api.response.FullSubscriptionResponse;
@@ -328,5 +329,12 @@ public abstract class ServerControllerTest extends TestCase {
     assertNotNull(customer);
     printObject(customer);
     return customer;
+  }
+
+  public <T extends ServerResponse> T sendRequest(Request request, SessionHolder context, Class<T> type) {
+    ServerResponse response = server.dispatch(request, context);
+    assertNotNull(response);
+    assertThat(response, instanceOf(type));
+    return type.cast(response);
   }
 }
