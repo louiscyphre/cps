@@ -1,4 +1,4 @@
-package cps.server.testing.utilities;
+package cps.testing.utilities;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,6 +23,7 @@ import cps.api.request.SubscriptionRequest;
 import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
 import cps.api.response.OnetimeParkingResponse;
+import cps.api.response.ParkingExitResponse;
 import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
@@ -41,7 +42,7 @@ import cps.server.session.SessionHolder;
 import junit.framework.TestCase;
 
 // @SuppressWarnings("unused")
-public abstract class ServerControllerTest extends TestCase {
+public abstract class ServerControllerTestBase extends TestCase {
   protected ServerController   server;
   protected DatabaseController db;
   protected Gson               gson   = new Gson();
@@ -86,11 +87,11 @@ public abstract class ServerControllerTest extends TestCase {
     this.config = config;
   }
 
-  public ServerControllerTest() {
+  public ServerControllerTestBase() {
     this.config = ServerConfig.testing();
   }
 
-  public ServerControllerTest(ServerConfig config) {
+  public ServerControllerTestBase(ServerConfig config) {
     this.config = config;
   }
 
@@ -306,21 +307,27 @@ public abstract class ServerControllerTest extends TestCase {
     return requestParkingEntry(data, context, false);
   }
 
-  protected void requestParkingExit(CustomerData data, SessionHolder context) throws ServerException {
+  protected ParkingExitResponse requestParkingExit(CustomerData data, SessionHolder context) throws ServerException {
     ParkingExitRequest request = new ParkingExitRequest(data.customerID, data.lotID, data.carID);
 
     ServerResponse response = server.dispatch(request, context);
     printObject(response);
     assertTrue(response.success());
+    
+    // Test database result
     assertEquals(1, db.countEntities("car_transportation"));
-
     Collection<CarTransportation> entries = db.performQuery(conn -> CarTransportation.findByLotID(conn, data.lotID));
     assertEquals(1, entries.size());
 
+    // Check that the car_transportation record's removed_at field was updated
     CarTransportation entry = entries.iterator().next();
     assertNotNull(entry);
     assertNotNull(entry.getRemovedAt());
     printObject(entry);
+    
+    // Return the type-specific response
+    assertThat(response, instanceOf(ParkingExitResponse.class));
+    return (ParkingExitResponse) response;
   }
 
   protected Customer makeCustomer(CustomerData data) throws ServerException {
