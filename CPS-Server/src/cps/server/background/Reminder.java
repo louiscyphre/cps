@@ -66,7 +66,7 @@ public class Reminder extends Thread {
 
         /* This function will generate weekly reports */
 
-        if (clock.now().getDayOfWeek() == DayOfWeek.SUNDAY && checkedWeeks.contains(clock.now().toLocalDate())) {
+        if (clock.now().getDayOfWeek() == DayOfWeek.SUNDAY && !checkedWeeks.contains(clock.now().toLocalDate())) {
           generateLastWeek();
           checkedWeeks.add(clock.now().toLocalDate());
         }
