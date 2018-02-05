@@ -95,13 +95,19 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
   /** List holding the entries */
   private ObservableList<TableQuarterlyEntry> obsEntriesList;
 
-  /* (non-Javadoc)
-   * @see
-   * cps.client.controller.service.ServiceActionControllerBase#handleBackButton(
-   * javafx.event.ActionEvent) */
+  
   @FXML
-  void handleBackButton(ActionEvent event) {
-    ControllersClientAdapter.setStage(SceneCode.SERVICE_STATISTICS_CHOICE);
+  void handleClearButton(ActionEvent event) {
+    this.cleanCtrl();
+  }
+
+  /** Handle refresh button.
+   * @param event the event */
+  @FXML
+  void handleRefreshButton(ActionEvent event) {
+    if (!processing) {
+      validateAndSend();
+    }
   }
 
   /** Handle start date choice.
@@ -113,6 +119,7 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
       return;
     }
     endDatePicker.setDisable(false);
+    validateAndSend();
   }
 
   /** Handle end date choice.
@@ -132,6 +139,7 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
     // Get the list of parking lots
     turnProcessingStateOn();
     sendRequest(new ListParkingLotsRequest());
+    validateAndSend();
   }
 
   /** Handle lot choice.

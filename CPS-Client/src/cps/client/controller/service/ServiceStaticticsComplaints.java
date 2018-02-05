@@ -82,24 +82,12 @@ public class ServiceStaticticsComplaints extends ServiceActionControllerBase imp
   /** Parking lots mapping to their addresses. */
   protected HashMap<String, ParkingLot> parkingLotsMap = new HashMap<String, ParkingLot>();
 
-  /** Refresh function. Request from the server fresh list of Reservations */
-  private void refresh() {
-    if (parkingLotsMap.isEmpty()) {
-      ListParkingLotsRequest request = new ListParkingLotsRequest();
-      // Toggle processing state on
-      turnProcessingStateOn();
-      ControllersClientAdapter.getClient().sendRequest(request);
-    } else {
-      validateAndSend();
-    }
-  }
-
   /** Handle refresh button.
    * @param event the event */
   @FXML
   void handleRefreshButton(ActionEvent event) {// TODO//FIXME
     if (!processing) {
-      refresh();
+      validateAndSend();
     }
   }
 

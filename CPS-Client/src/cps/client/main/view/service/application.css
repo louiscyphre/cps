@@ -60,6 +60,17 @@
     -fx-label-padding: 10 10 10 10;
 }
 
+
+.refreshButton {
+    -fx-color: #000000;
+    -fx-background-color: #5CB85C;
+    -fx-border-radius: 8 8 8 8;
+    -fx-background-radius: 8 8 8 8;
+    -fx-font-size: 16;
+    -fx-font-family: 'Sans-serif';
+    -fx-label-padding: 10 10 10 10;
+}
+
 .mediumButton {
 	-fx-font-size: 14;
     -fx-label-padding: 2 2 2 2;
