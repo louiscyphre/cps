@@ -9,6 +9,10 @@ import cps.common.Constants;
 public class FullSubscriptionRequest extends SubscriptionRequest {
   private static final long serialVersionUID = 1L;
 
+  public FullSubscriptionRequest(int customerID, String email, String[] carIDs, LocalDate startDate) {
+    super(customerID, email, carIDs, startDate);
+  }
+
   public FullSubscriptionRequest(int customerID, String email, String carID, LocalDate startDate) {
     super(customerID, email, carID, startDate);
   }

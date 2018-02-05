@@ -129,11 +129,20 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
     }
     // inside the form
     // car id validation
-    String carID = getCarID();
-    if (!InputFormats.CARID.validate(carID)) {
+    String[] carIDs = getCarIDs();
+    
+    if (carIDs == null) {
       displayError(InputFormats.CARID.errorMsg());
       return;
     }
+    
+    for (String carID : carIDs) {
+      if (!InputFormats.CARID.validate(carID)) {
+        displayError(InputFormats.CARID.errorMsg());
+        return;
+      }
+    }
+    
     // start time validation
     LocalDate today = LocalDate.now();
     // DatePicker start date validation
@@ -159,7 +168,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
       ControllersClientAdapter.getCustomerContext().setPendingEmail(email);
     }
 
-    FullSubscriptionRequest request = new FullSubscriptionRequest(customerID, email, carID, plannedStartDate);
+    FullSubscriptionRequest request = new FullSubscriptionRequest(customerID, email, carIDs, plannedStartDate);
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
@@ -186,10 +195,20 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
   }
 
   /**
-   * @return car id or null if empty
+   * @return car id list or null if empty
    */
-  private String getCarID() {
-    return carIDTextField.getText();
+  private String[] getCarIDs() {
+    String text = carIDTextField.getText();
+    
+    if (text == null || text.trim().length() < 1) {
+      return null;
+    }
+    
+    String[] values = text.split(",");
+    for (int i = 0; i < values.length; i++) {
+      values[i] = values[i].trim();
+    }
+    return values;
   }
 
   /**
@@ -222,7 +241,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
   }
 
   /**
-   * Display the Subscription Details Request was succesful, and user
+   * Display the Subscription Details Request was successful, and user
    * credentials if new user, otherwise - error.
    */
   public void handle(FullSubscriptionResponse response) {
@@ -258,6 +277,7 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
       // Success info creation
       formattedMessage.add(new Text("Subscription purchased successfully!\n"));
       formattedMessage.add(new Text(String.format("Your account was debited %s ILS.", response.getPayment())));
+      addSubscriptionIDs(formattedMessage, response.getSubscriptionIDs());
       ctrl.turnProcessingStateOff();
       // Display the whole formatted message
       ctrl.displayInfo(formattedMessage);
