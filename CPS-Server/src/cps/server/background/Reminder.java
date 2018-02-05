@@ -3,11 +3,13 @@
  */
 package cps.server.background;
 
+import static cps.common.Utilities.debugPrint;
+import static cps.common.Utilities.debugPrintln;
+
 import java.sql.Connection;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -20,9 +22,6 @@ import cps.server.ServerConfig;
 import cps.server.ServerException;
 import cps.server.TimeProvider;
 import cps.server.database.DatabaseController;
-
-import static cps.common.Utilities.debugPrint;
-import static cps.common.Utilities.debugPrintln;
 
 /** Runs in the background to remind users about important events.
  * 1. Ask users who are late to their reserved parking whether they are still interested in the reservation.
@@ -49,47 +48,56 @@ public class Reminder extends Thread {
     try {
       while (true) {
         Thread.sleep(INTERVAL);
-
-        /* This function will send messages to users that are late by at least
-         * one second */
-        warnLateCustomers();
-
-        /* This function will find users that are late more than 30 minutes and
-         * have not been authorized to do that and will cancel their one time
-         * order */
-        cancelLateReservations();
-
-        /* This function will find users that purchased a monthly subscription
-         * and have 1 week left until it expires,
-         * and will notify them to renew their subscription. */
-        warnSubscriptionOwners();
-
-        /* This function will generate weekly reports */
-
-        if (clock.now().getDayOfWeek() == DayOfWeek.SUNDAY && !checkedWeeks.contains(clock.now().toLocalDate())) {
-          generateLastWeek();
-          checkedWeeks.add(clock.now().toLocalDate());
-        }
+        runTasks();
       }
 
     } catch (InterruptedException e) {
       e.printStackTrace();
+    }
+  }
+  
+  public void runTasks() {
+    try {
+      /* This function will send messages to users that are late by at least
+       * one second */
+      warnLateCustomers();
+
+      /* This function will find users that are late more than 30 minutes and
+       * have not been authorized to do that and will cancel their one time
+       * order */
+      cancelLateReservations();
+
+      /* This function will find users that purchased a monthly subscription
+       * and have 1 week left until it expires,
+       * and will notify them to renew their subscription. */
+      warnSubscriptionOwners();
+
+      /* This function will generate weekly reports */
+      generateLastWeekReport();
     } catch (ServerException e) {
       e.printStackTrace();
-    }
+    }    
+  }
+  
+  private void generateLastWeekReport() throws ServerException {
+    LocalDate today = clock.now().toLocalDate();
+    if (today.getDayOfWeek() == DayOfWeek.SUNDAY && !checkedWeeks.contains(today)) {
+      generateWeeklyReport(today.minusDays(7));
+      checkedWeeks.add(today);
+    }    
   }
 
   /** Generate last week weekly report for each parking lot and populate it into the database.
    * @throws ServerException the server exception */
-  private void generateLastWeek() throws ServerException {
+  private void generateWeeklyReport(LocalDate weekStart) throws ServerException {
     db.performAction(conn -> {
       debugPrint("Updating last week weekly report ");
       LinkedList<ParkingLot> lots = (LinkedList<ParkingLot>) ParkingLot.findAll(conn);
       for (ParkingLot lot : lots) {
-        WeeklyStatistics.createUpdateWeeklyReport(conn, clock.now().toLocalDate().minusDays(7), lot.getId());
+        WeeklyStatistics.createUpdateWeeklyReport(conn, weekStart, lot.getId());
       }
 
-      debugPrintln("...updated %s lots weekly reports", lots.size());
+      debugPrintln("...updated weekly reports for %s lots", lots.size());
     });
   }
 
