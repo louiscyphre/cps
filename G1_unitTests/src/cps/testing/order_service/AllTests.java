@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ TestFullSubscription.class, TestIncidentalParking.class, TestRegularSubscription.class, TestReservedParking.class })
+@SuiteClasses({ TestIncidentalParking.class, TestReservedParking.class, TestRegularSubscription.class, TestFullSubscription.class })
 public class AllTests {
 
 }

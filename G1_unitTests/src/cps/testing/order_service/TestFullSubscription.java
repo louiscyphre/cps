@@ -13,8 +13,9 @@ import cps.server.database.DatabaseController;
 import cps.server.session.CustomerSession;
 import cps.server.session.SessionHolder;
 import cps.server.session.UserSession;
-import cps.server.testing.utilities.CustomerData;
-import cps.server.testing.utilities.ServerControllerTest;
+import cps.testing.utilities.CustomerData;
+import cps.testing.utilities.ParkingLotData;
+import cps.testing.utilities.ServerControllerTestBase;
 import cps.api.request.*;
 import cps.api.action.*;
 import cps.api.response.*;
@@ -34,27 +35,52 @@ import org.junit.Test;
 import com.google.gson.Gson;
 
 import org.junit.Assert;
+import org.junit.Before;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @SuppressWarnings("unused")
-public class TestFullSubscription extends ServerControllerTest {
+public class TestFullSubscription extends ServerControllerTestBase {
+  protected CustomerData custData;
+  protected ParkingLotData[] lotData = new ParkingLotData[2];
+  
+  @Before
+  public void setUp() throws Exception {
+    super.setUp();
+    
+    // Setup customer data
+    // Initially we set customer ID to 0, so that the system will create a new ID for us
+    custData = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+    
+    // Setup Parking Lot data
+    lotData[0] = new ParkingLotData(0, "Sesame, 1", 4, 5f, 4f, "1.0.0.1");
+    lotData[1] = new ParkingLotData(0, "Zanzibar, 2", 4, 5f, 4f, "1.0.0.2");
+  }
+  
   @Test
   public void testFullSubscription() throws ServerException {
-    /*
-     * Scenario: 1. Create Parking Lot 2. Send Full Subscription request 3. Send
-     * Parking Entry request - license: FullSubscription 4. Send Parking Exit
-     * request
-     */
+    /* Scenario:
+     * 1. Create Parking Lot
+     * 2. Send Full Subscription request
+     * 3. Send Parking Entry request - license: FullSubscription
+     * 4. Send Parking Exit request */
 
     header("testFullSubscription");
     CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+    
+    LocalDate startDate = getTime().toLocalDate();
 
-    initParkingLot();
-    requestFullSubscription(data, getContext());
-    requestParkingEntry(data, getContext());
+    ParkingLot lot = initParkingLot(lotData[0]);
+    float expectedPayment = Constants.PRICE_PER_HOUR_RESERVED * 72f;
+    requestFullSubscription(data, getContext(), startDate, expectedPayment);
+    enterParking(data, getContext());
     requestParkingExit(data, getContext());
+  }
+  @Test
+  public void testMultipleCars() throws ServerException {
+    
   }
 }
