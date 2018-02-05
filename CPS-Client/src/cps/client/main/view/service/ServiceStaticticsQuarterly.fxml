@@ -91,7 +91,7 @@
 					<children>
 						<Button id="" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="backButton" text="Back" textAlignment="CENTER" />
                   <Button id="" alignment="CENTER" defaultButton="true" layoutX="334.0" layoutY="23.0" mnemonicParsing="false" onAction="#handleClearButton" prefHeight="60.0" prefWidth="180.0" style="" styleClass="regularButton" text="Clear" textAlignment="CENTER" />
-                  <Button id="" alignment="CENTER" defaultButton="true" layoutX="454.0" layoutY="23.0" mnemonicParsing="false" onAction="#handleRefreshButton" prefHeight="60.0" prefWidth="180.0" style="-fx-background-color: #5CB85C; -fx-border-radius: 8 8 8 8; -fx-background-radius: 8 8 8 8;" styleClass="refreshButton" text="Refresh" textAlignment="CENTER" textFill="WHITE">
+                  <Button id="" alignment="CENTER" defaultButton="true" layoutX="454.0" layoutY="23.0" mnemonicParsing="false" onAction="#handleRefreshButton" prefHeight="60.0" prefWidth="180.0" styleClass="regularButton" text="Refresh" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font></Button>

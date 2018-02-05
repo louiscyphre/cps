@@ -7,6 +7,7 @@ import cps.client.controller.ControllersClientAdapter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -25,7 +26,15 @@ public class ServiceStaticticsPerformance extends ServiceStatitisticsBase {
 
   /** List holding the entries */
   private ObservableList<TablePerformanceEntry> obsEntriesList;
-  
+
+  /** Handle refresh button.
+   * @param event the event */
+  @FXML
+  void handleRefreshButton(ActionEvent event) {
+    if (!processing) {
+      validateAndSend();
+    }
+  }
   @Override
   void validateAndSend() {
     int userID = ControllersClientAdapter.getEmployeeContext().getCompanyPerson().getId();

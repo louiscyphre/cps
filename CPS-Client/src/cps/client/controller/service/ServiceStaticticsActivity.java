@@ -42,7 +42,21 @@ public class ServiceStaticticsActivity extends ServiceStatitisticsBase {
 
   /** List holding the entries */
   private ObservableList<TableActivityEntry> obsEntriesList;
+  
+  @FXML
+  void handleClearButton(ActionEvent event) {
+    this.cleanCtrl();
+  }
 
+  /** Handle refresh button.
+   * @param event the event */
+  @FXML
+  void handleRefreshButton(ActionEvent event) {
+    if (!processing) {
+      validateAndSend();
+    }
+  }
+  
   @FXML
   private TableView<TableActivityEntry> tableView;
 
