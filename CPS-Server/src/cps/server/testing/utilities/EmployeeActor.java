@@ -107,10 +107,6 @@ public class EmployeeActor implements Actor {
 
   private void actCheckComplaints(World world) throws ServerException {
 
-    if (roll(1, 10) > 1) {
-      return;
-    }
-
     CompanyPerson user = context.getServiceSession().requireCompanyPerson();
     Collection<Complaint> complaints = getComplaints(world, user);
 
@@ -121,11 +117,14 @@ public class EmployeeActor implements Actor {
       return;
     }
     
-    int index = roll(0, a.length - 1);
-
-    int status = a[index].getStatus();
-
-    if (status != Constants.COMPLAINT_STATUS_PROCESSING) {
+    int index = 0;
+    
+    for(index = 0 ; index < a.length ; index++) {
+      if(a[index].getStatus() == Constants.COMPLAINT_STATUS_PROCESSING) {
+        break;
+      }
+    }
+    if(index == a.length) {
       return;
     }
 
@@ -137,7 +136,7 @@ public class EmployeeActor implements Actor {
       action = new RejectComplaintAction(user.getId(), a[index].getId(), "Some reason");
       response = world.sendRequest(action, context, RejectComplaintResponse.class);
     } else {
-      action = new RefundAction(user.getId(), a[index].getId(), roll(0, 100), "Some reason");
+      action = new RefundAction(user.getId(), a[index].getId(), roll(1, 1000000), "Some reason");
       response = world.sendRequest(action, context, RefundResponse.class);
     }
     handleResponse(world, action, response);
