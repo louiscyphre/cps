@@ -11,7 +11,7 @@ import cps.common.Utilities;;
 /** Aggregates data that is used for producing and displaying periodic activity reports to the Global Manager. */
 public class PeriodicReport extends GenericReport<StatisticalData> {
   private static final long serialVersionUID = 1L;
-  
+
   /** The row names. */
   String[] rowNames;
 
@@ -21,7 +21,7 @@ public class PeriodicReport extends GenericReport<StatisticalData> {
     super(rowNames.length, "realizedOrders", "canceledOrders", "disabledParkingHours");
     this.rowNames = rowNames;
   }
-  
+
   /** Set the values for a data column.
    * @param name the name
    * @param values the values */
@@ -36,13 +36,13 @@ public class PeriodicReport extends GenericReport<StatisticalData> {
   public void setRowNames(String[] rowNames) {
     this.rowNames = rowNames;
   }
-  
+
   /** Retrieve a row of data.
    * @param i the i
    * @return the row */
   public Collection<Double> getRow(int i) {
     LinkedList<Double> row = new LinkedList<>();
-    
+
     for (String key : keySet()) {
       StatisticalData data = getData(key);
       if (data == null || data.getValues() == null || data.getValues().length < i + 1) {
@@ -51,21 +51,21 @@ public class PeriodicReport extends GenericReport<StatisticalData> {
         row.add(data.getValues()[i]);
       }
     }
-    
+
     // Return a data row with an entry for each column
     return row;
   }
-  
+
   /** Generate report for the given month by querying the database, collecting the necessary data and calculating the statistics.
    * @param conn the SQL connection
    * @param year the year
    * @param month the month
    * @return the periodic report
    * @throws SQLException on error */
-  public static PeriodicReport generate(Connection conn, int year, int month) throws SQLException {    
+  public static PeriodicReport generate(Connection conn, int year, int month) throws SQLException {
     /* The length of the report is bound to number of weeks in the month so we will count weeks in month */
     int weeks = Utilities.countWeeksInMonth(year, month);
-    
+
     DailyStatistics[] days = null;
     LocalDate start = LocalDate.of(year, month, 1);
     double[] completed = new double[weeks];
@@ -94,6 +94,7 @@ public class PeriodicReport extends GenericReport<StatisticalData> {
 
       /* Set label to week number */
       rows[i] = String.format("Week %d", i + 1);
+      start = start.plusDays(7);
     }
 
     PeriodicReport report = new PeriodicReport(rows);
@@ -102,6 +103,6 @@ public class PeriodicReport extends GenericReport<StatisticalData> {
     report.setColumn("disabledParkingHours", hours);
 
     return report;
-    
+
   }
 }
