@@ -71,7 +71,7 @@ public class StatisticsCollector {
     if (subsType == Constants.SUBSCRIPTION_TYPE_REGULAR) {
       MonthlyReport.increaseRegular(conn, date.getYear(), date.getMonthValue(), lotID);
     } else {
-      MonthlyReport.increaseFull(conn, date.getYear(), date.getMonthValue(), 0);
+      MonthlyReport.increaseFull(conn, date.getYear(), date.getMonthValue(), lotID);
     }
   }
   
