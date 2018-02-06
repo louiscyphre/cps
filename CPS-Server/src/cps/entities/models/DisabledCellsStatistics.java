@@ -36,7 +36,7 @@ public class DisabledCellsStatistics {
   private LocalDateTime dateEnabled;
 
   /** Instantiates a new disabled cells statistics object.
-   * @param _lotid the lotid
+   * @param _lotid the parking lot ID
    * @param _dateDisabled the date disabled
    * @param _width the width
    * @param _height the height
@@ -53,7 +53,7 @@ public class DisabledCellsStatistics {
 
   /** Instantiates a new disabled cells statistics object from an SQL ResultSet.
    * @param rs the SQL ResultSet
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public DisabledCellsStatistics(ResultSet rs) throws SQLException {
     this.lotId = rs.getInt("lotid");
     this.dateDisabled = rs.getTimestamp("date_disabled").toLocalDateTime();
@@ -65,40 +65,42 @@ public class DisabledCellsStatistics {
 
   /** Create a new disabled cells statistics object.
    * @param conn the SQL connection
-   * @param _lotid the lotid
-   * @param _width the width
-   * @param _height the height
-   * @param _depth the depth
-   * @throws SQLException the SQL exception */
-  public static void create(Connection conn, LocalDateTime date, int _lotid, int _width, int _height, int _depth) throws SQLException {
-    debugPrintln("DisabledCellsStatistics: cell disabled: date = %s, lot = %s, location = %d, %d, %d", date, _lotid, _width, _height, _depth);
+   * @param date the current date
+   * @param lotid the parking lot ID
+   * @param width the width coordinate
+   * @param height the height coordinate
+   * @param depth the depth coordinate
+   * @throws SQLException on error */
+  public static void create(Connection conn, LocalDateTime date, int lotid, int width, int height, int depth) throws SQLException {
+    debugPrintln("DisabledCellsStatistics: cell disabled: date = %s, lot = %s, location = %d, %d, %d", date, lotid, width, height, depth);
     PreparedStatement stmt = conn.prepareStatement("INSERT INTO disabled_slots_table VALUES(?,?,?,?,?,default)");
     int i = 1;
-    stmt.setInt(i++, _lotid);
+    stmt.setInt(i++, lotid);
     stmt.setTimestamp(i++, Timestamp.valueOf(date));
-    stmt.setInt(i++, _width);
-    stmt.setInt(i++, _height);
-    stmt.setInt(i++, _depth);
+    stmt.setInt(i++, width);
+    stmt.setInt(i++, height);
+    stmt.setInt(i++, depth);
     stmt.executeUpdate();
   }
 
   /** Find the most disabled cells statistics entry which recorded that a cell was disabled, but has not been enabled yet, and mark it as enabled.
    * @param conn the SQL connection
-   * @param _lotid the lotid
-   * @param _width the width
-   * @param _height the height
-   * @param _depth the depth
-   * @throws SQLException the SQL exception */
-  public static void markFixed(Connection conn, LocalDateTime date, int _lotid, int _width, int _height, int _depth) throws SQLException {
-    debugPrintln("DisabledCellsStatistics: cell enabled: date = %s, lot = %s, location = %d, %d, %d", date, _lotid, _width, _height, _depth);
+   * @param date the current date
+   * @param lotid the parking lot ID
+   * @param width the width coordinate
+   * @param height the height coordinate
+   * @param depth the depth coordinate
+   * @throws SQLException on error */
+  public static void markFixed(Connection conn, LocalDateTime date, int lotid, int width, int height, int depth) throws SQLException {
+    debugPrintln("DisabledCellsStatistics: cell enabled: date = %s, lot = %s, location = %d, %d, %d", date, lotid, width, height, depth);
     PreparedStatement stmt = conn
         .prepareStatement("UPDATE disabled_slots_table SET date_enabled=? WHERE lotid=? AND width=? AND height=? AND depth=? AND date_enabled is null");
     int i = 1;
     stmt.setTimestamp(i++, Timestamp.valueOf(date));
-    stmt.setInt(i++, _lotid);
-    stmt.setInt(i++, _width);
-    stmt.setInt(i++, _height);
-    stmt.setInt(i++, _depth);
+    stmt.setInt(i++, lotid);
+    stmt.setInt(i++, width);
+    stmt.setInt(i++, height);
+    stmt.setInt(i++, depth);
     stmt.executeUpdate();
   }
 
@@ -108,7 +110,7 @@ public class DisabledCellsStatistics {
    * @param from starting point of the period
    * @param to ending point of the period
    * @return the number of disabled cells
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static int countDisabledCells(Connection conn, int lotid, LocalDateTime from, LocalDateTime to) throws SQLException {
     return new QueryBuilder<Integer>(String.join(" ",
         // Count distinct selection
@@ -136,7 +138,7 @@ public class DisabledCellsStatistics {
    * @param from starting point of the period
    * @param to ending point of the period
    * @return the amount of hours during which cells were disabled
-   * @throws SQLException the SQL exception */
+   * @throws SQLException on error */
   public static double countDisableHours(Connection conn, LocalDate from, LocalDate to) throws SQLException {
     long helper = 0;
     LocalDateTime start, end;

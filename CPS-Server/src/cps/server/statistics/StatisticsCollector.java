@@ -27,7 +27,12 @@ public class StatisticsCollector {
 
   /** Increase realized order count by one for today in specific parking lot.
    * @param conn the SQL connection
+   * @param date the current date
+   * @param serviceID the service ID
+   * @param licenseType the license type
+   * @param parkingType the parking type
    * @param lotID the lot ID
+   * @param warned the warned flag
    * @throws SQLException on error
    * @throws ServerException on error */
   public static void increaseRealizedOrder(Connection conn, LocalDate date, int serviceID, int licenseType, int parkingType, int lotID, boolean warned) throws SQLException, ServerException {
@@ -57,6 +62,7 @@ public class StatisticsCollector {
 
   /** Increase the number of subscriptions purchased this month.
    * @param conn the SQL connection
+   * @param date the current date
    * @param subsType the subscription type (regular or full)
    * @param lotID the lot ID
    * @throws SQLException on error
@@ -100,6 +106,7 @@ public class StatisticsCollector {
   /** Collect statistics about parking cell (the location inside of a parking lot) disable/enable actions.
    * Record location, date disabled, date enabled.
    * @param conn the SQL connection
+   * @param date the current date
    * @param disabled was the cell disabled or enabled
    * @param lotID the lot ID
    * @param i the i coordinate

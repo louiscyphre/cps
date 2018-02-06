@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /** Various utility methods and classes that are used throughout the application to facilitate writing common tasks. */
 public abstract class Utilities {
@@ -243,6 +245,20 @@ public abstract class Utilities {
     T item = null;
     for (Iterator<T> it = collection.iterator(); it.hasNext(); item = it.next());
     return item;
+  }
+
+  /** Returns a set containing the unique elements of an array.
+   * @param <T> the generic type
+   * @param array the array
+   * @return the set of unique elements */
+  public static <T> Set<T> unique(T[] array) {
+    HashSet<T> set = new HashSet<>();
+    
+    for (T elem : array) {
+      set.add(elem);
+    }
+    
+    return set;
   }
 
 }

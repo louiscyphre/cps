@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
+import java.util.Set;
 
 import cps.api.request.FullSubscriptionRequest;
 import cps.api.request.RegularSubscriptionRequest;
@@ -14,6 +14,7 @@ import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.SubscriptionResponse;
 import cps.common.Constants;
+import cps.common.Utilities;
 import cps.entities.models.Customer;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
@@ -86,7 +87,7 @@ public class SubscriptionController extends RequestController {
       }
 
       // check overlapping subscriptions with the same car ID
-      HashSet<String> carIDs = unique(request.getCarIDs());
+      Set<String> carIDs = Utilities.unique(request.getCarIDs());
       
       int numCars = carIDs.size();
       
@@ -134,16 +135,6 @@ public class SubscriptionController extends RequestController {
 
       return response;
     });
-  }
-
-  private HashSet<String> unique(String[] array) {
-    HashSet<String> set = new HashSet<>();
-    
-    for (String elem : array) {
-      set.add(elem);
-    }
-    
-    return set;
   }
 
   private float paymentForSubscription(Connection conn, Customer customer, SubscriptionRequest request, int numCars)

@@ -39,6 +39,7 @@ public interface ParkingService extends Serializable {
   public int getParkingType();
 
   /** Should the service be marked as complete after the customer exits parking.
+   * @param now the current date-time
    * @return true if should be marked as complete */
   public boolean shouldCompleteAfterExit(LocalDateTime now);
 }
