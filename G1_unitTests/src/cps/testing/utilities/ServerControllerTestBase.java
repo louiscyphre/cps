@@ -318,7 +318,7 @@ public abstract class ServerControllerTestBase extends TestCase {
     return requestParkingEntry(data, context, false);
   }
 
-  protected ParkingExitResponse requestParkingExit(CustomerData data, SessionHolder context) throws ServerException {
+  protected ParkingExitResponse exitParking(CustomerData data, SessionHolder context) throws ServerException {
     ParkingExitRequest request = new ParkingExitRequest(data.getCustomerID(), data.getLotID(), data.getCarID());
     printObject(request);
     

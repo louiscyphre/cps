@@ -80,8 +80,9 @@ public class TestFullSubscription extends ServerControllerTestBase {
     requestFullSubscription(data, getContext(), startDate, expectedPayment);
     enterParking(data, getContext());
     setTime(getTime().plusHours(1));
-    requestParkingExit(data, getContext());
+    exitParking(data, getContext());
   }
+  
   @Test
   public void testMultipleCars() throws ServerException {
     header("testFullSubscription - multiple cars");
@@ -96,27 +97,29 @@ public class TestFullSubscription extends ServerControllerTestBase {
     
     int numSubscriptions = 10;
     String carIDs[] = new String[numSubscriptions];
-    int subsIDs[] = new int[numSubscriptions];
     
     for (int i = 0; i < numSubscriptions; i++) {
       carIDs[i] = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
-      FullSubscriptionRequest request = new FullSubscriptionRequest(data.getCustomerID(), data.getEmail(), carIDs[i], startDate);
-      printObject(request);
-      FullSubscriptionResponse response = sendRequest(request, getContext(), FullSubscriptionResponse.class);
-      assertNotNull(response);
-      printObject(response);
-      assertTrue(response.success());
-      
-      // After the first request, we will be registered as a new user
-      // Remember out ID and password
-      if (data.getCustomerID() == 0) {
-        data.setCustomerID(response.getCustomerID());
-        data.setPassword(response.getPassword());
-      }
-      
-      subsIDs[i] = response.getServiceID();
-      setTime(getTime().plusMinutes(1));
     }
+    
+    FullSubscriptionRequest request = new FullSubscriptionRequest(data.getCustomerID(), data.getEmail(), carIDs, startDate);
+    printObject(request);
+    FullSubscriptionResponse response = sendRequest(request, getContext(), FullSubscriptionResponse.class);
+    assertNotNull(response);
+    printObject(response);
+    assertTrue(response.success());
+    
+    // After the first request, we will be registered as a new user
+    // Remember out ID and password
+    if (data.getCustomerID() == 0) {
+      data.setCustomerID(response.getCustomerID());
+      data.setPassword(response.getPassword());
+    }
+    
+    int[] subsIDs = response.getSubscriptionIDs();
+    assertNotNull(subsIDs);
+    assertEquals(numSubscriptions, subsIDs);
+    setTime(getTime().plusMinutes(1));
     
     // Check that we have one customer and 10 subscriptions
     assertEquals(1, db.countEntities("customer"));
@@ -130,7 +133,7 @@ public class TestFullSubscription extends ServerControllerTestBase {
       data.setCarID(carIDs[i]);
       // The request should succeed on regular days, and fail on a weekend, because regular subscriptions are not active on weekends
       enterParking(data, getContext());
-      requestParkingExit(data, getContext()); 
+      exitParking(data, getContext()); 
       setTime(getTime().plusMinutes(1));     
     }
     

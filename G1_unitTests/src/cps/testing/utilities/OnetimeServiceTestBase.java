@@ -85,7 +85,7 @@ public class OnetimeServiceTestBase extends ServerControllerTestBase {
   protected void exitParking(CustomerData custData, LocalDateTime endTime, float expectedPrice) throws ServerException {    
     // Send Parking Exit request
     setTime(endTime);
-    ParkingExitResponse response = requestParkingExit(custData, getContext());
+    ParkingExitResponse response = exitParking(custData, getContext());
     
     // Check that the payment was correct
     assertEquals(expectedPrice, response.getPayment());

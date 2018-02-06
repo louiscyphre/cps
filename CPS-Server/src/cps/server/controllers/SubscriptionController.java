@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 
 import cps.api.request.FullSubscriptionRequest;
 import cps.api.request.RegularSubscriptionRequest;
@@ -85,18 +86,18 @@ public class SubscriptionController extends RequestController {
       }
 
       // check overlapping subscriptions with the same car ID
-      String[] carIDs = request.getCarIDs();
+      HashSet<String> carIDs = unique(request.getCarIDs());
       
-      int numCars = carIDs.length;
+      int numCars = carIDs.size();
       
-      for (int i = 0; i < numCars; i++) {
+      for (String carID : carIDs) {
         if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
           errorIf(
-              SubscriptionService.overlapExists(conn, carIDs[i], request.getSubscriptionType(),
+              SubscriptionService.overlapExists(conn, carID, request.getSubscriptionType(),
                   request.getLotID(), startDate, endDate),
               "Subscription for this car for this parking lot already exists in this timeframe");
         } else {
-          errorIf(SubscriptionService.overlapExists(conn, carIDs[i], request.getSubscriptionType(), 0, startDate,
+          errorIf(SubscriptionService.overlapExists(conn, carID, request.getSubscriptionType(), 0, startDate,
               endDate), "Subscription for this car already exists in this timeframe");
         }
       }
@@ -105,15 +106,16 @@ public class SubscriptionController extends RequestController {
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
       
       int subscriptionIDs[] = new int[numCars];
+      int i = 0;
         
-      for (int i = 0; i < carIDs.length; i++) {
+      for (String carID : carIDs) {
         SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(),
-            request.getEmail(), carIDs[i], request.getLotID(), startDate, endDate, dailyExitTime);
+            request.getEmail(), carID, request.getLotID(), startDate, endDate, dailyExitTime);
         errorIfNull(service, "Failed to create SubscriptionService entry");
   
         // XXX Statistics
         StatisticsCollector.increaseSubscription(conn, now().toLocalDate(), service.getSubscriptionType(), service.getLotID());
-        subscriptionIDs[i] = service.getId();
+        subscriptionIDs[i++] = service.getId();
       }
 
       // Calculate payment
@@ -132,6 +134,16 @@ public class SubscriptionController extends RequestController {
 
       return response;
     });
+  }
+
+  private HashSet<String> unique(String[] array) {
+    HashSet<String> set = new HashSet<>();
+    
+    for (String elem : array) {
+      set.add(elem);
+    }
+    
+    return set;
   }
 
   private float paymentForSubscription(Connection conn, Customer customer, SubscriptionRequest request, int numCars)

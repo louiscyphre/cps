@@ -54,7 +54,7 @@ public class TestRegularSubscription extends ServerControllerTestBase {
     // The request should succeed on regular days, and fail on a weekend, because regular subscriptions are not active on weekends
     if (requestParkingEntry(data, getContext(), isWeekend(LocalDateTime.now().getDayOfWeek()))) {
       setTime(startDate.atTime(dailyExitTime));
-      requestParkingExit(data, getContext());
+      exitParking(data, getContext());
     }
   }
   
@@ -104,7 +104,7 @@ public class TestRegularSubscription extends ServerControllerTestBase {
       data.setCarID(carIDs[i]);
       // The request should succeed on regular days, and fail on a weekend, because regular subscriptions are not active on weekends
       if (requestParkingEntry(data, getContext(), isWeekend(LocalDateTime.now().getDayOfWeek()))) {
-        requestParkingExit(data, getContext());
+        exitParking(data, getContext());
       }      
     }
   }
