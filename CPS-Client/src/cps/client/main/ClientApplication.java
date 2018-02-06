@@ -21,39 +21,20 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-/**
- * @author firl
- *
- */
+/** JavaFX Application main class run the client application and GUI. Contains network client for communication. */
 public class ClientApplication extends Application implements INetworkClient {
 
-  /**
-   * 
-   */
   private CPSNetworkClient client;
 
-  /**
-   * 
-   */
   private Stage primaryStage;
 
-  /**
-   * 
-   */
   private ResponseHandler responseHandler = new ResponseHandlerImpl();
 
-  /**
-   *
-   */
-  /**
-   * 
-   */
+  /** Default constructor. */
   public ClientApplication() {
   }
 
-  /**
-   * @throws IOException
-   */
+  /** @throws IOException */
   private void loadWebClient() throws IOException {
     try {
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
@@ -73,9 +54,7 @@ public class ClientApplication extends Application implements INetworkClient {
     }
   }
 
-  /**
-   * @throws IOException
-   */
+  /** @throws IOException */
   private void loadKiosk() throws IOException {
     try {
       ControllersClientAdapter.registerScene(SceneCode.CUSTOMER_INITIAL_MENU);
@@ -123,8 +102,7 @@ public class ClientApplication extends Application implements INetworkClient {
   }
 
   /* (non-Javadoc)
-   * @see javafx.application.Application#start(javafx.stage.Stage)
-   */
+   * @see javafx.application.Application#start(javafx.stage.Stage) */
   @Override
   public void start(Stage primaryStage) {
     try {
@@ -168,10 +146,8 @@ public class ClientApplication extends Application implements INetworkClient {
     }
   }
 
-  /**
-   * @param code
-   * @param title
-   */
+  /** @param code
+   * @param title */
   private void initializeStage(SceneCode code, String title) {
     ControllersClientAdapter.getClient().getPrimaryStage().setTitle(title);
     ControllersClientAdapter.setStage(code);
@@ -190,29 +166,25 @@ public class ClientApplication extends Application implements INetworkClient {
     ((CustomerMainMenuController) ControllersClientAdapter.fetchCtrl(SceneCode.CUSTOMER_INITIAL_MENU)).setAsWebClient();
   }
 
-  /**
-   * @param args
-   */
+  /** @param args -l 'lot-id' -m 'mode'(kiosk|webclient) -p 'port' -h 'host'
+   * @see CmdParser */
   public static void main(String[] args) {
     launch(args);
   }
 
   /* (non-Javadoc)
-   * @see cps.client.network.INetworkClient#sendRequest(java.lang.Object)
-   */
+   * @see cps.client.network.INetworkClient#sendRequest(java.lang.Object) */
   @Override
   public void sendRequest(Object rqst) {
     try {
       client.handleMessageFromClientUI(rqst);
     } catch (IOException e) {
-      // TODO throw new UserLevelClientException, and every client has to either resend or something
-      e.printStackTrace(); 
+      e.printStackTrace();
     }
   }
 
   /* (non-Javadoc)
-   * @see cps.client.network.INetworkClient#receiveResponse(java.lang.Object)
-   */
+   * @see cps.client.network.INetworkClient#receiveResponse(java.lang.Object) */
   @Override
   public void receiveResponse(Object resp) {
     if (resp instanceof ServerResponse) {
@@ -220,16 +192,12 @@ public class ClientApplication extends Application implements INetworkClient {
     }
   }
 
-  /**
-   * @return
-   */
+  /** @return application's primary stage*/
   public Stage getPrimaryStage() {
     return primaryStage;
   }
 
-  /**
-   * @param primaryStage
-   */
+  /** @param primaryStage application's primary stage*/
   public void setPrimaryStage(Stage primaryStage) {
     this.primaryStage = primaryStage;
   }

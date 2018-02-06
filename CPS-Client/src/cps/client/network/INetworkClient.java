@@ -1,17 +1,16 @@
 package cps.client.network;
 
 /**
- * @author firl
- *
+ * Network client interface, communication done with Java Objects.
  */
 public interface INetworkClient {
   /**
-   * @param rqst
+   * @param rqst object containing request
    */
   public void sendRequest(Object rqst);
 
   /**
-   * @param resp
+   * @param resp object containing response
    */
   public void receiveResponse(Object resp);
 }

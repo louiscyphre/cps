@@ -20,6 +20,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+/** Controller class for Service Activity scene. */
 public class ServiceStaticticsActivity extends ServiceStatitisticsBase {
 
   @FXML
@@ -42,7 +43,7 @@ public class ServiceStaticticsActivity extends ServiceStatitisticsBase {
 
   /** List holding the entries */
   private ObservableList<TableActivityEntry> obsEntriesList;
-  
+
   @FXML
   void handleClearButton(ActionEvent event) {
     this.cleanCtrl();
@@ -56,7 +57,7 @@ public class ServiceStaticticsActivity extends ServiceStatitisticsBase {
       validateAndSend();
     }
   }
-  
+
   @FXML
   private TableView<TableActivityEntry> tableView;
 
@@ -102,7 +103,9 @@ public class ServiceStaticticsActivity extends ServiceStatitisticsBase {
 
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_STATISTICS_ACTIVITY);
   }
-
+  
+  /** Handles the response from the server containing the data with periodic report
+   * and populates inner data structures accordingly. */
   @Override
   public void handle(PeriodicReportResponse response) {
     if (response.success()) {
@@ -180,6 +183,9 @@ public class ServiceStaticticsActivity extends ServiceStatitisticsBase {
     }
   }
 
+  /**
+   * Class representing the table entry for Activity View.
+   */
   public class TableActivityEntry {
 
     private SimpleStringProperty canceledOrders;

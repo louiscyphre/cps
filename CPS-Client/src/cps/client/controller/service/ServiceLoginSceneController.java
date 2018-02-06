@@ -9,25 +9,14 @@ import cps.client.utils.FormatValidation;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-/**
- *
- */
+/** Controller class for Service Login. */
 public class ServiceLoginSceneController extends ServiceActionControllerBase {
-  /**
-   * 
-   */
   @FXML // fx:id="usernameTF"
   private TextField usernameTF; // Value injected by FXMLLoader
 
-  /**
-   * 
-   */
   @FXML // fx:id="passwordTF"
   private TextField passwordTF; // Value injected by FXMLLoader
 
-  /**
-   * 
-   */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
@@ -38,8 +27,7 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.service.ServiceActionControllerBase#validateAndSend()
-   */
+   * @see cps.client.controller.service.ServiceActionControllerBase#validateAndSend() */
   @Override
   void validateAndSend() {
     String username = null;
@@ -65,23 +53,18 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
     ControllersClientAdapter.getClient().sendRequest(loginRequest);
   }
 
-  /**
-   * @return
-   */
+  /** @return */
   private String getPassword() {
     return passwordTF.getText();
   }
 
-  /**
-   * @return
-   */
+  /** @return */
   private String getUsername() {
     return usernameTF.getText();
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
-   */
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl() */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
@@ -89,9 +72,7 @@ public class ServiceLoginSceneController extends ServiceActionControllerBase {
     passwordTF.clear();
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ServiceLoginResponse)
-   */
+  /** Handles the response from the server , displays error is request failed.*/
   @Override
   public void handle(ServiceLoginResponse response) {
     ControllersClientAdapter.getEmployeeContext().setCompanyPerson(response.getUser());

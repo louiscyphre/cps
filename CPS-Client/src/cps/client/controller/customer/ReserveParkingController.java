@@ -35,17 +35,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-/**
- * Reserve Parking scene controller.
- */
-public class ReserveParkingController extends CustomerActionControllerBaseSubmitAndFinish
-    implements ParkingLotsController {
+/** Reserve Parking scene controller. */
+public class ReserveParkingController extends CustomerActionControllerBaseSubmitAndFinish implements ParkingLotsController {
 
-  /** End Date DatePicker  */
+  /** End Date DatePicker */
   @FXML
   private DatePicker endDatePicker;
 
-  /** Start Date DatePicker  */
+  /** Start Date DatePicker */
   @FXML
   private DatePicker startDatePicker;
 
@@ -53,47 +50,41 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   @FXML
   private TextField startTimeTF;
 
-  /** End Time TextField  */
+  /** End Time TextField */
   @FXML
   private TextField endTimeTF;
 
-  /** Insets  */
+  /** Insets */
   @FXML
   private Insets x2;
 
-
-  /** Car ID TextField  */
+  /** Car ID TextField */
   @FXML
   private TextField carIDTextField;
 
-  /** Email TextField  */
+  /** Email TextField */
   @FXML
   private TextField emailTF;
 
-  /** Parking Lots list  */
+  /** Parking Lots list */
   @FXML
   private ComboBox<String> parkingLotsList;
 
-  /** Parking Lots Mapping  */
+  /** Parking Lots Mapping */
   private HashMap<String, Integer> parkingLotsMap = null;
 
-  /**
-   * Turns email TextField visible 
-   */
+  /** Turns email TextField visible */
   public void showEmail() {
     emailTF.visibleProperty().set(true);
   }
 
-  /**
-   * Turns email TextField invisible 
-   */
+  /** Turns email TextField invisible */
   public void hideEmail() {
     emailTF.visibleProperty().set(false);
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
-   */
+   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent) */
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -102,9 +93,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     validateAndSend();
   }
 
-  /**
-   * @param event
-   */
+  /** @param event */
   @FXML
   void handlePickStartDate(ActionEvent event) {
     if (processing) {
@@ -113,9 +102,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
 
   }
 
-  /**
-   * @param event
-   */
+  /** @param event */
   @FXML
   void handlePickEndDate(ActionEvent event) {
     if (processing) {
@@ -123,9 +110,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     }
   }
 
-  /**
-   * Request from the server the updated list of lots.
-   */
+  /** Request from the server the updated list of lots. */
   void loadParkingLots() {
     if (processing) {
       return;
@@ -138,8 +123,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.Collection)
-   */
+   * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.Collection) */
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
     LinkedList<String> tmp = new LinkedList<String>();
@@ -152,9 +136,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     parkingLotsList.getItems().setAll(addresses);
   }
 
-  /**
-   * Initializes the Controller and Registers it. 
-   */
+  /** Initializes the Controller and Registers it. */
   @FXML
   void initialize() {
     super.baseInitialize();
@@ -236,25 +218,20 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
       ControllersClientAdapter.getCustomerContext().setPendingEmail(email);
     }
 
-    ReservedParkingRequest request = new ReservedParkingRequest(customerId, email, carId, lotId, plannedStartDateTime,
-        plannedEndDateTime);
+    ReservedParkingRequest request = new ReservedParkingRequest(customerId, email, carId, lotId, plannedStartDateTime, plannedEndDateTime);
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
   // returns customer context - >=1 if logged in, 0 otherwise
-  /**
-   * @return
-   */
+  /** @return */
   private int getCustomerId() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
   // returns email if logged in from customer context,
-  /**
-   * @return
-   */
+  /** @return */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
     if (cntx.isLoggedIn()) {
@@ -265,20 +242,15 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   // return car id or null if empty
-  /**
-   * @return
-   */
+  /** @return */
   private String getCarId() {
     return carIDTextField.getText().trim();
   }
 
   // returns lot id or -1 if empty
-  /**
-   * @return
-   */
+  /** @return */
   private int getLotId() {
-    if (parkingLotsList == null || parkingLotsList.valueProperty() == null
-        || parkingLotsList.valueProperty().getValue() == null) {
+    if (parkingLotsList == null || parkingLotsList.valueProperty() == null || parkingLotsList.valueProperty().getValue() == null) {
       return 0;
     }
     int lotId = parkingLotsMap.get(parkingLotsList.valueProperty().getValue());
@@ -286,9 +258,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   // returns planned start date or null if empty
-  /**
-   * @return
-   */
+  /** @return */
   private LocalDateTime getPlannedStartDateTime() {
     if (startDatePicker.getValue() == null) {
       return null;
@@ -301,17 +271,13 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   // returns planned start time or null if empty
-  /**
-   * @return
-   */
+  /** @return */
   private LocalTime getStartTime() {
     return getTime(startTimeTF, "Start time");
   }
 
   // returns planned end date or null if empty
-  /**
-   * @return
-   */
+  /** @return */
   private LocalDateTime getPlannedEndDateTime() {
     if (endDatePicker.getValue() == null) {
       return null;
@@ -324,16 +290,13 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   // returns planned end time or null if empty
-  /**
-   * @return
-   */
+  /** @return */
   private LocalTime getEndTime() {
     return getTime(endTimeTF, "End time");
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn()
-   */
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn() */
   @Override
   public void turnLoggedInStateOn() {
     super.turnLoggedInStateOn();
@@ -341,8 +304,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff()
-   */
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff() */
   @Override
   public void turnLoggedInStateOff() {
     super.turnLoggedInStateOn();
@@ -350,8 +312,7 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl()
-   */
+   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl() */
   @Override
   public void cleanCtrl() {
     // info box clear
@@ -366,9 +327,8 @@ public class ReserveParkingController extends CustomerActionControllerBaseSubmit
     loadParkingLots();
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ReservedParkingResponse)
-   */
+  /** Display the parking details if request was successful, and user
+   * credentials if new user, otherwise - error message from the server. */
   @Override
   public void handle(ReservedParkingResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();

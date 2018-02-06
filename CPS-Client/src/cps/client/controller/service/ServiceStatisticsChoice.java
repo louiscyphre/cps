@@ -7,7 +7,7 @@ import cps.entities.people.LocalEmployee;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-
+/** Controller class for Reports menu. */
 public class ServiceStatisticsChoice extends ServiceActionControllerBase {
 
   @FXML

@@ -7,25 +7,12 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**
- * Created on: 2018-01-09 10:33:40 PM
- */
-/**
- * @author firl
- *
+ * Nullable timestamp
  */
 public class NullableTimestamp extends Timestamp {
 
-  /**
-   * 
-   */
-  /**
-   * 
-   */
   private static final long serialVersionUID = 1L;
 
-  /**
-   * 
-   */
   public NullableTimestamp() {
     super(0L);
   }

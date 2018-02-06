@@ -25,7 +25,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 /**
- *
+ * Subscription menu controller.
  */
 public class SubscriptionsMenuController extends CustomerActionControllerBase implements ParkingLotsController {
 

@@ -25,36 +25,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 /**
- *
+ *  Controller class for Updating Prices.
  */
 public class ServiceActionUpdatePricesController extends ServiceActionControllerBaseSubmitAndFinish implements ParkingLotsController {
 
-  /**
-   * 
-   */
   @FXML // fx:id="newReservedPriceTextField"
   private TextField newReservedPriceTextField; // Value injected by FXMLLoader
 
-  /**
-   * 
-   */
   @FXML // fx:id="newReservedPriceTextField"
   private TextField newIncidentalPriceTextField; // Value injected by FXMLLoader
 
-  /**
-   * 
-   */
   @FXML
   private ComboBox<String> parkingLotsList;
 
-  /**
-   * 
-   */
   HashMap<String, ParkingLot> parkingLotsMap = null;
 
-  /**
-   * 
-   */
   String userLotChoice = null;
 
   /**
@@ -89,7 +74,7 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
   }
 
   /**
-   * 
+   * Helper function. Updates the output message, accordingly.
    */
   private void refreshPrices() {
     ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
@@ -137,9 +122,6 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     }
   }
 
-  /**
-   * @param list
-   */
   /* (non-Javadoc)
    * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.Collection)
    */
@@ -163,9 +145,7 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     parkingLotsList.setDisable(false);
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.ListParkingLotsResponse)
-   */
+  /** Handles the response from the server , displays error is request failed.*/
   @Override
   public void handle(ListParkingLotsResponse response) {
     if (response.success()) {
@@ -174,9 +154,7 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
     super.handleGenericResponse(response);
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.UpdatePricesResponse)
-   */
+  /** Handles the response from the server , displays error is request failed.*/
   @Override
   public void handle(UpdatePricesResponse response) {
     if (response.success()) {

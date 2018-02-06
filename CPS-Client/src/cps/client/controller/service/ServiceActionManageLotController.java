@@ -33,9 +33,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
-/**
- * Manage Lot scene controller.
- */
+/** Manage Lot scene controller. */
 public class ServiceActionManageLotController extends ServiceActionControllerBase implements ParkingLotsController {
 
   /** Grid anchor where the cars representation is held. */
@@ -88,12 +86,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     gridAnchor.getChildren().get(getCurrentLevelIndex()).setVisible(true);
   }
 
-  /**
-   * Sends server an API request to reserve the selected car, while validating
+  /** Sends server an API request to reserve the selected car, while validating
    * that car is indeed selected
-   * 
-   * @param event
-   */
+   * @param event */
   @FXML
   void handleReserveSlot(ActionEvent event) {
     if (!processing) {
@@ -103,8 +98,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
           user = requireLoggedInUser();
           ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
           turnProcessingStateOn();
-          sendRequest(new ParkingCellSetReservedAction(user.getId(), lot.getId(), selectedCell.width,
-              selectedCell.height, selectedCell.depth, (!selectedCell.isReserved())));
+          sendRequest(new ParkingCellSetReservedAction(user.getId(), lot.getId(), selectedCell.width, selectedCell.height, selectedCell.depth,
+              (!selectedCell.isReserved())));
         } catch (Exception e) {
           displayError(e.getMessage());
         }
@@ -112,12 +107,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Sends server an API request to disable the selected car, while validating
+  /** Sends server an API request to disable the selected car, while validating
    * that car is indeed selected
-   * 
-   * @param event
-   */
+   * @param event */
   @FXML
   void handleDisableSlot(ActionEvent event) {
     if (!processing) {
@@ -127,8 +119,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
           user = requireLoggedInUser();
           ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
           turnProcessingStateOn();
-          sendRequest(new ParkingCellSetDisabledAction(user.getId(), lot.getId(), selectedCell.width,
-              selectedCell.height, selectedCell.depth, (!selectedCell.isDisabled())));
+          sendRequest(new ParkingCellSetDisabledAction(user.getId(), lot.getId(), selectedCell.width, selectedCell.height, selectedCell.depth,
+              (!selectedCell.isDisabled())));
         } catch (Exception e) {
           displayError(e.getMessage());
         }
@@ -136,11 +128,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Handle '1' button pressed.
-   * 
-   * @param event
-   */
+  /** Handle '1' button pressed.
+   * @param event */
   @FXML
   void handle1pressed(ActionEvent event) {
     if (!processing) {
@@ -149,11 +138,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Handle '2' button pressed.
-   * 
-   * @param event
-   */
+  /** Handle '2' button pressed.
+   * @param event */
   @FXML
   void handle2pressed(ActionEvent event) {
     if (!processing) {
@@ -162,11 +148,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Handle '3' button pressed.
-   * 
-   * @param event
-   */
+  /** Handle '3' button pressed.
+   * @param event */
   @FXML
   void handle3pressed(ActionEvent event) {
     if (!processing) {
@@ -175,12 +158,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Handle the overview Button being pressed. Displays currently held overview
+  /** Handle the overview Button being pressed. Displays currently held overview
    * info.
-   * 
-   * @param event
-   */
+   * @param event */
   @FXML
   void showOverview(ActionEvent event) {
     if (!processing) {
@@ -188,11 +168,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Handle specific lot being selected from the Parking lots list.
-   * 
-   * @param event
-   */
+  /** Handle specific lot being selected from the Parking lots list.
+   * @param event */
   @FXML
   void handleChooseParkingLot(ActionEvent event) {
     if (!processing) {
@@ -200,9 +177,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Initializes the Controller and Registers it.
-   */
+  /** Initializes the Controller and Registers it. */
   @FXML // This method is called by the FXMLLoader when initialization is
         // complete
   void initialize() {
@@ -218,17 +193,13 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     registerCtrl();
   }
 
-  /**
-   * Registers this controller in the Adapter
-   */
+  /** Registers this controller in the Adapter */
   protected void registerCtrl() {
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_MANAGE_LOT);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#cleanCtrl()
-   */
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#cleanCtrl() */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
@@ -247,9 +218,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     sendRequest(new ListParkingLotsRequest());
   }
 
-  /**
-   * Cleans the parking cells field, flushing its content.
-   */
+  /** Cleans the parking cells field, flushing its content. */
   private void clearParkingCells() {
     parkingCell.forEach(inner -> {
       inner.forEach(inner2 -> {
@@ -260,9 +229,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     parkingCell.clear();
   }
 
-  /**
-   * Initiates parking cells.
-   */
+  /** Initiates parking cells. */
   private void initParkingCells() {
     parkingCell = new ArrayList<ArrayList<ArrayList<ParkingCell>>>(Constants.LOT_HEIGHT);
     for (int i = 0; i < Constants.LOT_HEIGHT; i++) {
@@ -273,10 +240,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Cleans the grid panes holding the cars representation, flushing its
-   * content.
-   */
+  /** Cleans the grid panes holding the cars representation, flushing its
+   * content. */
   private void clearCarsGrids() {
     carsGrids.forEach(carsGrid -> {
       carsGrid.getChildren().clear();
@@ -284,9 +249,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     gridAnchor.getChildren().forEach(carsGrid -> carsGrid.setVisible(false));
   }
 
-  /**
-   * Initiates the cars grids.
-   */
+  /** Initiates the cars grids. */
   private void initCarsGrids() {
     carsGrids = new ArrayList<GridPane>(Constants.LOT_HEIGHT);
     for (int i = 0; i < Constants.LOT_DEPTH; i++) {
@@ -303,9 +266,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     gridAnchor.getChildren().setAll(carsGrids);
   }
 
-  /**
-   * Initiates the list holding the overview text in specified format.
-   */
+  /** Initiates the list holding the overview text in specified format. */
   private void initOverviewInfo() {
     overviewInfo = new ArrayList<Text>(15);
 
@@ -330,9 +291,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     overviewInfo.add(new Text("\n"));
   }
 
-  /**
-   * Update the overview info, filling priorly '0' texts with actual value.
-   */
+  /** Update the overview info, filling priorly '0' texts with actual value. */
   private void updateOverviewInfo() {
     int capacity = parkingCell.size() * parkingCell.get(0).size() * parkingCell.get(0).get(0).size();
     int disabled = new Integer(0);
@@ -363,9 +322,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     overviewInfo.set(13, new Text(Integer.toString(occupied)));
   }
 
-  /**
-   * Initiates the list holding the cell info text in specified format.
-   */
+  /** Initiates the list holding the cell info text in specified format. */
   private void initCellInfo() {
     cellInfo = new ArrayList<Text>(15);
 
@@ -391,11 +348,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
 
   }
 
-  /**
-   * Update the overview info, filling priorly '0' texts with actual value.
-   * 
-   * @param cell
-   */
+  /** Update the overview info, filling priorly '0' texts with actual value.
+   * @param cell */
   private void updateCellInfo(ParkingCell cell) {
 
     cellInfo.set(1, new Text("[" + (cell.height + 1) + "," + (cell.width + 1) + "," + (cell.depth + 1) + "]"));
@@ -414,18 +368,14 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
 
   }
 
-  /**
-   * @return
-   */
+  /** @return */
   private int getCurrentLevelIndex() {
     return levelIndicator - 1;
   }
 
-  /*
-   * (non-Javadoc)
+  /* (non-Javadoc)
    * @see
-   * cps.client.controller.service.ServiceActionControllerBase#validateAndSend()
-   */
+   * cps.client.controller.service.ServiceActionControllerBase#validateAndSend() */
   @Override
   void validateAndSend() {
     try {
@@ -440,11 +390,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /*
-   * (non-Javadoc)
+  /* (non-Javadoc)
    * @see cps.client.controller.ParkingLotsController#setParkingLots(java.util.
-   * Collection)
-   */
+   * Collection) */
   @Override
   public void setParkingLots(Collection<ParkingLot> list) {
     List<String> tmp = new ArrayList<String>();
@@ -461,19 +409,14 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     fillComboBoxItems(addresses);
   }
 
-  /**
-   * @param addresses
-   */
+  /** @param addresses */
   private void fillComboBoxItems(ObservableList<String> addresses) {
     parkingLotsList.getItems().addAll(addresses);
     parkingLotsList.setDisable(false);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.
-   * RequestLotStateResponse)
-   */
+  /** Handles the response from the server containing the data about parking lot cells
+   * and populates inner data structures accordingly. */
   @Override
   public void handle(RequestLotStateResponse response) {
 
@@ -495,9 +438,7 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * @param content
-   */
+  /** @param content */
   private void readContent(ParkingCell[][][] content) {
     double vgap = carsGrids.get(0).getVgap();
     double hgap = carsGrids.get(0).getHgap();
@@ -543,12 +484,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Applies selection visual indication to rectangles.
-   * 
+  /** Applies selection visual indication to rectangles.
    * @param correspondingCell
-   * @param currentRectangle
-   */
+   * @param currentRectangle */
   private void toggleSelectCar(ParkingCell correspondingCell, Rectangle currentRectangle) {
     // if pressed same or another and was assigned
     if (selectedCar != null) {
@@ -569,11 +507,8 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Handling mouse hover and updating the cell info from the hover information.
-   * 
-   * @param currentRectangle
-   */
+  /** Handling mouse hover and updating the cell info from the hover information.
+   * @param currentRectangle */
   protected void onMouseEnteredHandler(Rectangle currentRectangle) {
     if (processing)
       return;
@@ -587,12 +522,9 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Handling mouse click and updating the cell info from the click information,
+  /** Handling mouse click and updating the cell info from the click information,
    * effectively selecting clicked car.
-   * 
-   * @param currentRectangle
-   */
+   * @param currentRectangle */
   protected void onMouseClickedHandler(Rectangle currentRectangle) {
     if (processing)
       return;
@@ -610,49 +542,38 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     }
   }
 
-  /**
-   * Makes the Disable Slot disabled, or enabled, in accordance given parameter.
-   * 
-   * @param value
-   */
+  /** Makes the Disable Slot disabled, or enabled, in accordance given parameter.
+   * @param value */
   private void setSlotButtonsDisabled(boolean value) {
     reserveButton.setDisable(value);
     disableButton.setDisable(value);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.
-   * ReserveParkingSlotsResponse)
-   */
+  /** Handles the response from the server , if successful - paints priorly selected cell to appropriate color, displays error is request failed. */
   @Override
   public void handle(ReserveParkingSlotsResponse response) {
     super.handleGenericResponse(response);
     if (response.success()) {
       selectedCell.setReserved(!selectedCell.isReserved());
       paintRectAccordingToCell(selectedCell, selectedCar);
+      updateOverviewInfo();
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.
-   * DisableParkingSlotsResponse)
-   */
+  /** Handles the response from the server , if successful - paints priorly selected cell to appropriate color, displays error is request failed. */
   @Override
   public void handle(DisableParkingSlotsResponse response) {
     super.handleGenericResponse(response);
     if (response.success()) {
       selectedCell.setDisabled(!selectedCell.isDisabled());
       paintRectAccordingToCell(selectedCell, selectedCar);
+      updateOverviewInfo();
     }
   }
 
-  /**
-   * Painting rectangle to appropriate colors, depending on Cell value.
+  /** Painting rectangle to appropriate colors, depending on Cell value.
    * @param currentParkingCell
-   * @param rect
-   */
+   * @param rect */
   void paintRectAccordingToCell(ParkingCell currentParkingCell, Rectangle rect) {
     Paint rectPaint;
     if (currentParkingCell.isFree() || currentParkingCell == null) {

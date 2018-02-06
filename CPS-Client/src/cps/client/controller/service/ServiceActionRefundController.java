@@ -27,49 +27,27 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 /**
- *
+ * Controller class for Service Refund.
  */
 public class ServiceActionRefundController extends ServiceActionControllerBase {
 
-  /**
-   * 
-   */
   @FXML
   private ListView<String> complaintsList;
 
-  /**
-   * 
-   */
   @FXML
   private TextField refundTF;
 
-  /**
-   * 
-   */
   @FXML
   private TextField reasonTF;
 
-  /**
-   * 
-   */
   @FXML
   private TextArea complaintContent;
 
-  /**
-   * 
-   */
   @FXML
   private Button rejectButton;
 
-  /**
-   * 
-   */
   @FXML
   private Button refundButton;
-
-  /**
-   * 
-   */
   private HashMap<String, Complaint> complaintsMap;
 
   /**
@@ -202,18 +180,14 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     }
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.RefundResponse)
-   */
+  /** Handles the response from the server , displays error is request failed.*/
   @Override
   public void handle(RefundResponse response) {
     super.handleGenericResponse(response);
     cleanCtrl();
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.RejectComplaintResponse)
-   */
+  /** Handles the response from the server , displays error is request failed.*/
   @Override
   public void handle(RejectComplaintResponse response) {
     super.handleGenericResponse(response);
@@ -229,9 +203,6 @@ public class ServiceActionRefundController extends ServiceActionControllerBase {
     List<String> tmp = new ArrayList<String>();
     complaintsMap.clear();
     for (Complaint i : response.getData()) {
-//      String complaintMeta = new String(
-//          "[id: " + i.getId() + "]" + "[Employee: " + i.getEmployeeID() + "]" + "[Customer: " + i.getCustomerID() + "]");
-
       String complaintMeta = String.format("id: %s, Employee: %s, Customer: %s, Status: %s", i.getId(), i.getEmployeeID(), i.getCustomerID(), i.getStatusText());
 
       tmp.add(complaintMeta);
