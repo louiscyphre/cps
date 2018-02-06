@@ -41,8 +41,8 @@ public class ReportController extends RequestController {
       CompanyPerson user = session.requireCompanyPerson();
       
       errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You do not have permission to perform this action");
-      errorIf(user.getAccessLevel() <= Constants.ACCESS_LEVEL_LOCAL_MANAGER && user.getDepartmentID() != action.getLotID(),
-          "A LocalEmployee can perform this action only on their lot");
+      errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER && user.getDepartmentID() != action.getLotID(),
+          "A LocalManager can perform this action only on their lot");
       
       LocalDate weekStart = Utilities.findWeekStart(now().toLocalDate());
       
@@ -64,8 +64,8 @@ public class ReportController extends RequestController {
       
       errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You do not have permission to perform this action");
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_MANAGER, "You do not have permission to perform this action");
-      errorIf(user.getAccessLevel() <= Constants.ACCESS_LEVEL_LOCAL_MANAGER && user.getDepartmentID() != action.getLotID(),
-          "A LocalEmployee can perform this action only on their lot");
+      errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER && user.getDepartmentID() != action.getLotID(),
+          "A LocalManager can perform this action only on their lot");
 
       LocalDate start = action.getPeriodStart();
       LocalDate end = action.getPeriodEnd();

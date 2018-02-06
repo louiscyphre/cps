@@ -10,6 +10,7 @@ import cps.entities.models.ParkingLot;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.ServerException;
+import cps.server.background.TaskScheduler;
 import cps.server.session.CompanyPersonService;
 import cps.server.testing.utilities.CustomerActor;
 import cps.server.testing.utilities.EmployeeActor;
@@ -23,6 +24,7 @@ public class TestStatistics extends ServerControllerTest implements World {
   int numParkingLots;
   int numEmployees;
   Duration timeSlice;
+  TaskScheduler scheduler;
   
   public TestStatistics() {
     super(ServerConfig.testing());
@@ -35,7 +37,7 @@ public class TestStatistics extends ServerControllerTest implements World {
     
     timeSlice = Duration.ofMinutes(10);
     numParkingLots = 5;
-    numEmployees = CompanyPersonService.getNumberOfEmployees();
+    numEmployees = CompanyPersonService.getNumberOfEmployees() - 1;
     
     // Create employees
     employees = new EmployeeActor[numEmployees];
@@ -50,6 +52,8 @@ public class TestStatistics extends ServerControllerTest implements World {
     for (int i = 0; i < customers.length; i++) {
       customers[i] = new CustomerActor(this, i + 1);
     }
+    
+    scheduler = new TaskScheduler(server.getConfig(), getClock());
   }
   
   void tick() {
@@ -94,6 +98,7 @@ public class TestStatistics extends ServerControllerTest implements World {
         j++;
       }
       
+      scheduler.runTasks();
       epoch++;
     }
     
@@ -109,6 +114,7 @@ public class TestStatistics extends ServerControllerTest implements World {
         employees[i].act(this);
       }
       
+      scheduler.runTasks();
       epoch++;
     }
   }

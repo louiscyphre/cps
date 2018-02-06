@@ -121,8 +121,13 @@ public class CustomerActor extends CustomerData implements Actor {
 
     ParkingEntryRequest request = new ParkingEntryRequest(customerID, 0, lotID, carID);
     ParkingEntryResponse response = world.sendRequest(request, context, ParkingEntryResponse.class);
-    handleResponse(world, request, response);
-    pushState(State.PARKED);
+    handleResponse(world, request, response, false);
+    
+    if (response.success()) {
+      pushState(State.PARKED);
+    } else {
+      pushState(State.READY);
+    }
   }
 
   private void actWaitToExitParking(World world) {
@@ -172,8 +177,8 @@ public class CustomerActor extends CustomerData implements Actor {
       actBuyFullSubscription(world);
       break;
     case 5:
-      if (roll(1, 5) == 1) {
-        // 1/5 chance to complain
+      if (roll(1, 3) == 1) {
+        // 1/3 chance to complain
         actFileComplaint(world);
       }
       break;
@@ -336,9 +341,9 @@ public class CustomerActor extends CustomerData implements Actor {
 
     try {
       if (r == 1) { // early
-        plannedEndTimeOffset = Duration.ofMinutes(-roll(1, full.getSeconds() / 60 / 2));
+        plannedEndTimeOffset = Duration.ofMinutes(-roll(0, full.getSeconds() / 60 / 2));
       } else if (r == m) { // late
-        plannedEndTimeOffset = Duration.ofMinutes(roll(1, full.getSeconds() / 60 / 2));
+        plannedEndTimeOffset = Duration.ofMinutes(roll(0, full.getSeconds() / 60 / 2));
       } else { // in time
         plannedEndTimeOffset = Duration.ZERO;
       }

@@ -29,8 +29,8 @@ import cps.server.database.DatabaseController;
  * 3. Generate weekly statistics from daily statistical records. */
 public class TaskScheduler extends Thread {
   DatabaseController         db = null;
+  private HashSet<LocalDate> checkedWeeks = new HashSet<>();
   private TimeProvider       clock;
-  private HashSet<LocalDate> checkedWeeks;
 
   /** Number of milliseconds to wait until the next check. */
   private static final long INTERVAL = 60000; // Once in 1 minute

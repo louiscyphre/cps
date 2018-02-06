@@ -272,4 +272,9 @@ public class Customer implements Serializable, User {
   public boolean canAccessDomain(int domain) {
     return false;
   }
+
+  @Override
+  public boolean canAccessDomain(int domain, int departmentID) {
+    return false;
+  }
 }
