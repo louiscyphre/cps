@@ -108,15 +108,6 @@ INSERT INTO `parking_lot` VALUES (1,'Sesam 2',4,5,3,NULL,'12.f.t43','\0'),(2,'Ra
 UNLOCK TABLES;
 
 --
--- Dumping data for table `quarterly_report`
---
-
-LOCK TABLES `quarterly_report` WRITE;
-/*!40000 ALTER TABLE `quarterly_report` DISABLE KEYS */;
-/*!40000 ALTER TABLE `quarterly_report` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping data for table `subscription_service`
 --
 
