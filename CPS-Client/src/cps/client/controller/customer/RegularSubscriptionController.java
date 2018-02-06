@@ -1,6 +1,3 @@
-/**
- * 
- */
 package cps.client.controller.customer;
 
 import java.time.DateTimeException;
@@ -124,12 +121,12 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     // inside the form
     // car id validation
     String[] carIDs = getCarIDs();
-    
+
     if (carIDs == null) {
       displayError(InputFormats.CARID.errorMsg());
       return;
     }
-    
+
     for (String carID : carIDs) {
       if (!InputFormats.CARID.validate(carID)) {
         displayError(InputFormats.CARID.errorMsg());
@@ -155,7 +152,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
       return;
     }
 
-    RegularSubscriptionRequest request = new RegularSubscriptionRequest(customerID, email, carID, plannedStartDate, lotID, dailyExitTime);
+    RegularSubscriptionRequest request = new RegularSubscriptionRequest(customerID, email, carIDs, plannedStartDate, lotID, dailyExitTime);
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
@@ -176,14 +173,14 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     }
   }
 
-  /** @return car id or null if empty */
+  /** @return car id list or null if empty */
   private String[] getCarIDs() {
     String text = carIDTextField.getText();
-    
+
     if (text == null || text.trim().length() < 1) {
       return null;
     }
-    
+
     String[] values = text.split(",");
     for (int i = 0; i < values.length; i++) {
       values[i] = values[i].trim();
