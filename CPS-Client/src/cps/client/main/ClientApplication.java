@@ -169,6 +169,17 @@ public class ClientApplication extends Application implements INetworkClient {
   /** @param args -l 'lot-id' -m 'mode'(kiosk|webclient) -p 'port' -h 'host'
    * @see CmdParser */
   public static void main(String[] args) {
+    if (args.length == 0) {
+      args = new String[8];
+      args[0] = "-h";
+      args[1] = "localhost";
+      args[2] = "-p";
+      args[3] = "5555";
+      args[4] = "-m";
+      args[5] = "kiosk";
+      args[6] = "-l";
+      args[7] = "1";
+    }
     launch(args);
   }
 
@@ -192,12 +203,12 @@ public class ClientApplication extends Application implements INetworkClient {
     }
   }
 
-  /** @return application's primary stage*/
+  /** @return application's primary stage */
   public Stage getPrimaryStage() {
     return primaryStage;
   }
 
-  /** @param primaryStage application's primary stage*/
+  /** @param primaryStage application's primary stage */
   public void setPrimaryStage(Stage primaryStage) {
     this.primaryStage = primaryStage;
   }
