@@ -16,7 +16,7 @@ public abstract class RequestController {
 
   /** The server application. */
   protected final ServerController serverController;
-  protected final Gson gson;
+  protected final Gson             gson;
 
   /** Instantiates a new request controller.
    * @param serverController the server controller */
@@ -35,7 +35,7 @@ public abstract class RequestController {
   }
 
   void error(String message) throws ServerException {
-      throw new ServerException(message);
+    throw new ServerException(message);
   }
 
   void errorIf(boolean condition, String message) throws ServerException {
@@ -47,8 +47,12 @@ public abstract class RequestController {
   void errorIfNull(Object object, String message) throws ServerException {
     errorIf(object == null, message);
   }
-  
+
   LocalDateTime now() {
     return serverController.getClock().now();
+  }
+
+  protected void printObject(Object object) {
+    System.out.println(String.format("%s: %s", object.getClass().getSimpleName(), gson.toJson(object)));
   }
 }

@@ -11,4 +11,6 @@ public interface User {
   int getAccessLevel();
 
   boolean canAccessDomain(int domain);
+
+  boolean canAccessDomain(int domain, int departmentID);
 }

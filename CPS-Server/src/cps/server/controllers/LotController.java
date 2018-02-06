@@ -3,6 +3,7 @@ package cps.server.controllers;
 import static cps.common.Utilities.between;
 import static cps.common.Utilities.isEmpty;
 import static cps.common.Utilities.valueOrDefault;
+import static cps.common.Utilities.debugPrintln;
 
 import java.util.Collection;
 
@@ -74,6 +75,7 @@ public class LotController extends RequestController {
     return database.performQuery(new InitLotResponse(), (conn, response) -> {
       // Require a logged in employee
       CompanyPerson user = session.requireCompanyPerson();
+      printObject(user);
 
       // Require the employee to have access rights to this action
       errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
@@ -96,6 +98,7 @@ public class LotController extends RequestController {
 
       // Set lot id for LocalEmployee
       if (user.getAccessLevel() <= Constants.ACCESS_LEVEL_LOCAL_MANAGER) {
+        debugPrintln("Binding lot id %d to user %d", result.getId(), user.getId());
         user.setDepartmentID(result.getId());
       }
 
@@ -118,7 +121,7 @@ public class LotController extends RequestController {
       User user = session.requireUser();
 
       // Require the employee to have access rights to this action
-      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
+      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT, action.getLotID()), "You cannot perform this action");
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_MANAGER, "You cannot perform this action");
 
       // Require a parking lot
@@ -148,7 +151,7 @@ public class LotController extends RequestController {
       User user = session.requireUser();
 
       // Require the employee to have access rights to this action
-      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
+      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT, action.getLotID()), "You cannot perform this action");
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_WORKER, "You cannot perform this action");
 
       // Check request parameters
@@ -195,9 +198,10 @@ public class LotController extends RequestController {
     return database.performQuery(serverResponse, (conn, response) -> {
       // Require a logged in employee
       User user = session.requireUser();
+      printObject(user);
 
       // Require the employee to have access rights to this action
-      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You cannot perform this action");
+      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT, lotID), "You cannot perform this action");
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_WORKER, "You cannot perform this action");
 
       // Require a parking lot
@@ -205,7 +209,7 @@ public class LotController extends RequestController {
 
       // Check request parameters
       errorIf(!between(j, 0, Constants.LOT_HEIGHT - 1), String.format("Parameter j must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
-      errorIf(!between(k, 0, Constants.LOT_DEPTH - 1), String.format("Parameter k must be in range [0, %s] (inclusive)", Constants.LOT_HEIGHT - 1));
+      errorIf(!between(k, 0, Constants.LOT_DEPTH - 1), String.format("Parameter k must be in range [0, %s] (inclusive)", Constants.LOT_DEPTH - 1));
       errorIf(!between(i, 0, lot.getWidth() - 1), String.format("Parameter i must be in range [0, %s] (inclusive)", lot.getWidth() - 1));
 
       ParkingCell cell = ParkingCell.find(conn, lot.getId(), i, j, k);

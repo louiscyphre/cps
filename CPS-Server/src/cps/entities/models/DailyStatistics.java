@@ -32,9 +32,6 @@ public class DailyStatistics implements Serializable {
   /** The number of late arrivals. */
   private int lateArrivals;
 
-  /** The number of complaints. */
-  private int complaints;
-
   /** Instantiates a new daily statistics object.
    * @param day the day
    * @param lotId the lot id
@@ -42,22 +39,20 @@ public class DailyStatistics implements Serializable {
    * @param canceledOrders the canceled orders
    * @param lateArrivals the late arrivals
    * @param complaints the complaints */
-  public DailyStatistics(LocalDate day, int lotId, int realizedOrders, int canceledOrders, int lateArrivals, int complaints) {
+  public DailyStatistics(LocalDate day, int lotId, int realizedOrders, int canceledOrders, int lateArrivals) {
     super();
     this.day = day;
     this.lotId = lotId;
     this.realizedOrders = realizedOrders;
     this.canceledOrders = canceledOrders;
     this.lateArrivals = lateArrivals;
-    this.complaints = complaints;
   }
 
   /** Instantiates a new daily statistics object from an SQL ResultSet.
    * @param rs the SQL ResultSet
    * @throws SQLException on error */
   public DailyStatistics(ResultSet rs) throws SQLException {
-    this(rs.getDate("day").toLocalDate(), rs.getInt("lot_id"), rs.getInt("realized_orders"), rs.getInt("canceled_orders"), rs.getInt("late_arrivals"),
-        rs.getInt("complaints"));
+    this(rs.getDate("day").toLocalDate(), rs.getInt("lot_id"), rs.getInt("realized_orders"), rs.getInt("canceled_orders"), rs.getInt("late_arrivals"));
   }
 
   public LocalDate getDay() {
@@ -100,14 +95,6 @@ public class DailyStatistics implements Serializable {
     this.lateArrivals = lateArrivals;
   }
 
-  public int getComplaints() {
-    return complaints;
-  }
-
-  public void setComplaints(int complaints) {
-    this.complaints = complaints;
-  }
-
   /** Creates an empty entry in the table for specific date and lotId. All other
    * parameters are zero by default
    * @param conn the SQL connection
@@ -124,7 +111,7 @@ public class DailyStatistics implements Serializable {
     stmt.executeUpdate();
 
     stmt.close();
-    return new DailyStatistics(today, lotId, 0, 0, 0, 0);
+    return new DailyStatistics(today, lotId, 0, 0, 0);
 
   }
 
@@ -204,7 +191,7 @@ public class DailyStatistics implements Serializable {
 
       } else {
         // if doesn't exists - create empty line with zeroes
-        item[i] = new DailyStatistics(iDate, lotId, 0, 0, 0, 0);
+        item[i] = new DailyStatistics(iDate, lotId, 0, 0, 0);
       }
       rs.close();
       st.close();
@@ -231,12 +218,11 @@ public class DailyStatistics implements Serializable {
       rs = st.executeQuery();
 
       if (rs.next()) {
-        item[i] = new DailyStatistics(iDate, 0, rs.getInt("realized_orders"), rs.getInt("canceled_orders"), rs.getInt("late_arrivals"),
-            rs.getInt("inactive_slots"));
+        item[i] = new DailyStatistics(iDate, 0, rs.getInt("realized_orders"), rs.getInt("canceled_orders"), rs.getInt("late_arrivals"));
 
       } else {
         // if doesn't exists - create empty line with zeroes
-        item[i] = new DailyStatistics(iDate, 0, 0, 0, 0, 0);
+        item[i] = new DailyStatistics(iDate, 0, 0, 0, 0);
       }
       rs.close();
       st.close();

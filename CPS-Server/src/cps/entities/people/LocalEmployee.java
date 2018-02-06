@@ -13,4 +13,9 @@ public abstract class LocalEmployee extends Employee {
   public int getLotID() {
     return getDepartmentID();
   }
+
+  @Override
+  public boolean canAccessDomain(int domain, int departmentID) {
+    return (getAccessDomain() & domain) != 0 && getDepartmentID() == departmentID;
+  }
 }

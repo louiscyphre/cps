@@ -12,4 +12,9 @@ public class GlobalManager extends CompanyPerson {
     setAccessLevel(Constants.ACCESS_LEVEL_GLOBAL_MANAGER);
     setAccessDomain(Constants.ACCESS_DOMAIN_EVERYTHING);
   }
+
+  @Override
+  public boolean canAccessDomain(int domain, int departmentID) {
+    return true;
+  }
 }

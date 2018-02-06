@@ -120,6 +120,10 @@ public class CarTransportationControllerA extends RequestController implements C
             // Parse the car info
             ParkingCell cell = content[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1];
             // Calculate the priority
+            if (cell.getPlannedExitTime() == null) {
+              continue;
+            }
+            
             otherPriority = calculatePriority(cell.getPlannedExitTime().toLocalDateTime(), worstPriority, lotWidth);
             /* If this one can be promoted, try to find a place for him in
              * higher priorities */
@@ -173,6 +177,9 @@ public class CarTransportationControllerA extends RequestController implements C
             // Parse the car info
             ParkingCell cell = content[iSize][Math.floorMod(iHeight, 3)][Math.floorDiv(iHeight, 3) + 1];
             // Calculate the priority
+            if (cell.getPlannedExitTime() == null) {
+              continue;
+            }
             otherPriority = calculatePriority(cell.getPlannedExitTime().toLocalDateTime(), worstPriority, lotWidth);
             /* If this one can be demoted, try to find a place for him in lower
              * priorities */

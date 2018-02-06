@@ -132,7 +132,7 @@ public class WeeklyStatistics implements Serializable {
     DailyStatistics[] days = DailyStatistics.getSevenDays(conn, start, lotid);
 
     /* Calculate median and mean */
-    int[][] medianHelper = new int[2][7];
+    int[][] medianHelper = new int[3][7];
 
     float numRealizedOrders = 0f;
     float numCanceledOrders = 0f;
@@ -149,9 +149,9 @@ public class WeeklyStatistics implements Serializable {
     for (int i = 0; i < 2; i++) {
       Arrays.sort(medianHelper[i]);
     }
-    result.realizedOrdersMean = numRealizedOrders / 7;
-    result.canceledOrdersMean = numCanceledOrders / 7;
-    result.lateArrivalsMean = numLateArrivals / 7;
+    result.realizedOrdersMean = numRealizedOrders / 7f;
+    result.canceledOrdersMean = numCanceledOrders / 7f;
+    result.lateArrivalsMean = numLateArrivals / 7f;
     result.realizedOrdersMedian = medianHelper[0][3];
     result.canceledOrdersMedian = medianHelper[1][3];
     result.lateArrivalsMedian = medianHelper[2][3];
@@ -162,18 +162,22 @@ public class WeeklyStatistics implements Serializable {
     result.lateArrivalsDist = "";
     result.realizedOrdersDist = "";
     for (int i = 0; i < 6; i++) {
-      result.realizedOrdersDist += String.format("%f,", days[i].getRealizedOrders() / numRealizedOrders);
-      result.canceledOrdersDist += String.format("%f,", days[i].getCanceledOrders() / numCanceledOrders);
-      result.lateArrivalsDist += String.format("%f,", days[i].getLateArrivals() / numLateArrivals);
+      result.realizedOrdersDist += String.format("%f,", zeroIfNaN(days[i].getRealizedOrders() / numRealizedOrders));
+      result.canceledOrdersDist += String.format("%f,", zeroIfNaN(days[i].getCanceledOrders() / numCanceledOrders));
+      result.lateArrivalsDist += String.format("%f,", zeroIfNaN(days[i].getLateArrivals() / numLateArrivals));
     }
-    result.realizedOrdersDist += String.format("%f", days[6].getRealizedOrders() / numRealizedOrders);
-    result.canceledOrdersDist += String.format("%f", days[6].getCanceledOrders() / numCanceledOrders);
-    result.lateArrivalsDist += String.format("%f", days[6].getLateArrivals() / numLateArrivals);
+    result.realizedOrdersDist += String.format("%f", zeroIfNaN(days[6].getRealizedOrders() / numRealizedOrders));
+    result.canceledOrdersDist += String.format("%f", zeroIfNaN(days[6].getCanceledOrders() / numCanceledOrders));
+    result.lateArrivalsDist += String.format("%f", zeroIfNaN(days[6].getLateArrivals() / numLateArrivals));
 
     /* Distributions now recorded as comma separated values from Sunday to Saturday */
     result.update(conn);
     debugPrintln("WeeklyStatistics: generated for %s", start);
     return result;
+  }
+
+  private static float zeroIfNaN(float f) {
+    return Float.isNaN(f) ? 0f : f;
   }
 
   /** Collect the weekly statistics that are needed for producing a periodic activity report.
