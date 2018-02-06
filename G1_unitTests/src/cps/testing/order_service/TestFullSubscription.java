@@ -20,6 +20,7 @@ import cps.api.request.*;
 import cps.api.action.*;
 import cps.api.response.*;
 import cps.common.Constants;
+import cps.common.Utilities;
 import cps.common.Utilities.Pair;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.Complaint;
@@ -37,6 +38,7 @@ import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Before;
 
+import static cps.common.Utilities.isWeekend;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -77,10 +79,60 @@ public class TestFullSubscription extends ServerControllerTestBase {
     float expectedPayment = Constants.PRICE_PER_HOUR_RESERVED * 72f;
     requestFullSubscription(data, getContext(), startDate, expectedPayment);
     enterParking(data, getContext());
+    setTime(getTime().plusHours(1));
     requestParkingExit(data, getContext());
   }
   @Test
   public void testMultipleCars() throws ServerException {
+    header("testFullSubscription - multiple cars");
+    initParkingLot(lotData[0]);
+    
+    CustomerData data = new CustomerData(0, "company@email", "", "", 1, 0);
+    
+    LocalDate startDate = getTime().toLocalDate();
+    LocalTime dailyExitTime = LocalTime.of(17, 30);
+    
+    setTime(startDate.atTime(9, 0));
+    
+    int numSubscriptions = 10;
+    String carIDs[] = new String[numSubscriptions];
+    int subsIDs[] = new int[numSubscriptions];
+    
+    for (int i = 0; i < numSubscriptions; i++) {
+      carIDs[i] = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
+      FullSubscriptionRequest request = new FullSubscriptionRequest(data.getCustomerID(), data.getEmail(), carIDs[i], startDate);
+      printObject(request);
+      FullSubscriptionResponse response = sendRequest(request, getContext(), FullSubscriptionResponse.class);
+      assertNotNull(response);
+      printObject(response);
+      assertTrue(response.success());
+      
+      // After the first request, we will be registered as a new user
+      // Remember out ID and password
+      if (data.getCustomerID() == 0) {
+        data.setCustomerID(response.getCustomerID());
+        data.setPassword(response.getPassword());
+      }
+      
+      subsIDs[i] = response.getServiceID();
+      setTime(getTime().plusMinutes(1));
+    }
+    
+    // Check that we have one customer and 10 subscriptions
+    assertEquals(1, db.countEntities("customer"));
+    assertEquals(numSubscriptions, db.countEntities("subscription_service"));
+    
+    // Park with all of them
+    setTime(getTime().plusHours(1));
+    
+    for (int i = 0; i < numSubscriptions; i++) {
+      data.setSubsID(subsIDs[i]);
+      data.setCarID(carIDs[i]);
+      // The request should succeed on regular days, and fail on a weekend, because regular subscriptions are not active on weekends
+      enterParking(data, getContext());
+      requestParkingExit(data, getContext()); 
+      setTime(getTime().plusMinutes(1));     
+    }
     
   }
 }
