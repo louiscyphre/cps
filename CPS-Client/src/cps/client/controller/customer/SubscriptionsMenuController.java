@@ -164,6 +164,7 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     
     if (parkingLotsList.getValue() == null) {
       displayError("Please choose a parking lot");
+      return;
     }
     
     int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
