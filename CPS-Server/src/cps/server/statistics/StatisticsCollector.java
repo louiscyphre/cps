@@ -43,7 +43,7 @@ public class StatisticsCollector {
         DailyStatistics.increaseRealizedOrder(conn, date, lotID);
         // Daily statistics - late arrival
         if (warned) {
-          DailyStatistics.increaseLateArrival(conn, date, serviceID);
+          DailyStatistics.increaseLateArrival(conn, date, lotID);
         }
       }
     }  
@@ -95,7 +95,7 @@ public class StatisticsCollector {
       } else { // PARKING_TYPE_RESERVED
         // Daily statistics - late arrival
         if (warned) {
-          DailyStatistics.increaseLateArrival(conn, now, serviceID);
+          DailyStatistics.increaseLateArrival(conn, now, lotID);
         }
         // Monthly statistics
         MonthlyReport.increaseReserved(conn, now.getYear(), now.getMonthValue(), lotID);
