@@ -9,12 +9,12 @@ import cps.common.Constants;
 public class FullSubscriptionRequest extends SubscriptionRequest {
   private static final long serialVersionUID = 1L;
 
-  public FullSubscriptionRequest(int customerID, String email, String[] carIDs, LocalDate startDate) {
-    super(customerID, email, carIDs, startDate);
+  public FullSubscriptionRequest(int customerID, String email, String[] carIDs, LocalDate startDate, int lotID) {
+    super(customerID, email, carIDs, startDate, lotID);
   }
 
-  public FullSubscriptionRequest(int customerID, String email, String carID, LocalDate startDate) {
-    super(customerID, email, carID, startDate);
+  public FullSubscriptionRequest(int customerID, String email, String carID, LocalDate startDate, int lotID) {
+    super(customerID, email, carID, startDate, lotID);
   }
 
   /** Call the handler for this request.
@@ -28,10 +28,5 @@ public class FullSubscriptionRequest extends SubscriptionRequest {
   @Override
   public int getSubscriptionType() {
     return Constants.SUBSCRIPTION_TYPE_FULL;
-  }
-
-  @Override
-  public int getLotID() {
-    return 0;
   }
 }

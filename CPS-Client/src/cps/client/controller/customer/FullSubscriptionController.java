@@ -168,7 +168,8 @@ public class FullSubscriptionController extends CustomerActionControllerBaseSubm
       ControllersClientAdapter.getCustomerContext().setPendingEmail(email);
     }
 
-    FullSubscriptionRequest request = new FullSubscriptionRequest(customerID, email, carIDs, plannedStartDate);
+    int lotID = ControllersClientAdapter.getCustomerContext().getChosenLotID();
+    FullSubscriptionRequest request = new FullSubscriptionRequest(customerID, email, carIDs, plannedStartDate, lotID);
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }

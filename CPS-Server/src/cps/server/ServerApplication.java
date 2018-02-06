@@ -9,7 +9,7 @@ import cps.api.request.Request;
 import cps.api.response.ServerResponse;
 import cps.api.response.SimpleResponse;
 import cps.common.Constants;
-import cps.server.background.Reminder;
+import cps.server.background.TaskScheduler;
 import cps.server.database.DatabaseController;
 import cps.server.session.SessionHolder;
 import ocsf.server.AbstractServer;
@@ -30,7 +30,7 @@ import ocsf.server.ConnectionToClient;
 public class ServerApplication extends AbstractServer {
   private Gson             gson     = new Gson();
   private ServerController serverController;
-  private Reminder         reminder = null;
+  private TaskScheduler         reminder = null;
 
   /**
    * Constructs an instance of the server application.
@@ -49,7 +49,7 @@ public class ServerApplication extends AbstractServer {
 
   private void initialize(ServerConfig config) throws Exception {
     // Create background thread to poll the database every minute
-    reminder = new Reminder(config, new RealTimeProvider());
+    reminder = new TaskScheduler(config, new RealTimeProvider());
     reminder.start();
   }
 

@@ -75,6 +75,7 @@ public class ServerController implements RequestHandler<SessionHolder> {
 
   /** Constructs an instance of the server controller.
    * @param config the configuration settings
+   * @param clock the time provider
    * @throws Exception on error */
   public ServerController(ServerConfig config, TimeProvider clock) throws Exception {
     this.config = config;

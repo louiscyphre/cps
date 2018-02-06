@@ -8,19 +8,22 @@ public abstract class SubscriptionRequest extends CustomerRequest {
   private String            email;
   private String[]          carIDs;
   private LocalDate         startDate;
+  private int               lotID;
 
-  public SubscriptionRequest(int customerID, String email, String[] carIDs, LocalDate startDate) {
+  public SubscriptionRequest(int customerID, String email, String[] carIDs, LocalDate startDate, int lotID) {
     super(customerID);
     this.email = email;
     this.carIDs = carIDs;
     this.startDate = startDate;
+    this.lotID = lotID;
   }
 
-  public SubscriptionRequest(int customerID, String email, String carID, LocalDate startDate) {
+  public SubscriptionRequest(int customerID, String email, String carID, LocalDate startDate, int lotID) {
     super(customerID);
     this.email = email;
     this.carIDs = new String[] { carID };
     this.startDate = startDate;
+    this.lotID = lotID;
   }
 
   public String getEmail() {
@@ -71,7 +74,13 @@ public abstract class SubscriptionRequest extends CustomerRequest {
     this.startDate = startDate;
   }
 
-  public abstract int getSubscriptionType();
+  public int getLotID() {
+    return lotID;
+  }
 
-  public abstract int getLotID();
+  public void setLotID(int lotID) {
+    this.lotID = lotID;
+  }
+
+  public abstract int getSubscriptionType();
 }

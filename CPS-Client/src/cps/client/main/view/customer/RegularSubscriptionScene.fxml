@@ -29,7 +29,7 @@
                <VBox.margin>
                   <Insets />
                </VBox.margin></TextField>
-        <TextField fx:id="carIDTextField" alignment="BASELINE_LEFT" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter your Car ID here" style="" styleClass="inputField" text="">
+        <TextField fx:id="carIDTextField" alignment="BASELINE_LEFT" maxWidth="280.0" prefHeight="40.0" prefWidth="280.0" promptText="Enter one or more Car ID numbers here" style="" styleClass="inputField" text="">
                <VBox.margin>
                   <Insets />
                </VBox.margin>

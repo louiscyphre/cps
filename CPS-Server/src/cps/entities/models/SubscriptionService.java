@@ -323,8 +323,7 @@ public class SubscriptionService implements ParkingService {
 
   /** Return the daily exit time for this subscription.
    * For regular subscription: specified at creation
-   * For full subscription: always return midnight 
-   * @see cps.entities.models.ParkingService#getExitTime() */
+   * For full subscription: always return midnight  */
   @Override
   public LocalDateTime getExitTime(LocalDate now) {
     if (subscriptionType == Constants.SUBSCRIPTION_TYPE_FULL) {
@@ -475,9 +474,8 @@ public class SubscriptionService implements ParkingService {
   }
   
   /** Whether the subscription service record should be marked as complete after the customer exits from parking.
-   * @return true if this was the last time that the customer could use the subscription
-   * @see cps.entities.models.ParkingService#shouldCompleteAfterExit()
-   */
+   * @param now the current date-time
+   * @return true if this was the last time that the customer could use the subscription */
   @Override
   public boolean shouldCompleteAfterExit(LocalDateTime now) {
     return LocalDateTime.of(endDate, dailyExitTime).isBefore(now) && !parked;    

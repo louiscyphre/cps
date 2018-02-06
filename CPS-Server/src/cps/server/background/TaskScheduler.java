@@ -23,10 +23,11 @@ import cps.server.ServerException;
 import cps.server.TimeProvider;
 import cps.server.database.DatabaseController;
 
-/** Runs in the background to remind users about important events.
+/** Runs background tasks that need to be performed periodically.
  * 1. Ask users who are late to their reserved parking whether they are still interested in the reservation.
- * 2. Remind users who purchased a monthly subscription, that there is 1 week left before their subscription runs out. */
-public class Reminder extends Thread {
+ * 2. Remind users who purchased a monthly subscription, that there is 1 week left before their subscription runs out.
+ * 3. Generate weekly statistics from daily statistical records. */
+public class TaskScheduler extends Thread {
   DatabaseController         db = null;
   private TimeProvider       clock;
   private HashSet<LocalDate> checkedWeeks;
@@ -35,7 +36,7 @@ public class Reminder extends Thread {
   private static final long INTERVAL = 60000; // Once in 1 minute
   // private static final long INTERVAL = 6000; // Once in 6 seconds
 
-  public Reminder(ServerConfig config, TimeProvider clock) throws Exception {
+  public TaskScheduler(ServerConfig config, TimeProvider clock) throws Exception {
     db = new DatabaseController(config);
     this.clock = clock;
   }
@@ -88,6 +89,7 @@ public class Reminder extends Thread {
   }
 
   /** Generate last week weekly report for each parking lot and populate it into the database.
+   * @param weekStart the date when the week started
    * @throws ServerException the server exception */
   private void generateWeeklyReport(LocalDate weekStart) throws ServerException {
     db.performAction(conn -> {

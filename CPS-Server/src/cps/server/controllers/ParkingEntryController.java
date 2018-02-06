@@ -126,6 +126,10 @@ public class ParkingEntryController extends RequestController {
       // Check if they have a SubscriptionService entry
       int subsID = request.getSubscriptionID();
       SubscriptionService service = SubscriptionService.findForEntry(conn, customerID, carID, subsID);
+
+      // Check that entry an license exists
+      errorIfNull(service, "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
+      
       errorIf(service.isParked(), "You are already parking with this subscription");
       errorIf(service.isCompleted(), "This subscription has expired");
 
@@ -138,9 +142,6 @@ public class ParkingEntryController extends RequestController {
             now().toLocalDate());
         errorIf(transportation != null, "This subscription was already used today");
       }
-
-      // Check that entry an license exists
-      errorIfNull(service, "SubscriptionService entry license not found for customer ID " + customerID + " with car ID " + carID);
 
       // Check that the lot ID is correct for regular subscription
       errorIf(service.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR && lotID != service.getLotID(),

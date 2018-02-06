@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
+import java.util.Set;
 
 import cps.api.request.FullSubscriptionRequest;
 import cps.api.request.RegularSubscriptionRequest;
@@ -14,6 +14,7 @@ import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.ServerResponse;
 import cps.api.response.SubscriptionResponse;
 import cps.common.Constants;
+import cps.common.Utilities;
 import cps.entities.models.Customer;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
@@ -86,18 +87,21 @@ public class SubscriptionController extends RequestController {
       }
 
       // check overlapping subscriptions with the same car ID
-      HashSet<String> carIDs = unique(request.getCarIDs());
+      String carIDs[] = request.getCarIDs();
+      Set<String> unique = Utilities.unique(carIDs);
       
-      int numCars = carIDs.size();
+      errorIf(unique.size() < request.getCarIDs().length, "The same car ID cannot be listed twice");
       
-      for (String carID : carIDs) {
+      int numCars = carIDs.length;
+      
+      for (int i = 0; i < numCars; i++) {
         if (request.getSubscriptionType() == Constants.SUBSCRIPTION_TYPE_REGULAR) {
           errorIf(
-              SubscriptionService.overlapExists(conn, carID, request.getSubscriptionType(),
+              SubscriptionService.overlapExists(conn, carIDs[i], request.getSubscriptionType(),
                   request.getLotID(), startDate, endDate),
               "Subscription for this car for this parking lot already exists in this timeframe");
         } else {
-          errorIf(SubscriptionService.overlapExists(conn, carID, request.getSubscriptionType(), 0, startDate,
+          errorIf(SubscriptionService.overlapExists(conn, carIDs[i], request.getSubscriptionType(), 0, startDate,
               endDate), "Subscription for this car already exists in this timeframe");
         }
       }
@@ -106,16 +110,15 @@ public class SubscriptionController extends RequestController {
       Customer customer = session.requireRegisteredCustomer(conn, request.getCustomerID(), request.getEmail());
       
       int subscriptionIDs[] = new int[numCars];
-      int i = 0;
         
-      for (String carID : carIDs) {
+      for (int i = 0; i < numCars; i++) {
         SubscriptionService service = SubscriptionService.create(conn, request.getSubscriptionType(), customer.getId(),
-            request.getEmail(), carID, request.getLotID(), startDate, endDate, dailyExitTime);
+            request.getEmail(), carIDs[i], request.getLotID(), startDate, endDate, dailyExitTime);
         errorIfNull(service, "Failed to create SubscriptionService entry");
   
         // XXX Statistics
         StatisticsCollector.increaseSubscription(conn, now().toLocalDate(), service.getSubscriptionType(), service.getLotID());
-        subscriptionIDs[i++] = service.getId();
+        subscriptionIDs[i] = service.getId();
       }
 
       // Calculate payment
@@ -134,16 +137,6 @@ public class SubscriptionController extends RequestController {
 
       return response;
     });
-  }
-
-  private HashSet<String> unique(String[] array) {
-    HashSet<String> set = new HashSet<>();
-    
-    for (String elem : array) {
-      set.add(elem);
-    }
-    
-    return set;
   }
 
   private float paymentForSubscription(Connection conn, Customer customer, SubscriptionRequest request, int numCars)
