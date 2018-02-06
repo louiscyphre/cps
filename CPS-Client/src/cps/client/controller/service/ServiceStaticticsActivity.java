@@ -110,11 +110,12 @@ public class ServiceStaticticsActivity extends ServiceStatitisticsBase {
   public void handle(PeriodicReportResponse response) {
     if (response.success()) {
       fillReportTable(response.getData());
+      turnProcessingStateOff();
       displayInfo("Reports retrieved successfully");
     } else {
+      turnProcessingStateOff();
       displayError("Can't retrieve quarterly report");
     }
-    turnProcessingStateOff();
   }
 
   private void fillReportTable(PeriodicReport data) {

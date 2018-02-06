@@ -54,6 +54,7 @@ public class ServiceActionInitLotSceneController extends ServiceActionController
   public void handle(InitLotResponse response) {
     if (response.success()) {
       setFinishInsteadOfSubmit(true);
+      ControllersClientAdapter.setLotID(response.getLotID());
     }
     super.handleGenericResponse(response);
   }

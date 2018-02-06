@@ -259,11 +259,12 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
   public void handle(ListParkingLotsResponse response) {
     if (response.success()) {
       setParkingLots(response.getData());
+      turnProcessingStateOff();
       displayInfo("Parking lots list retrieved successfully");
     } else {
+      turnProcessingStateOff();
       displayError("Can't retrieve parking lots");
     }
-    turnProcessingStateOff();
   }
 
   /** Handles the response from the server containing the data with quarterly report
@@ -272,11 +273,12 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
   public void handle(QuarterlyReportResponse response) {
     if (response.success()) {
       fillReportTable(response.getData());
+      turnProcessingStateOff();
       displayInfo("Reports retrieved successfully");
     } else {
+      turnProcessingStateOff();
       displayError("Can't retrieve quarterly report");
     }
-    turnProcessingStateOff();
   }
 
   /* (non-Javadoc)
