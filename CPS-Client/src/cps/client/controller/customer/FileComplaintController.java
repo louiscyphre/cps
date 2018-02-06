@@ -13,6 +13,7 @@ import cps.client.controller.ParkingLotsController;
 import cps.entities.models.ParkingLot;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
@@ -38,6 +39,17 @@ public class FileComplaintController extends CustomerActionControllerBaseSubmitA
    */
   HashMap<String, ParkingLot> parkingLotsMap = null;
 
+  /** Handle lot choice.
+   * @param event
+   *        the event */
+  @FXML
+  void handleLotChoice(ActionEvent event) {
+    if (processing) {
+      return;
+    }
+    int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
+    ControllersClientAdapter.getCustomerContext().setChosenLotID(userChosenLotID);
+  }
   /**
    * 
    */
@@ -59,7 +71,7 @@ public class FileComplaintController extends CustomerActionControllerBaseSubmitA
     try {
       int customerId = notNull(ControllersClientAdapter.getCustomerContext(), "CustomerContext").getCustomerId();
       String content = requireField(complaintContent, "Complaint Content");
-      int lotId = ControllersClientAdapter.getLotID();
+      int lotId = ControllersClientAdapter.getCustomerContext().getChosenLotID();
       sendRequest(new ComplaintRequest(customerId, lotId, content));
     } catch (Exception e) {
       displayError(e.getMessage());
