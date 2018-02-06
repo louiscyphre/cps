@@ -36,14 +36,10 @@ public class CarTransportationControllerA extends RequestController implements C
 
   /** Insert multiple cars. This function should only be run after checking there
    * is at least one empty space in the parking lot.
-   * @param conn
-   *        the SQL connection
-   * @param lot
-   *        the parking lot
-   * @param carIds
-   *        Stack holding the car IDs
-   * @param exitTimes
-   *        Stack holding the exit times, correlated with car IDs
+   * @param conn the SQL connection
+   * @param lot the parking lot
+   * @param carIds Stack holding the car IDs
+   * @param exitTimes Stack holding the exit times, correlated with car IDs
    * @return true, if successful
    * @throws SQLException
    *         on error
@@ -123,7 +119,7 @@ public class CarTransportationControllerA extends RequestController implements C
             if (cell.getPlannedExitTime() == null) {
               continue;
             }
-            
+
             otherPriority = calculatePriority(cell.getPlannedExitTime().toLocalDateTime(), worstPriority, lotWidth);
             /* If this one can be promoted, try to find a place for him in
              * higher priorities */
@@ -429,7 +425,7 @@ public class CarTransportationControllerA extends RequestController implements C
         }
       }
     }
-    return Math.max(priority, worstPriority);
+    return priority;
   }
 
   private void pave(Stack<String> carIds, Stack<LocalDateTime> exitTimes, int maxSize, int maxHeight, int maxDepth, ParkingCell[][][] content,
