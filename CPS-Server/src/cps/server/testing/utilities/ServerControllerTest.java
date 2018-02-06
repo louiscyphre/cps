@@ -170,7 +170,7 @@ public abstract class ServerControllerTest extends TestCase {
 
     // Make the request
     LocalDate startDate = getTime().toLocalDate();
-    FullSubscriptionRequest request = new FullSubscriptionRequest(data.customerID, data.email, data.carID, startDate);
+    FullSubscriptionRequest request = new FullSubscriptionRequest(data.customerID, data.email, data.carID, startDate, data.lotID);
 
     // Run general tests
     requestSubscription(request, context, data, holder);

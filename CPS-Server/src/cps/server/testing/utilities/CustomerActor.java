@@ -191,10 +191,11 @@ public class CustomerActor extends CustomerData implements Actor {
   }
 
   private void actBuyFullSubscription(World world) {
+    lotID = roll(1, world.getNumberOfParkingLots());
     startDate = world.getTime().toLocalDate().plusDays(roll(1, 10));
     endDate = startDate.plusDays(27);
 
-    FullSubscriptionRequest request = new FullSubscriptionRequest(customerID, email, carID, startDate);
+    FullSubscriptionRequest request = new FullSubscriptionRequest(customerID, email, carID, startDate, lotID);
     FullSubscriptionResponse response = world.sendRequest(request, context, FullSubscriptionResponse.class);
     handleResponse(world, request, response, false);
 

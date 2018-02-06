@@ -144,7 +144,13 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     if (processing) {
       return;
     }
-    parkingLotsList.setDisable(true);
+    parkingLotsList.setDisable(false);
+    if (parkingLotsMap != null) {
+      return;
+    }
+    ListParkingLotsRequest request = new ListParkingLotsRequest();
+    turnProcessingStateOn();
+    ControllersClientAdapter.getClient().sendRequest(request);
   }
 
   /**
@@ -155,15 +161,19 @@ public class SubscriptionsMenuController extends CustomerActionControllerBase im
     if (processing) {
       return;
     }
+    
+    if (parkingLotsList.getValue() == null) {
+      displayError("Please choose a parking lot");
+    }
+    
+    int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
+    ControllersClientAdapter.getCustomerContext().setChosenLotID(userChosenLotID);
+    
     if (fullSubscriptionRadioButton.isSelected()) {
       ControllersClientAdapter.setStage(ControllerConstants.SceneCode.FULL_SUBSCRIPTION);
       return;
     }
-    if (parkingLotsList.getValue() == null) {
-      displayError("Please choose a parking lot");
-    }
-    int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
-    ControllersClientAdapter.getCustomerContext().setChosenLotID(userChosenLotID);
+    
     ControllersClientAdapter.setStage(ControllerConstants.SceneCode.REGULAR_SUBSCRIPTION);
   }
   /**
