@@ -100,7 +100,7 @@ public class DatabaseController {
    *           on error
    */
   public Connection getConnection() throws SQLException {
-    return DriverManager.getConnection("jdbc:mysql://" + host + "/" + dbName, username, password);
+    return DriverManager.getConnection("jdbc:mysql://" + host + "/" + dbName + "?verifyServerCertificate=false&useSSL=true", username, password);
   }
 
   /** Handle SQL exception.
