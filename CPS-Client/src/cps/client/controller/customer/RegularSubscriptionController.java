@@ -29,50 +29,34 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-/**
- *
- */
+/** Regular Subscription controller. */
 public class RegularSubscriptionController extends CustomerActionControllerBaseSubmitAndFinish {
 
-  /**
-   * End time TextField
-   */
+  /** End time TextField */
   @FXML
   private TextField endTimeTextField;
 
-  /**
-   * End time TextField
-   */
+  /** End time TextField */
   @FXML
   private TextField emailTextField;
 
-  /**
-   * Start date DatePicker
-   */
+  /** Start date DatePicker */
   @FXML
   private DatePicker startDatePicker;
 
-  /**
-   * Font
-   */
+  /** Font */
   @FXML
   private Font x1;
 
-  /**
-   * Insets
-   */
+  /** Insets */
   @FXML
   private Insets x3;
 
-  /**
-   * Car ID TextField
-   */
+  /** Car ID TextField */
   @FXML
   private TextField carIDTextField;
 
-  /**
-   * @param event
-   */
+  /** @param event */
   @FXML
   void handlePickStartDate(ActionEvent event) {
     if (processing) {
@@ -81,8 +65,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBase#handleBackButton(javafx.event.ActionEvent)
-   */
+   * @see cps.client.controller.customer.CustomerActionControllerBase#handleBackButton(javafx.event.ActionEvent) */
   @FXML
   void handleBackButton(ActionEvent event) {
     if (processing) {
@@ -92,8 +75,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent)
-   */
+   * @see cps.client.controller.customer.CustomerActionControllerBase#handleSubmitButton(javafx.event.ActionEvent) */
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -103,8 +85,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn()
-   */
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn() */
   @Override
   public void turnLoggedInStateOn() {
     super.turnLoggedInStateOn();
@@ -112,17 +93,14 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff()
-   */
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff() */
   @Override
   public void turnLoggedInStateOff() {
     super.turnLoggedInStateOff();
     emailTextField.setVisible(true);
   }
 
-  /**
-   * Validates that the fields and Sends API request to the server.
-   */
+  /** Validates that the fields and Sends API request to the server. */
   private void validateAndSend() {
     // validation in same order as order in the form
     // out of form
@@ -169,23 +147,18 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
       return;
     }
 
-    RegularSubscriptionRequest request = new RegularSubscriptionRequest(customerID, email, carID, plannedStartDate,
-        lotID, dailyExitTime);
+    RegularSubscriptionRequest request = new RegularSubscriptionRequest(customerID, email, carID, plannedStartDate, lotID, dailyExitTime);
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
-  /**
-   * @return customer id from context - >=1 if logged in, 0 otherwise
-   */
+  /** @return customer id from context - >=1 if logged in, 0 otherwise */
   private int getCustomerID() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
-  /**
-   * @return email from customer context if logged in, or the value of the email field otherwise
-   */
+  /** @return email from customer context if logged in, or the value of the email field otherwise */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
     if (cntx.isLoggedIn()) {
@@ -195,16 +168,12 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     }
   }
 
-  /**
-   * @return car id or null if empty
-   */
+  /** @return car id or null if empty */
   private String getCarID() {
     return carIDTextField.getText();
   }
-  
-  /**
-   * @return planned start date or null if empty
-   */
+
+  /** @return planned start date or null if empty */
   private LocalDate getPlannedStartDate() {
     if (startDatePicker.getValue() == null) {
       return null;
@@ -216,9 +185,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     }
   }
 
-  /**
-   * @return planned exit time or null if empty
-   */
+  /** @return planned exit time or null if empty */
   private LocalTime getPlannedDailyExitTime() {
     try {
       return LocalTime.parse(endTimeTextField.getText(), DateTimeFormatter.ISO_LOCAL_TIME);
@@ -227,9 +194,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
     }
   }
 
-  /**
-   * Initializes the Controller and Registers it.
-   */
+  /** Initializes the Controller and Registers it. */
   @FXML
   void initialize() {
     super.baseInitialize();
@@ -243,9 +208,8 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
                                                      // Field
   }
 
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.RegularSubscriptionResponse)
-   */
+  /** Display the subscription details if request was successful, and user
+   * credentials if new user, otherwise - error message from the server. */
   @Override
   public void handle(RegularSubscriptionResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
@@ -298,8 +262,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /* (non-Javadoc)
-   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl()
-   */
+   * @see cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#cleanCtrl() */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();

@@ -14,10 +14,6 @@ import org.apache.commons.cli.ParseException;
 /**
  * This class parses and saves all command line parameters for client
  */
-/**
- * @author firl
- *
- */
 public class CmdParser {
 
   /**
@@ -62,7 +58,7 @@ public class CmdParser {
   }
 
   /**
-   * @return
+   * @return host
    */
   public String getHost() {
     String option = cmd.getOptionValue("host");
@@ -70,7 +66,7 @@ public class CmdParser {
   }
 
   /**
-   * @return
+   * @return port
    * @throws NumberFormatException
    */
   public int getPort() throws NumberFormatException {
@@ -82,7 +78,7 @@ public class CmdParser {
   }
 
   /**
-   * @return
+   * @return lot id
    * @throws NumberFormatException
    */
   public int getLotId() throws NumberFormatException {
@@ -94,7 +90,7 @@ public class CmdParser {
   }
 
   /**
-   * @return
+   * @return mode of the application
    */
   public String getMode() {
     String option = cmd.getOptionValue("mode");

@@ -156,11 +156,7 @@ public class ServiceActionLotIsFullController extends ServiceActionControllerBas
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.
-   * SetFullLotResponse)
-   */
+  /** Handles the response from the server , displays error is request failed.*/
   @Override
   public void handle(SetFullLotResponse response) {
     super.handleGenericResponse(response);

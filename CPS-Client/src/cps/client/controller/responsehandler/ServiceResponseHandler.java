@@ -16,7 +16,6 @@ import cps.api.response.SetFullLotResponse;
 import cps.api.response.UpdatePricesResponse;
 import cps.api.response.WeeklyReportResponse;
 
-// TODO: Auto-generated Javadoc
 /**
  * Service Response Handler Class. Used to Handle generic and specific Responses.
  */

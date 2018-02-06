@@ -30,10 +30,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-// TODO represent date as 1 column
-// TODO "TOTAL" row is the last int the table and passed with fieldText = "Total"
-
+/** Controller class for Service Quarterly report scene. */
 public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implements ParkingLotsController, ReportsController {
 
   @FXML
@@ -95,7 +92,6 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
   /** List holding the entries */
   private ObservableList<TableQuarterlyEntry> obsEntriesList;
 
-  
   @FXML
   void handleClearButton(ActionEvent event) {
     this.cleanCtrl();
@@ -199,6 +195,7 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_STATISTICS_QUARTERLY);
   }
 
+  /** @see cps.client.controller.ClientControllerBase#cleanCtrl() */
   @Override
   public void cleanCtrl() {
     super.cleanCtrl();
@@ -256,6 +253,8 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
     }
   }
 
+  /** Handles the response from the server containing the data about parking lots
+   * and populates inner data structures accordingly. */
   @Override
   public void handle(ListParkingLotsResponse response) {
     if (response.success()) {
@@ -267,6 +266,8 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
     turnProcessingStateOff();
   }
 
+  /** Handles the response from the server containing the data with quarterly report
+   * and populates inner data structures accordingly. */
   @Override
   public void handle(QuarterlyReportResponse response) {
     if (response.success()) {
@@ -302,6 +303,7 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
     parkingLotsList.setDisable(false);
   }
 
+  /** Populates inner data structures accordingly to monthly reports. */
   @Override
   public void fillReportTable(Collection<MonthlyReport> list) {
     List<TableQuarterlyEntry> newEntriesList = new LinkedList<TableQuarterlyEntry>();
@@ -339,6 +341,7 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
     obsEntriesList.setAll(newEntriesList);
   }
 
+  /** Class representing the table entry for Quarterly View. */
   public class TableQuarterlyEntry {
 
     private SimpleStringProperty date;

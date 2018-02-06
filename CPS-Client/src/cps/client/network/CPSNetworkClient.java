@@ -5,7 +5,7 @@ import java.io.IOException;
 import ocsf.client.AbstractClient;
 
 /**
- *
+ * Network client used by CPS application
  */
 public class CPSNetworkClient extends AbstractClient {
   /**

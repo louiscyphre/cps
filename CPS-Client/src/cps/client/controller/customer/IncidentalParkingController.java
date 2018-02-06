@@ -26,51 +26,35 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-/**
- * Created on: 2018-01-13 1:01:03 AM
- */
+/** Incidental Parking controller. */
 public class IncidentalParkingController extends CustomerActionControllerBaseSubmitAndFinish {
-  /**
-   * Car ID TextField
-   */
+  /** Car ID TextField */
   @FXML
   private TextField carIDTextField;
 
-  /**
-   * End Date picker
-   */
+  /** End Date picker */
   @FXML
   private DatePicker endDatePicker;
 
-  /**
-   * End Time Text Field
-   */
+  /** End Time Text Field */
   @FXML
   private TextField endTimeTextField;
 
-  /**
-   * Email Text Field
-   */
+  /** Email Text Field */
   @FXML
   private TextField emailTextField;
 
-  /**
-   * Font
-   */
+  /** Font */
   @FXML
   private Font x1;
 
-  /**
-   * Insets
-   */
+  /** Insets */
   @FXML
   private Insets x3;
 
-  /*
-   * (non-Javadoc)
+  /* (non-Javadoc)
    * @see cps.client.controller.customer.CustomerActionControllerBase#
-   * handleSubmitButton(javafx.event.ActionEvent)
-   */
+   * handleSubmitButton(javafx.event.ActionEvent) */
   @FXML
   void handleSubmitButton(ActionEvent event) {
     if (processing) {
@@ -79,9 +63,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     validateAndSend();
   }
 
-  /**
-   * @param event
-   */
+  /** @param event */
   @FXML
   void handlePickEndDate(ActionEvent event) {
     if (processing) {
@@ -89,9 +71,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     }
   }
 
-  /**
-   * Validates that the fields and Sends API request to the server.
-   */
+  /** Validates that the fields and Sends API request to the server. */
   private void validateAndSend() {
     // validation in same order as order in the form
     // out of form
@@ -143,30 +123,23 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
       ControllersClientAdapter.getCustomerContext().setPendingEmail(email);
     }
 
-    IncidentalParkingRequest request = new IncidentalParkingRequest(customerID, email, carID, lotID,
-        plannedEndDateTime);
+    IncidentalParkingRequest request = new IncidentalParkingRequest(customerID, email, carID, lotID, plannedEndDateTime);
     turnProcessingStateOn();
     ControllersClientAdapter.getClient().sendRequest(request);
   }
 
-  /**
-   * @return customer id from context
-   */
+  /** @return customer id from context */
   private int getCustomerId() {
     int id = ControllersClientAdapter.getCustomerContext().getCustomerId();
     return id;
   }
 
-  /**
-   * @return car ID
-   */
+  /** @return car ID */
   private String getCarId() {
     return carIDTextField.getText();
   }
 
-  /**
-   * @return planned leave date
-   */
+  /** @return planned leave date */
   private LocalDateTime getPlannedEndDateTime() {
     if (endDatePicker.getValue() == null) {
       return null;
@@ -178,16 +151,12 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     }
   }
 
-  /**
-   * @return planned end time
-   */
+  /** @return planned end time */
   private LocalTime getEndTime() {
     return getTime(endTimeTextField, "End time");
   }
 
-  /**
-   * @return lot id from the client application
-   */
+  /** @return lot id from the client application */
   private int getLotId() {
     if (ControllersClientAdapter.getLotID() == 0) {
       return -1;
@@ -195,9 +164,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     return ControllersClientAdapter.getLotID();
   }
 
-  /**
-   * @return email from context
-   */
+  /** @return email from context */
   private String getEmail() {
     CustomerContext cntx = ControllersClientAdapter.getCustomerContext();
     if (cntx.isLoggedIn()) {
@@ -207,43 +174,33 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     }
   }
 
-  /**
-   * Toggles the email TextField visible
-   */
+  /** Toggles the email TextField visible */
   public void showEmail() {
     emailTextField.visibleProperty().set(true);
   }
 
-  /**
-   * Toggles the email TextField invisible
-   */
+  /** Toggles the email TextField invisible */
   public void hideEmail() {
     emailTextField.visibleProperty().set(false);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn()
-   */
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOn() */
   @Override
   public void turnLoggedInStateOn() {
     super.turnLoggedInStateOn();
     emailTextField.setVisible(false);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff()
-   */
+  /* (non-Javadoc)
+   * @see cps.client.controller.ClientControllerBase#turnLoggedInStateOff() */
   @Override
   public void turnLoggedInStateOff() {
     super.turnLoggedInStateOff();
     emailTextField.setVisible(true);
   }
 
-  /**
-   * Initializes the Controller and Registers it. 
-   */
+  /** Initializes the Controller and Registers it. */
   @FXML
   void initialize() {
     super.baseInitialize();
@@ -256,12 +213,10 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
                                                      // Field
   }
 
-  /*
-   * (non-Javadoc)
+  /* (non-Javadoc)
    * @see
    * cps.client.controller.customer.CustomerActionControllerBaseSubmitAndFinish#
-   * cleanCtrl()
-   */
+   * cleanCtrl() */
   @Override
   public void cleanCtrl() {
     // info box clear
@@ -274,11 +229,8 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
     endTimeTextField.clear();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.
-   * IncidentalParkingResponse)
-   */
+  /** Display the parking details if request was successful, and user
+   * credentials if new user, otherwise - error message from the server. */
   public void handle(IncidentalParkingResponse response) {
     CustomerContext context = ControllersClientAdapter.getCustomerContext();
     ViewController ctrl = ControllersClientAdapter.getCurrentCtrl();

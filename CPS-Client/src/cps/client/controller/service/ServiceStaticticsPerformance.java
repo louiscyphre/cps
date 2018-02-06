@@ -13,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+/** Controller class for Service Performance report scene. */
 public class ServiceStaticticsPerformance extends ServiceStatitisticsBase {
 
   @FXML
@@ -43,6 +44,8 @@ public class ServiceStaticticsPerformance extends ServiceStatitisticsBase {
     turnProcessingStateOn();
   }
 
+  /** Handles the response from the server containing the data about current performance of this lot
+   * and populates inner data structures accordingly. */
   @Override
   public void handle(CurrentPerformanceResponse response) {
     if (response.success()) {
@@ -81,7 +84,10 @@ public class ServiceStaticticsPerformance extends ServiceStatitisticsBase {
     super.cleanCtrl();
     validateAndSend();
   }
-
+  
+  /**
+   * Class representing the table entry for Performance View.
+   */
   public class TablePerformanceEntry {
     private SimpleStringProperty numberOfSubscriptions;
     private SimpleStringProperty numberOfSubscriptionsWithMultipleCars;

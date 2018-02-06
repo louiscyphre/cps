@@ -101,12 +101,14 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
     }
   }
   
-  /* (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.SimpleResponse)
-   */ 
+  /**
+   * The generic response handling.
+   * Turns the processing state off.
+   * Displays the info/error on the display.
+   * @param response
+   */
   @Override
   public void handle(SimpleResponse response) {
-    // TODO change to ServiceLogoutResponse
     super.handleGenericResponse(response);
     cleanCtrl();
   }

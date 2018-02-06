@@ -128,10 +128,8 @@ public class LoginController extends CustomerActionControllerBase {
     cancelButton.setDisable(false);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see cps.client.controller.ClientControllerBase#handle(cps.api.response.
-   * LoginResponse)
+  /**
+   * Logs user in if successful, otherwise - displays error message.
    */
   @Override
   public void handle(LoginResponse response) {
