@@ -95,19 +95,21 @@ public class TestFullSubscription extends ServerControllerTestBase {
     
     setTime(startDate.atTime(9, 0));
     
-    int numSubscriptions = 10;
-    String carIDs[] = new String[numSubscriptions];
+    int numCars = 10;
+    String carIDs[] = new String[numCars];
     
-    for (int i = 0; i < numSubscriptions; i++) {
+    for (int i = 0; i < numCars; i++) {
       carIDs[i] = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
     }
     
+    float expectedPayment = lotData[0].getPrice2() * 72f * numCars;
     FullSubscriptionRequest request = new FullSubscriptionRequest(data.getCustomerID(), data.getEmail(), carIDs, startDate);
     printObject(request);
     FullSubscriptionResponse response = sendRequest(request, getContext(), FullSubscriptionResponse.class);
     assertNotNull(response);
     printObject(response);
     assertTrue(response.success());
+    assertEquals(expectedPayment, response.getPayment());
     
     // After the first request, we will be registered as a new user
     // Remember out ID and password
@@ -118,17 +120,16 @@ public class TestFullSubscription extends ServerControllerTestBase {
     
     int[] subsIDs = response.getSubscriptionIDs();
     assertNotNull(subsIDs);
-    assertEquals(numSubscriptions, subsIDs);
-    setTime(getTime().plusMinutes(1));
+    assertEquals(numCars, subsIDs.length);
     
     // Check that we have one customer and 10 subscriptions
     assertEquals(1, db.countEntities("customer"));
-    assertEquals(numSubscriptions, db.countEntities("subscription_service"));
+    assertEquals(numCars, db.countEntities("subscription_service"));
     
     // Park with all of them
     setTime(getTime().plusHours(1));
     
-    for (int i = 0; i < numSubscriptions; i++) {
+    for (int i = 0; i < numCars; i++) {
       data.setSubsID(subsIDs[i]);
       data.setCarID(carIDs[i]);
       // The request should succeed on regular days, and fail on a weekend, because regular subscriptions are not active on weekends

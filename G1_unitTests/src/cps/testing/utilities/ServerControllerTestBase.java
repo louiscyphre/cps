@@ -190,7 +190,7 @@ public abstract class ServerControllerTestBase extends TestCase {
     assertEquals(expectedPayment, response.getPayment());
   }
 
-  protected void requestRegularSubscription(CustomerData data, SessionHolder context, LocalDate startDate, LocalTime dailyExitTime) throws ServerException {
+  protected void requestRegularSubscription(CustomerData data, SessionHolder context, LocalDate startDate, LocalTime dailyExitTime, float expectedPayment) throws ServerException {
     // Holder for data to be checked later with type-specific tests
     Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
@@ -204,6 +204,8 @@ public abstract class ServerControllerTestBase extends TestCase {
     SubscriptionService entry = holder.getA();
     assertEquals(entry.getDailyExitTime(), request.getDailyExitTime());
     assertThat(holder.getB(), instanceOf(RegularSubscriptionResponse.class));
+    RegularSubscriptionResponse response = (RegularSubscriptionResponse) holder.getB();
+    assertEquals(expectedPayment, response.getPayment());
   }
 
   protected void requestOnetimeParking(OnetimeParkingRequest request, SessionHolder context, CustomerData data,
@@ -298,6 +300,7 @@ public abstract class ServerControllerTestBase extends TestCase {
     // subscriptionID = 0 means entry by OnetimeParking license
     int numTransportations = db.countEntities("car_transportation");
     ParkingEntryRequest request = new ParkingEntryRequest(data.getCustomerID(), data.getSubsID(), data.getLotID(), data.getCarID());
+    printObject(request);
     ServerResponse response = server.dispatch(request, context);
     assertNotNull(response);
     printObject(response);

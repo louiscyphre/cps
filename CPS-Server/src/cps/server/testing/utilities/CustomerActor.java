@@ -3,19 +3,23 @@ package cps.server.testing.utilities;
 import static org.junit.Assert.assertTrue;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.concurrent.ThreadLocalRandom;
 
 import cps.api.request.ComplaintRequest;
 import cps.api.request.IncidentalParkingRequest;
 import cps.api.request.ParkingEntryRequest;
 import cps.api.request.ParkingExitRequest;
+import cps.api.request.RegularSubscriptionRequest;
 import cps.api.request.Request;
 import cps.api.request.ReservedParkingRequest;
 import cps.api.response.ComplaintResponse;
 import cps.api.response.IncidentalParkingResponse;
 import cps.api.response.ParkingEntryResponse;
 import cps.api.response.ParkingExitResponse;
+import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
 import cps.common.Utilities;
@@ -23,7 +27,7 @@ import cps.server.session.SessionHolder;
 
 public class CustomerActor extends CustomerData implements Actor {
   enum State {
-    INITIAL, PURCHASED_RESERVATION, PURCHASED_SUBSCRIPTION, PARKED, READY
+    INITIAL, PURCHASED_RESERVATION, PURCHASED_REGULAR_SUBSCRIPTION, PURCHASED_FULL_SUBSCRIPTION, PARKED, READY
   };
 
   int           token;
@@ -163,6 +167,23 @@ public class CustomerActor extends CustomerData implements Actor {
   }
 
   private void actBuyRegularSubscription(World world) {
+    lotID = roll(1, world.getNumberOfParkingLots());
+    
+    LocalDate startDate = world.getTime().toLocalDate().plusDays(roll(1, 10));
+    LocalTime dailyExitTime = LocalTime.of(roll(9, 23), roll(0, 59));
+    
+    RegularSubscriptionRequest request = new RegularSubscriptionRequest(customerID, email, carID, startDate, lotID, dailyExitTime);
+    RegularSubscriptionResponse response = world.sendRequest(request, context, RegularSubscriptionResponse.class);
+    handleResponse(world, request, response);
+    
+    if (customerID == 0) {
+      customerID = response.getCustomerID();
+      password = response.getPassword();
+    }
+    
+    handlePayment(response.getPayment());
+    
+    state = State.PURCHASED_REGULAR_SUBSCRIPTION;
 
   }
 

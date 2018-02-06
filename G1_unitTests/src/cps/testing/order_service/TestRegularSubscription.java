@@ -48,8 +48,9 @@ public class TestRegularSubscription extends ServerControllerTestBase {
     initParkingLot(lotData[0]);
     LocalDate startDate = getTime().toLocalDate();
     LocalTime dailyExitTime = LocalTime.of(17, 30);
-    requestRegularSubscription(data, getContext(), startDate, dailyExitTime);
-    // TODO check payment
+
+    float expectedPayment = lotData[0].getPrice2() * 60f;
+    requestRegularSubscription(data, getContext(), startDate, dailyExitTime, expectedPayment);
     
     // The request should succeed on regular days, and fail on a weekend, because regular subscriptions are not active on weekends
     if (requestParkingEntry(data, getContext(), isWeekend(LocalDateTime.now().getDayOfWeek()))) {
@@ -70,36 +71,43 @@ public class TestRegularSubscription extends ServerControllerTestBase {
     
     setTime(startDate.atTime(9, 0));
     
-    int numSubscriptions = 10;
-    String carIDs[] = new String[numSubscriptions];
-    int subsIDs[] = new int[numSubscriptions];
+    int numCars = 10;
+    String carIDs[] = new String[numCars];
     
-    for (int i = 0; i < numSubscriptions; i++) {
+    for (int i = 0; i < numCars; i++) {
       carIDs[i] = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
-      RegularSubscriptionRequest request = new RegularSubscriptionRequest(data.getCustomerID(), data.getEmail(), carIDs[i], startDate, data.getLotID(), dailyExitTime);
-      printObject(request);
-      RegularSubscriptionResponse response = sendRequest(request, getContext(), RegularSubscriptionResponse.class);
-      assertNotNull(response);
-      printObject(response);
-      assertTrue(response.success());
-      
-      // After the first request, we will be registered as a new user
-      // Remember out ID and password
-      if (data.getCustomerID() == 0) {
-        data.setCustomerID(response.getCustomerID());
-        data.setPassword(response.getPassword());
-      }
-      
-      subsIDs[i] = response.getServiceID();
-      setTime(getTime().plusMinutes(1));
     }
+    
+
+    float expectedPayment = lotData[0].getPrice2() * 54f * numCars;
+    RegularSubscriptionRequest request = new RegularSubscriptionRequest(data.getCustomerID(), data.getEmail(), carIDs, startDate, data.getLotID(), dailyExitTime);
+    printObject(request);
+    RegularSubscriptionResponse response = sendRequest(request, getContext(), RegularSubscriptionResponse.class);
+    assertNotNull(response);
+    printObject(response);
+    assertTrue(response.success());
+    assertEquals(expectedPayment, response.getPayment());
+    
+    // After the first request, we will be registered as a new user
+    // Remember out ID and password
+    if (data.getCustomerID() == 0) {
+      data.setCustomerID(response.getCustomerID());
+      data.setPassword(response.getPassword());
+    }
+    
+    int subsIDs[] = response.getSubscriptionIDs();
+    assertNotNull(subsIDs);
+    assertEquals(numCars, subsIDs.length);
     
     // Check that we have one customer and 10 subscriptions
     assertEquals(1, db.countEntities("customer"));
-    assertEquals(numSubscriptions, db.countEntities("subscription_service"));
+    assertEquals(numCars, db.countEntities("subscription_service"));
     
     // Park with all of them
-    for (int i = 0; i < numSubscriptions; i++) {
+    setTime(getTime().plusMinutes(10));
+    
+    // Park with all of them
+    for (int i = 0; i < numCars; i++) {
       data.setSubsID(subsIDs[i]);
       data.setCarID(carIDs[i]);
       // The request should succeed on regular days, and fail on a weekend, because regular subscriptions are not active on weekends
