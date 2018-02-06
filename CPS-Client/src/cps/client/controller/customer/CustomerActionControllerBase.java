@@ -77,4 +77,15 @@ public class CustomerActionControllerBase extends ClientControllerBase {
       }
     }
   }
+
+  void addSubscriptionIDs(List<Text> formattedMessage, int[] subscriptionIDs) {
+    if (subscriptionIDs != null) {
+      String[] stringIDs = new String[subscriptionIDs.length];
+      for (int i = 0; i < subscriptionIDs.length; i++) {
+        stringIDs[i] = Integer.toString(subscriptionIDs[i]);
+      }
+      formattedMessage.add(new Text("\n Your new subscription numbers:\n"));
+      formattedMessage.add(new Text(String.join(", ", stringIDs)));
+    }
+  }
 }

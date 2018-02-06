@@ -123,10 +123,18 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
 
     // inside the form
     // car id validation
-    String carID = getCarID();
-    if (!InputFormats.CARID.validate(carID)) {
+    String[] carIDs = getCarIDs();
+    
+    if (carIDs == null) {
       displayError(InputFormats.CARID.errorMsg());
       return;
+    }
+    
+    for (String carID : carIDs) {
+      if (!InputFormats.CARID.validate(carID)) {
+        displayError(InputFormats.CARID.errorMsg());
+        return;
+      }
     }
 
     int lotID = ControllersClientAdapter.getCustomerContext().getChosenLotID();
@@ -169,8 +177,18 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
   }
 
   /** @return car id or null if empty */
-  private String getCarID() {
-    return carIDTextField.getText();
+  private String[] getCarIDs() {
+    String text = carIDTextField.getText();
+    
+    if (text == null || text.trim().length() < 1) {
+      return null;
+    }
+    
+    String[] values = text.split(",");
+    for (int i = 0; i < values.length; i++) {
+      values[i] = values[i].trim();
+    }
+    return values;
   }
 
   /** @return planned start date or null if empty */
@@ -244,6 +262,7 @@ public class RegularSubscriptionController extends CustomerActionControllerBaseS
       // Success info creation
       formattedMessage.add(new Text("Subscription purchased successfully!\n"));
       formattedMessage.add(new Text(String.format("Your account was debited %s ILS.", response.getPayment())));
+      addSubscriptionIDs(formattedMessage, response.getSubscriptionIDs());
       // Turning off the processing state
       ctrl.turnProcessingStateOff();
       // Display the whole formatted message

@@ -6,13 +6,20 @@ import java.time.LocalDate;
 public abstract class SubscriptionRequest extends CustomerRequest {
   private static final long serialVersionUID = 1L;
   private String            email;
-  private String            carID;
+  private String[]          carIDs;
   private LocalDate         startDate;
+
+  public SubscriptionRequest(int customerID, String email, String[] carIDs, LocalDate startDate) {
+    super(customerID);
+    this.email = email;
+    this.carIDs = carIDs;
+    this.startDate = startDate;
+  }
 
   public SubscriptionRequest(int customerID, String email, String carID, LocalDate startDate) {
     super(customerID);
     this.email = email;
-    this.carID = carID;
+    this.carIDs = new String[] { carID };
     this.startDate = startDate;
   }
 
@@ -24,12 +31,36 @@ public abstract class SubscriptionRequest extends CustomerRequest {
     this.email = email;
   }
 
+  public String[] getCarIDs() {
+    return carIDs;
+  }
+
+  public void setCarIDs(String[] carIDs) {
+    this.carIDs = carIDs;
+  }
+
+  public String getCarID(int index) {
+    if (carIDs == null) {
+      return null;
+    }
+    
+    return carIDs[index];
+  }
+
   public String getCarID() {
-    return carID;
+    if (carIDs == null) {
+      return null;
+    }
+    
+    return carIDs[0];
   }
 
   public void setCarID(String carID) {
-    this.carID = carID;
+    if (carIDs == null) {
+      carIDs = new String[1];
+    }
+    
+    carIDs[0] = carID;
   }
 
   public LocalDate getStartDate() {

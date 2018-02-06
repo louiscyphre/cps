@@ -13,8 +13,10 @@ import java.util.Collection;
 
 import com.google.gson.Gson;
 
+import cps.api.action.SetFullLotAction;
 import cps.api.request.FullSubscriptionRequest;
 import cps.api.request.IncidentalParkingRequest;
+import cps.api.request.LoginRequest;
 import cps.api.request.OnetimeParkingRequest;
 import cps.api.request.ParkingEntryRequest;
 import cps.api.request.ParkingExitRequest;
@@ -24,22 +26,28 @@ import cps.api.request.ReservedParkingRequest;
 import cps.api.request.SubscriptionRequest;
 import cps.api.response.FullSubscriptionResponse;
 import cps.api.response.IncidentalParkingResponse;
+import cps.api.response.LoginResponse;
 import cps.api.response.OnetimeParkingResponse;
 import cps.api.response.ParkingExitResponse;
 import cps.api.response.RegularSubscriptionResponse;
 import cps.api.response.ReservedParkingResponse;
 import cps.api.response.ServerResponse;
+import cps.api.response.SetFullLotResponse;
 import cps.api.response.SubscriptionResponse;
+import cps.common.Utilities;
 import cps.common.Utilities.Pair;
 import cps.entities.models.CarTransportation;
 import cps.entities.models.Customer;
 import cps.entities.models.OnetimeService;
 import cps.entities.models.ParkingLot;
 import cps.entities.models.SubscriptionService;
+import cps.entities.people.User;
 import cps.server.ServerConfig;
 import cps.server.ServerController;
 import cps.server.ServerException;
+import cps.server.controllers.CarTransportationController;
 import cps.server.database.DatabaseController;
+import cps.server.session.ServiceSession;
 import cps.server.session.SessionHolder;
 import junit.framework.TestCase;
 
@@ -166,12 +174,11 @@ public abstract class ServerControllerTestBase extends TestCase {
     holder.setB(specificResponse);
   }
 
-  protected void requestFullSubscription(CustomerData data, SessionHolder context) throws ServerException {
+  protected void requestFullSubscription(CustomerData data, SessionHolder context, LocalDate startDate, float expectedPayment) throws ServerException {
     // Holder for data to be checked later with type-specific tests
     Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    LocalDate startDate = getTime().toLocalDate();
     FullSubscriptionRequest request = new FullSubscriptionRequest(data.getCustomerID(), data.getEmail(), data.getCarID(), startDate);
 
     // Run general tests
@@ -179,15 +186,15 @@ public abstract class ServerControllerTestBase extends TestCase {
 
     // Run type-specific tests
     assertThat(holder.getB(), instanceOf(FullSubscriptionResponse.class));
+    FullSubscriptionResponse response = (FullSubscriptionResponse) holder.getB();
+    assertEquals(expectedPayment, response.getPayment());
   }
 
-  protected void requestRegularSubscription(CustomerData data, SessionHolder context) throws ServerException {
+  protected void requestRegularSubscription(CustomerData data, SessionHolder context, LocalDate startDate, LocalTime dailyExitTime) throws ServerException {
     // Holder for data to be checked later with type-specific tests
     Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    LocalDate startDate = getTime().toLocalDate();
-    LocalTime dailyExitTime = LocalTime.of(17, 30);
     RegularSubscriptionRequest request = new RegularSubscriptionRequest(data.getCustomerID(), data.getEmail(), data.getCarID(), startDate, data.getLotID(), dailyExitTime);
 
     // Run general tests
@@ -289,6 +296,7 @@ public abstract class ServerControllerTestBase extends TestCase {
 
   protected boolean requestParkingEntry(CustomerData data, SessionHolder context, boolean weekend) throws ServerException {
     // subscriptionID = 0 means entry by OnetimeParking license
+    int numTransportations = db.countEntities("car_transportation");
     ParkingEntryRequest request = new ParkingEntryRequest(data.getCustomerID(), data.getSubsID(), data.getLotID(), data.getCarID());
     ServerResponse response = server.dispatch(request, context);
     assertNotNull(response);
@@ -296,7 +304,7 @@ public abstract class ServerControllerTestBase extends TestCase {
 
     if (!weekend) {
       assertTrue(response.success());
-      assertEquals(1, db.countEntities("car_transportation"));
+      assertEquals(numTransportations + 1, db.countEntities("car_transportation"));
       CarTransportation entry = db.performQuery(conn -> CarTransportation.findByCarId(conn, data.getCarID(), data.getLotID()));
       printObject(entry);
     } else {
@@ -306,11 +314,11 @@ public abstract class ServerControllerTestBase extends TestCase {
     return response.success();
   }
 
-  protected boolean requestParkingEntry(CustomerData data, SessionHolder context) throws ServerException {
+  protected boolean enterParking(CustomerData data, SessionHolder context) throws ServerException {
     return requestParkingEntry(data, context, false);
   }
 
-  protected ParkingExitResponse requestParkingExit(CustomerData data, SessionHolder context) throws ServerException {
+  protected ParkingExitResponse exitParking(CustomerData data, SessionHolder context) throws ServerException {
     ParkingExitRequest request = new ParkingExitRequest(data.getCustomerID(), data.getLotID(), data.getCarID());
     printObject(request);
     
@@ -346,5 +354,55 @@ public abstract class ServerControllerTestBase extends TestCase {
     assertNotNull(response);
     assertThat(response, instanceOf(type));
     return type.cast(response);
+  }
+  
+  protected void setRedirects(ParkingLot lot, int[] alternativeLots) throws ServerException {
+    ServiceSession session = getContext().acquireServiceSession();
+    User user = session.login("sarit", "1234");
+    assertNotNull(user);
+    
+    SetFullLotAction action = new SetFullLotAction(user.getId(), lot.getId(), false, alternativeLots);
+    printObject(action);
+    SetFullLotResponse response = sendRequest(action, getContext(), SetFullLotResponse.class);
+    assertTrue(response.success());
+    printObject(response);
+  }
+  
+  protected void fillLot(ParkingLot lot) throws ServerException {    
+    db.performAction(conn -> {
+      CarTransportationController tc = server.getTransportationController();
+      for (int i = 0, n = lot.getVolume(); i < n; i++) {
+        String carID = Utilities.randomString("ILBTA", 2) + "-" + Utilities.randomString("1234567890", 6);
+        LocalDateTime plannedExitTime = getTime().plusDays(10);
+        tc.insertCar(conn, lot, carID, plannedExitTime);
+      }
+    });
+  }
+
+  protected void checkRegistered(CustomerData data, int numCustomers) throws ServerException {    
+    // Check that a new customer ID was created
+    assertNotEquals(0, data.getCustomerID());
+    
+    // Check that a new password was created
+    assertNotNull(data.getPassword());
+    
+    // The password should have a length of 4
+    assertEquals(4, data.getPassword().length());
+    
+    // Test database result
+    assertEquals(numCustomers + 1, db.countEntities("customer"));
+  }
+
+  protected float calculateFlatPayment(LocalDateTime start, LocalDateTime end, float price) {
+    Duration duration = Duration.between(start, end);    
+    return price * duration.getSeconds() / 3600f;
+  }
+  
+  protected void requestLogin(CustomerData data, SessionHolder context) {
+    LoginRequest request = new LoginRequest(data.getEmail(), data.getPassword());
+    printObject(request);
+    LoginResponse response = sendRequest(request, getContext(), LoginResponse.class);
+    assertTrue(response.success());
+    printObject(response);
   }
 }

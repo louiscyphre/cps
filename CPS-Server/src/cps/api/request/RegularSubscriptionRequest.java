@@ -17,6 +17,24 @@ public class RegularSubscriptionRequest extends SubscriptionRequest {
    *
    * @param customerID the customer ID
    * @param email the email
+   * @param carIDs the list of car IDs
+   * @param startDate the start date
+   * @param lotID the lot ID
+   * @param dailyExitTime the daily exit time
+   */
+  public RegularSubscriptionRequest(int customerID, String email, String[] carIDs, LocalDate startDate, int lotID,
+      LocalTime dailyExitTime) {
+    super(customerID, email, carIDs, startDate);
+    this.lotID = lotID;
+    this.dailyExitTime = dailyExitTime;
+  }
+
+
+  /**
+   * Instantiates a new regular subscription request.
+   *
+   * @param customerID the customer ID
+   * @param email the email
    * @param carID the car ID
    * @param startDate the start date
    * @param lotID the lot ID
