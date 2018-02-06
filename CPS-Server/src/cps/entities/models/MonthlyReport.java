@@ -98,6 +98,8 @@ public class MonthlyReport implements Serializable {
     this.ordRegular = rs.getInt("ordered_regular");
     this.ordFull = rs.getInt("ordered_full");
     this.complaintsCount = rs.getInt("complaints_count");
+    this.complaintsClosedCount = rs.getInt("complaints_closed_count");
+    this.complaintsRefundedCount = rs.getInt("complaints_refunded_count");
     this.disabledSlots = rs.getInt("disabled_slots");
   }
 
