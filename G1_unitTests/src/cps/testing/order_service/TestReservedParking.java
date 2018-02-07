@@ -57,7 +57,11 @@ public class TestReservedParking extends OnetimeServiceTestBase {
     header("testReservedParking - new customer");
 
     // Create Parking Lot
-    initParkingLot(lotData[0]);
+    ParkingLot lot = initParkingLot(lotData[0]);
+    
+    // Setup customer data
+    // Initially we set customer ID to 0, so that the system will create a new ID for us
+    custData = new CustomerData(0, "user@email", "", "IL11-222-33", lot.getId(), 0);
     
     // Define starting and ending times
     LocalDateTime plannedStartTime = getTime().plusHours(3);
@@ -166,7 +170,11 @@ public class TestReservedParking extends OnetimeServiceTestBase {
     header("testReservedParking - overlap with another reserved parking");
 
     // Create Parking Lot
-    initParkingLot(lotData[0]);
+    ParkingLot lot = initParkingLot(lotData[0]);
+    
+    // Setup customer data
+    // Initially we set customer ID to 0, so that the system will create a new ID for us
+    custData = new CustomerData(0, "user@email", "", "IL11-222-33", lot.getId(), 0);
     
     // Planned time for parking
     LocalDateTime plannedStartTime = getTime().plusHours(2);

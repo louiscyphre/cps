@@ -9,6 +9,7 @@ import cps.api.request.IncidentalParkingRequest;
 import cps.api.response.IncidentalParkingResponse;
 import cps.entities.models.ParkingLot;
 import cps.server.ServerException;
+import cps.testing.utilities.CustomerData;
 import cps.testing.utilities.OnetimeServiceTestBase;
 
 public class TestIncidentalParking extends OnetimeServiceTestBase {  
@@ -23,7 +24,11 @@ public class TestIncidentalParking extends OnetimeServiceTestBase {
     header("testIncidentalParking - new customer");
 
     // Create Parking Lot
-    initParkingLot(lotData[0]);
+    ParkingLot lot = initParkingLot(lotData[0]);
+    
+    // Setup customer data
+    // Initially we set customer ID to 0, so that the system will create a new ID for us
+    custData = new CustomerData(0, "user@email", "", "IL11-222-33", lot.getId(), 0);
     
     // Planned time for parking
     LocalDateTime startTime = getTime();
@@ -88,8 +93,13 @@ public class TestIncidentalParking extends OnetimeServiceTestBase {
     // Order of incidental parking by existing customer. The incidental parking overlaps a reserved parking.
     header("testIncidentalParking - overlap with reserved parking");
 
+
     // Create Parking Lot
-    initParkingLot(lotData[0]);
+    ParkingLot lot = initParkingLot(lotData[0]);
+    
+    // Setup customer data
+    // Initially we set customer ID to 0, so that the system will create a new ID for us
+    custData = new CustomerData(0, "user@email", "", "IL11-222-33", lot.getId(), 0);
     
     // Planned time for parking
     LocalDateTime plannedStartTime = getTime().plusHours(1);
@@ -136,6 +146,10 @@ public class TestIncidentalParking extends OnetimeServiceTestBase {
     // Create two Parking Lots
     ParkingLot lot1 = initParkingLot(lotData[0]);
     ParkingLot lot2 = initParkingLot(lotData[1]);
+    
+    // Setup customer data
+    // Initially we set customer ID to 0, so that the system will create a new ID for us
+    custData = new CustomerData(0, "user@email", "", "IL11-222-33", lot1.getId(), 0);
     
     // Fill lot1 with cars
     fillLot(lot1);

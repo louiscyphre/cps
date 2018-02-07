@@ -26,12 +26,7 @@ public class OnetimeServiceTestBase extends ServerControllerTestBase {
   
   @Before
   public void setUp() throws Exception {
-    super.setUp();
-    
-    // Setup customer data
-    // Initially we set customer ID to 0, so that the system will create a new ID for us
-    custData = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
-    
+    super.setUp();    
     // Setup Parking Lot data
     lotData[0] = new ParkingLotData(0, "Sesame, 1", 4, 5f, 4f, "1.0.0.1");
     lotData[1] = new ParkingLotData(0, "Zanzibar, 2", 4, 5f, 4f, "1.0.0.2");

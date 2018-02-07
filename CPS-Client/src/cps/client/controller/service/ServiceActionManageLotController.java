@@ -13,11 +13,13 @@ import cps.api.response.DisableParkingSlotsResponse;
 import cps.api.response.RequestLotStateResponse;
 import cps.api.response.ReserveParkingSlotsResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
+import cps.client.utils.UserLevelClientException;
 import cps.client.controller.ControllersClientAdapter;
 import cps.client.controller.ParkingLotsController;
 import cps.common.Constants;
 import cps.entities.models.ParkingCell;
 import cps.entities.models.ParkingLot;
+import cps.entities.people.CompanyPerson;
 import cps.entities.people.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -289,6 +291,14 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
     overviewInfo.add(new Text("Occupied : "));
     overviewInfo.add(new Text(""));
     overviewInfo.add(new Text("\n"));
+
+    overviewInfo.add(new Text("Full State : "));
+    overviewInfo.add(new Text(""));
+    overviewInfo.add(new Text("\n"));
+
+    overviewInfo.add(new Text("Alternative Lots : "));
+    overviewInfo.add(new Text(""));
+    overviewInfo.add(new Text("\n"));
   }
 
   /** Update the overview info, filling priorly '0' texts with actual value. */
@@ -315,11 +325,19 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
         }
       }
     }
+
+    ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
+    
     overviewInfo.set(1, new Text(Integer.toString(capacity)));
     overviewInfo.set(4, new Text(Integer.toString(free)));
     overviewInfo.set(7, new Text(Integer.toString(disabled)));
     overviewInfo.set(10, new Text(Integer.toString(reserved)));
     overviewInfo.set(13, new Text(Integer.toString(occupied)));
+    
+    if (lot != null) {
+      overviewInfo.set(16, new Text(Boolean.toString(lot.isLotFull())));
+      overviewInfo.set(19, new Text(lot.getAlternativeLots()));
+    }
   }
 
   /** Initiates the list holding the cell info text in specified format. */
@@ -379,8 +397,14 @@ public class ServiceActionManageLotController extends ServiceActionControllerBas
   @Override
   void validateAndSend() {
     try {
-      User user = requireLoggedInUser();
+      CompanyPerson user = requireLoggedInUser();
       ParkingLot lot = parkingLotsMap.get(parkingLotsList.getValue());
+      
+      if(lot.getId() != user.getDepartmentID()) {
+        clearCarsGrids();
+        throw new UserLevelClientException("You cannot perform this action on this parking lot");
+      }
+      
       errorIfNull(lot, "Please choose a parking lot");
       turnProcessingStateOn();
       clearCarsGrids();
