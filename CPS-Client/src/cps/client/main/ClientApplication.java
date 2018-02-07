@@ -70,7 +70,7 @@ public class ClientApplication extends Application implements INetworkClient {
       ControllersClientAdapter.registerScene(SceneCode.FILE_COMPLAINT);
 
       ControllersClientAdapter.turnLoggedInStateOff();
-      initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Customer Client");
+      initializeStage(SceneCode.CUSTOMER_INITIAL_MENU, "CPS Kiosk Client [" + ControllersClientAdapter.getLotID() + "]");
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -121,6 +121,8 @@ public class ClientApplication extends Application implements INetworkClient {
 
       ControllersClientAdapter.registerClient(this);
 
+      ControllersClientAdapter.setLotID(parser.getLotId());
+      
       switch (parser.getMode()) {
         case "webclient":
           loadWebClient();
@@ -135,7 +137,6 @@ public class ClientApplication extends Application implements INetworkClient {
           loadKiosk();
       }
 
-      ControllersClientAdapter.setLotID(parser.getLotId());
 
     } catch (IOException e) {
       System.out.println("Error: Can't setup connection! Terminating client.");
