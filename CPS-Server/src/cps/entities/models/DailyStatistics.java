@@ -195,6 +195,7 @@ public class DailyStatistics implements Serializable {
       }
       rs.close();
       st.close();
+      iDate=iDate.plusDays(1);
     }
 
     return item;
