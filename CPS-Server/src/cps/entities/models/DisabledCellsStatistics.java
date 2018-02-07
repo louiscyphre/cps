@@ -94,7 +94,7 @@ public class DisabledCellsStatistics {
   public static void markFixed(Connection conn, LocalDateTime date, int lotid, int width, int height, int depth) throws SQLException {
     debugPrintln("DisabledCellsStatistics: cell enabled: date = %s, lot = %s, location = %d, %d, %d", date, lotid, width, height, depth);
     PreparedStatement stmt = conn
-        .prepareStatement("UPDATE disabled_slots_table SET date_enabled=? WHERE lotid=? AND width=? AND height=? AND depth=? AND date_enabled is null");
+        .prepareStatement("UPDATE IGNORE disabled_slots_table SET date_enabled=? WHERE lotid=? AND width=? AND height=? AND depth=? AND date_enabled is null");
     int i = 1;
     stmt.setTimestamp(i++, Timestamp.valueOf(date));
     stmt.setInt(i++, lotid);
@@ -148,7 +148,7 @@ public class DisabledCellsStatistics {
     qhelper += "OR (date_disabled <= ? AND (date_enabled is null OR date_enabled >= ?))";
 
     Timestamp _from = Timestamp.valueOf(from.atStartOfDay());
-    Timestamp _to = Timestamp.valueOf(to.atTime(LocalTime.MAX));
+    Timestamp _to = Timestamp.valueOf(to.minusDays(1).atTime(LocalTime.MAX));
 
     PreparedStatement stmt = conn.prepareStatement(qhelper);
 
@@ -176,7 +176,7 @@ public class DisabledCellsStatistics {
           end = _to.toLocalDateTime();
         }
       }
-      helper += start.until(end, ChronoUnit.MINUTES);
+      helper += Math.abs(start.until(end, ChronoUnit.MINUTES));
     }
     rs.close();
     stmt.close();

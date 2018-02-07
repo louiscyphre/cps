@@ -3,6 +3,8 @@ package cps.server.testing.utilities;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -36,10 +38,15 @@ public class EmployeeActor implements Actor {
   int           token;
 
   enum State {
-    INITIAL, READY
+    INITIAL, READY, DISABLED_CELL
   };
 
   State state;
+  int locationI = 0;
+  int locationJ = 0;
+  int locationK = 0;
+  LocalDateTime disabledAt = null;
+  Duration untilEnable = null;
 
   public EmployeeActor(World world, int token) {
     this.token = token;
@@ -77,6 +84,9 @@ public class EmployeeActor implements Actor {
         break;
       case READY:
         actReady(world);
+        break;
+      case DISABLED_CELL:
+        actEnableSlot(world);
         break;
       default:
         break;
@@ -124,6 +134,7 @@ public class EmployeeActor implements Actor {
         break;
       }
     }
+    
     if(index == a.length) {
       return;
     }
@@ -185,15 +196,55 @@ public class EmployeeActor implements Actor {
 
     ParkingCell cell = content[i][j][k];
 
-    if (cell.containsCar()) {
+    if (cell.containsCar() || cell.isDisabled()) {
       return;
     }
 
-    boolean disable = !cell.isDisabled();
-
-    ParkingCellSetDisabledAction action = new ParkingCellSetDisabledAction(user.getId(), lotID, i, j, k, disable);
+    ParkingCellSetDisabledAction action = new ParkingCellSetDisabledAction(user.getId(), lotID, i, j, k, true);
     DisableParkingSlotsResponse response = world.sendRequest(action, context, DisableParkingSlotsResponse.class);
     handleResponse(world, action, response);
+    
+    locationI = i;
+    locationJ = j;
+    locationK = k;
+    disabledAt = world.getTime();
+    untilEnable = Duration.ofHours(roll(1, 48));
+    
+    state = State.DISABLED_CELL;
+  }
+
+  private void actEnableSlot(World world) throws ServerException {
+    LocalDateTime now = world.getTime();
+    if (now.isBefore(disabledAt.plus(untilEnable))) {
+      return;
+    }
+
+    CompanyPerson user = context.getServiceSession().requireCompanyPerson();
+    int lotID = user.getDepartmentID();
+
+    Pair<ParkingLot, ParkingCell[][][]> lotResult = getLot(world, user, lotID);
+    ParkingCell[][][] content = lotResult.getB();
+
+    int i = locationI;
+    int j = locationJ;
+    int k = locationK;
+
+    ParkingCell cell = content[i][j][k];
+
+    if (!cell.isDisabled()) {
+      return;
+    }
+
+    ParkingCellSetDisabledAction action = new ParkingCellSetDisabledAction(user.getId(), lotID, i, j, k, false);
+    DisableParkingSlotsResponse response = world.sendRequest(action, context, DisableParkingSlotsResponse.class);
+    handleResponse(world, action, response);
+    
+    locationI = 0;
+    locationJ = 0;
+    locationK = 0;
+    
+    state = State.READY;
+    
   }
 
 }

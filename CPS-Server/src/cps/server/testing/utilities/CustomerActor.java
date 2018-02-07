@@ -277,9 +277,9 @@ public class CustomerActor extends CustomerData implements Actor {
 
     try {
       if (r == 1) { // early
-        plannedEndTimeOffset = Duration.ofMinutes(-roll(1, full.getSeconds() / 60 / 2));
+        plannedEndTimeOffset = Duration.ofMinutes(-roll(0, full.getSeconds() / 60 / 2));
       } else if (r == m) { // late
-        plannedEndTimeOffset = Duration.ofMinutes(roll(1, full.getSeconds() / 60 / 2));
+        plannedEndTimeOffset = Duration.ofMinutes(roll(0, full.getSeconds() / 60 / 2));
       } else { // in time
         plannedEndTimeOffset = Duration.ZERO;
       }

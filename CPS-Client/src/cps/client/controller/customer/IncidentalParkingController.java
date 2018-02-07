@@ -267,7 +267,7 @@ public class IncidentalParkingController extends CustomerActionControllerBaseSub
       // Success info creation
       formattedMessage.add(new Text("Entry granted\n"));
       formattedMessage.add(new Text("Robot will collect your car shortly\n"));
-      Text warning = new Text("Don't forget: Password is required to collect the Car\n");
+      Text warning = new Text("Don't forget: Password is required to collect the car\n");
       // Making bold font
       Font defaultFont = warning.getFont();
       warning.setFont(Font.font(defaultFont.getFamily(), FontWeight.BOLD, defaultFont.getSize()));

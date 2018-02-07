@@ -2,7 +2,7 @@
 <anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://org.eclipse.fx.ide.jdt/1.0" buildDirectory="${project}/build" cssToBin="true">
   <deploy packagingFormat="none">
     <application name="CPS-Client" mainclass="cps.client.main.ClientApplication" version="1.0" toolkit="fx"/>
-    <info title="G1-Client" vendor="Group1"/>
+    <info title="G1_Client" vendor="Group1"/>
   </deploy>
   <signjar/>
 </anttasks:AntTask>

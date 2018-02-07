@@ -146,9 +146,18 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
     if (processing) {
       return;
     }
-    int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
-    ControllersClientAdapter.getEmployeeContext().setChosenLotID(userChosenLotID);
-    validateAndSend();
+    String lotAddress = parkingLotsList.getValue();
+    
+    if (lotAddress == null || lotAddress.trim().isEmpty()) {
+      return;
+    }
+    
+    int userChosenLotID = parkingLotsMap.get(lotAddress).getId();
+    
+    if (userChosenLotID != 0) {
+      ControllersClientAdapter.getEmployeeContext().setChosenLotID(userChosenLotID);
+      validateAndSend();
+    }
   }
 
   @FXML

@@ -253,7 +253,11 @@ public class LotController extends RequestController {
   public ServerResponse handle(ParkingCellSetDisabledAction action, ServiceSession session) {
     String successMessage = action.getValue() ? "Parking cell disabled successfully" : "Parking cell enabled successfully";
     return reserveOrDisable(session, new DisableParkingSlotsResponse(), action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK(),
-        cell -> { cell.setDisabled(action.getValue()); },
+        cell -> {
+          errorIf(cell.isDisabled() && action.getValue() == true, "This cell is already disabled");
+          errorIf(!cell.isDisabled() && action.getValue() == false, "This cell is already enabled");
+          cell.setDisabled(action.getValue());
+        },
         conn -> {
           // XXX Statistics
           StatisticsCollector.registerCellDisableAction(conn, now(), action.getValue(), action.getLotID(), action.getLocationI(), action.getLocationJ(), action.getLocationK());

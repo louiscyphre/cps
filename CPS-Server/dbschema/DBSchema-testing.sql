@@ -100,7 +100,7 @@ DROP TABLE IF EXISTS `disabled_slots_table`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `disabled_slots_table` (
   `lotid` int(11) NOT NULL,
-  `date_disabled` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_disabled` timestamp NULL DEFAULT NULL,
   `width` int(11) NOT NULL,
   `height` int(11) NOT NULL,
   `depth` int(11) NOT NULL,

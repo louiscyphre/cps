@@ -40,7 +40,7 @@ public class ReportController extends RequestController {
     return database.performQuery(new WeeklyReportResponse(), (conn, response) -> {
       CompanyPerson user = session.requireCompanyPerson();
       
-      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You do not have permission to perform this action");
+      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_STATISTICS), "You do not have permission to perform this action");
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER && user.getDepartmentID() != action.getLotID(),
           "A LocalManager can perform this action only on their lot");
       
@@ -62,8 +62,7 @@ public class ReportController extends RequestController {
     return database.performQuery(new QuarterlyReportResponse(), (conn, response) -> {
       CompanyPerson user = session.requireCompanyPerson();
       
-      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT), "You do not have permission to perform this action");
-      errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_LOCAL_MANAGER, "You do not have permission to perform this action");
+      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_STATISTICS), "You do not have permission to perform this action");
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER && user.getDepartmentID() != action.getLotID(),
           "A LocalManager can perform this action only on their lot");
 
@@ -102,6 +101,7 @@ public class ReportController extends RequestController {
     return database.performQuery(new CurrentPerformanceResponse(), (conn, response) -> {
       CompanyPerson user = session.requireCompanyPerson();
       
+      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_STATISTICS), "You do not have permission to perform this action");
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER, "Only the Global Manager can perform this action");
       
       response.setDate(now().toLocalDate());
@@ -121,6 +121,7 @@ public class ReportController extends RequestController {
     return database.performQuery(new PeriodicReportResponse(), (conn, response) -> {
       CompanyPerson user = session.requireCompanyPerson();
       
+      errorIf(!user.canAccessDomain(Constants.ACCESS_DOMAIN_STATISTICS), "You do not have permission to perform this action");
       errorIf(user.getAccessLevel() < Constants.ACCESS_LEVEL_GLOBAL_MANAGER, "Only the Global Manager can perform this action");
      
       LocalDate period = action.getPeriodEnd();

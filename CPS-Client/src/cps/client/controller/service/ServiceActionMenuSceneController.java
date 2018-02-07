@@ -4,11 +4,13 @@ import cps.api.action.ServiceLogoutAction;
 import cps.api.response.SimpleResponse;
 import cps.client.controller.ControllerConstants.SceneCode;
 import cps.client.controller.ControllersClientAdapter;
+import cps.common.Constants;
 import cps.entities.people.CompanyPerson;
 import cps.entities.people.LocalEmployee;
 import cps.entities.people.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 
@@ -28,6 +30,29 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
   /**   */
   @FXML // fx:id="usernameLabel"
   private Label usernameLabel; // Value injected by FXMLLoader
+  
+
+  @FXML // fx:id="initializeLotButton"
+  private Button initializeLotButton;
+  
+
+  @FXML // fx:id="refundButton"
+  private Button refundButton;
+  
+  @FXML // fx:id="lotIsFullButton"
+  private Button lotIsFullButton;
+  
+  @FXML // fx:id="updatePricesButton"
+  private Button updatePricesButton;
+  
+  @FXML // fx:id="manageLotButton"
+  private Button manageLotButton;
+  
+  @FXML // fx:id="logoutButton"
+  private Button logoutButton;
+  
+  @FXML // fx:id="lotIsFullButton"
+  private Button statisticsButton;
 
   /**
    * @param event
@@ -122,6 +147,13 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
     super.baseInitialize();
     assert jobTitleLabel != null : "fx:id=\"jobTitleLabel\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
     assert usernameLabel != null : "fx:id=\"usernameLabel\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
+    assert initializeLotButton != null : "fx:id=\"initializeLotButton\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
+    assert refundButton != null : "fx:id=\"refundButton\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
+    assert lotIsFullButton != null : "fx:id=\"lotIsFullButton\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
+    assert updatePricesButton != null : "fx:id=\"updatePricesButton\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
+    assert manageLotButton != null : "fx:id=\"manageLotButton\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
+    assert statisticsButton != null : "fx:id=\"statisticsButton\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
+    assert logoutButton != null : "fx:id=\"logoutButton\" was not injected: check your FXML file 'ServiceActionMenuScene.fxml'.";
     ControllersClientAdapter.registerCtrl(this, SceneCode.SERVICE_ACTION_MENU);
   }
 
@@ -139,9 +171,56 @@ public class ServiceActionMenuSceneController extends ServiceActionControllerBas
       } else {
         jobTitleLabel.setText(companyPerson.getJobTitle());
       }
+      
+      setAvailableButtons(companyPerson);
     } else { // companyPerson == null
       usernameLabel.setText("Not logged in");
       jobTitleLabel.setText("");
     }
+  }
+
+  private void setAvailableButtons(CompanyPerson person) {
+    initializeLotButton.setDisable(!canInitializeLot(person));
+    refundButton.setDisable(!canRefund(person));
+    lotIsFullButton.setDisable(!canSetLotFull(person));
+    updatePricesButton.setDisable(!canUpdatePrices(person));
+    manageLotButton.setDisable(!canManageLot(person));
+    statisticsButton.setDisable(!canAccessStatistics(person));
+    logoutButton.setDisable(!canLogout(person));
+  }
+
+  private boolean canLogout(CompanyPerson person) {
+    if (person == null) return false;
+    return true;
+  }
+
+  private boolean canAccessStatistics(CompanyPerson person) {
+    if (person == null) return false;
+    return person.canAccessDomain(Constants.ACCESS_DOMAIN_STATISTICS);
+  }
+
+  private boolean canManageLot(CompanyPerson person) {
+    if (person == null) return false;
+    return person.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT);
+  }
+
+  private boolean canUpdatePrices(CompanyPerson person) {
+    if (person == null) return false;
+    return person.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT) && person.getAccessLevel() >= Constants.ACCESS_LEVEL_GLOBAL_MANAGER;
+  }
+
+  private boolean canSetLotFull(CompanyPerson person) {
+    if (person == null) return false;
+    return person.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT);
+  }
+
+  private boolean canRefund(CompanyPerson person) {
+    if (person == null) return false;
+    return person.canAccessDomain(Constants.ACCESS_DOMAIN_CUSTOMER_SERVICE);
+  }
+
+  private boolean canInitializeLot(CompanyPerson person) {
+    if (person == null) return false;
+    return person.canAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT);
   }
 }

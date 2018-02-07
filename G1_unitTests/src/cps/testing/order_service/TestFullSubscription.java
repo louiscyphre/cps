@@ -51,12 +51,7 @@ public class TestFullSubscription extends ServerControllerTestBase {
   
   @Before
   public void setUp() throws Exception {
-    super.setUp();
-    
-    // Setup customer data
-    // Initially we set customer ID to 0, so that the system will create a new ID for us
-    custData = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
-    
+    super.setUp();    
     // Setup Parking Lot data
     lotData[0] = new ParkingLotData(0, "Sesame, 1", 4, 5f, 4f, "1.0.0.1");
     lotData[1] = new ParkingLotData(0, "Zanzibar, 2", 4, 5f, 4f, "1.0.0.2");
@@ -71,11 +66,15 @@ public class TestFullSubscription extends ServerControllerTestBase {
      * 4. Send Parking Exit request */
 
     header("testFullSubscription");
-    CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
+
+    // Create lot
+    ParkingLot lot = initParkingLot(lotData[0]);
+    
+    // Setup customer data
+    // Initially we set customer ID to 0, so that the system will create a new ID for us
+    CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", lot.getId(), 0);
     
     LocalDate startDate = getTime().toLocalDate();
-
-    ParkingLot lot = initParkingLot(lotData[0]);
     float expectedPayment = Constants.PRICE_PER_HOUR_RESERVED * 72f;
     requestFullSubscription(data, getContext(), startDate, expectedPayment);
     enterParking(data, getContext());
@@ -86,9 +85,13 @@ public class TestFullSubscription extends ServerControllerTestBase {
   @Test
   public void testMultipleCars() throws ServerException {
     header("testFullSubscription - multiple cars");
-    initParkingLot(lotData[0]);
+
+    // Create lot
+    ParkingLot lot = initParkingLot(lotData[0]);
     
-    CustomerData data = new CustomerData(0, "company@email", "", "", 1, 0);
+    // Setup customer data
+    // Initially we set customer ID to 0, so that the system will create a new ID for us
+    CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", lot.getId(), 0);
     
     LocalDate startDate = getTime().toLocalDate();
     LocalTime dailyExitTime = LocalTime.of(17, 30);
@@ -103,7 +106,7 @@ public class TestFullSubscription extends ServerControllerTestBase {
     }
     
     float expectedPayment = lotData[0].getPrice2() * 72f * numCars;
-    FullSubscriptionRequest request = new FullSubscriptionRequest(data.getCustomerID(), data.getEmail(), carIDs, startDate);
+    FullSubscriptionRequest request = new FullSubscriptionRequest(data.getCustomerID(), data.getEmail(), carIDs, startDate, data.getLotID());
     printObject(request);
     FullSubscriptionResponse response = sendRequest(request, getContext(), FullSubscriptionResponse.class);
     assertNotNull(response);

@@ -179,7 +179,7 @@ public abstract class ServerControllerTestBase extends TestCase {
     Pair<SubscriptionService, SubscriptionResponse> holder = new Pair<>(null, null);
 
     // Make the request
-    FullSubscriptionRequest request = new FullSubscriptionRequest(data.getCustomerID(), data.getEmail(), data.getCarID(), startDate);
+    FullSubscriptionRequest request = new FullSubscriptionRequest(data.getCustomerID(), data.getEmail(), data.getCarID(), startDate, data.getLotID());
 
     // Run general tests
     requestSubscription(request, context, data, holder);

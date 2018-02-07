@@ -47,10 +47,13 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
    */
   @FXML
   void handleComboBoxAction(ActionEvent event) {
-    if (processing || parkingLotsMap != null) {
+    if (processing) {
       return;
     }
+    
     userLotChoice = parkingLotsList.getValue();
+    newReservedPriceTextField.clear();
+    newIncidentalPriceTextField.clear();
   }
 
   /**
@@ -109,11 +112,10 @@ public class ServiceActionUpdatePricesController extends ServiceActionController
   @Override
   void validateAndSend() {
     try {
-      float newReservedParkingPrice = requireFloat(newReservedPriceTextField, "New reserved parking price");
-      float newIncidentalParkingPrice = requireFloat(newIncidentalPriceTextField, "New incidental parking price");
-
       User user = ControllersClientAdapter.getEmployeeContext().requireCompanyPerson();
       ParkingLot lot = notNull(parkingLotsMap.get(parkingLotsList.getValue()), "Please choose a parking lot");
+      float newReservedParkingPrice = requireFloat(newReservedPriceTextField, "New reserved parking price");
+      float newIncidentalParkingPrice = requireFloat(newIncidentalPriceTextField, "New incidental parking price");
       UpdatePricesAction action = new UpdatePricesAction(user.getId(), lot.getId(), newIncidentalParkingPrice,
           newReservedParkingPrice);
       ControllersClientAdapter.getClient().sendRequest(action);

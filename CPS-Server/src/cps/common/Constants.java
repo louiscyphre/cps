@@ -4,7 +4,7 @@ package cps.common;
 public interface Constants {
   // TODO disable on release
   public final boolean DEBUG_MODE = true;
-//  public final boolean DEBUG_MODE = false;
+  // public final boolean DEBUG_MODE = false;
 
   public final int    DEFAULT_LOT_NUMBER      = 0;
   public final int    DEFAULT_PORT            = 5555;
@@ -33,6 +33,7 @@ public interface Constants {
   // Bit flags
   public final int ACCESS_DOMAIN_PARKING_LOT      = 1;
   public final int ACCESS_DOMAIN_CUSTOMER_SERVICE = 2;
+  public final int ACCESS_DOMAIN_STATISTICS       = 4;
   public final int ACCESS_DOMAIN_EVERYTHING       = 255;
 
   public final float  PRICE_PER_HOUR_RESERVED     = 4f;

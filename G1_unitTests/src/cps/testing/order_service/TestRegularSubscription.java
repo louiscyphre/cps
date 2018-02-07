@@ -12,6 +12,7 @@ import org.junit.Test;
 import cps.api.request.RegularSubscriptionRequest;
 import cps.api.response.RegularSubscriptionResponse;
 import cps.common.Utilities;
+import cps.entities.models.ParkingLot;
 import cps.server.ServerException;
 import cps.testing.utilities.CustomerData;
 import cps.testing.utilities.ParkingLotData;
@@ -23,12 +24,7 @@ public class TestRegularSubscription extends ServerControllerTestBase {
   
   @Before
   public void setUp() throws Exception {
-    super.setUp();
-    
-    // Setup customer data
-    // Initially we set customer ID to 0, so that the system will create a new ID for us
-    custData = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
-    
+    super.setUp();    
     // Setup Parking Lot data
     lotData[0] = new ParkingLotData(0, "Sesame, 1", 4, 5f, 4f, "1.0.0.1");
     lotData[1] = new ParkingLotData(0, "Zanzibar, 2", 4, 5f, 4f, "1.0.0.2");
@@ -43,9 +39,14 @@ public class TestRegularSubscription extends ServerControllerTestBase {
      * 4. Send Parking Exit request */
 
     header("testRegularSubscription - single car");
-    CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", 1, 0);
 
-    initParkingLot(lotData[0]);
+    // Create lot
+    ParkingLot lot = initParkingLot(lotData[0]);
+    
+    // Setup customer data
+    // Initially we set customer ID to 0, so that the system will create a new ID for us
+    CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", lot.getId(), 0);
+    
     LocalDate startDate = getTime().toLocalDate();
     LocalTime dailyExitTime = LocalTime.of(17, 30);
 
@@ -62,9 +63,13 @@ public class TestRegularSubscription extends ServerControllerTestBase {
   @Test
   public void testMultipleCars() throws ServerException {
     header("testRegularSubscription - multiple cars");
-    initParkingLot(lotData[0]);
+
+    // Create lot
+    ParkingLot lot = initParkingLot(lotData[0]);
     
-    CustomerData data = new CustomerData(0, "company@email", "", "", 1, 0);
+    // Setup customer data
+    // Initially we set customer ID to 0, so that the system will create a new ID for us
+    CustomerData data = new CustomerData(0, "user@email", "", "IL11-222-33", lot.getId(), 0);
     
     LocalDate startDate = getTime().toLocalDate();
     LocalTime dailyExitTime = LocalTime.of(17, 30);

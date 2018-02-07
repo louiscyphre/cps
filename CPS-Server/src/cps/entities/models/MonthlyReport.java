@@ -358,8 +358,9 @@ public class MonthlyReport implements Serializable {
   public static void countDisabledCells(Connection conn, int year, int month, int lotid)
       throws SQLException, ServerException {
     MonthlyReport rep = createOrFindNotNull(conn, year, month, lotid);
-    rep.disabledSlots = DisabledCellsStatistics.countDisabledCells(conn, lotid, LocalDateTime.of(year, month, 1, 0, 0),
-        LocalDateTime.of(year, month + 1, 1, 0, 0).minusDays(1));
+    LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+    LocalDateTime end = start.plusMonths(1).minusDays(1);
+    rep.disabledSlots = DisabledCellsStatistics.countDisabledCells(conn, lotid, start, end);
     debugPrintln("MonthlyStatistics: counting disabledSlots: %d", rep.disabledSlots);
     rep.update(conn);
   }
