@@ -115,7 +115,12 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
       return;
     }
     endDatePicker.setDisable(false);
-    validateAndSend();
+
+    String lotAddress = parkingLotsList.getValue();
+    
+    if (lotAddress != null && !lotAddress.trim().isEmpty()) {
+      validateAndSend();
+    }
   }
 
   /** Handle end date choice.
@@ -126,16 +131,23 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
     if (processing) {
       return;
     }
+    
     parkingLotsList.setDisable(false);
 
     if (!parkingLotsList.getItems().isEmpty()) {
       parkingLotsList.getItems().clear();
       parkingLotsMap.clear();
     }
+    
     // Get the list of parking lots
     turnProcessingStateOn();
     sendRequest(new ListParkingLotsRequest());
-    validateAndSend();
+
+    String lotAddress = parkingLotsList.getValue();
+    
+    if (lotAddress != null && !lotAddress.trim().isEmpty()) {
+      validateAndSend();
+    }
   }
 
   /** Handle lot choice.
@@ -146,9 +158,18 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
     if (processing) {
       return;
     }
-    int userChosenLotID = parkingLotsMap.get(parkingLotsList.getValue()).getId();
-    ControllersClientAdapter.getEmployeeContext().setChosenLotID(userChosenLotID);
-    validateAndSend();
+    String lotAddress = parkingLotsList.getValue();
+    
+    if (lotAddress == null || lotAddress.trim().isEmpty()) {
+      return;
+    }
+    
+    int userChosenLotID = parkingLotsMap.get(lotAddress).getId();
+    
+    if (userChosenLotID != 0) {
+      ControllersClientAdapter.getEmployeeContext().setChosenLotID(userChosenLotID);
+      validateAndSend();
+    }
   }
 
   @FXML
@@ -225,7 +246,13 @@ public class ServiceStaticticsQuarterly extends ServiceStatitisticsBase implemen
       displayError("End date must be greater than start date");
       return;
     }
+    
     int lotID = ControllersClientAdapter.getEmployeeContext().getChosenLotID();
+    
+    if (lotID == 0) {
+      return;
+    }
+    
     int userID = ControllersClientAdapter.getEmployeeContext().getCompanyPerson().getId();
     GetQuarterlyReportAction request = new GetQuarterlyReportAction(userID, Constants.REPORT_TYPE_QUARTERLY, reportStartDate, reportEndDate, lotID);
     turnProcessingStateOn();
