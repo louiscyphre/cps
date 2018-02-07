@@ -63,10 +63,10 @@ public class TestStatistics extends ServerControllerTest implements World {
   void makeLots() throws ServerException {
     ParkingLotData lotData[] = new ParkingLotData[] {
         new ParkingLotData(0, "Sesame, 1", 4, 5f, 4f, "1.0.0.1"),
-        new ParkingLotData(0, "Monaco, 2", 4, 50f, 40f, "1.0.0.1"),
-        new ParkingLotData(0, "Dubai, 3", 10, 1000f, 500f, "1.0.0.1"),
-        new ParkingLotData(0, "Bangkok, 4", 5, 10f, 7f, "1.0.0.1"),
-        new ParkingLotData(0, "Jakarta, 5", 5, 3f, 10f, "1.0.0.1"),
+        new ParkingLotData(0, "Monaco, 2", 4, 50f, 40f, "1.0.0.2"),
+        new ParkingLotData(0, "Dubai, 3", 8, 1000f, 500f, "1.0.0.3"),
+//        new ParkingLotData(0, "Bangkok, 4", 5, 10f, 7f, "1.0.0.4"),
+//        new ParkingLotData(0, "Jakarta, 5", 5, 3f, 10f, "1.0.0.5"),
     };
     
     for (int i = 0; i < lotData.length; i++) {
@@ -84,7 +84,10 @@ public class TestStatistics extends ServerControllerTest implements World {
     makeLots();
     
     // Run in a loop for a specified period    
-    LocalDateTime endOfTime = getTime().plusMonths(2);
+    LocalDateTime start = getTime().minusMonths(3);
+    LocalDateTime endOfTime = getTime();
+//    LocalDateTime endOfTime = getTime().plusMonths(3);
+    setTime(start);
     
     int epoch = 1;
     int j = 0;

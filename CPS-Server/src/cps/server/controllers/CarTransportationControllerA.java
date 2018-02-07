@@ -425,7 +425,7 @@ public class CarTransportationControllerA extends RequestController implements C
         }
       }
     }
-    return priority;
+    return Math.max(priority, worstPriority);
   }
 
   private void pave(Stack<String> carIds, Stack<LocalDateTime> exitTimes, int maxSize, int maxHeight, int maxDepth, ParkingCell[][][] content,

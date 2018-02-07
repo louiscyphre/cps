@@ -10,7 +10,7 @@ public class GlobalManager extends CompanyPerson {
       String jobTitle) {
     super(id, email, username, password, firstName, lastName, jobTitle);
     setAccessLevel(Constants.ACCESS_LEVEL_GLOBAL_MANAGER);
-    setAccessDomain(Constants.ACCESS_DOMAIN_EVERYTHING);
+    setAccessDomain(Constants.ACCESS_DOMAIN_STATISTICS);
   }
 
   @Override

@@ -10,6 +10,6 @@ public class LocalManager extends LocalEmployee {
       String jobTitle, int managerID, int departmentID) {
     super(id, email, username, password, firstName, lastName, jobTitle, managerID, departmentID);
     setAccessLevel(Constants.ACCESS_LEVEL_LOCAL_MANAGER);
-    setAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT);
+    setAccessDomain(Constants.ACCESS_DOMAIN_PARKING_LOT | Constants.ACCESS_DOMAIN_STATISTICS);
   }
 }
