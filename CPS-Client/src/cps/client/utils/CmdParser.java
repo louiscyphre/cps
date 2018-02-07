@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package cps.client.utils;
 
@@ -17,7 +17,7 @@ import org.apache.commons.cli.ParseException;
 public class CmdParser {
 
   /**
-   * 
+   *
    */
   private CommandLine cmd;
 
@@ -62,7 +62,7 @@ public class CmdParser {
    */
   public String getHost() {
     String option = cmd.getOptionValue("host");
-    return (option == null) ? option : cps.common.Constants.DEFAULT_HOST;
+    return (option != null) ? option : cps.common.Constants.DEFAULT_HOST;
   }
 
   /**
