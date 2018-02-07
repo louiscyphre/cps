@@ -36,7 +36,7 @@ public class TestStatistics extends ServerControllerTest implements World {
     super.setUp();
     
     timeSlice = Duration.ofMinutes(10);
-    numParkingLots = 5;
+    numParkingLots = 3;
     numEmployees = CompanyPersonService.getNumberOfEmployees() - 1;
     
     // Create employees
